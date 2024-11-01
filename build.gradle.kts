@@ -1,26 +1,17 @@
 plugins {
     java
-    id("org.springframework.boot") version "3.3.5"
-    id("io.spring.dependency-management") version "1.1.6"
+    id("onyxdb-java-spring-app-conventions")
 }
 
-group = "com.onyxdb"
-version = "0.0.1-SNAPSHOT"
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
-}
-
-repositories {
-    mavenCentral()
+configurations.all {
+    exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    implementation(libs.springBoot.starterWeb)
+    implementation(libs.springBoot.starterLog4j2)
+
+    testImplementation(libs.springBoot.starterTest)
 }
 
 tasks.withType<Test> {

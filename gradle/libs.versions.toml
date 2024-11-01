@@ -1,0 +1,12 @@
+[versions]
+springBoot = "3.3.5"
+
+
+[plugins]
+springBoot = { id = "org.springframework.boot" }
+
+[libraries]
+springBoot-gradlePlugin = { group = "org.springframework.boot", name = "spring-boot-gradle-plugin", version.ref = "springBoot" }
+springBoot-starterWeb = { group = "org.springframework.boot", name = "spring-boot-starter-web", version.ref = "springBoot" }
+springBoot-starterLog4j2 = { group = "org.springframework.boot", name = "spring-boot-starter-log4j2", version.ref = "springBoot" }
+springBoot-starterTest = { group = "org.springframework.boot", name = "spring-boot-starter-test", version.ref = "springBoot" }
