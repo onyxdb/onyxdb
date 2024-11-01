@@ -13,7 +13,3 @@ dependencies {
 
     testImplementation(libs.springBoot.starterTest)
 }
-
-tasks.withType<Test> {
-    useJUnitPlatform()
-}
