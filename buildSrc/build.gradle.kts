@@ -7,7 +7,7 @@ repositories {
 }
 
 dependencies {
-    // Deps for xor-java-spring-app-conventions plugin
+    // Deps for onyxdb-java-spring-app-conventions plugin
     implementation(libs.springBoot.gradlePlugin)
 }
 
