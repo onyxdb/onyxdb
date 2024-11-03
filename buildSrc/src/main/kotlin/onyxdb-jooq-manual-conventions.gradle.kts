@@ -83,3 +83,10 @@ tasks.named(JooqConfig.GENERATE_JOOQ_TASK).configure {
 tasks.named(CustomTasksConfig.ONYXDB_GENERATE_ALL_CODEGEN).configure {
     dependsOn(JooqConfig.GENERATE_JOOQ_TASK)
 }
+
+tasks.configureEach {
+    // Fixes error: Task ':generateEffectiveLombokConfig' uses this output of task ':generateJooq' without declaring an explicit or implicit dependency.
+    if (name == "generateEffectiveLombokConfig") {
+        mustRunAfter(JooqConfig.GENERATE_JOOQ_TASK)
+    }
+}
