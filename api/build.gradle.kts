@@ -27,7 +27,7 @@ dependencies {
 
 openApiGenerate {
 	generatorName.set("spring")
-	inputSpec.set("$projectDir/src/main/resources/openapi/onyx-api.yaml")
+	inputSpec.set("$projectDir/src/main/resources/openapi/onyxdb-api.yaml")
 	outputDir.set("$projectDir/generated/openapi")
 	apiPackage.set("${project.group}.onyxdbApi.generated.openapi.apis")
 	modelPackage.set("${project.group}.onyxdbApi.generated.openapi.models")
