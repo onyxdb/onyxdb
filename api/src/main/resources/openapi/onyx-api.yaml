@@ -11,7 +11,7 @@ paths:
       summary: Create cluster.
       operationId: apiV1CreateCluster
       tags:
-        - onyxApiV1
+        - onyxApiV1Clusters
       requestBody:
         required: true
         content:
