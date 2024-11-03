@@ -15,7 +15,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @ContextConfiguration(initializers = PostgresTest.DataSourceInitializer.class)
 public abstract class PostgresTest {
     @Container
-    private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:12.9-alpine");
+    private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:14.4-alpine");
 
     static {
         postgres.start();
