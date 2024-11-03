@@ -9,6 +9,7 @@ flywaydb-flywayGradlePlugin = "10.15.2"
 flywaydb-flywayDatabasePostgresql = "10.4.1"
 flywaydb-flywayCore = "10.17.1"
 studerJooq-studerJooqGradlePlugin = "8.0"
+testcontainers-junitJupiter = "1.20.1"
 testcontainers-postgresql = "1.17.3"
 # Version should be synced with onyxdb-jooq-manual-conventions plguin
 postgresql-postgresql = "42.7.2"
@@ -31,5 +32,6 @@ flywaydb-flywayGradlePlugin = { group = "org.flywaydb", name = "flyway-gradle-pl
 flywaydb-flywayDatabasePostgresql = { group = "org.flywaydb", name = "flyway-database-postgresql", version.ref = "flywaydb-flywayDatabasePostgresql" }
 flywaydb-flywayCore = { group = "org.flywaydb", name = "flyway-core", version.ref = "flywaydb-flywayCore" }
 studerJooq-studerJooqGradlePlugin = { group = "nu.studer.jooq", name = "nu.studer.jooq.gradle.plugin", version.ref = "studerJooq-studerJooqGradlePlugin" }
+testcontainers-junitJupiter  = { group = "org.testcontainers", name = "junit-jupiter", version.ref = "testcontainers-junitJupiter" }
 testcontainers-postgresql = { group = "org.testcontainers", name = "postgresql", version.ref = "testcontainers-postgresql" }
 postgresql-postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "postgresql-postgresql" }

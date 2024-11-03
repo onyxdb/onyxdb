@@ -22,6 +22,8 @@ dependencies {
 	implementation(libs.javaxValidation.validationApi)
 
 	testImplementation(libs.springBoot.starterTest)
+	testImplementation(libs.testcontainers.junitJupiter)
+	testImplementation(libs.testcontainers.postgresql)
 }
 
 openApiGenerate {
