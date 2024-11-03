@@ -1,11 +1,11 @@
-package com.onyxdb.core;
+package com.onyxdb.api;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class OnyxdbCoreApplicationTests {
-    @Test
-    void contextLoads() {
-    }
+class OnyxApiApplicationTests {
+	@Test
+	void contextLoads() {
+	}
 }
