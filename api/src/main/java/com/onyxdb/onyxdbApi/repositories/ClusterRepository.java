@@ -1,4 +1,4 @@
-package com.onyxdb.onyxdbApi.repository;
+package com.onyxdb.onyxdbApi.repositories;
 
 import com.onyxdb.onyxdbApi.models.Cluster;
 

@@ -1,4 +1,4 @@
-package com.onyxdb.onyxdbApi.repository;
+package com.onyxdb.onyxdbApi.repositories;
 
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
