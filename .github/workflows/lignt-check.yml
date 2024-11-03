@@ -1,4 +1,4 @@
-name: 'Run checks'
+name: 'Build monorepo'
 
 on:
   push:
@@ -22,4 +22,4 @@ jobs:
       - uses: gradle/actions/setup-gradle@v3
 
       - name: Build with Gradle
-        run: ./gradlew clean onyxdbGenerateAllCodegen build
+        run: ./gradlew clean build
