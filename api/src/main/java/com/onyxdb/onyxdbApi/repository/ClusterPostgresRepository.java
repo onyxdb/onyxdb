@@ -1,9 +1,10 @@
 package com.onyxdb.onyxdbApi.repository;
 
-import com.onyxdb.onyxdbApi.models.Cluster;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
+
+import com.onyxdb.onyxdbApi.models.Cluster;
 
 /**
  * @author foxleren

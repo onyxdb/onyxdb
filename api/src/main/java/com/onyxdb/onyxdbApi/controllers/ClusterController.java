@@ -1,13 +1,14 @@
 package com.onyxdb.onyxdbApi.controllers;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.onyxdb.onyxdbApi.generated.openapi.apis.OnyxApiV1ClustersApi;
 import com.onyxdb.onyxdbApi.generated.openapi.models.CreateClusterRequest;
 import com.onyxdb.onyxdbApi.generated.openapi.models.CreateClusterResponse;
 import com.onyxdb.onyxdbApi.models.Cluster;
 import com.onyxdb.onyxdbApi.services.ClusterService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author foxleren
