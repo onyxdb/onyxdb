@@ -5,6 +5,12 @@ swaggerCoreV3-swaggerAnnotations = "2.2.20"
 javaxAnnotation-annotionApi = "1.3.2"
 javaxValidation-validationApi = "2.0.0.Final"
 lombok-gradlePlugin = "8.10.2"
+flywaydb-flywayGradlePlugin = "10.15.2"
+flywaydb-flywayDatabasePostgresql = "10.4.1"
+studerJooq-studerJooqGradlePlugin = "8.0"
+testcontainers-postgresql = "1.17.3"
+# Version should be synced with onyxdb-jooq-manual-conventions plguin
+postgresql-postgresql = "42.7.2"
 
 [plugins]
 springBoot = { id = "org.springframework.boot" }
@@ -19,3 +25,8 @@ springBoot-starterTest = { group = "org.springframework.boot", name = "spring-bo
 swaggerCoreV3-swaggerAnnotations = { group = "io.swagger.core.v3", name = "swagger-annotations", version.ref = "swaggerCoreV3-swaggerAnnotations" }
 javaxAnnotation-annotionApi = { group = "javax.annotation", name = "javax.annotation-api", version.ref = "javaxAnnotation-annotionApi" }
 javaxValidation-validationApi = { group = "javax.validation", name = "validation-api", version.ref = "javaxValidation-validationApi" }
+flywaydb-flywayGradlePlugin = { group = "org.flywaydb", name = "flyway-gradle-plugin", version.ref = "flywaydb-flywayGradlePlugin" }
+flywaydb-flywayDatabasePostgresql = { group = "org.flywaydb", name = "flyway-database-postgresql", version.ref = "flywaydb-flywayDatabasePostgresql" }
+studerJooq-studerJooqGradlePlugin = { group = "nu.studer.jooq", name = "nu.studer.jooq.gradle.plugin", version.ref = "studerJooq-studerJooqGradlePlugin" }
+testcontainers-postgresql = { group = "org.testcontainers", name = "postgresql", version.ref = "testcontainers-postgresql" }
+postgresql-postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "postgresql-postgresql" }

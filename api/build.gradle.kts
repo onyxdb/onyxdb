@@ -1,6 +1,7 @@
 plugins {
 	java
 	id("onyxdb-java-spring-app-conventions")
+	id("onyxdb-jooq-manual-conventions")
 	alias(libs.plugins.openapiGenerator)
 	alias(libs.plugins.lombok)
 }
@@ -25,8 +26,8 @@ openApiGenerate {
 	generatorName.set("spring")
 	inputSpec.set("$projectDir/src/main/resources/openapi/onyx-api.yaml")
 	outputDir.set("$buildDir/generated/openapi")
-	apiPackage.set("com.onyxdb.generated.api.apis")
-	modelPackage.set("com.onyxdb.generated.api.models")
+	apiPackage.set("${project.group}.generated.api.apis")
+	modelPackage.set("${project.group}.generated.api.models")
 	configOptions = mapOf(
 		"dateLibrary" to "java8-localdatetime",
 		"interfaceOnly" to "true",

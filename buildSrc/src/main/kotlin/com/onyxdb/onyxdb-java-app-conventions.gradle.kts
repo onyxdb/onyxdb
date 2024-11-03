@@ -1,3 +1,5 @@
+import com.onyxdb.ProjectConfig
+
 plugins {
     java
 }
