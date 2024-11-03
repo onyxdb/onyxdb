@@ -25,8 +25,8 @@ openApiGenerate {
 	generatorName.set("spring")
 	inputSpec.set("$projectDir/src/main/resources/openapi/onyx-api.yaml")
 	outputDir.set("$buildDir/generated/openapi")
-	apiPackage.set("com.onyxdb.api.generated.apis")
-	modelPackage.set("com.onyxdb.api.generated.models")
+	apiPackage.set("com.onyxdb.generated.api.apis")
+	modelPackage.set("com.onyxdb.generated.api.models")
 	configOptions = mapOf(
 		"dateLibrary" to "java8-localdatetime",
 		"interfaceOnly" to "true",

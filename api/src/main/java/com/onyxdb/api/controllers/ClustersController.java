@@ -1,8 +1,8 @@
 package com.onyxdb.api.controllers;
 
-import com.onyxdb.api.generated.apis.OnyxApiV1Api;
-import com.onyxdb.api.generated.models.CreateClusterRequest;
-import com.onyxdb.api.generated.models.CreateClusterResponse;
+import com.onyxdb.generated.api.apis.OnyxApiV1Api;
+import com.onyxdb.generated.api.models.CreateClusterRequest;
+import com.onyxdb.generated.api.models.CreateClusterResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
