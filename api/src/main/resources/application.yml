@@ -1,3 +1,13 @@
 spring:
   application:
-    name: onyx-api
+    name: onyxdb-api
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/dev
+    username: postgres
+    password: qwerty
+  jooq:
+    sql-dialect: Postgres
+  flyway:
+    baseline-on-migrate: true
+    enabled: true

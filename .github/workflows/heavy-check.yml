@@ -1,14 +1,12 @@
-name: 'Run checks'
+name: 'Generate all codegen and build monorepo'
 
 on:
-  push:
-    branches:
-      - master
-  pull_request:
+  schedule:
+    - cron: '0 0 * * *'
   workflow_dispatch:
 
 jobs:
-  light-check:
+  build-with-codegen:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,4 +20,4 @@ jobs:
       - uses: gradle/actions/setup-gradle@v3
 
       - name: Build with Gradle
-        run: ./gradlew clean build
+        run: ./gradlew clean onyxdbGenerateAllCodegen build

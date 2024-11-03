@@ -1,4 +1,9 @@
-rootProject.name = "onyxdb-core"
+rootProject.name = "onyxdb"
 
-include("onyx-api")
-project(":onyx-api").projectDir = file("api")
+include("onyxdbApi")
+project(":onyxdbApi").projectDir = file("api")
+
+include("onyxdbCommon")
+project(":onyxdbCommon").projectDir = file("common")
+
+include("onyxdbCommon:postgres")

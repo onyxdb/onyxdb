@@ -1,6 +1,7 @@
 plugins {
 	java
 	id("onyxdb-java-spring-app-conventions")
+	id("onyxdb-jooq-manual-conventions")
 	alias(libs.plugins.openapiGenerator)
 	alias(libs.plugins.lombok)
 }
@@ -10,6 +11,8 @@ configurations.all {
 }
 
 dependencies {
+	implementation(project(":onyxdbCommon:postgres"))
+
 	implementation(libs.springBoot.starterWeb)
 	implementation(libs.springBoot.starterLog4j2)
 
@@ -19,14 +22,16 @@ dependencies {
 	implementation(libs.javaxValidation.validationApi)
 
 	testImplementation(libs.springBoot.starterTest)
+	testImplementation(libs.testcontainers.junitJupiter)
+	testImplementation(libs.testcontainers.postgresql)
 }
 
 openApiGenerate {
 	generatorName.set("spring")
 	inputSpec.set("$projectDir/src/main/resources/openapi/onyx-api.yaml")
-	outputDir.set("$buildDir/generated/openapi")
-	apiPackage.set("com.onyxdb.generated.api.apis")
-	modelPackage.set("com.onyxdb.generated.api.models")
+	outputDir.set("$projectDir/generated/openapi")
+	apiPackage.set("${project.group}.onyxdbApi.generated.openapi.apis")
+	modelPackage.set("${project.group}.onyxdbApi.generated.openapi.models")
 	configOptions = mapOf(
 		"dateLibrary" to "java8-localdatetime",
 		"interfaceOnly" to "true",
@@ -44,11 +49,11 @@ openApiGenerate {
 sourceSets {
 	main {
 		java {
-			srcDirs("$buildDir/generated/openapi/src/main/java")
+			srcDirs("$projectDir/generated/openapi/src/main/java")
 		}
 	}
 }
 
-tasks.compileJava {
+tasks.named(CustomTasksConfig.ONYXDB_GENERATE_ALL_CODEGEN).configure {
 	dependsOn(tasks.openApiGenerate)
 }
