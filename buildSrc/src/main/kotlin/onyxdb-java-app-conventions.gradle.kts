@@ -1,7 +1,5 @@
-import com.onyxdb.ProjectConfig
-
 plugins {
-    java
+    id("java")
 }
 
 group = ProjectConfig.GROUP
@@ -18,4 +16,8 @@ repositories {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+tasks.register(CustomTasksConfig.ONYXDB_GENERATE_ALL_CODEGEN) {
+    group = CustomTasksConfig.ONYXDB_GROUP
 }

@@ -7,6 +7,7 @@ javaxValidation-validationApi = "2.0.0.Final"
 lombok-gradlePlugin = "8.10.2"
 flywaydb-flywayGradlePlugin = "10.15.2"
 flywaydb-flywayDatabasePostgresql = "10.4.1"
+flywaydb-flywayCore = "10.17.1"
 studerJooq-studerJooqGradlePlugin = "8.0"
 testcontainers-postgresql = "1.17.3"
 # Version should be synced with onyxdb-jooq-manual-conventions plguin
@@ -22,11 +23,13 @@ springBoot-gradlePlugin = { group = "org.springframework.boot", name = "spring-b
 springBoot-starterWeb = { group = "org.springframework.boot", name = "spring-boot-starter-web", version.ref = "springBoot" }
 springBoot-starterLog4j2 = { group = "org.springframework.boot", name = "spring-boot-starter-log4j2", version.ref = "springBoot" }
 springBoot-starterTest = { group = "org.springframework.boot", name = "spring-boot-starter-test", version.ref = "springBoot" }
+springBoot-starterJdbc = { group = "org.springframework.boot", name = "spring-boot-starter-jdbc", version.ref = "springBoot" }
 swaggerCoreV3-swaggerAnnotations = { group = "io.swagger.core.v3", name = "swagger-annotations", version.ref = "swaggerCoreV3-swaggerAnnotations" }
 javaxAnnotation-annotionApi = { group = "javax.annotation", name = "javax.annotation-api", version.ref = "javaxAnnotation-annotionApi" }
 javaxValidation-validationApi = { group = "javax.validation", name = "validation-api", version.ref = "javaxValidation-validationApi" }
 flywaydb-flywayGradlePlugin = { group = "org.flywaydb", name = "flyway-gradle-plugin", version.ref = "flywaydb-flywayGradlePlugin" }
 flywaydb-flywayDatabasePostgresql = { group = "org.flywaydb", name = "flyway-database-postgresql", version.ref = "flywaydb-flywayDatabasePostgresql" }
+flywaydb-flywayCore = { group = "org.flywaydb", name = "flyway-core", version.ref = "flywaydb-flywayCore" }
 studerJooq-studerJooqGradlePlugin = { group = "nu.studer.jooq", name = "nu.studer.jooq.gradle.plugin", version.ref = "studerJooq-studerJooqGradlePlugin" }
 testcontainers-postgresql = { group = "org.testcontainers", name = "postgresql", version.ref = "testcontainers-postgresql" }
 postgresql-postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "postgresql-postgresql" }

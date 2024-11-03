@@ -1,6 +1,4 @@
 import org.testcontainers.containers.PostgreSQLContainer
-import com.onyxdb.JooqConfig
-import com.onyxdb.ProjectConfig
 
 plugins {
     id("onyxdb-java-app-conventions")
@@ -13,8 +11,13 @@ dependencies {
     jooqGenerator("org.postgresql:postgresql:42.7.2")
 }
 
+val permittedTasks: List<String> = listOf(
+    JooqConfig.GENERATE_JOOQ_TASK,
+    CustomTasksConfig.ONYXDB_GENERATE_ALL_CODEGEN
+)
+
 val postgresContainer: PostgreSQLContainer<Nothing>? =
-    if (JooqConfig.GENERATE_JOOQ_TASK in project.gradle.startParameter.taskNames) {
+    if (permittedTasks.any { it in project.gradle.startParameter.taskNames }) {
         PostgreSQLContainer<Nothing>(JooqConfig.POSTGRES_DOCKER_IMAGE).apply {
             start()
         }
@@ -52,8 +55,8 @@ jooq {
                         excludes = "flyway.*"
                     }
                     target.apply {
-                        packageName = "${project.group}.${project.name}.jooq"
-                        directory = "src/generated/jooq/src/main/java"
+                        packageName = "${project.group}.${project.name}.generated.jooq"
+                        directory = "$projectDir/generated/jooq/src/main/java"
                     }
                 }
             }
@@ -63,8 +66,10 @@ jooq {
 
 tasks.flywayMigrate.configure {
     val taskNames = project.gradle.startParameter.taskNames
-    if (JooqConfig.FLYWAY_MIGRATE_TASK in taskNames && JooqConfig.GENERATE_JOOQ_TASK !in taskNames) {
-        throw IllegalArgumentException("${JooqConfig.FLYWAY_MIGRATE_TASK} is available only for ${JooqConfig.GENERATE_JOOQ_TASK}")
+    if (JooqConfig.FLYWAY_MIGRATE_TASK in taskNames) {
+        if (!permittedTasks.any { it in project.gradle.startParameter.taskNames }) {
+            throw IllegalArgumentException("${JooqConfig.FLYWAY_MIGRATE_TASK} is not available for current task")
+        }
     }
 }
 
@@ -73,4 +78,8 @@ tasks.named(JooqConfig.GENERATE_JOOQ_TASK).configure {
     doLast {
         postgresContainer?.stop()
     }
+}
+
+tasks.named(CustomTasksConfig.ONYXDB_GENERATE_ALL_CODEGEN).configure {
+    dependsOn(JooqConfig.GENERATE_JOOQ_TASK)
 }
