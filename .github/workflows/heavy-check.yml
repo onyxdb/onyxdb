@@ -1,4 +1,4 @@
-name: 'Generate all codegen and build monorepo'
+name: 'heavy-check'
 
 on:
   schedule:
