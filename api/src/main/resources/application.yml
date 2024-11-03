@@ -9,5 +9,4 @@ spring:
   jooq:
     sql-dialect: Postgres
   flyway:
-    baseline-on-migrate: true
     enabled: true
