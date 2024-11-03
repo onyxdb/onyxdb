@@ -1,5 +1,4 @@
 plugins {
-	java
 	id("onyxdb-java-spring-app-conventions")
 	id("onyxdb-jooq-manual-conventions")
 	alias(libs.plugins.openapiGenerator)
