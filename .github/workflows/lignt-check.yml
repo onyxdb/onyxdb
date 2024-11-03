@@ -4,7 +4,11 @@ on:
   push:
     branches:
       - master
+    paths:
+      - '!./README.md'
   pull_request:
+    paths:
+      - '!./README.md'
   workflow_dispatch:
 
 jobs:
