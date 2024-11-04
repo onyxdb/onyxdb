@@ -3,7 +3,7 @@ name: 'heavy-check'
 on:
   schedule:
     # Github-actions don't support custom timezone for cron expression,so it is UTC timezone.
-    - cron: '* 18 * * *'
+    - cron: '0 18 * * *'
   workflow_dispatch:
 
 jobs:
