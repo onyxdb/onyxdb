@@ -1,5 +1,5 @@
 plugins {
-    id("onyxdb-java-library-conventions")
+    alias(libs.plugins.onyxdb.javaLibraryConventions)
 }
 
 dependencies {
