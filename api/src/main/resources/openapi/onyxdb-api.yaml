@@ -9,9 +9,9 @@ paths:
   /api/v1/clusters:
     post:
       summary: Create cluster.
-      operationId: apiV1CreateCluster
+      operationId: v1ClustersCreateCluster
       tags:
-        - onyxApiV1Clusters
+        - v1Clusters
       requestBody:
         required: true
         content:
@@ -32,14 +32,51 @@ components:
       type: object
       required:
         - name
-        - type
+        - storage
+        - db
       properties:
         name:
           type: string
-        type:
+          minLength: 1
+          maxLength: 64
+        description:
           type: string
-          enum:
-            - mongo
+          minLength: 1
+          maxLength: 256
+        storage:
+          type: object
+          required:
+            - diskSize
+          properties:
+            diskSize:
+              type: integer
+              format: int64
+              description: Disk size in bytes.
+        db:
+          type: object
+          required:
+            - type
+          properties:
+            type:
+              type: string
+              enum:
+                - mongodb
+                - postgresql
+            mongodb:
+              type: object
+              required:
+                - version
+              properties:
+                version:
+                  type: string
+                  enum:
+                    - '6.0'
+                    - '5.0'
+                mongodbV6x0:
+                  type: object
+                mongodbV5x0:
+                  type: object
+
     CreateClusterResponse:
       type: object
       required:

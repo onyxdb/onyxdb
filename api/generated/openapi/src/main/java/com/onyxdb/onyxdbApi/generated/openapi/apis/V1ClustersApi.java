@@ -26,17 +26,17 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.5.0")
 @Validated
-@Tag(name = "onyxApiV1Clusters", description = "the onyxApiV1Clusters API")
-public interface OnyxApiV1ClustersApi {
+@Tag(name = "v1Clusters", description = "the v1Clusters API")
+public interface V1ClustersApi {
 
     /**
      * POST /api/v1/clusters : Create cluster.
@@ -45,9 +45,9 @@ public interface OnyxApiV1ClustersApi {
      * @return OK (status code 200)
      */
     @Operation(
-        operationId = "apiV1CreateCluster",
+        operationId = "v1ClustersCreateCluster",
         summary = "Create cluster.",
-        tags = { "onyxApiV1Clusters" },
+        tags = { "v1Clusters" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = CreateClusterResponse.class))
@@ -61,7 +61,7 @@ public interface OnyxApiV1ClustersApi {
         consumes = { "application/json" }
     )
     
-    ResponseEntity<CreateClusterResponse> apiV1CreateCluster(
+    ResponseEntity<CreateClusterResponse> v1ClustersCreateCluster(
         @Parameter(name = "CreateClusterRequest", description = "", required = true) @Valid @RequestBody CreateClusterRequest createClusterRequest
     );
 

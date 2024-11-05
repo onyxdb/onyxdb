@@ -4,15 +4,16 @@ import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.onyxdb.onyxdbApi.generated.openapi.models.CreateClusterRequestDb;
+import com.onyxdb.onyxdbApi.generated.openapi.models.CreateClusterRequestStorage;
 import java.time.OffsetDateTime;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 
 import java.util.*;
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 
 /**
  * CreateClusterRequest
@@ -23,40 +24,11 @@ public class CreateClusterRequest {
 
   private String name;
 
-  /**
-   * Gets or Sets type
-   */
-  public enum TypeEnum {
-    MONGO("mongo");
+  private String description;
 
-    private String value;
+  private CreateClusterRequestStorage storage;
 
-    TypeEnum(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static TypeEnum fromValue(String value) {
-      for (TypeEnum b : TypeEnum.values()) {
-        if (b.value.equals(value)) {
-          return b;
-        }
-      }
-      throw new IllegalArgumentException("Unexpected value '" + value + "'");
-    }
-  }
-
-  private TypeEnum type;
+  private CreateClusterRequestDb db;
 
   public CreateClusterRequest() {
     super();
@@ -65,9 +37,10 @@ public class CreateClusterRequest {
   /**
    * Constructor with only required parameters
    */
-  public CreateClusterRequest(String name, TypeEnum type) {
+  public CreateClusterRequest(String name, CreateClusterRequestStorage storage, CreateClusterRequestDb db) {
     this.name = name;
-    this.type = type;
+    this.storage = storage;
+    this.db = db;
   }
 
   public CreateClusterRequest name(String name) {
@@ -79,7 +52,7 @@ public class CreateClusterRequest {
    * Get name
    * @return name
   */
-  @NotNull 
+  @NotNull @Size(min = 1, max = 64) 
   @Schema(name = "name", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("name")
   public String getName() {
@@ -90,24 +63,64 @@ public class CreateClusterRequest {
     this.name = name;
   }
 
-  public CreateClusterRequest type(TypeEnum type) {
-    this.type = type;
+  public CreateClusterRequest description(String description) {
+    this.description = description;
     return this;
   }
 
   /**
-   * Get type
-   * @return type
+   * Get description
+   * @return description
   */
-  @NotNull 
-  @Schema(name = "type", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("type")
-  public TypeEnum getType() {
-    return type;
+  @Size(min = 1, max = 256) 
+  @Schema(name = "description", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("description")
+  public String getDescription() {
+    return description;
   }
 
-  public void setType(TypeEnum type) {
-    this.type = type;
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public CreateClusterRequest storage(CreateClusterRequestStorage storage) {
+    this.storage = storage;
+    return this;
+  }
+
+  /**
+   * Get storage
+   * @return storage
+  */
+  @NotNull @Valid 
+  @Schema(name = "storage", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("storage")
+  public CreateClusterRequestStorage getStorage() {
+    return storage;
+  }
+
+  public void setStorage(CreateClusterRequestStorage storage) {
+    this.storage = storage;
+  }
+
+  public CreateClusterRequest db(CreateClusterRequestDb db) {
+    this.db = db;
+    return this;
+  }
+
+  /**
+   * Get db
+   * @return db
+  */
+  @NotNull @Valid 
+  @Schema(name = "db", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("db")
+  public CreateClusterRequestDb getDb() {
+    return db;
+  }
+
+  public void setDb(CreateClusterRequestDb db) {
+    this.db = db;
   }
 
   @Override
@@ -120,12 +133,14 @@ public class CreateClusterRequest {
     }
     CreateClusterRequest createClusterRequest = (CreateClusterRequest) o;
     return Objects.equals(this.name, createClusterRequest.name) &&
-        Objects.equals(this.type, createClusterRequest.type);
+        Objects.equals(this.description, createClusterRequest.description) &&
+        Objects.equals(this.storage, createClusterRequest.storage) &&
+        Objects.equals(this.db, createClusterRequest.db);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, type);
+    return Objects.hash(name, description, storage, db);
   }
 
   @Override
@@ -133,7 +148,9 @@ public class CreateClusterRequest {
     StringBuilder sb = new StringBuilder();
     sb.append("class CreateClusterRequest {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    type: ").append(toIndentedString(type)).append("\n");
+    sb.append("    description: ").append(toIndentedString(description)).append("\n");
+    sb.append("    storage: ").append(toIndentedString(storage)).append("\n");
+    sb.append("    db: ").append(toIndentedString(db)).append("\n");
     sb.append("}");
     return sb.toString();
   }

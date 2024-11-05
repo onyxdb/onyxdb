@@ -14,6 +14,7 @@ dependencies {
 
 	implementation(libs.springBoot.starterWeb)
 	implementation(libs.springBoot.starterLog4j2)
+	implementation(libs.springBoot.starterValidation)
 
 	// Deps for openapi generator
 	implementation(libs.swaggerCoreV3.swaggerAnnotations)
@@ -37,7 +38,9 @@ openApiGenerate {
 		"useTags" to "true",
 		"skipDefaultInterface" to "true",
 		"openApiNullable" to "false",
-		"hideGenerationTimestamp" to "true"
+		"hideGenerationTimestamp" to "true",
+		"useJakartaEe" to "true",
+		"useOptional" to "true"
 	)
 	globalProperties = mapOf(
 		"apis" to "",
