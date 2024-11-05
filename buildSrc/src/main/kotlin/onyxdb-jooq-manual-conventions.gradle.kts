@@ -67,7 +67,7 @@ jooq {
 tasks.flywayMigrate.configure {
     val taskNames = project.gradle.startParameter.taskNames
     if (JooqConfig.FLYWAY_MIGRATE_TASK in taskNames) {
-        if (!permittedTasks.any { it in project.gradle.startParameter.taskNames }) {
+        if (!permittedTasks.any { it in taskNames }) {
             throw IllegalArgumentException("${JooqConfig.FLYWAY_MIGRATE_TASK} is not available for current task")
         }
     }

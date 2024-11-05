@@ -11,13 +11,18 @@ flywaydb-flywayCore = "10.17.1"
 studerJooq-studerJooqGradlePlugin = "8.0"
 testcontainers-junitJupiter = "1.20.1"
 testcontainers-postgresql = "1.17.3"
-# Version should be synced with onyxdb-jooq-manual-conventions plguin
+# Version should be synced with onyxdb-jooq-manual-conventions plugin
 postgresql-postgresql = "42.7.2"
 
 [plugins]
+onyxdb-javaAppConventions = { id = "onyxdb-java-app-conventions" }
+onyxdb-javaLibraryConventions = { id = "onyxdb-java-library-conventions" }
+onyxdb-javaSpringAppConventions = { id = "onyxdb-java-spring-app-conventions" }
+onyxdb-jooqManualConventions = { id = "onyxdb-jooq-manual-conventions" }
+
 springBoot = { id = "org.springframework.boot" }
 openapiGenerator = { id = "org.openapi.generator", version.ref = "openapiGenerator" }
-lombok = { id = "io.freefair.lombok",  version.ref = "lombok-gradlePlugin" }
+lombok = { id = "io.freefair.lombok", version.ref = "lombok-gradlePlugin" }
 
 [libraries]
 springBoot-gradlePlugin = { group = "org.springframework.boot", name = "spring-boot-gradle-plugin", version.ref = "springBoot" }
@@ -33,6 +38,6 @@ flywaydb-flywayGradlePlugin = { group = "org.flywaydb", name = "flyway-gradle-pl
 flywaydb-flywayDatabasePostgresql = { group = "org.flywaydb", name = "flyway-database-postgresql", version.ref = "flywaydb-flywayDatabasePostgresql" }
 flywaydb-flywayCore = { group = "org.flywaydb", name = "flyway-core", version.ref = "flywaydb-flywayCore" }
 studerJooq-studerJooqGradlePlugin = { group = "nu.studer.jooq", name = "nu.studer.jooq.gradle.plugin", version.ref = "studerJooq-studerJooqGradlePlugin" }
-testcontainers-junitJupiter  = { group = "org.testcontainers", name = "junit-jupiter", version.ref = "testcontainers-junitJupiter" }
+testcontainers-junitJupiter = { group = "org.testcontainers", name = "junit-jupiter", version.ref = "testcontainers-junitJupiter" }
 testcontainers-postgresql = { group = "org.testcontainers", name = "postgresql", version.ref = "testcontainers-postgresql" }
 postgresql-postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "postgresql-postgresql" }

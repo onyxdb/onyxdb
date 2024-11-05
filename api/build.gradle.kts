@@ -1,6 +1,6 @@
 plugins {
-	id("onyxdb-java-spring-app-conventions")
-	id("onyxdb-jooq-manual-conventions")
+	alias(libs.plugins.onyxdb.javaSpringAppConventions)
+	alias(libs.plugins.onyxdb.jooqManualConventions)
 	alias(libs.plugins.openapiGenerator)
 	alias(libs.plugins.lombok)
 }
