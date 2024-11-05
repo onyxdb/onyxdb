@@ -6,11 +6,11 @@ on:
       - master
     paths:
       - '**'
-      - '!./README.md'
+      - '!README.md'
   pull_request:
     paths:
       - '**'
-      - '!./README.md'
+      - '!README.md'
   workflow_dispatch:
 
 jobs:
