@@ -9,7 +9,7 @@ import com.onyxdb.onyxdbApi.models.ClusterType;
 public class MongoClusterOperationProcessor implements ClusterOperationProcessor {
     @Override
     public ClusterType getClusterType() {
-        return ClusterType.MONGO;
+        return ClusterType.MONGODB;
     }
 
     @Override

@@ -17,23 +17,23 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateClusterRequest'
+              $ref: '#/components/schemas/V1CreateClusterRequest'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreateClusterResponse'
+                $ref: '#/components/schemas/V1CreateClusterResponse'
 
 components:
   schemas:
-    CreateClusterRequest:
+    V1CreateClusterRequest:
       type: object
       required:
         - name
         - storage
-        - db
+        - dbSpec
       properties:
         name:
           type: string
@@ -52,7 +52,9 @@ components:
               type: integer
               format: int64
               description: Disk size in bytes.
-        db:
+              minimum: 1073741824 # 1Gb
+              maximum: 10737418240 # 10 Gb
+        dbSpec:
           type: object
           required:
             - type
@@ -74,10 +76,13 @@ components:
                     - '5.0'
                 mongodbV6x0:
                   type: object
+                  additionalProperties:
+                    type: string
                 mongodbV5x0:
                   type: object
-
-    CreateClusterResponse:
+                  additionalProperties:
+                    type: string
+    V1CreateClusterResponse:
       type: object
       required:
         - clusterId

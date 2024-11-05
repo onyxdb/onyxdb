@@ -4,7 +4,7 @@ import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -15,43 +15,46 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * CreateClusterResponse
+ * V1CreateClusterRequestStorage
  */
 
+@JsonTypeName("V1CreateClusterRequest_storage")
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.5.0")
-public class CreateClusterResponse {
+public class V1CreateClusterRequestStorage {
 
-  private UUID clusterId;
+  private Long diskSize;
 
-  public CreateClusterResponse() {
+  public V1CreateClusterRequestStorage() {
     super();
   }
 
   /**
    * Constructor with only required parameters
    */
-  public CreateClusterResponse(UUID clusterId) {
-    this.clusterId = clusterId;
+  public V1CreateClusterRequestStorage(Long diskSize) {
+    this.diskSize = diskSize;
   }
 
-  public CreateClusterResponse clusterId(UUID clusterId) {
-    this.clusterId = clusterId;
+  public V1CreateClusterRequestStorage diskSize(Long diskSize) {
+    this.diskSize = diskSize;
     return this;
   }
 
   /**
-   * Get clusterId
-   * @return clusterId
+   * Disk size in bytes.
+   * minimum: 1073741824
+   * maximum: 10737418240
+   * @return diskSize
   */
-  @NotNull @Valid 
-  @Schema(name = "clusterId", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("clusterId")
-  public UUID getClusterId() {
-    return clusterId;
+  @NotNull @Min(1073741824L) @Max(10737418240L) 
+  @Schema(name = "diskSize", description = "Disk size in bytes.", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("diskSize")
+  public Long getDiskSize() {
+    return diskSize;
   }
 
-  public void setClusterId(UUID clusterId) {
-    this.clusterId = clusterId;
+  public void setDiskSize(Long diskSize) {
+    this.diskSize = diskSize;
   }
 
   @Override
@@ -62,20 +65,20 @@ public class CreateClusterResponse {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    CreateClusterResponse createClusterResponse = (CreateClusterResponse) o;
-    return Objects.equals(this.clusterId, createClusterResponse.clusterId);
+    V1CreateClusterRequestStorage v1CreateClusterRequestStorage = (V1CreateClusterRequestStorage) o;
+    return Objects.equals(this.diskSize, v1CreateClusterRequestStorage.diskSize);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(clusterId);
+    return Objects.hash(diskSize);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class CreateClusterResponse {\n");
-    sb.append("    clusterId: ").append(toIndentedString(clusterId)).append("\n");
+    sb.append("class V1CreateClusterRequestStorage {\n");
+    sb.append("    diskSize: ").append(toIndentedString(diskSize)).append("\n");
     sb.append("}");
     return sb.toString();
   }

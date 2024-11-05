@@ -5,6 +5,8 @@ package com.onyxdb.onyxdbApi.generated.jooq;
 
 
 import com.onyxdb.onyxdbApi.generated.jooq.tables.Clusters;
+import com.onyxdb.onyxdbApi.generated.jooq.tables.ClustersToDbSpecs;
+import com.onyxdb.onyxdbApi.generated.jooq.tables.ClustersToStorages;
 
 
 /**
@@ -17,4 +19,14 @@ public class Tables {
      * The table <code>public.clusters</code>.
      */
     public static final Clusters CLUSTERS = Clusters.CLUSTERS;
+
+    /**
+     * The table <code>public.clusters_to_db_specs</code>.
+     */
+    public static final ClustersToDbSpecs CLUSTERS_TO_DB_SPECS = ClustersToDbSpecs.CLUSTERS_TO_DB_SPECS;
+
+    /**
+     * The table <code>public.clusters_to_storages</code>.
+     */
+    public static final ClustersToStorages CLUSTERS_TO_STORAGES = ClustersToStorages.CLUSTERS_TO_STORAGES;
 }

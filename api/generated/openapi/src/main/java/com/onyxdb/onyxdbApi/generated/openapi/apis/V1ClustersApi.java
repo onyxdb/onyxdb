@@ -5,8 +5,8 @@
  */
 package com.onyxdb.onyxdbApi.generated.openapi.apis;
 
-import com.onyxdb.onyxdbApi.generated.openapi.models.CreateClusterRequest;
-import com.onyxdb.onyxdbApi.generated.openapi.models.CreateClusterResponse;
+import com.onyxdb.onyxdbApi.generated.openapi.models.V1CreateClusterRequest;
+import com.onyxdb.onyxdbApi.generated.openapi.models.V1CreateClusterResponse;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -41,7 +41,7 @@ public interface V1ClustersApi {
     /**
      * POST /api/v1/clusters : Create cluster.
      *
-     * @param createClusterRequest  (required)
+     * @param v1CreateClusterRequest  (required)
      * @return OK (status code 200)
      */
     @Operation(
@@ -50,7 +50,7 @@ public interface V1ClustersApi {
         tags = { "v1Clusters" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = CreateClusterResponse.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = V1CreateClusterResponse.class))
             })
         }
     )
@@ -61,8 +61,8 @@ public interface V1ClustersApi {
         consumes = { "application/json" }
     )
     
-    ResponseEntity<CreateClusterResponse> v1ClustersCreateCluster(
-        @Parameter(name = "CreateClusterRequest", description = "", required = true) @Valid @RequestBody CreateClusterRequest createClusterRequest
+    ResponseEntity<V1CreateClusterResponse> v1ClustersCreateCluster(
+        @Parameter(name = "V1CreateClusterRequest", description = "", required = true) @Valid @RequestBody V1CreateClusterRequest v1CreateClusterRequest
     );
 
 }

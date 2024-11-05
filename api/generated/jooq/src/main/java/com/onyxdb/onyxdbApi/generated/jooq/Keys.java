@@ -5,8 +5,13 @@ package com.onyxdb.onyxdbApi.generated.jooq;
 
 
 import com.onyxdb.onyxdbApi.generated.jooq.tables.Clusters;
+import com.onyxdb.onyxdbApi.generated.jooq.tables.ClustersToDbSpecs;
+import com.onyxdb.onyxdbApi.generated.jooq.tables.ClustersToStorages;
 import com.onyxdb.onyxdbApi.generated.jooq.tables.records.ClustersRecord;
+import com.onyxdb.onyxdbApi.generated.jooq.tables.records.ClustersToDbSpecsRecord;
+import com.onyxdb.onyxdbApi.generated.jooq.tables.records.ClustersToStoragesRecord;
 
+import org.jooq.ForeignKey;
 import org.jooq.TableField;
 import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
@@ -25,4 +30,13 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final UniqueKey<ClustersRecord> CLUSTERS_PKEY = Internal.createUniqueKey(Clusters.CLUSTERS, DSL.name("clusters_pkey"), new TableField[] { Clusters.CLUSTERS.ID }, true);
+    public static final UniqueKey<ClustersToDbSpecsRecord> CLUSTERS_TO_DB_SPECS_CLUSTER_ID_KEY = Internal.createUniqueKey(ClustersToDbSpecs.CLUSTERS_TO_DB_SPECS, DSL.name("clusters_to_db_specs_cluster_id_key"), new TableField[] { ClustersToDbSpecs.CLUSTERS_TO_DB_SPECS.CLUSTER_ID }, true);
+    public static final UniqueKey<ClustersToStoragesRecord> CLUSTERS_TO_STORAGES_CLUSTER_ID_KEY = Internal.createUniqueKey(ClustersToStorages.CLUSTERS_TO_STORAGES, DSL.name("clusters_to_storages_cluster_id_key"), new TableField[] { ClustersToStorages.CLUSTERS_TO_STORAGES.CLUSTER_ID }, true);
+
+    // -------------------------------------------------------------------------
+    // FOREIGN KEY definitions
+    // -------------------------------------------------------------------------
+
+    public static final ForeignKey<ClustersToDbSpecsRecord, ClustersRecord> CLUSTERS_TO_DB_SPECS__CLUSTERS_TO_DB_SPECS_CLUSTER_ID_FKEY = Internal.createForeignKey(ClustersToDbSpecs.CLUSTERS_TO_DB_SPECS, DSL.name("clusters_to_db_specs_cluster_id_fkey"), new TableField[] { ClustersToDbSpecs.CLUSTERS_TO_DB_SPECS.CLUSTER_ID }, Keys.CLUSTERS_PKEY, new TableField[] { Clusters.CLUSTERS.ID }, true);
+    public static final ForeignKey<ClustersToStoragesRecord, ClustersRecord> CLUSTERS_TO_STORAGES__CLUSTERS_TO_STORAGES_CLUSTER_ID_FKEY = Internal.createForeignKey(ClustersToStorages.CLUSTERS_TO_STORAGES, DSL.name("clusters_to_storages_cluster_id_fkey"), new TableField[] { ClustersToStorages.CLUSTERS_TO_STORAGES.CLUSTER_ID }, Keys.CLUSTERS_PKEY, new TableField[] { Clusters.CLUSTERS.ID }, true);
 }

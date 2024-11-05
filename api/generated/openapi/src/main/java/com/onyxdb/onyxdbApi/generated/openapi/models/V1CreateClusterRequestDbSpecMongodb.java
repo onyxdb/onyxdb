@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
+import java.util.HashMap;
+import java.util.Map;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -16,12 +18,12 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * CreateClusterRequestDbMongodb
+ * V1CreateClusterRequestDbSpecMongodb
  */
 
-@JsonTypeName("CreateClusterRequest_db_mongodb")
+@JsonTypeName("V1CreateClusterRequest_dbSpec_mongodb")
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.5.0")
-public class CreateClusterRequestDbMongodb {
+public class V1CreateClusterRequestDbSpecMongodb {
 
   /**
    * Gets or Sets version
@@ -60,22 +62,24 @@ public class CreateClusterRequestDbMongodb {
 
   private VersionEnum version;
 
-  private Object mongodbV6x0;
+  @Valid
+  private Map<String, String> mongodbV6x0 = new HashMap<>();
 
-  private Object mongodbV5x0;
+  @Valid
+  private Map<String, String> mongodbV5x0 = new HashMap<>();
 
-  public CreateClusterRequestDbMongodb() {
+  public V1CreateClusterRequestDbSpecMongodb() {
     super();
   }
 
   /**
    * Constructor with only required parameters
    */
-  public CreateClusterRequestDbMongodb(VersionEnum version) {
+  public V1CreateClusterRequestDbSpecMongodb(VersionEnum version) {
     this.version = version;
   }
 
-  public CreateClusterRequestDbMongodb version(VersionEnum version) {
+  public V1CreateClusterRequestDbSpecMongodb version(VersionEnum version) {
     this.version = version;
     return this;
   }
@@ -95,8 +99,16 @@ public class CreateClusterRequestDbMongodb {
     this.version = version;
   }
 
-  public CreateClusterRequestDbMongodb mongodbV6x0(Object mongodbV6x0) {
+  public V1CreateClusterRequestDbSpecMongodb mongodbV6x0(Map<String, String> mongodbV6x0) {
     this.mongodbV6x0 = mongodbV6x0;
+    return this;
+  }
+
+  public V1CreateClusterRequestDbSpecMongodb putMongodbV6x0Item(String key, String mongodbV6x0Item) {
+    if (this.mongodbV6x0 == null) {
+      this.mongodbV6x0 = new HashMap<>();
+    }
+    this.mongodbV6x0.put(key, mongodbV6x0Item);
     return this;
   }
 
@@ -107,16 +119,24 @@ public class CreateClusterRequestDbMongodb {
   
   @Schema(name = "mongodbV6x0", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("mongodbV6x0")
-  public Object getMongodbV6x0() {
+  public Map<String, String> getMongodbV6x0() {
     return mongodbV6x0;
   }
 
-  public void setMongodbV6x0(Object mongodbV6x0) {
+  public void setMongodbV6x0(Map<String, String> mongodbV6x0) {
     this.mongodbV6x0 = mongodbV6x0;
   }
 
-  public CreateClusterRequestDbMongodb mongodbV5x0(Object mongodbV5x0) {
+  public V1CreateClusterRequestDbSpecMongodb mongodbV5x0(Map<String, String> mongodbV5x0) {
     this.mongodbV5x0 = mongodbV5x0;
+    return this;
+  }
+
+  public V1CreateClusterRequestDbSpecMongodb putMongodbV5x0Item(String key, String mongodbV5x0Item) {
+    if (this.mongodbV5x0 == null) {
+      this.mongodbV5x0 = new HashMap<>();
+    }
+    this.mongodbV5x0.put(key, mongodbV5x0Item);
     return this;
   }
 
@@ -127,11 +147,11 @@ public class CreateClusterRequestDbMongodb {
   
   @Schema(name = "mongodbV5x0", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("mongodbV5x0")
-  public Object getMongodbV5x0() {
+  public Map<String, String> getMongodbV5x0() {
     return mongodbV5x0;
   }
 
-  public void setMongodbV5x0(Object mongodbV5x0) {
+  public void setMongodbV5x0(Map<String, String> mongodbV5x0) {
     this.mongodbV5x0 = mongodbV5x0;
   }
 
@@ -143,10 +163,10 @@ public class CreateClusterRequestDbMongodb {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    CreateClusterRequestDbMongodb createClusterRequestDbMongodb = (CreateClusterRequestDbMongodb) o;
-    return Objects.equals(this.version, createClusterRequestDbMongodb.version) &&
-        Objects.equals(this.mongodbV6x0, createClusterRequestDbMongodb.mongodbV6x0) &&
-        Objects.equals(this.mongodbV5x0, createClusterRequestDbMongodb.mongodbV5x0);
+    V1CreateClusterRequestDbSpecMongodb v1CreateClusterRequestDbSpecMongodb = (V1CreateClusterRequestDbSpecMongodb) o;
+    return Objects.equals(this.version, v1CreateClusterRequestDbSpecMongodb.version) &&
+        Objects.equals(this.mongodbV6x0, v1CreateClusterRequestDbSpecMongodb.mongodbV6x0) &&
+        Objects.equals(this.mongodbV5x0, v1CreateClusterRequestDbSpecMongodb.mongodbV5x0);
   }
 
   @Override
@@ -157,7 +177,7 @@ public class CreateClusterRequestDbMongodb {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class CreateClusterRequestDbMongodb {\n");
+    sb.append("class V1CreateClusterRequestDbSpecMongodb {\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("    mongodbV6x0: ").append(toIndentedString(mongodbV6x0)).append("\n");
     sb.append("    mongodbV5x0: ").append(toIndentedString(mongodbV5x0)).append("\n");

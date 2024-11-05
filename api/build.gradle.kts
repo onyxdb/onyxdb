@@ -15,6 +15,7 @@ dependencies {
 	implementation(libs.springBoot.starterWeb)
 	implementation(libs.springBoot.starterLog4j2)
 	implementation(libs.springBoot.starterValidation)
+	implementation(libs.apacheCommons.commonsLang3)
 
 	// Deps for openapi generator
 	implementation(libs.swaggerCoreV3.swaggerAnnotations)

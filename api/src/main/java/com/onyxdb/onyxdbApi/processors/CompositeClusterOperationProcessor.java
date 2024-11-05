@@ -23,6 +23,8 @@ public class CompositeClusterOperationProcessor {
         prepareProcessorsMap(processors);
     }
 
+//    public
+
     private void prepareProcessorsMap(List<ClusterOperationProcessor> processors) {
         for (ClusterOperationProcessor processor : processors) {
             clusterTypeToProcessor.put(processor.getClusterType(), processor);

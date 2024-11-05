@@ -4,7 +4,7 @@ import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import java.util.UUID;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -15,44 +15,43 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * CreateClusterRequestStorage
+ * V1CreateClusterResponse
  */
 
-@JsonTypeName("CreateClusterRequest_storage")
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.5.0")
-public class CreateClusterRequestStorage {
+public class V1CreateClusterResponse {
 
-  private Long diskSize;
+  private UUID clusterId;
 
-  public CreateClusterRequestStorage() {
+  public V1CreateClusterResponse() {
     super();
   }
 
   /**
    * Constructor with only required parameters
    */
-  public CreateClusterRequestStorage(Long diskSize) {
-    this.diskSize = diskSize;
+  public V1CreateClusterResponse(UUID clusterId) {
+    this.clusterId = clusterId;
   }
 
-  public CreateClusterRequestStorage diskSize(Long diskSize) {
-    this.diskSize = diskSize;
+  public V1CreateClusterResponse clusterId(UUID clusterId) {
+    this.clusterId = clusterId;
     return this;
   }
 
   /**
-   * Disk size in bytes.
-   * @return diskSize
+   * Get clusterId
+   * @return clusterId
   */
-  @NotNull 
-  @Schema(name = "diskSize", description = "Disk size in bytes.", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("diskSize")
-  public Long getDiskSize() {
-    return diskSize;
+  @NotNull @Valid 
+  @Schema(name = "clusterId", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("clusterId")
+  public UUID getClusterId() {
+    return clusterId;
   }
 
-  public void setDiskSize(Long diskSize) {
-    this.diskSize = diskSize;
+  public void setClusterId(UUID clusterId) {
+    this.clusterId = clusterId;
   }
 
   @Override
@@ -63,20 +62,20 @@ public class CreateClusterRequestStorage {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    CreateClusterRequestStorage createClusterRequestStorage = (CreateClusterRequestStorage) o;
-    return Objects.equals(this.diskSize, createClusterRequestStorage.diskSize);
+    V1CreateClusterResponse v1CreateClusterResponse = (V1CreateClusterResponse) o;
+    return Objects.equals(this.clusterId, v1CreateClusterResponse.clusterId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(diskSize);
+    return Objects.hash(clusterId);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class CreateClusterRequestStorage {\n");
-    sb.append("    diskSize: ").append(toIndentedString(diskSize)).append("\n");
+    sb.append("class V1CreateClusterResponse {\n");
+    sb.append("    clusterId: ").append(toIndentedString(clusterId)).append("\n");
     sb.append("}");
     return sb.toString();
   }

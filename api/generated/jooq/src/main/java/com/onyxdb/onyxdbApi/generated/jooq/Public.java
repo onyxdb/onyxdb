@@ -5,6 +5,8 @@ package com.onyxdb.onyxdbApi.generated.jooq;
 
 
 import com.onyxdb.onyxdbApi.generated.jooq.tables.Clusters;
+import com.onyxdb.onyxdbApi.generated.jooq.tables.ClustersToDbSpecs;
+import com.onyxdb.onyxdbApi.generated.jooq.tables.ClustersToStorages;
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,6 +35,16 @@ public class Public extends SchemaImpl {
     public final Clusters CLUSTERS = Clusters.CLUSTERS;
 
     /**
+     * The table <code>public.clusters_to_db_specs</code>.
+     */
+    public final ClustersToDbSpecs CLUSTERS_TO_DB_SPECS = ClustersToDbSpecs.CLUSTERS_TO_DB_SPECS;
+
+    /**
+     * The table <code>public.clusters_to_storages</code>.
+     */
+    public final ClustersToStorages CLUSTERS_TO_STORAGES = ClustersToStorages.CLUSTERS_TO_STORAGES;
+
+    /**
      * No further instances allowed
      */
     private Public() {
@@ -48,7 +60,9 @@ public class Public extends SchemaImpl {
     @Override
     public final List<Table<?>> getTables() {
         return Arrays.asList(
-            Clusters.CLUSTERS
+            Clusters.CLUSTERS,
+            ClustersToDbSpecs.CLUSTERS_TO_DB_SPECS,
+            ClustersToStorages.CLUSTERS_TO_STORAGES
         );
     }
 }

@@ -6,13 +6,14 @@ import java.util.Optional;
 /**
  * @author foxleren
  */
-public enum ClusterType {
-    MONGODB("mongodb"),
+public enum MongoDbVersion {
+    V5_0("5.0"),
+    V6_0("6.0"),
     ;
 
     private final String value;
 
-    ClusterType(final String value) {
+    MongoDbVersion(final String value) {
         this.value = value;
     }
 
@@ -21,7 +22,7 @@ public enum ClusterType {
         return value;
     }
 
-    public static Optional<ClusterType> parseO(String value) {
+    public static Optional<MongoDbVersion> parseO(String value) {
         return Arrays.stream(values())
                 .filter(item -> item.toString().equalsIgnoreCase(value))
                 .findFirst();
