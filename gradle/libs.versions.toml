@@ -11,7 +11,7 @@ flywaydb-flywayCore = "10.17.1"
 studerJooq-studerJooqGradlePlugin = "8.0"
 testcontainers-junitJupiter = "1.20.1"
 testcontainers-postgresql = "1.17.3"
-# Version should be synced with onyxdb-jooq-manual-conventions plguin
+# Version should be synced with onyxdb-jooq-manual-conventions plugin
 postgresql-postgresql = "42.7.2"
 
 [plugins]
