@@ -1,4 +1,4 @@
-# onyxdb
+# onyxdb - Managed databases in Kubernetes as a service
 
 ## Workflows
 
