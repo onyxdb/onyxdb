@@ -3,5 +3,5 @@ plugins {
 }
 
 dependencies {
-    api(project(":onyxdbCommon:postgres"))
+    api(project(":common:postgres"))
 }
