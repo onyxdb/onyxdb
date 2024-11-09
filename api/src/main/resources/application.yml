@@ -1,12 +1,20 @@
 spring:
   application:
-    name: onyxdb-api
+    name: onyxdb-mdb-api
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/dev
-    username: postgres
-    password: qwerty
+    url: ${ONYXDB_MDB_API_PSQL_URL:jdbc:postgresql://localhost:5432/dev}
+    username: ${ONYXDB_MDB_API_PSQL_USERNAME:postgres}
+    password: ${ONYXDB_MDB_API_PSQL_PASSWORD:qwerty}
   jooq:
     sql-dialect: Postgres
   flyway:
     enabled: true
+server:
+  port: ${ONYXDB_MDB_API_HTTP_PORT:9001}
+
+springdoc:
+  api-docs:
+    path: /internal/api-docs
+  swagger-ui:
+    path: /internal/swagger-ui

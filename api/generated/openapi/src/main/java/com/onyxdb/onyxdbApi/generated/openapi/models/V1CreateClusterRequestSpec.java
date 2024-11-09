@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.onyxdb.onyxdbApi.generated.openapi.models.V1CreateClusterRequestDbSpecMongodb;
+import com.onyxdb.onyxdbApi.generated.openapi.models.V1CreateClusterRequestSpecMongodb;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -17,20 +17,18 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * V1CreateClusterRequestDbSpec
+ * V1CreateClusterRequestSpec
  */
 
-@JsonTypeName("V1CreateClusterRequest_dbSpec")
+@JsonTypeName("V1CreateClusterRequest_spec")
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.5.0")
-public class V1CreateClusterRequestDbSpec {
+public class V1CreateClusterRequestSpec {
 
   /**
    * Gets or Sets type
    */
   public enum TypeEnum {
-    MONGODB("mongodb"),
-    
-    POSTGRESQL("postgresql");
+    MONGODB("mongodb");
 
     private String value;
 
@@ -61,20 +59,20 @@ public class V1CreateClusterRequestDbSpec {
 
   private TypeEnum type;
 
-  private V1CreateClusterRequestDbSpecMongodb mongodb;
+  private V1CreateClusterRequestSpecMongodb mongodb;
 
-  public V1CreateClusterRequestDbSpec() {
+  public V1CreateClusterRequestSpec() {
     super();
   }
 
   /**
    * Constructor with only required parameters
    */
-  public V1CreateClusterRequestDbSpec(TypeEnum type) {
+  public V1CreateClusterRequestSpec(TypeEnum type) {
     this.type = type;
   }
 
-  public V1CreateClusterRequestDbSpec type(TypeEnum type) {
+  public V1CreateClusterRequestSpec type(TypeEnum type) {
     this.type = type;
     return this;
   }
@@ -84,7 +82,7 @@ public class V1CreateClusterRequestDbSpec {
    * @return type
   */
   @NotNull 
-  @Schema(name = "type", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "type", example = "mongodb", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("type")
   public TypeEnum getType() {
     return type;
@@ -94,7 +92,7 @@ public class V1CreateClusterRequestDbSpec {
     this.type = type;
   }
 
-  public V1CreateClusterRequestDbSpec mongodb(V1CreateClusterRequestDbSpecMongodb mongodb) {
+  public V1CreateClusterRequestSpec mongodb(V1CreateClusterRequestSpecMongodb mongodb) {
     this.mongodb = mongodb;
     return this;
   }
@@ -106,11 +104,11 @@ public class V1CreateClusterRequestDbSpec {
   @Valid 
   @Schema(name = "mongodb", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("mongodb")
-  public V1CreateClusterRequestDbSpecMongodb getMongodb() {
+  public V1CreateClusterRequestSpecMongodb getMongodb() {
     return mongodb;
   }
 
-  public void setMongodb(V1CreateClusterRequestDbSpecMongodb mongodb) {
+  public void setMongodb(V1CreateClusterRequestSpecMongodb mongodb) {
     this.mongodb = mongodb;
   }
 
@@ -122,9 +120,9 @@ public class V1CreateClusterRequestDbSpec {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    V1CreateClusterRequestDbSpec v1CreateClusterRequestDbSpec = (V1CreateClusterRequestDbSpec) o;
-    return Objects.equals(this.type, v1CreateClusterRequestDbSpec.type) &&
-        Objects.equals(this.mongodb, v1CreateClusterRequestDbSpec.mongodb);
+    V1CreateClusterRequestSpec v1CreateClusterRequestSpec = (V1CreateClusterRequestSpec) o;
+    return Objects.equals(this.type, v1CreateClusterRequestSpec.type) &&
+        Objects.equals(this.mongodb, v1CreateClusterRequestSpec.mongodb);
   }
 
   @Override
@@ -135,7 +133,7 @@ public class V1CreateClusterRequestDbSpec {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class V1CreateClusterRequestDbSpec {\n");
+    sb.append("class V1CreateClusterRequestSpec {\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    mongodb: ").append(toIndentedString(mongodb)).append("\n");
     sb.append("}");

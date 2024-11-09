@@ -4,8 +4,8 @@ import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.onyxdb.onyxdbApi.generated.openapi.models.V1CreateClusterRequestDbSpec;
-import com.onyxdb.onyxdbApi.generated.openapi.models.V1CreateClusterRequestStorage;
+import com.onyxdb.onyxdbApi.generated.openapi.models.V1CreateClusterRequestResources;
+import com.onyxdb.onyxdbApi.generated.openapi.models.V1CreateClusterRequestSpec;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -26,9 +26,9 @@ public class V1CreateClusterRequest {
 
   private String description;
 
-  private V1CreateClusterRequestStorage storage;
+  private V1CreateClusterRequestResources resources;
 
-  private V1CreateClusterRequestDbSpec dbSpec;
+  private V1CreateClusterRequestSpec spec;
 
   public V1CreateClusterRequest() {
     super();
@@ -37,10 +37,9 @@ public class V1CreateClusterRequest {
   /**
    * Constructor with only required parameters
    */
-  public V1CreateClusterRequest(String name, V1CreateClusterRequestStorage storage, V1CreateClusterRequestDbSpec dbSpec) {
+  public V1CreateClusterRequest(String name, V1CreateClusterRequestResources resources) {
     this.name = name;
-    this.storage = storage;
-    this.dbSpec = dbSpec;
+    this.resources = resources;
   }
 
   public V1CreateClusterRequest name(String name) {
@@ -53,7 +52,7 @@ public class V1CreateClusterRequest {
    * @return name
   */
   @NotNull @Size(min = 1, max = 64) 
-  @Schema(name = "name", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "name", example = "Cluster name", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("name")
   public String getName() {
     return name;
@@ -73,7 +72,7 @@ public class V1CreateClusterRequest {
    * @return description
   */
   @Size(min = 1, max = 256) 
-  @Schema(name = "description", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "description", example = "Cluster description", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("description")
   public String getDescription() {
     return description;
@@ -83,44 +82,44 @@ public class V1CreateClusterRequest {
     this.description = description;
   }
 
-  public V1CreateClusterRequest storage(V1CreateClusterRequestStorage storage) {
-    this.storage = storage;
+  public V1CreateClusterRequest resources(V1CreateClusterRequestResources resources) {
+    this.resources = resources;
     return this;
   }
 
   /**
-   * Get storage
-   * @return storage
+   * Get resources
+   * @return resources
   */
   @NotNull @Valid 
-  @Schema(name = "storage", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("storage")
-  public V1CreateClusterRequestStorage getStorage() {
-    return storage;
+  @Schema(name = "resources", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("resources")
+  public V1CreateClusterRequestResources getResources() {
+    return resources;
   }
 
-  public void setStorage(V1CreateClusterRequestStorage storage) {
-    this.storage = storage;
+  public void setResources(V1CreateClusterRequestResources resources) {
+    this.resources = resources;
   }
 
-  public V1CreateClusterRequest dbSpec(V1CreateClusterRequestDbSpec dbSpec) {
-    this.dbSpec = dbSpec;
+  public V1CreateClusterRequest spec(V1CreateClusterRequestSpec spec) {
+    this.spec = spec;
     return this;
   }
 
   /**
-   * Get dbSpec
-   * @return dbSpec
+   * Get spec
+   * @return spec
   */
-  @NotNull @Valid 
-  @Schema(name = "dbSpec", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("dbSpec")
-  public V1CreateClusterRequestDbSpec getDbSpec() {
-    return dbSpec;
+  @Valid 
+  @Schema(name = "spec", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("spec")
+  public V1CreateClusterRequestSpec getSpec() {
+    return spec;
   }
 
-  public void setDbSpec(V1CreateClusterRequestDbSpec dbSpec) {
-    this.dbSpec = dbSpec;
+  public void setSpec(V1CreateClusterRequestSpec spec) {
+    this.spec = spec;
   }
 
   @Override
@@ -134,13 +133,13 @@ public class V1CreateClusterRequest {
     V1CreateClusterRequest v1CreateClusterRequest = (V1CreateClusterRequest) o;
     return Objects.equals(this.name, v1CreateClusterRequest.name) &&
         Objects.equals(this.description, v1CreateClusterRequest.description) &&
-        Objects.equals(this.storage, v1CreateClusterRequest.storage) &&
-        Objects.equals(this.dbSpec, v1CreateClusterRequest.dbSpec);
+        Objects.equals(this.resources, v1CreateClusterRequest.resources) &&
+        Objects.equals(this.spec, v1CreateClusterRequest.spec);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, description, storage, dbSpec);
+    return Objects.hash(name, description, resources, spec);
   }
 
   @Override
@@ -149,8 +148,8 @@ public class V1CreateClusterRequest {
     sb.append("class V1CreateClusterRequest {\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
-    sb.append("    storage: ").append(toIndentedString(storage)).append("\n");
-    sb.append("    dbSpec: ").append(toIndentedString(dbSpec)).append("\n");
+    sb.append("    resources: ").append(toIndentedString(resources)).append("\n");
+    sb.append("    spec: ").append(toIndentedString(spec)).append("\n");
     sb.append("}");
     return sb.toString();
   }

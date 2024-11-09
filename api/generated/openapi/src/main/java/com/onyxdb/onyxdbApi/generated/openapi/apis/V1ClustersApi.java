@@ -5,6 +5,7 @@
  */
 package com.onyxdb.onyxdbApi.generated.openapi.apis;
 
+import com.onyxdb.onyxdbApi.generated.openapi.models.V1BadRequestResponse;
 import com.onyxdb.onyxdbApi.generated.openapi.models.V1CreateClusterRequest;
 import com.onyxdb.onyxdbApi.generated.openapi.models.V1CreateClusterResponse;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
@@ -43,6 +44,7 @@ public interface V1ClustersApi {
      *
      * @param v1CreateClusterRequest  (required)
      * @return OK (status code 200)
+     *         or Bad request (status code 400)
      */
     @Operation(
         operationId = "v1ClustersCreateCluster",
@@ -51,6 +53,9 @@ public interface V1ClustersApi {
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = V1CreateClusterResponse.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = V1BadRequestResponse.class))
             })
         }
     )
