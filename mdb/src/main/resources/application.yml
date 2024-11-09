@@ -1,6 +1,6 @@
 spring:
   application:
-    name: onyxdb-mdb-api
+    name: onyxdb-mdb
   datasource:
     driver-class-name: org.postgresql.Driver
     url: ${ONYXDB_MDB_API_PSQL_URL:jdbc:postgresql://localhost:5432/dev}
