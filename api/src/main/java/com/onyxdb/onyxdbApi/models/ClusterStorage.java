@@ -1,12 +1,12 @@
 package com.onyxdb.onyxdbApi.models;
 
-import com.onyxdb.onyxdbApi.generated.openapi.models.V1CreateClusterRequestStorage;
+import com.onyxdb.onyxdbApi.generated.openapi.models.V1CreateClusterRequestResourcesStorage;
 
 /**
  * @author foxleren
  */
-public record ClusterStorage(long diskSize) {
-    public static ClusterStorage fromV1CreateClusterRequestStorage(V1CreateClusterRequestStorage storage) {
-        return new ClusterStorage(storage.getDiskSize());
+public record ClusterStorage(long diskSizeBytes) {
+    public static ClusterStorage fromApiV1ClusterStorage(V1CreateClusterRequestResourcesStorage storage) {
+        return new ClusterStorage(storage.getDiskSizeBytes());
     }
 }

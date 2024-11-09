@@ -14,6 +14,7 @@ testcontainers-postgresql = "1.17.3"
 # Version should be synced with onyxdb-jooq-manual-conventions plugin
 postgresql-postgresql = "42.7.2"
 apacheCommons-commonsLang3 = "3.17.0"
+springDoc-springdocOpenapiStarterWebmvcUi = "2.6.0"
 
 [plugins]
 onyxdb-javaAppConventions = { id = "onyxdb-java-app-conventions" }
@@ -43,3 +44,4 @@ testcontainers-junitJupiter = { group = "org.testcontainers", name = "junit-jupi
 testcontainers-postgresql = { group = "org.testcontainers", name = "postgresql", version.ref = "testcontainers-postgresql" }
 postgresql-postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "postgresql-postgresql" }
 apacheCommons-commonsLang3 = { group = "org.apache.commons", name = "commons-lang3", version.ref = "apacheCommons-commonsLang3" }
+springDoc-springdocOpenapiStarterWebmvcUi = { group = "org.springdoc", name = "springdoc-openapi-starter-webmvc-ui", version.ref = "springDoc-springdocOpenapiStarterWebmvcUi" }

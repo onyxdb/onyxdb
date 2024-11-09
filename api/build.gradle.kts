@@ -16,6 +16,7 @@ dependencies {
 	implementation(libs.springBoot.starterLog4j2)
 	implementation(libs.springBoot.starterValidation)
 	implementation(libs.apacheCommons.commonsLang3)
+	implementation(libs.springDoc.springdocOpenapiStarterWebmvcUi)
 
 	// Deps for openapi generator
 	implementation(libs.swaggerCoreV3.swaggerAnnotations)
@@ -29,7 +30,7 @@ dependencies {
 
 openApiGenerate {
 	generatorName.set("spring")
-	inputSpec.set("$projectDir/src/main/resources/openapi/onyxdb-api.yaml")
+	inputSpec.set("$projectDir/src/main/resources/openapi/scheme.yaml")
 	outputDir.set("$projectDir/generated/openapi")
 	apiPackage.set("${project.group}.onyxdbApi.generated.openapi.apis")
 	modelPackage.set("${project.group}.onyxdbApi.generated.openapi.models")

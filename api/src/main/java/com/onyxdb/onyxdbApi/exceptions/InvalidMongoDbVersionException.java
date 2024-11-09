@@ -5,6 +5,6 @@ package com.onyxdb.onyxdbApi.exceptions;
  */
 public class InvalidMongoDbVersionException extends BadRequestException {
     public InvalidMongoDbVersionException(String version) {
-        super(String.format("Got invalid mongodb version to parse. Version={%s}", version));
+        super(String.format("Failed to parse mongodb version because value is not valid. Version={%s}", version));
     }
 }

@@ -1,4 +1,4 @@
-package com.onyxdb.onyxdbApi.controllers;
+package com.onyxdb.onyxdbApi.controllers.v1;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,13 +15,14 @@ import com.onyxdb.onyxdbApi.services.ClusterService;
  */
 @RestController
 @RequiredArgsConstructor
-public class v1ClusterController implements V1ClustersApi {
+public class V1ClusterController implements V1ClustersApi {
     private final ClusterService clusterService;
 
     @Override
     public ResponseEntity<V1CreateClusterResponse> v1ClustersCreateCluster(V1CreateClusterRequest request) {
         var cluster = Cluster.fromV1CreateClusterRequest(request);
         clusterService.createCluster(cluster);
-        return null;
+        var response = new V1CreateClusterResponse(cluster.id());
+        return ResponseEntity.ok(response);
     }
 }

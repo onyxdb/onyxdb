@@ -2,29 +2,28 @@ package com.onyxdb.onyxdbApi.models;
 
 import java.util.Optional;
 
-import org.apache.commons.lang3.EnumUtils;
 import org.springframework.lang.Nullable;
 
 import com.onyxdb.onyxdbApi.exceptions.InvalidClusterTypeException;
-import com.onyxdb.onyxdbApi.generated.openapi.models.V1CreateClusterRequestDbSpec;
+import com.onyxdb.onyxdbApi.generated.openapi.models.V1CreateClusterRequestSpec;
 
 /**
  * @author foxleren
  */
-public record ClusterDbSpec(
+public record ClusterSpec(
         ClusterType type,
         @Nullable
-        ClusterMongoDbSpec mongoDbSpec)
+        ClusterMongodbSpec mongodbSpec)
 {
-    public static ClusterDbSpec fromV1CreateClusterRequestDbSpec(V1CreateClusterRequestDbSpec dbSpec) {
-        String rawClusterType = dbSpec.getType().getValue();
+    public static ClusterSpec fromApiV1ClusterSpec(V1CreateClusterRequestSpec clusterSpec) {
+        String rawClusterType = clusterSpec.getType().getValue();
         Optional<ClusterType> clusterTypeO = ClusterType.parseO(rawClusterType);
         ClusterType clusterType = clusterTypeO.orElseThrow(() -> new InvalidClusterTypeException(rawClusterType));
 
-        return new ClusterDbSpec(
+        return new ClusterSpec(
                 clusterType,
                 clusterType == ClusterType.MONGODB ?
-                        ClusterMongoDbSpec.fromV1CreateClusterRequestDbSpecMongodb(dbSpec.getMongodb()) :
+                        ClusterMongodbSpec.fromApiV1ClusterSpecMongodb(clusterSpec.getMongodb()) :
                         null
         );
     }
