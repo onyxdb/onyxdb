@@ -37,9 +37,10 @@ public class V1CreateClusterRequest {
   /**
    * Constructor with only required parameters
    */
-  public V1CreateClusterRequest(String name, V1CreateClusterRequestResources resources) {
+  public V1CreateClusterRequest(String name, V1CreateClusterRequestResources resources, V1CreateClusterRequestSpec spec) {
     this.name = name;
     this.resources = resources;
+    this.spec = spec;
   }
 
   public V1CreateClusterRequest name(String name) {
@@ -111,8 +112,8 @@ public class V1CreateClusterRequest {
    * Get spec
    * @return spec
   */
-  @Valid 
-  @Schema(name = "spec", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @NotNull @Valid 
+  @Schema(name = "spec", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("spec")
   public V1CreateClusterRequestSpec getSpec() {
     return spec;

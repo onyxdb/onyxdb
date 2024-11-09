@@ -41,8 +41,7 @@ openApiGenerate {
 		"skipDefaultInterface" to "true",
 		"openApiNullable" to "false",
 		"hideGenerationTimestamp" to "true",
-		"useJakartaEe" to "true",
-		"useOptional" to "true"
+		"useJakartaEe" to "true"
 	)
 	globalProperties = mapOf(
 		"apis" to "",
