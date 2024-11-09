@@ -13,6 +13,8 @@ testcontainers-junitJupiter = "1.20.1"
 testcontainers-postgresql = "1.17.3"
 # Version should be synced with onyxdb-jooq-manual-conventions plugin
 postgresql-postgresql = "42.7.2"
+apacheCommons-commonsLang3 = "3.17.0"
+springDoc-springdocOpenapiStarterWebmvcUi = "2.6.0"
 
 [plugins]
 onyxdb-javaAppConventions = { id = "onyxdb-java-app-conventions" }
@@ -30,6 +32,7 @@ springBoot-starterWeb = { group = "org.springframework.boot", name = "spring-boo
 springBoot-starterLog4j2 = { group = "org.springframework.boot", name = "spring-boot-starter-log4j2", version.ref = "springBoot" }
 springBoot-starterTest = { group = "org.springframework.boot", name = "spring-boot-starter-test", version.ref = "springBoot" }
 springBoot-starterJdbc = { group = "org.springframework.boot", name = "spring-boot-starter-jdbc", version.ref = "springBoot" }
+springBoot-starterValidation = { group = "org.springframework.boot", name = "spring-boot-starter-validation", version.ref = "springBoot" }
 swaggerCoreV3-swaggerAnnotations = { group = "io.swagger.core.v3", name = "swagger-annotations", version.ref = "swaggerCoreV3-swaggerAnnotations" }
 javaxAnnotation-annotionApi = { group = "javax.annotation", name = "javax.annotation-api", version.ref = "javaxAnnotation-annotionApi" }
 javaxValidation-validationApi = { group = "javax.validation", name = "validation-api", version.ref = "javaxValidation-validationApi" }
@@ -40,3 +43,5 @@ studerJooq-studerJooqGradlePlugin = { group = "nu.studer.jooq", name = "nu.stude
 testcontainers-junitJupiter = { group = "org.testcontainers", name = "junit-jupiter", version.ref = "testcontainers-junitJupiter" }
 testcontainers-postgresql = { group = "org.testcontainers", name = "postgresql", version.ref = "testcontainers-postgresql" }
 postgresql-postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "postgresql-postgresql" }
+apacheCommons-commonsLang3 = { group = "org.apache.commons", name = "commons-lang3", version.ref = "apacheCommons-commonsLang3" }
+springDoc-springdocOpenapiStarterWebmvcUi = { group = "org.springdoc", name = "springdoc-openapi-starter-webmvc-ui", version.ref = "springDoc-springdocOpenapiStarterWebmvcUi" }

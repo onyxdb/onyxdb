@@ -4,7 +4,7 @@
 package com.onyxdb.onyxdbApi.generated.jooq;
 
 
-import com.onyxdb.onyxdbApi.generated.jooq.tables.Clusters;
+import com.onyxdb.onyxdbApi.generated.jooq.tables.Cluster;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,9 +28,9 @@ public class Public extends SchemaImpl {
     public static final Public PUBLIC = new Public();
 
     /**
-     * The table <code>public.clusters</code>.
+     * The table <code>public.cluster</code>.
      */
-    public final Clusters CLUSTERS = Clusters.CLUSTERS;
+    public final Cluster CLUSTER = Cluster.CLUSTER;
 
     /**
      * No further instances allowed
@@ -48,7 +48,7 @@ public class Public extends SchemaImpl {
     @Override
     public final List<Table<?>> getTables() {
         return Arrays.asList(
-            Clusters.CLUSTERS
+            Cluster.CLUSTER
         );
     }
 }

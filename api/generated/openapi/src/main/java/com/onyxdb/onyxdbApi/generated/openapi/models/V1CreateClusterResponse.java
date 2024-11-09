@@ -6,35 +6,35 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.UUID;
 import java.time.OffsetDateTime;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 
 import java.util.*;
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 
 /**
- * CreateClusterResponse
+ * V1CreateClusterResponse
  */
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.5.0")
-public class CreateClusterResponse {
+public class V1CreateClusterResponse {
 
   private UUID clusterId;
 
-  public CreateClusterResponse() {
+  public V1CreateClusterResponse() {
     super();
   }
 
   /**
    * Constructor with only required parameters
    */
-  public CreateClusterResponse(UUID clusterId) {
+  public V1CreateClusterResponse(UUID clusterId) {
     this.clusterId = clusterId;
   }
 
-  public CreateClusterResponse clusterId(UUID clusterId) {
+  public V1CreateClusterResponse clusterId(UUID clusterId) {
     this.clusterId = clusterId;
     return this;
   }
@@ -62,8 +62,8 @@ public class CreateClusterResponse {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    CreateClusterResponse createClusterResponse = (CreateClusterResponse) o;
-    return Objects.equals(this.clusterId, createClusterResponse.clusterId);
+    V1CreateClusterResponse v1CreateClusterResponse = (V1CreateClusterResponse) o;
+    return Objects.equals(this.clusterId, v1CreateClusterResponse.clusterId);
   }
 
   @Override
@@ -74,7 +74,7 @@ public class CreateClusterResponse {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class CreateClusterResponse {\n");
+    sb.append("class V1CreateClusterResponse {\n");
     sb.append("    clusterId: ").append(toIndentedString(clusterId)).append("\n");
     sb.append("}");
     return sb.toString();

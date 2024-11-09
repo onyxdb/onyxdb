@@ -5,8 +5,9 @@
  */
 package com.onyxdb.onyxdbApi.generated.openapi.apis;
 
-import com.onyxdb.onyxdbApi.generated.openapi.models.CreateClusterRequest;
-import com.onyxdb.onyxdbApi.generated.openapi.models.CreateClusterResponse;
+import com.onyxdb.onyxdbApi.generated.openapi.models.V1BadRequestResponse;
+import com.onyxdb.onyxdbApi.generated.openapi.models.V1CreateClusterRequest;
+import com.onyxdb.onyxdbApi.generated.openapi.models.V1CreateClusterResponse;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -26,31 +27,35 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.5.0")
 @Validated
-@Tag(name = "onyxApiV1Clusters", description = "the onyxApiV1Clusters API")
-public interface OnyxApiV1ClustersApi {
+@Tag(name = "v1Clusters", description = "the v1Clusters API")
+public interface V1ClustersApi {
 
     /**
      * POST /api/v1/clusters : Create cluster.
      *
-     * @param createClusterRequest  (required)
+     * @param v1CreateClusterRequest  (required)
      * @return OK (status code 200)
+     *         or Bad request (status code 400)
      */
     @Operation(
-        operationId = "apiV1CreateCluster",
+        operationId = "v1ClustersCreateCluster",
         summary = "Create cluster.",
-        tags = { "onyxApiV1Clusters" },
+        tags = { "v1Clusters" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = CreateClusterResponse.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = V1CreateClusterResponse.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = V1BadRequestResponse.class))
             })
         }
     )
@@ -61,8 +66,8 @@ public interface OnyxApiV1ClustersApi {
         consumes = { "application/json" }
     )
     
-    ResponseEntity<CreateClusterResponse> apiV1CreateCluster(
-        @Parameter(name = "CreateClusterRequest", description = "", required = true) @Valid @RequestBody CreateClusterRequest createClusterRequest
+    ResponseEntity<V1CreateClusterResponse> v1ClustersCreateCluster(
+        @Parameter(name = "V1CreateClusterRequest", description = "", required = true) @Valid @RequestBody V1CreateClusterRequest v1CreateClusterRequest
     );
 
 }

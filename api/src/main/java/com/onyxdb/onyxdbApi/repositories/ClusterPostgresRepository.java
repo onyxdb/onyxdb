@@ -16,10 +16,11 @@ public class ClusterPostgresRepository implements ClusterRepository {
 
     @Override
     public void createCluster(Cluster cluster) {
-        var clustersTable = com.onyxdb.onyxdbApi.generated.jooq.tables.Clusters.CLUSTERS;
-        dslContext.insertInto(clustersTable)
-                .set(clustersTable.ID, cluster.id())
-                .set(clustersTable.NAME, cluster.name())
+        var clusterTable = com.onyxdb.onyxdbApi.generated.jooq.tables.Cluster.CLUSTER;
+        dslContext.insertInto(clusterTable)
+                .set(clusterTable.ID, cluster.id())
+                .set(clusterTable.NAME, cluster.name())
+                .set(clusterTable.DESCRIPTION, cluster.description())
                 .execute();
     }
 }

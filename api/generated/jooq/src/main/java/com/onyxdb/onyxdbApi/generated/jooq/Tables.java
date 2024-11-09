@@ -4,7 +4,7 @@
 package com.onyxdb.onyxdbApi.generated.jooq;
 
 
-import com.onyxdb.onyxdbApi.generated.jooq.tables.Clusters;
+import com.onyxdb.onyxdbApi.generated.jooq.tables.Cluster;
 
 
 /**
@@ -14,7 +14,7 @@ import com.onyxdb.onyxdbApi.generated.jooq.tables.Clusters;
 public class Tables {
 
     /**
-     * The table <code>public.clusters</code>.
+     * The table <code>public.cluster</code>.
      */
-    public static final Clusters CLUSTERS = Clusters.CLUSTERS;
+    public static final Cluster CLUSTER = Cluster.CLUSTER;
 }

@@ -1,0 +1,115 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: onyxdb-mdb-api
+servers:
+  - url: http://localhost:9001
+    description: localhost
+paths:
+  /api/v1/clusters:
+    post:
+      summary: Create cluster.
+      operationId: v1ClustersCreateCluster
+      tags:
+        - v1Clusters
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/V1CreateClusterRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/V1CreateClusterResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/V1BadRequestResponse'
+
+components:
+  schemas:
+    V1BadRequestResponse:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+    V1CreateClusterRequest:
+      type: object
+      required:
+        - name
+        - resources
+        - spec
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 64
+          example: Cluster name
+        description:
+          type: string
+          minLength: 1
+          maxLength: 256
+          example: Cluster description
+        resources:
+          type: object
+          required:
+            - storage
+          properties:
+            storage:
+              type: object
+              required:
+                - diskSizeBytes
+                - storageClass
+              properties:
+                diskSizeBytes:
+                  type: integer
+                  format: int64
+                  minimum: 1073741824 # 1Gb
+                  maximum: 10737418240 # 10 Gb
+                  example: 1073741824
+                storageClass:
+                  type: string
+                  enum:
+                    - standard
+                  example: standard
+        spec:
+          type: object
+          required:
+            - type
+          properties:
+            type:
+              type: string
+              enum:
+                - mongodb
+              example: mongodb
+            mongodb:
+              type: object
+              required:
+                - version
+              properties:
+                version:
+                  type: string
+                  enum:
+                    - '6.0'
+                    - '5.0'
+                  example: '6.0'
+                mongodbV6x0:
+                  type: object
+                  additionalProperties:
+                    type: string
+    V1CreateClusterResponse:
+      type: object
+      required:
+        - clusterId
+      properties:
+        clusterId:
+          type: string
+          format: uuid

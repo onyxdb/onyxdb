@@ -4,30 +4,31 @@ import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.onyxdb.onyxdbApi.generated.openapi.models.V1CreateClusterRequestSpecMongodb;
 import java.time.OffsetDateTime;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 
 import java.util.*;
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 
 /**
- * CreateClusterRequest
+ * V1CreateClusterRequestSpec
  */
 
+@JsonTypeName("V1CreateClusterRequest_spec")
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.5.0")
-public class CreateClusterRequest {
-
-  private String name;
+public class V1CreateClusterRequestSpec {
 
   /**
    * Gets or Sets type
    */
   public enum TypeEnum {
-    MONGO("mongo");
+    MONGODB("mongodb");
 
     private String value;
 
@@ -58,39 +59,20 @@ public class CreateClusterRequest {
 
   private TypeEnum type;
 
-  public CreateClusterRequest() {
+  private V1CreateClusterRequestSpecMongodb mongodb;
+
+  public V1CreateClusterRequestSpec() {
     super();
   }
 
   /**
    * Constructor with only required parameters
    */
-  public CreateClusterRequest(String name, TypeEnum type) {
-    this.name = name;
+  public V1CreateClusterRequestSpec(TypeEnum type) {
     this.type = type;
   }
 
-  public CreateClusterRequest name(String name) {
-    this.name = name;
-    return this;
-  }
-
-  /**
-   * Get name
-   * @return name
-  */
-  @NotNull 
-  @Schema(name = "name", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("name")
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public CreateClusterRequest type(TypeEnum type) {
+  public V1CreateClusterRequestSpec type(TypeEnum type) {
     this.type = type;
     return this;
   }
@@ -100,7 +82,7 @@ public class CreateClusterRequest {
    * @return type
   */
   @NotNull 
-  @Schema(name = "type", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "type", example = "mongodb", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("type")
   public TypeEnum getType() {
     return type;
@@ -108,6 +90,26 @@ public class CreateClusterRequest {
 
   public void setType(TypeEnum type) {
     this.type = type;
+  }
+
+  public V1CreateClusterRequestSpec mongodb(V1CreateClusterRequestSpecMongodb mongodb) {
+    this.mongodb = mongodb;
+    return this;
+  }
+
+  /**
+   * Get mongodb
+   * @return mongodb
+  */
+  @Valid 
+  @Schema(name = "mongodb", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("mongodb")
+  public V1CreateClusterRequestSpecMongodb getMongodb() {
+    return mongodb;
+  }
+
+  public void setMongodb(V1CreateClusterRequestSpecMongodb mongodb) {
+    this.mongodb = mongodb;
   }
 
   @Override
@@ -118,22 +120,22 @@ public class CreateClusterRequest {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    CreateClusterRequest createClusterRequest = (CreateClusterRequest) o;
-    return Objects.equals(this.name, createClusterRequest.name) &&
-        Objects.equals(this.type, createClusterRequest.type);
+    V1CreateClusterRequestSpec v1CreateClusterRequestSpec = (V1CreateClusterRequestSpec) o;
+    return Objects.equals(this.type, v1CreateClusterRequestSpec.type) &&
+        Objects.equals(this.mongodb, v1CreateClusterRequestSpec.mongodb);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, type);
+    return Objects.hash(type, mongodb);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class CreateClusterRequest {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("class V1CreateClusterRequestSpec {\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
+    sb.append("    mongodb: ").append(toIndentedString(mongodb)).append("\n");
     sb.append("}");
     return sb.toString();
   }

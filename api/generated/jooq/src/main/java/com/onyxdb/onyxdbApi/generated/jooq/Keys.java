@@ -4,8 +4,8 @@
 package com.onyxdb.onyxdbApi.generated.jooq;
 
 
-import com.onyxdb.onyxdbApi.generated.jooq.tables.Clusters;
-import com.onyxdb.onyxdbApi.generated.jooq.tables.records.ClustersRecord;
+import com.onyxdb.onyxdbApi.generated.jooq.tables.Cluster;
+import com.onyxdb.onyxdbApi.generated.jooq.tables.records.ClusterRecord;
 
 import org.jooq.TableField;
 import org.jooq.UniqueKey;
@@ -24,5 +24,5 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final UniqueKey<ClustersRecord> CLUSTERS_PKEY = Internal.createUniqueKey(Clusters.CLUSTERS, DSL.name("clusters_pkey"), new TableField[] { Clusters.CLUSTERS.ID }, true);
+    public static final UniqueKey<ClusterRecord> CLUSTER_PKEY = Internal.createUniqueKey(Cluster.CLUSTER, DSL.name("cluster_pkey"), new TableField[] { Cluster.CLUSTER.ID }, true);
 }
