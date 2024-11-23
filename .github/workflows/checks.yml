@@ -1,13 +1,20 @@
-name: 'heavy-check'
+name: 'Run checks'
 
 on:
-  schedule:
-    # Github-actions don't support custom timezone for cron expression,so it is UTC timezone.
-    - cron: '0 18 * * *'
+  push:
+    branches:
+      - master
+    paths:
+      - '**'
+      - '!README.md'
+  pull_request:
+    paths:
+      - '**'
+      - '!README.md'
   workflow_dispatch:
 
 jobs:
-  build-with-codegen:
+  build:
     runs-on: ubuntu-latest
 
     steps:
