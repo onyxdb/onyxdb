@@ -22,3 +22,6 @@ gradle-build:
   stage: build
   image: amazoncorretto:21-alpine
   script: ./gradlew clean build
+  except:
+    changes:
+      - README.md
