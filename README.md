@@ -1,9 +1,4 @@
-# onyxdb - Managed databases in Kubernetes as a service
-
-## Workflows
-
-`checks.yml` - runs on any pr and push to the master branch.
-This check re-generates all available codegen and builds monorepo.
+# onyxdb - DBaaS platform in Kubernetes
 
 ## Gradle configurations
 
