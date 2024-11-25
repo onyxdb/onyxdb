@@ -21,8 +21,7 @@ stages:
 gradle-build:
   stage: build
   rules:
-    - if: true
-      changes:
+    - changes:
         - README.md
       when: never
   image: amazoncorretto:21-alpine
