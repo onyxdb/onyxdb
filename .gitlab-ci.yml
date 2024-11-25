@@ -24,5 +24,6 @@ gradle-build:
     - changes:
         - README.md
       when: never
+    - when: on_success
   image: amazoncorretto:21-alpine
   script: ./gradlew clean build
