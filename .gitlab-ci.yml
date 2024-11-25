@@ -2,11 +2,6 @@ default:
   tags:
     - foxleren-ubuntu-gitlab-runner
 
-services:
-  - name: docker:dind
-    # explicitly disable tls to avoid docker startup interruption
-    command: ["--tls=false"]
-
 variables:
   # Instruct Testcontainers to use the daemon of DinD, use port 2375 for non-tls connections.
   DOCKER_HOST: "tcp://docker:2375"
@@ -15,13 +10,20 @@ variables:
   # Improve performance with overlayfs.
   DOCKER_DRIVER: overlay2
 
+services:
+  - name: docker:dind
+    # explicitly disable tls to avoid docker startup interruption
+    command: ["--tls=false"]
+
 stages:
   - build
 
 gradle-build:
   stage: build
+  rules:
+    - if: true
+      changes:
+        - README.md
+      when: never
   image: amazoncorretto:21-alpine
   script: ./gradlew clean build
-  except:
-    changes:
-      - README.md
