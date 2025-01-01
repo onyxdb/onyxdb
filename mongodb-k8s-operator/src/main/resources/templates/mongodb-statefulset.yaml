@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: onyxdb-managed-mongodb
+  namespace: onyxdb
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: onyxdb-managed-mongodb
+  serviceName: onyxdb-managed-mongodb
+  template:
+    metadata:
+      namespace: onyxdb
+      labels:
+        app: onyxdb-managed-mongodb
+    spec:
+      containers:
+        - name: onyxdb-managed-mongodb
+          image: mongo:7.0.16
+          imagePullPolicy: IfNotPresent
+          command:
+            - mongod
+            - '--bind_ip_all'
+            - '--replSet'
+            - rs0
+          args:
+            - '--dbpath'
+            - /data/db
+          volumeMounts:
+            - mountPath: /data/db
+              name: onyxdb-managed-mongodb-pvc
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: user
+                  name: onyxdb-managed-mongodb-secret
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: onyxdb-managed-mongodb-secret
+  volumeClaimTemplates:
+    - metadata:
+        name: onyxdb-managed-mongodb-pvc
+      spec:
+        storageClassName: ''
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
