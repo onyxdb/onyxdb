@@ -1,0 +1,10 @@
+rs.initiate(
+ {
+  _id: "rs0",
+  members: [
+   { _id: 0, host: "onyxdb-managed-mongodb-0.onyxdb-managed-mongodb.onyxdb.svc.cluster.local:27017" },
+   { _id: 1, host: "onyxdb-managed-mongodb-1.onyxdb-managed-mongodb.onyxdb.svc.cluster.local:27017" },
+   { _id: 2, host: "onyxdb-managed-mongodb-2.onyxdb-managed-mongodb.onyxdb.svc.cluster.local:27017" }
+  ]
+ }
+)
