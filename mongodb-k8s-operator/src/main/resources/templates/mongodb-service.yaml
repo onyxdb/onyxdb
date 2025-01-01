@@ -4,8 +4,7 @@ metadata:
   name: onyxdb-managed-mongodb
   namespace: onyxdb
   labels:
-    app.kubernetes.io/name: onyxdb-managed-mongodb
-    app.kubernetes.io/managed-by: onyxdb
+    managedBy: onyxdb
 spec:
   selector:
     app: onyxdb-managed-mongodb
