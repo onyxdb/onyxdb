@@ -7,7 +7,14 @@ configurations.all {
 }
 
 dependencies {
-    implementation(libs.springBoot.starterWebflux)
+    implementation(libs.springBoot.starterWeb)
     implementation(libs.springBoot.starterLog4j2)
+
+    implementation(libs.javaOperatorSdk.operatorFrameworkSpringBootStarter)
+    compileOnly(libs.ioFabric8.crdGeneratorApt)
+    implementation(libs.orgBouncycastle.bcprovJdk18on)
+    implementation(libs.orgBouncycastle.bcpkixJdk18on)
+
     testImplementation(libs.springBoot.starterTest)
+    testImplementation(libs.javaOperatorSdk.operatorFrameworkSpringBootStarterTest)
 }
