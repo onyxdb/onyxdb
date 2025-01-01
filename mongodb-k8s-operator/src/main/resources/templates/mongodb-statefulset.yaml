@@ -22,11 +22,10 @@ spec:
           command:
             - mongod
             - '--bind_ip_all'
-            - '--replSet'
-            - rs0
-          args:
             - '--dbpath'
             - /data/db
+            - '--replSet'
+            - rs0
           volumeMounts:
             - mountPath: /data/db
               name: onyxdb-managed-mongodb-pvc
@@ -45,7 +44,7 @@ spec:
     - metadata:
         name: onyxdb-managed-mongodb-pvc
       spec:
-        storageClassName: ''
+        storageClassName: 'standard'
         accessModes:
           - ReadWriteOnce
         resources:
