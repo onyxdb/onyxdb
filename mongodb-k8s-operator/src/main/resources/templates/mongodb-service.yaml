@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: onyxdb-managed-mongodb
+  namespace: onyxdb
+  labels:
+    app.kubernetes.io/name: onyxdb-managed-mongodb
+    app.kubernetes.io/managed-by: onyxdb
+spec:
+  selector:
+    app: onyxdb-managed-mongodb
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 27017
+      targetPort: 27017
