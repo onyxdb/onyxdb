@@ -1,19 +1,27 @@
 package com.onyxdb.mongodbOperator.crds;
 
+import java.util.List;
 import java.util.Map;
 
 import io.fabric8.kubernetes.api.model.LabelSelector;
 import io.fabric8.kubernetes.api.model.LabelSelectorBuilder;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
+import io.fabric8.kubernetes.api.model.ObjectMetaBuilder;
+import io.fabric8.kubernetes.api.model.PersistentVolumeClaim;
+import io.fabric8.kubernetes.api.model.PersistentVolumeClaimBuilder;
+import io.fabric8.kubernetes.api.model.PersistentVolumeClaimSpecBuilder;
 import io.fabric8.kubernetes.api.model.PodSpec;
 import io.fabric8.kubernetes.api.model.PodSpecBuilder;
 import io.fabric8.kubernetes.api.model.PodTemplateSpec;
 import io.fabric8.kubernetes.api.model.PodTemplateSpecBuilder;
+import io.fabric8.kubernetes.api.model.Quantity;
 import io.fabric8.kubernetes.api.model.Service;
-import io.fabric8.kubernetes.api.model.apps.Deployment;
-import io.fabric8.kubernetes.api.model.apps.DeploymentBuilder;
-import io.fabric8.kubernetes.api.model.apps.DeploymentSpec;
-import io.fabric8.kubernetes.api.model.apps.DeploymentSpecBuilder;
+import io.fabric8.kubernetes.api.model.VolumeResourceRequirements;
+import io.fabric8.kubernetes.api.model.VolumeResourceRequirementsBuilder;
+import io.fabric8.kubernetes.api.model.apps.StatefulSet;
+import io.fabric8.kubernetes.api.model.apps.StatefulSetBuilder;
+import io.fabric8.kubernetes.api.model.apps.StatefulSetSpec;
+import io.fabric8.kubernetes.api.model.apps.StatefulSetSpecBuilder;
 import io.javaoperatorsdk.operator.api.reconciler.Context;
 import io.javaoperatorsdk.operator.api.reconciler.ResourceIDMatcherDiscriminator;
 import io.javaoperatorsdk.operator.processing.dependent.kubernetes.CRUDKubernetesDependentResource;
@@ -27,36 +35,37 @@ import static com.onyxdb.mongodbOperator.utils.K8sManifestHelper.fromPrimary;
 /**
  * @author foxleren
  */
-public class ManagedMongodbStatefulSetResource extends CRUDKubernetesDependentResource<Deployment, ManagedMongodbResource> {
+public class ManagedMongodbStatefulSetResource extends CRUDKubernetesDependentResource<StatefulSet, ManagedMongodbResource> {
     public static final String COMPONENT = "managed-mongodb-stateful-set";
 
     private static final String TEMPLATE_PATH = "templates/mongodb-stateful-set.yaml";
     // TODO configure by manifest
     private static final int REPLICAS = 3;
 
-    private final Deployment template;
+    private final StatefulSet template;
 
     public ManagedMongodbStatefulSetResource() {
-        super(Deployment.class);
-        this.template = K8sManifestHelper.loadTemplate(Deployment.class, TEMPLATE_PATH);
+        super(StatefulSet.class);
+        this.template = K8sManifestHelper.loadTemplate(StatefulSet.class, TEMPLATE_PATH);
     }
 
     @Override
-    protected Deployment desired(ManagedMongodbResource primary, Context<ManagedMongodbResource> context) {
+    protected StatefulSet desired(ManagedMongodbResource primary, Context<ManagedMongodbResource> context) {
         ObjectMeta meta = fromPrimary(primary, COMPONENT)
                 .build();
 
-        return new DeploymentBuilder(template)
+        return new StatefulSetBuilder(template)
                 .withMetadata(meta)
                 .withSpec(buildSpec(primary, meta))
                 .build();
     }
 
-    private DeploymentSpec buildSpec(ManagedMongodbResource primary, ObjectMeta primaryMeta) {
-        return new DeploymentSpecBuilder()
+    private StatefulSetSpec buildSpec(ManagedMongodbResource primary, ObjectMeta primaryMeta) {
+        return new StatefulSetSpecBuilder()
                 .withSelector(buildSelector(primaryMeta.getLabels()))
                 .withReplicas(REPLICAS)
                 .withTemplate(buildPodTemplate(primary, primaryMeta))
+                .withVolumeClaimTemplates(buildPersistentVolumeClaim(primary))
                 .build();
     }
 
@@ -71,6 +80,25 @@ public class ManagedMongodbStatefulSetResource extends CRUDKubernetesDependentRe
                 .withMetadata(primaryMeta)
                 .withSpec(buildPodSpec(primary))
                 .build();
+    }
+
+    private List<PersistentVolumeClaim> buildPersistentVolumeClaim(ManagedMongodbResource primary) {
+//        primary.getSpec().getDiskSizeBytes();
+        return List.of(
+                new PersistentVolumeClaimBuilder()
+                        .withMetadata(new ObjectMetaBuilder()
+                                .withNamespace("onyxdb")
+                                .withName("onyxdb-managed-mongodb-pvc")
+                                .build())
+                        .withSpec(new PersistentVolumeClaimSpecBuilder()
+                                .withStorageClassName("standard")
+                                .withAccessModes(List.of("ReadWriteOnce"))
+                                .withResources(new VolumeResourceRequirementsBuilder()
+                                        .addToRequests("storage", Quantity.parse("1Gi"))
+                                        .build())
+                                .build())
+                        .build()
+        );
     }
 
     private PodSpec buildPodSpec(ManagedMongodbResource primary) {

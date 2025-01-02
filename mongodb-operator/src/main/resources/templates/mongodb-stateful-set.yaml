@@ -28,6 +28,9 @@ spec:
             - /data/db
             - '--replSet'
             - rs0
+          resources:
+            limits:
+              memory: 1Gi
           volumeMounts:
             - mountPath: /data/db
               name: onyxdb-managed-mongodb-pvc
