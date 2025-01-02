@@ -1,4 +1,4 @@
-package com.onyxdb.mongodbK8sOperator.crds;
+package com.onyxdb.mongodbOperator.crds;
 
 import java.util.Map;
 
@@ -9,22 +9,25 @@ import io.fabric8.kubernetes.api.model.PodSpec;
 import io.fabric8.kubernetes.api.model.PodSpecBuilder;
 import io.fabric8.kubernetes.api.model.PodTemplateSpec;
 import io.fabric8.kubernetes.api.model.PodTemplateSpecBuilder;
+import io.fabric8.kubernetes.api.model.Service;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.kubernetes.api.model.apps.DeploymentBuilder;
 import io.fabric8.kubernetes.api.model.apps.DeploymentSpec;
 import io.fabric8.kubernetes.api.model.apps.DeploymentSpecBuilder;
 import io.javaoperatorsdk.operator.api.reconciler.Context;
+import io.javaoperatorsdk.operator.api.reconciler.ResourceIDMatcherDiscriminator;
 import io.javaoperatorsdk.operator.processing.dependent.kubernetes.CRUDKubernetesDependentResource;
+import io.javaoperatorsdk.operator.processing.event.ResourceID;
 
-import com.onyxdb.mongodbK8sOperator.utils.K8sManifestHelper;
+import com.onyxdb.mongodbOperator.utils.K8sManifestHelper;
 
-import static com.onyxdb.mongodbK8sOperator.utils.K8sManifestHelper.fromPrimary;
+import static com.onyxdb.mongodbOperator.utils.K8sManifestHelper.fromPrimary;
 
 
 /**
  * @author foxleren
  */
-public class ManagedMongoDbStatefulSetResource extends CRUDKubernetesDependentResource<Deployment, ManagedMongoDbResource> {
+public class ManagedMongodbStatefulSetResource extends CRUDKubernetesDependentResource<Deployment, ManagedMongodbResource> {
     public static final String COMPONENT = "managed-mongodb-stateful-set";
 
     private static final String TEMPLATE_PATH = "templates/mongodb-stateful-set.yaml";
@@ -33,13 +36,13 @@ public class ManagedMongoDbStatefulSetResource extends CRUDKubernetesDependentRe
 
     private final Deployment template;
 
-    public ManagedMongoDbStatefulSetResource() {
+    public ManagedMongodbStatefulSetResource() {
         super(Deployment.class);
         this.template = K8sManifestHelper.loadTemplate(Deployment.class, TEMPLATE_PATH);
     }
 
     @Override
-    protected Deployment desired(ManagedMongoDbResource primary, Context<ManagedMongoDbResource> context) {
+    protected Deployment desired(ManagedMongodbResource primary, Context<ManagedMongodbResource> context) {
         ObjectMeta meta = fromPrimary(primary, COMPONENT)
                 .build();
 
@@ -49,7 +52,7 @@ public class ManagedMongoDbStatefulSetResource extends CRUDKubernetesDependentRe
                 .build();
     }
 
-    private DeploymentSpec buildSpec(ManagedMongoDbResource primary, ObjectMeta primaryMeta) {
+    private DeploymentSpec buildSpec(ManagedMongodbResource primary, ObjectMeta primaryMeta) {
         return new DeploymentSpecBuilder()
                 .withSelector(buildSelector(primaryMeta.getLabels()))
                 .withReplicas(REPLICAS)
@@ -63,14 +66,14 @@ public class ManagedMongoDbStatefulSetResource extends CRUDKubernetesDependentRe
                 .build();
     }
 
-    private PodTemplateSpec buildPodTemplate(ManagedMongoDbResource primary, ObjectMeta primaryMeta) {
+    private PodTemplateSpec buildPodTemplate(ManagedMongodbResource primary, ObjectMeta primaryMeta) {
         return new PodTemplateSpecBuilder()
                 .withMetadata(primaryMeta)
                 .withSpec(buildPodSpec(primary))
                 .build();
     }
 
-    private PodSpec buildPodSpec(ManagedMongoDbResource primary) {
+    private PodSpec buildPodSpec(ManagedMongodbResource primary) {
         // TODO configure image by manifest
 //        String imageVersion = StringUtils.hasText(primary.getSpec().getApiServerVersion()) ?
 //                ":" + primary.getSpec().getApiServerVersion().trim() : "";
@@ -83,5 +86,12 @@ public class ManagedMongoDbStatefulSetResource extends CRUDKubernetesDependentRe
 //                .withImage(imageName + imageVersion)
                 .and()
                 .build();
+    }
+
+    @SuppressWarnings("unused")
+    static class Discriminator extends ResourceIDMatcherDiscriminator<Service, ManagedMongodbResource> {
+        public Discriminator() {
+            super(COMPONENT, (p) -> new ResourceID(p.getMetadata().getName() + "-" + COMPONENT, p.getMetadata().getNamespace()));
+        }
     }
 }

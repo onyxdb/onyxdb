@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: onyxdb-managed-mongodb
+  name: onyxdb-managed-mongodb-stateful-set
   namespace: onyxdb
 spec:
   replicas: 3

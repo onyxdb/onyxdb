@@ -1,4 +1,4 @@
-package com.onyxdb.mongodbK8sOperator.utils;
+package com.onyxdb.mongodbOperator.utils;
 
 import java.io.IOException;
 import java.io.InputStream;

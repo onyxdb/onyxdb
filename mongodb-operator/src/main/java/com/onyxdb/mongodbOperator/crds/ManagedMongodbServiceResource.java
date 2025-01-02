@@ -1,4 +1,4 @@
-package com.onyxdb.mongodbK8sOperator.crds;
+package com.onyxdb.mongodbOperator.crds;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,30 +11,30 @@ import io.javaoperatorsdk.operator.api.reconciler.ResourceIDMatcherDiscriminator
 import io.javaoperatorsdk.operator.processing.dependent.kubernetes.CRUDKubernetesDependentResource;
 import io.javaoperatorsdk.operator.processing.event.ResourceID;
 
-import com.onyxdb.mongodbK8sOperator.utils.K8sManifestHelper;
+import com.onyxdb.mongodbOperator.utils.K8sManifestHelper;
 
-import static com.onyxdb.mongodbK8sOperator.utils.K8sManifestHelper.fromPrimary;
+import static com.onyxdb.mongodbOperator.utils.K8sManifestHelper.fromPrimary;
 
 /**
  * @author foxleren
  */
-public class ManagedMongoDbServiceResource extends CRUDKubernetesDependentResource<Service, ManagedMongoDbResource> {
+public class ManagedMongodbServiceResource extends CRUDKubernetesDependentResource<Service, ManagedMongodbResource> {
     public static final String COMPONENT = "managed-mongodb-service";
 
     private final Service template;
 
-    public ManagedMongoDbServiceResource() {
+    public ManagedMongodbServiceResource() {
         super(Service.class);
         this.template = K8sManifestHelper.loadTemplate(Service.class, "templates/mongodb-service.yaml");
     }
 
     @Override
-    protected Service desired(ManagedMongoDbResource primary, Context<ManagedMongoDbResource> context) {
+    protected Service desired(ManagedMongodbResource primary, Context<ManagedMongodbResource> context) {
         ObjectMeta meta = fromPrimary(primary, COMPONENT)
                 .build();
 
         Map<String, String> selector = new HashMap<>(meta.getLabels());
-        selector.put("component", ManagedMongoDbStatefulSetResource.COMPONENT);
+        selector.put("component", ManagedMongodbStatefulSetResource.COMPONENT);
 
         return new ServiceBuilder(template)
                 .withMetadata(meta)
@@ -45,7 +45,7 @@ public class ManagedMongoDbServiceResource extends CRUDKubernetesDependentResour
     }
 
     @SuppressWarnings("unused")
-    static class Discriminator extends ResourceIDMatcherDiscriminator<Service, ManagedMongoDbResource> {
+    static class Discriminator extends ResourceIDMatcherDiscriminator<Service, ManagedMongodbResource> {
         public Discriminator() {
             super(COMPONENT, (p) -> new ResourceID(p.getMetadata().getName() + "-" + COMPONENT, p.getMetadata().getNamespace()));
         }

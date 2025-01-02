@@ -11,7 +11,7 @@ dependencies {
     implementation(libs.springBoot.starterLog4j2)
 
     implementation(libs.javaOperatorSdk.operatorFrameworkSpringBootStarter)
-    compileOnly(libs.ioFabric8.crdGeneratorApt)
+    annotationProcessor(libs.ioFabric8.crdGeneratorApt)
     implementation(libs.orgBouncycastle.bcprovJdk18on)
     implementation(libs.orgBouncycastle.bcpkixJdk18on)
 
