@@ -1,0 +1,8 @@
+apiVersion: onyxdb.com/v1
+kind: ManagedMongoDB
+metadata:
+  namespace: onyxdb
+  name: foxleren
+
+#spec:
+#  ingressHostname: deptrack.172.31.42.16.nip.io
