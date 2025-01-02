@@ -8,12 +8,14 @@ spec:
   selector:
     matchLabels:
       app: onyxdb-managed-mongodb
+      managedBy: onyxdb
   serviceName: onyxdb-managed-mongodb
   template:
     metadata:
       namespace: onyxdb
       labels:
         app: onyxdb-managed-mongodb
+        managedBy: onyxdb
     spec:
       containers:
         - name: onyxdb-managed-mongodb
