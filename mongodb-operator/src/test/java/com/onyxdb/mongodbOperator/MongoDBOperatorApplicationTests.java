@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @EnableMockOperator(crdPaths = "classpath:META-INF/fabric8/managedmongodbs.onyxdb.com-v1.yml")
-class MongodbOperatorApplicationTests {
+class MongoDBOperatorApplicationTests {
     @Autowired
     KubernetesClient client;
 
