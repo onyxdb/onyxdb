@@ -1,24 +1,26 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: onyxdb-managed-mongodb-stateful-set
+  name: managed-mongodb-stateful-set
   namespace: onyxdb
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: onyxdb-managed-mongodb
-      managedBy: onyxdb
-  serviceName: onyxdb-managed-mongodb
+      app: managed-mongodb
+      managedBy: mongodb-operator
+  serviceName: managed-mongodb
+#  serviceName: onyxdb-managed-mongodb
   template:
     metadata:
+      name: managed-mongodb
       namespace: onyxdb
       labels:
-        app: onyxdb-managed-mongodb
-        managedBy: onyxdb
+        app: managed-mongodb
+        managedBy: mongodb-operator
     spec:
       containers:
-        - name: onyxdb-managed-mongodb
+        - name: managed-mongodb
           image: mongo:7.0.16
           imagePullPolicy: IfNotPresent
           command:
@@ -33,7 +35,7 @@ spec:
               memory: 1Gi
           volumeMounts:
             - mountPath: /data/db
-              name: onyxdb-managed-mongodb-pvc
+              name: managed-mongodb-pvc
           env:
             - name: MONGO_INITDB_ROOT_USERNAME
               valueFrom:
@@ -47,7 +49,8 @@ spec:
                   name: onyxdb-managed-mongodb-secret
   volumeClaimTemplates:
     - metadata:
-        name: onyxdb-managed-mongodb-pvc
+        name: managed-mongodb-pvc
+        namespace: onyxdb
       spec:
         storageClassName: 'standard'
         accessModes:

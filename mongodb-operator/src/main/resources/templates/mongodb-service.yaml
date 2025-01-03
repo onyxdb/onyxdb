@@ -1,14 +1,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: onyxdb-managed-mongodb
+  name: managed-mongodb
   namespace: onyxdb
   labels:
-    managedBy: onyxdb
+    app: managed-mongodb
+    managedBy: mongodb-operator
 spec:
   selector:
-    app: onyxdb-managed-mongodb
-    managedBy: onyxdb
+    app: managed-mongodb
+    managedBy: mongodb-operator
   type: ClusterIP
   ports:
     - protocol: TCP

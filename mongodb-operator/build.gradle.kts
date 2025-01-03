@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.onyxdb.javaSpringAppConventions)
+    alias(libs.plugins.lombok)
 }
 
 configurations.all {

@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@EnableMockOperator(crdPaths = "classpath:META-INF/fabric8/managedmongodbresources.onyxdb.com-v1.yml")
+@EnableMockOperator(crdPaths = "classpath:META-INF/fabric8/managedmongodbs.onyxdb.com-v1.yml")
 class MongodbOperatorApplicationTests {
     @Autowired
     KubernetesClient client;
@@ -24,7 +24,7 @@ class MongodbOperatorApplicationTests {
                 .apiextensions()
                 .v1()
                 .customResourceDefinitions()
-                .withName("managedmongodbresources.onyxdb.com")
+                .withName("managedmongodbs.onyxdb.com")
                 .get();
         assertThat(r).isNotNull();
     }

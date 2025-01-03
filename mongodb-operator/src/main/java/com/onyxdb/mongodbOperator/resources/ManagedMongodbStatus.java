@@ -1,4 +1,4 @@
-package com.onyxdb.mongodbOperator.crds;
+package com.onyxdb.mongodbOperator.resources;
 
 import io.javaoperatorsdk.operator.api.ObservedGenerationAwareStatus;
 
