@@ -33,13 +33,17 @@ public class MongoDbSecret extends CRUDKubernetesDependentResource<Secret, Manag
                 Map.entry("password", initUser.password())
         );
 
-       var secret =  new SecretBuilder()
+        var secret = new SecretBuilder()
                 .withMetadata(K8sUtils.enrichResourceMeta(primary, RESOURCE_NAME_PREFIX))
                 .withType("Opaque")
                 .withStringData(stringData)
                 .build();
-       secret.addOwnerReference(primary);
-       return secret;
+        secret.addOwnerReference(primary);
+        return secret;
+    }
+
+    public static String getResourceName(String primaryResourceName) {
+        return K8sUtils.buildResourceName(RESOURCE_NAME_PREFIX, primaryResourceName);
     }
 
     @SuppressWarnings("unused")
