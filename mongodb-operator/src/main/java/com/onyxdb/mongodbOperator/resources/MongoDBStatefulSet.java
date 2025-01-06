@@ -35,11 +35,11 @@ import com.onyxdb.mongodbOperator.utils.K8sUtils;
 /**
  * @author foxleren
  */
-public class MongoDbStatefulSet extends CRUDKubernetesDependentResource<StatefulSet, ManagedMongoDB> {
+public class MongoDBStatefulSet extends CRUDKubernetesDependentResource<StatefulSet, ManagedMongoDB> {
     public static final String DEPENDENT_NAME = "managed-mongodb-stateful-set";
 
     private static final String RESOURCE_NAME_PREFIX = "managed-mongodb";
-    private static final String MONGODB_CONTAINER_NAME = "mongodb";
+    public static final String MONGODB_CONTAINER_NAME = "mongodb";
     private static final String MONGODB_CONTAINER_MOUNT_PATH = "/data/db";
     private static final String PVC_NAME = "managed-mongodb-pvc";
     private static final List<String> PVC_ACCESS_MODES = List.of("ReadWriteOnce");
@@ -49,7 +49,7 @@ public class MongoDbStatefulSet extends CRUDKubernetesDependentResource<Stateful
     private static final String DEFAULT_STORAGE_CLASS = "standard";
     private static final String DEFAULT_STORAGE_SIZE = "1Gi";
 
-    public MongoDbStatefulSet() {
+    public MongoDBStatefulSet() {
         super(StatefulSet.class);
     }
 
