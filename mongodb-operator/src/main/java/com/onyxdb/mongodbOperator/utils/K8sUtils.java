@@ -21,16 +21,17 @@ public final class K8sUtils {
         return new ObjectMetaBuilder()
                 .withNamespace(primaryMeta.getNamespace())
                 .withName(buildResourceName(resourceNamePrefix, primaryMeta.getName()))
-                .withLabels(getSelectorLabels())
+                .withLabels(LabelsUtil.getClusterLabels(primary.getMetadata().getName()))
+//                .withLabels(getSelectorLabels())
                 .build();
     }
 
-    public static Map<String, String> getSelectorLabels() {
-        return Map.ofEntries(
-                Map.entry("app", APP_LABEL),
-                Map.entry("managedBy", MANAGED_BY)
-        );
-    }
+//    public static Map<String, String> getSelectorLabels() {
+//        return Map.ofEntries(
+//                Map.entry("app", APP_LABEL),
+//                Map.entry("managedBy", MANAGED_BY)
+//        );
+//    }
 
     public static String buildResourceName(String resourceNamePrefix, String metaName) {
         return String.format("%s-%s", resourceNamePrefix, metaName);

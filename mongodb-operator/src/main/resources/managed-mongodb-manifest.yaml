@@ -1,10 +1,10 @@
 apiVersion: onyxdb.com/v1
 kind: ManagedMongoDB
 metadata:
+  name: "test"
   namespace: onyxdb
-  name: foxleren-db-1
 spec:
   image: mongo:7.0.16
-  rootUser:
+  initUser:
     user: user1
     password: password1

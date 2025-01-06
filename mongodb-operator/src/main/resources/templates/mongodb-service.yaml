@@ -4,12 +4,19 @@ metadata:
   name: managed-mongodb
   namespace: onyxdb
   labels:
-    app: managed-mongodb
-    managedBy: mongodb-operator
+    app.kubernetes.io/component: database
+    app.kubernetes.io/instance: test
+    app.kubernetes.io/managed-by: onyxdb-managed-mongodb-operator
+    app.kubernetes.io/name: onyxdb-managed-mongodb
+    app.kubernetes.io/part-of: onyxdb-managed-mongodb
 spec:
   selector:
-    app: managed-mongodb
-    managedBy: mongodb-operator
+    app.kubernetes.io/component: database
+    app.kubernetes.io/instance: test
+    app.kubernetes.io/managed-by: onyxdb-managed-mongodb-operator
+    app.kubernetes.io/name: onyxdb-managed-mongodb
+    app.kubernetes.io/part-of: onyxdb-managed-mongodb
+  clusterIP: None
   type: ClusterIP
   ports:
     - protocol: TCP

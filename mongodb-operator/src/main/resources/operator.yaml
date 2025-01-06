@@ -19,7 +19,7 @@ spec:
               properties:
                 image:
                   type: string
-                rootUser:
+                initUser:
                   properties:
                     password:
                       type: string
@@ -29,8 +29,17 @@ spec:
               type: object
             status:
               properties:
+                message:
+                  type: string
                 observedGeneration:
                   type: integer
+                state:
+                  enum:
+                    - ERROR
+                    - INITIALIZING
+                    - READY
+                    - UNKNOWN
+                  type: string
               type: object
           type: object
       served: true

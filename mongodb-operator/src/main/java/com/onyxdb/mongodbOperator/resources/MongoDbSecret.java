@@ -15,28 +15,31 @@ import com.onyxdb.mongodbOperator.utils.K8sUtils;
 /**
  * @author foxleren
  */
-public class ManagedMongoDBSecret extends CRUDKubernetesDependentResource<Secret, ManagedMongoDB> {
+public class MongoDbSecret extends CRUDKubernetesDependentResource<Secret, ManagedMongoDB> {
     public static final String DEPENDENT_NAME = "managed-mongodb-secret";
 
     private static final String RESOURCE_NAME_PREFIX = "managed-mongodb";
 
-    public ManagedMongoDBSecret() {
+    public MongoDbSecret() {
         super(Secret.class);
     }
 
     @Override
     protected Secret desired(ManagedMongoDB primary, Context<ManagedMongoDB> context) {
-        RootUser rootUser = primary.getSpec().rootUser();
+//        ReconcilerUtils.loadYaml()
+        MongodbUser initUser = primary.getSpec().initUser();
         Map<String, String> stringData = Map.ofEntries(
-                Map.entry("user", rootUser.user()),
-                Map.entry("password", rootUser.password())
+                Map.entry("user", initUser.user()),
+                Map.entry("password", initUser.password())
         );
 
-        return new SecretBuilder()
+       var secret =  new SecretBuilder()
                 .withMetadata(K8sUtils.enrichResourceMeta(primary, RESOURCE_NAME_PREFIX))
                 .withType("Opaque")
                 .withStringData(stringData)
                 .build();
+       secret.addOwnerReference(primary);
+       return secret;
     }
 
     @SuppressWarnings("unused")

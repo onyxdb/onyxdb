@@ -10,5 +10,5 @@ import io.fabric8.kubernetes.model.annotation.Version;
  */
 @Group("onyxdb.com")
 @Version("v1")
-public class ManagedMongoDB extends CustomResource<ManagedMongodbSpec, ManagedMongodbStatus> implements Namespaced {
+public class ManagedMongoDB extends CustomResource<MongoDbSpec, MongodbStatus> implements Namespaced {
 }

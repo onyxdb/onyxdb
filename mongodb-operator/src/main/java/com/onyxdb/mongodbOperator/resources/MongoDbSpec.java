@@ -3,5 +3,5 @@ package com.onyxdb.mongodbOperator.resources;
 /**
  * @author foxleren
  */
-public record RootUser(String user, String password) {
+public record MongoDbSpec(String image, MongodbUser initUser) {
 }

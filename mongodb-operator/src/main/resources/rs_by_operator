@@ -1,0 +1,21 @@
+rs.initiate(
+ {
+  _id: "rs0",
+  members: [
+   { _id: 0, host: "managed-mongodb-0.managed-mongodb.onyxdb:27017" },
+   { _id: 1, host: "managed-mongodb-1.managed-mongodb.onyxdb:27017" },
+   { _id: 2, host: "managed-mongodb-2.managed-mongodb.onyxdb:27017" }
+  ]
+ }
+)
+
+rs.initiate(
+ {
+  _id: "rs0",
+  members: [
+   { _id: 0, host: "managed-mongodb-test-0.managed-mongodb-test.onyxdb:27017" },
+   { _id: 1, host: "managed-mongodb-test-1.managed-mongodb-test.onyxdb:27017" },
+   { _id: 2, host: "managed-mongodb-test-2.managed-mongodb-test.onyxdb:27017" }
+  ]
+ }
+)

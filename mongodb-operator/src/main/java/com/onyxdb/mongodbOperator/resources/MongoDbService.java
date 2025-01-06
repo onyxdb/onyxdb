@@ -14,16 +14,17 @@ import io.javaoperatorsdk.operator.processing.dependent.kubernetes.CRUDKubernete
 import io.javaoperatorsdk.operator.processing.event.ResourceID;
 
 import com.onyxdb.mongodbOperator.utils.K8sUtils;
+import com.onyxdb.mongodbOperator.utils.LabelsUtil;
 
 /**
  * @author foxleren
  */
-public class ManagedMongodbService extends CRUDKubernetesDependentResource<Service, ManagedMongoDB> {
+public class MongoDbService extends CRUDKubernetesDependentResource<Service, ManagedMongoDB> {
     public static final String DEPENDENT_NAME = "managed-mongodb-service";
 
     private static final String RESOURCE_NAME_PREFIX = "managed-mongodb";
 
-    public ManagedMongodbService() {
+    public MongoDbService() {
         super(Service.class);
     }
 
@@ -31,14 +32,15 @@ public class ManagedMongodbService extends CRUDKubernetesDependentResource<Servi
     protected Service desired(ManagedMongoDB primary, Context<ManagedMongoDB> context) {
         return new ServiceBuilder()
                 .withMetadata(K8sUtils.enrichResourceMeta(primary, RESOURCE_NAME_PREFIX))
-                .withSpec(buildServiceSpec())
+                .withSpec(buildServiceSpec(primary))
                 .build();
     }
 
-    private ServiceSpec buildServiceSpec() {
+    private ServiceSpec buildServiceSpec(ManagedMongoDB primary) {
         return new ServiceSpecBuilder()
-                .withSelector(K8sUtils.getSelectorLabels())
+                .withSelector(LabelsUtil.getClusterLabels(primary.getMetadata().getName()))
                 .withType("ClusterIP")
+                .withClusterIP("None")
                 .withPorts(new ServicePortBuilder()
                         .withProtocol("TCP")
                         .withPort(27017)
