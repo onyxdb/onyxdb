@@ -16,7 +16,9 @@ postgresql-postgresql = "42.7.2"
 apacheCommons-commonsLang3 = "3.17.0"
 springDoc-springdocOpenapiStarterWebmvcUi = "2.6.0"
 javaOperatorSdk-operatorFrameworkSpringBootStarter = "5.6.0"
-ioFabric8-crdGeneratorApt = "7.0.1"
+ioFabric8-kubernetesClientApi = "7.0.0"
+ioFabric8-crdGeneratorApiV2 = "7.0.0"
+ioFabric8-crdGeneratorCollector = "7.0.0"
 orgBouncycastle-bcprovJdk18on = "1.79"
 orgBouncycastle-bcpkixJdk18on = "1.79"
 orgMongodb-mongodbDriverSync = "5.2.1"
@@ -53,7 +55,9 @@ apacheCommons-commonsLang3 = { group = "org.apache.commons", name = "commons-lan
 springDoc-springdocOpenapiStarterWebmvcUi = { group = "org.springdoc", name = "springdoc-openapi-starter-webmvc-ui", version.ref = "springDoc-springdocOpenapiStarterWebmvcUi" }
 javaOperatorSdk-operatorFrameworkSpringBootStarter = { group = "io.javaoperatorsdk", name = "operator-framework-spring-boot-starter", version.ref = "javaOperatorSdk-operatorFrameworkSpringBootStarter" }
 javaOperatorSdk-operatorFrameworkSpringBootStarterTest = { group = "io.javaoperatorsdk", name = "operator-framework-spring-boot-starter-test", version.ref = "javaOperatorSdk-operatorFrameworkSpringBootStarter" }
-ioFabric8-crdGeneratorApt = { group = "io.fabric8", name = "crd-generator-apt", version.ref = "ioFabric8-crdGeneratorApt" }
+ioFabric8-crdGeneratorApiV2 = { group = "io.fabric8", name = "crd-generator-api-v2", version.ref = "ioFabric8-crdGeneratorApiV2" }
+ioFabric8-crdGeneratorCollector = { group = "io.fabric8", name = "crd-generator-collector", version.ref = "ioFabric8-crdGeneratorCollector" }
+ioFabric8-kubernetesClientApi = { group = "io.fabric8", name = "kubernetes-client-api", version.ref = "ioFabric8-kubernetesClientApi" }
 orgBouncycastle-bcprovJdk18on = { group = "org.bouncycastle", name = "bcprov-jdk18on", version.ref = "orgBouncycastle-bcprovJdk18on" }
 orgBouncycastle-bcpkixJdk18on = { group = "org.bouncycastle", name = "bcpkix-jdk18on", version.ref = "orgBouncycastle-bcpkixJdk18on" }
 orgMongodb-mongodbDriverSync = { group = "org.mongodb", name = "mongodb-driver-sync", version.ref = "orgMongodb-mongodbDriverSync" }

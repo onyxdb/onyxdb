@@ -68,18 +68,23 @@ public class ManagedMongoDBReconciler
     private final KubernetesClient kubernetesClient;
 
     @Override
-    public UpdateControl<ManagedMongoDB> reconcile(ManagedMongoDB primaryResource, Context<ManagedMongoDB> context) {
-        String crdName = primaryResource.getCRDName();
-        String primaryName = primaryResource.getMetadata().getName();
+    public UpdateControl<ManagedMongoDB> reconcile(ManagedMongoDB primary, Context<ManagedMongoDB> context) {
+        String crdName = primary.getCRDName();
+        String primaryName = primary.getMetadata().getName();
 
-        logger.info("Reconciling {} with name={}", crdName, primaryName);
-        UpdateControl<ManagedMongoDB> updateControl = context.managedDependentResourceContext()
-                .getWorkflowReconcileResult()
-                .map(r -> handleWorkflowReconcileResult(primaryResource, context, r))
-                .orElseThrow();
-        logger.info("Reconciled {} with name={}", crdName, primaryName);
-
-        return updateControl;
+        try {
+            logger.info("Reconciling {} with name={}", crdName, primaryName);
+            UpdateControl<ManagedMongoDB> updateControl = context.managedDependentResourceContext()
+                    .getWorkflowReconcileResult()
+                    .map(r -> handleWorkflowReconcileResult(primary, context, r))
+                    .orElseThrow();
+            logger.info("Reconciled {} with name={}", crdName, primaryName);
+            return updateControl;
+        } catch (Exception e) {
+            logger.error("Failed to reconcile {} with name={}", crdName, primaryName, e);
+            primary.setStatus(MongoStatus.withErrorState(e.getMessage()));
+            return UpdateControl.patchStatus(primary).rescheduleAfter(RECONCILE_DELAY);
+        }
     }
 
     @Override
@@ -231,6 +236,7 @@ public class ManagedMongoDBReconciler
 
 //        var i = 0;
 
+        primary.setStatus(new MongoStatus(MongoState.READY));
         return UpdateControl.patchStatus(primary).rescheduleAfter(RECONCILE_DELAY);
     }
 
