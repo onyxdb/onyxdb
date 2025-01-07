@@ -28,9 +28,9 @@ import com.onyxdb.mongodbOperator.condition.MongoSecretReadyCondition;
 import com.onyxdb.mongodbOperator.condition.MongoServiceReadyCondition;
 import com.onyxdb.mongodbOperator.condition.MongoStatefulSetReadyCondition;
 import com.onyxdb.mongodbOperator.resources.ManagedMongoDB;
-import com.onyxdb.mongodbOperator.resources.MongoStatefulSet;
 import com.onyxdb.mongodbOperator.resources.MongoSecret;
 import com.onyxdb.mongodbOperator.resources.MongoService;
+import com.onyxdb.mongodbOperator.resources.MongoStatefulSet;
 import com.onyxdb.mongodbOperator.status.MongoState;
 import com.onyxdb.mongodbOperator.status.MongoStatus;
 
