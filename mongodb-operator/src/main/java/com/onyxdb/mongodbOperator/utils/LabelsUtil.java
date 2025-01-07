@@ -2,6 +2,8 @@ package com.onyxdb.mongodbOperator.utils;
 
 import java.util.Map;
 
+import io.fabric8.kubernetes.client.CustomResource;
+
 /**
  * Recommended labels:
  * <a href="https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/">docs</a>.
@@ -26,18 +28,15 @@ public class LabelsUtil {
 
     public static Map<String, String> getClusterLabels(String crName) {
         return Map.ofEntries(
-                Map.entry("app.kubernetes.io/component", "database"),
-                Map.entry("app.kubernetes.io/instance", "test"),
-                Map.entry("app.kubernetes.io/managed-by", "onyxdb-managed-mongodb-operator"),
-                Map.entry("app.kubernetes.io/name", "onyxdb-managed-mongodb"),
-                Map.entry("app.kubernetes.io/part-of", "onyxdb-managed-mongodb")
+                Map.entry(APP_KUBERNETES_NAME_LABEL, APP_KUBERNETES_NAME_LABEL_VALUE),
+                Map.entry(APP_KUBERNETES_INSTANCE_LABEL, crName),
+                Map.entry(APP_KUBERNETES_COMPONENT_LABEL, APP_KUBERNETES_COMPONENT_LABEL_VALUE),
+                Map.entry(APP_KUBERNETES_PART_OF_LABEL, APP_KUBERNETES_PART_OF_LABEL_VALUE),
+                Map.entry(APP_KUBERNETES_MANAGED_BY_LABEL, APP_KUBERNETES_MANAGED_BY_LABEL_VALUE)
         );
-//        return Map.ofEntries(
-//                Map.entry(APP_KUBERNETES_NAME_LABEL, APP_KUBERNETES_NAME_LABEL_VALUE),
-//                Map.entry(APP_KUBERNETES_INSTANCE_LABEL, crName),
-//                Map.entry(APP_KUBERNETES_COMPONENT_LABEL, APP_KUBERNETES_COMPONENT_LABEL_VALUE),
-//                Map.entry(APP_KUBERNETES_PART_OF_LABEL, APP_KUBERNETES_PART_OF_LABEL_VALUE),
-//                Map.entry(APP_KUBERNETES_MANAGED_BY_LABEL, APP_KUBERNETES_MANAGED_BY_LABEL_VALUE)
-//        );
+    }
+
+    public static <T extends CustomResource<?, ?>> Map<String, String> getClusterLabels(T primary) {
+        return getClusterLabels(primary.getMetadata().getName());
     }
 }

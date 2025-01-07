@@ -4,12 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
-import com.mongodb.MongoClientSettings;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import io.fabric8.kubernetes.api.model.LabelSelectorBuilder;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.apps.StatefulSet;
 import io.fabric8.kubernetes.client.KubernetesClient;
@@ -27,20 +22,17 @@ import io.javaoperatorsdk.operator.processing.dependent.workflow.WorkflowReconci
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.mongo.StandardMongoClientSettingsBuilderCustomizer;
 import org.springframework.stereotype.Component;
 
-import com.onyxdb.mongodbOperator.condition.MongoDBSecretReadyCondition;
-import com.onyxdb.mongodbOperator.condition.MongoDBServiceReadyCondition;
-import com.onyxdb.mongodbOperator.condition.MongoDBStatefulSetReadyCondition;
+import com.onyxdb.mongodbOperator.condition.MongoSecretReadyCondition;
+import com.onyxdb.mongodbOperator.condition.MongoServiceReadyCondition;
+import com.onyxdb.mongodbOperator.condition.MongoStatefulSetReadyCondition;
 import com.onyxdb.mongodbOperator.resources.ManagedMongoDB;
-import com.onyxdb.mongodbOperator.resources.MongoDBStatefulSet;
-import com.onyxdb.mongodbOperator.resources.MongoDbSecret;
-import com.onyxdb.mongodbOperator.resources.MongoDbService;
-import com.onyxdb.mongodbOperator.resources.MongoDbState;
-import com.onyxdb.mongodbOperator.resources.MongodbStatus;
-import com.onyxdb.mongodbOperator.utils.LabelsUtil;
-import com.onyxdb.mongodbOperator.utils.PodsUtil;
+import com.onyxdb.mongodbOperator.resources.MongoStatefulSet;
+import com.onyxdb.mongodbOperator.resources.MongoSecret;
+import com.onyxdb.mongodbOperator.resources.MongoService;
+import com.onyxdb.mongodbOperator.status.MongoState;
+import com.onyxdb.mongodbOperator.status.MongoStatus;
 
 /**
  * @author foxleren
@@ -48,31 +40,29 @@ import com.onyxdb.mongodbOperator.utils.PodsUtil;
 @Component
 @ControllerConfiguration(dependents = {
         @Dependent(
-                name = MongoDbSecret.DEPENDENT_NAME,
-                type = MongoDbSecret.class,
-                readyPostcondition = MongoDBSecretReadyCondition.class
+                name = MongoSecret.DEPENDENT_NAME,
+                type = MongoSecret.class,
+                readyPostcondition = MongoSecretReadyCondition.class
         ),
         @Dependent(
-                name = MongoDbService.DEPENDENT_NAME,
-                type = MongoDbService.class,
-                readyPostcondition = MongoDBServiceReadyCondition.class
+                name = MongoService.DEPENDENT_NAME,
+                type = MongoService.class,
+                readyPostcondition = MongoServiceReadyCondition.class
         ),
         @Dependent(
-                name = MongoDBStatefulSet.DEPENDENT_NAME,
-                type = MongoDBStatefulSet.class,
-                dependsOn = {MongoDbSecret.DEPENDENT_NAME, MongoDbService.DEPENDENT_NAME},
-                readyPostcondition = MongoDBStatefulSetReadyCondition.class
+                name = MongoStatefulSet.DEPENDENT_NAME,
+                type = MongoStatefulSet.class,
+                dependsOn = {MongoSecret.DEPENDENT_NAME, MongoService.DEPENDENT_NAME},
+                readyPostcondition = MongoStatefulSetReadyCondition.class
         ),
 })
 @RequiredArgsConstructor
-public class MongoDBReconciler
+public class ManagedMongoDBReconciler
         implements Reconciler<ManagedMongoDB>,
         ErrorStatusHandler<ManagedMongoDB>,
         Cleaner<ManagedMongoDB>
 {
-    private static final Logger logger = LoggerFactory.getLogger(MongoDBReconciler.class);
-
-//    private static final String RESOURCE_NAME
+    private static final Logger logger = LoggerFactory.getLogger(ManagedMongoDBReconciler.class);
     private static final Duration RECONCILE_DELAY = Duration.ofSeconds(5);
 
     private final KubernetesClient kubernetesClient;
@@ -94,7 +84,7 @@ public class MongoDBReconciler
 
     @Override
     public ErrorStatusUpdateControl<ManagedMongoDB> updateErrorStatus(ManagedMongoDB resource, Context<ManagedMongoDB> context, Exception e) {
-        resource.setStatus(MongodbStatus.withErrorState(e.getMessage()));
+        resource.setStatus(MongoStatus.withErrorState(e.getMessage()));
         return ErrorStatusUpdateControl.patchStatus(resource);
     }
 
@@ -110,7 +100,7 @@ public class MongoDBReconciler
     {
         if (!reconcileResult.allDependentResourcesReady()) {
             logger.info("Pending secondary resources for primary resource {}", primaryResource.getMetadata().getName());
-            primaryResource.setStatus(new MongodbStatus(MongoDbState.INITIALIZING, "Pending secondary resources"));
+            primaryResource.setStatus(new MongoStatus(MongoState.INITIALIZING, "Pending secondary resources"));
             return UpdateControl.patchStatus(primaryResource).rescheduleAfter(RECONCILE_DELAY);
         }
 
@@ -218,20 +208,20 @@ public class MongoDBReconciler
 
         var kubernetesClient2 = context.getClient();
 
-        MongoClient mongoClient = MongoClients.create(MongoClientSettings.builder()
-                .applyToClusterSettings(b -> b.hosts(List.of())).build());
+//        MongoClient mongoClient = MongoClients.create(MongoClientSettings.builder()
+//                .applyToClusterSettings(b -> b.hosts(List.of())).build());
+//
+//        mongoClient.close();
 
-        mongoClient.close();
-
-        try {
-            StatefulSet statefulSet = context.getSecondaryResource(StatefulSet.class).orElseThrow();
-            List<Pod> pods = getStatefulSetPods(primaryNamespace, primaryName);
-            String serviceName = MongoDbService.getServiceName(primaryName);
-
-            initMongoReplicaSet(statefulSet, pods, serviceName, primaryNamespace);
-        } catch (Exception e) {
-            mongoClient.close();
-        }
+//        try {
+//            StatefulSet statefulSet = context.getSecondaryResource(StatefulSet.class).orElseThrow();
+//            List<Pod> pods = getStatefulSetPods(primaryNamespace, primaryName);
+//            String serviceName = MongoService.getServiceName(primaryName);
+//
+//            initMongoReplicaSet(statefulSet, pods, serviceName, primaryNamespace);
+//        } catch (Exception e) {
+//            mongoClient.close();
+//        }
 
 
 //        Optional<UpdateControl<ManagedMongoDB>> updateControlAfterHandledPodsO = handlePods(primary, pods);
@@ -278,7 +268,7 @@ public class MongoDBReconciler
         try (ExecWatch execWatch = kubernetesClient.pods()
                 .inNamespace(namespace)
                 .withName(pods.getFirst().getMetadata().getName())
-                .inContainer(MongoDBStatefulSet.MONGODB_CONTAINER_NAME) // Optional; remove if not targeting a specific container
+                .inContainer(MongoStatefulSet.MONGODB_CONTAINER_NAME) // Optional; remove if not targeting a specific container
                 .writingOutput(outputStream)
                 .writingError(errorStream)
                 .exec(command)) {
@@ -289,7 +279,7 @@ public class MongoDBReconciler
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            execWatch.
+//            execWatch.
             // Command Output: { ok: 1 }
             // Command Error: MongoServerError: already initialized
             System.out.println("Command Output: " + outputStream.size());
@@ -299,31 +289,5 @@ public class MongoDBReconciler
 //            r.complete()
         }
 
-    }
-
-//    private Optional<UpdateControl<ManagedMongoDB>> handlePods(ManagedMongoDB primaryResource, List<Pod> pods) {
-//        for (Pod pod : pods) {
-//            if (!PodsUtil.isPodRunning(pod) ||
-//                    !PodsUtil.isPodContainerReady(pod, MongoDBStatefulSet.MONGODB_CONTAINER_NAME))
-//            {
-//                logger.info("Pod with MongoDB {} is not ready", pod.getMetadata().getName());
-//                var status = new MongodbStatus(MongoDbState.INITIALIZING, "Waiting for the pods");
-//                primaryResource.setStatus(status);
-//                return Optional.of(UpdateControl.patchStatus(primaryResource).rescheduleAfter(RECONCILE_DELAY));
-//            }
-//        }
-//        return Optional.empty();
-//    }
-
-    private List<Pod> getStatefulSetPods(String primaryNamespace, String primaryName) {
-        logger.info(String.format("%s-%s",primaryNamespace, primaryName));
-        return kubernetesClient
-                .pods()
-                .inNamespace(primaryNamespace)
-                .withLabelSelector(new LabelSelectorBuilder()
-                        .withMatchLabels(LabelsUtil.getClusterLabels(primaryName))
-                        .build())
-                .list()
-                .getItems();
     }
 }

@@ -3,6 +3,7 @@ package com.onyxdb.mongodbOperator.resources;
 import java.util.List;
 import java.util.Map;
 
+import io.fabric8.kubernetes.api.model.ContainerPortBuilder;
 import io.fabric8.kubernetes.api.model.EnvVarBuilder;
 import io.fabric8.kubernetes.api.model.EnvVarSourceBuilder;
 import io.fabric8.kubernetes.api.model.LabelSelector;
@@ -28,17 +29,20 @@ import io.fabric8.kubernetes.api.model.apps.StatefulSetSpec;
 import io.fabric8.kubernetes.api.model.apps.StatefulSetSpecBuilder;
 import io.javaoperatorsdk.operator.api.reconciler.Context;
 import io.javaoperatorsdk.operator.processing.dependent.kubernetes.CRUDKubernetesDependentResource;
+import io.javaoperatorsdk.operator.processing.dependent.kubernetes.KubernetesDependent;
 
-import com.onyxdb.mongodbOperator.utils.K8sUtils;
+import com.onyxdb.mongodbOperator.discriminators.MongoStatefulSetDiscriminator;
+import com.onyxdb.mongodbOperator.utils.K8sUtil;
 
 
 /**
  * @author foxleren
  */
-public class MongoDBStatefulSet extends CRUDKubernetesDependentResource<StatefulSet, ManagedMongoDB> {
+@KubernetesDependent(resourceDiscriminator = MongoStatefulSetDiscriminator.class)
+public class MongoStatefulSet extends CRUDKubernetesDependentResource<StatefulSet, ManagedMongoDB> {
     public static final String DEPENDENT_NAME = "managed-mongodb-stateful-set";
 
-    private static final String RESOURCE_NAME_PREFIX = "managed-mongodb";
+//    private static final String RESOURCE_NAME_PREFIX = "managed-mongodb";
     public static final String MONGODB_CONTAINER_NAME = "mongodb";
     private static final String MONGODB_CONTAINER_MOUNT_PATH = "/data/db";
     private static final String PVC_NAME = "managed-mongodb-pvc";
@@ -48,14 +52,18 @@ public class MongoDBStatefulSet extends CRUDKubernetesDependentResource<Stateful
     private static final int DEFAULT_REPLICAS = 3;
     private static final String DEFAULT_STORAGE_CLASS = "standard";
     private static final String DEFAULT_STORAGE_SIZE = "1Gi";
+    public static final int MONGODB_CONTAINER_PORT = 27017;
 
-    public MongoDBStatefulSet() {
+    private static final String MONGO_INITDB_ROOT_USERNAME_ENV = "MONGO_INITDB_ROOT_USERNAME";
+    private static final String MONGO_INITDB_ROOT_PASSWORD_ENV = "MONGO_INITDB_ROOT_PASSWORD";
+
+    public MongoStatefulSet() {
         super(StatefulSet.class);
     }
 
     @Override
     protected StatefulSet desired(ManagedMongoDB primary, Context<ManagedMongoDB> context) {
-        ObjectMeta meta = K8sUtils.enrichResourceMeta(primary, RESOURCE_NAME_PREFIX);
+        ObjectMeta meta = K8sUtil.createMetaFromPrimary(primary);
         return new StatefulSetBuilder()
                 .withMetadata(meta)
                 .withSpec(buildSpec(primary, meta))
@@ -64,7 +72,7 @@ public class MongoDBStatefulSet extends CRUDKubernetesDependentResource<Stateful
 
     private StatefulSetSpec buildSpec(ManagedMongoDB primary, ObjectMeta meta) {
         return new StatefulSetSpecBuilder()
-                .withServiceName(K8sUtils.buildResourceName(RESOURCE_NAME_PREFIX, primary.getMetadata().getName()))
+                .withServiceName(K8sUtil.getResourceInstanceNameWithPrefix(primary))
                 .withReplicas(DEFAULT_REPLICAS)
                 .withSelector(buildSelector(meta.getLabels()))
                 .withTemplate(buildPodTemplate(primary, meta))
@@ -86,7 +94,7 @@ public class MongoDBStatefulSet extends CRUDKubernetesDependentResource<Stateful
     }
 
     private PodSpec buildPodSpec(ManagedMongoDB primary, ObjectMeta meta) {
-        MongoDbSpec primarySpec = primary.getSpec();
+        MongoSpec primarySpec = primary.getSpec();
         List<String> mongodbContainerCommand = List.of(
                 "mongod",
                 "--bind_ip_all",
@@ -99,7 +107,7 @@ public class MongoDBStatefulSet extends CRUDKubernetesDependentResource<Stateful
                 .withLimits(Map.ofEntries(Map.entry("memory", Quantity.parse("1Gi"))))
                 .withRequests(Map.ofEntries(Map.entry("memory", Quantity.parse("1Gi"))))
                 .build();
-        String managedMongodbSecret = K8sUtils.buildResourceName(RESOURCE_NAME_PREFIX, primary.getMetadata().getName());
+        String managedMongodbSecret = K8sUtil.getResourceInstanceNameWithPrefix(primary);
 
         return new PodSpecBuilder()
                 .addNewContainer()
@@ -108,13 +116,17 @@ public class MongoDBStatefulSet extends CRUDKubernetesDependentResource<Stateful
                 .withImagePullPolicy("IfNotPresent")
                 .withCommand(mongodbContainerCommand)
                 .withResources(mongodbContainerResources)
+                .withPorts(new ContainerPortBuilder()
+                        .withContainerPort(MONGODB_CONTAINER_PORT)
+                        .build()
+                )
                 .withVolumeMounts(new VolumeMountBuilder()
                         .withMountPath(MONGODB_CONTAINER_MOUNT_PATH)
                         .withName(PVC_NAME)
                         .build()
                 )
                 .withEnv(new EnvVarBuilder()
-                        .withName("MONGO_INITDB_ROOT_USERNAME")
+                        .withName(MONGO_INITDB_ROOT_USERNAME_ENV)
                         .withValueFrom(new EnvVarSourceBuilder()
                                 .withSecretKeyRef(new SecretKeySelectorBuilder()
                                         .withKey("user")
@@ -123,7 +135,7 @@ public class MongoDBStatefulSet extends CRUDKubernetesDependentResource<Stateful
                                 .build())
                         .build(),
                         new EnvVarBuilder()
-                                .withName("MONGO_INITDB_ROOT_PASSWORD")
+                                .withName(MONGO_INITDB_ROOT_PASSWORD_ENV)
                                 .withValueFrom(new EnvVarSourceBuilder()
                                         .withSecretKeyRef(new SecretKeySelectorBuilder()
                                                 .withKey("password")

@@ -12,7 +12,7 @@ import com.onyxdb.mongodbOperator.resources.ManagedMongoDB;
 /**
  * @author foxleren
  */
-public class MongoDBStatefulSetReadyCondition implements Condition<StatefulSet, ManagedMongoDB> {
+public class MongoStatefulSetReadyCondition implements Condition<StatefulSet, ManagedMongoDB> {
     @Override
     public boolean isMet(DependentResource<StatefulSet, ManagedMongoDB> dependentResource,
                          ManagedMongoDB primary,

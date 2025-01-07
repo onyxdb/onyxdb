@@ -1,4 +1,4 @@
-package com.onyxdb.mongodbOperator.resources;
+package com.onyxdb.mongodbOperator.status;
 
 import io.javaoperatorsdk.operator.api.ObservedGenerationAwareStatus;
 import lombok.AllArgsConstructor;
@@ -13,16 +13,16 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MongodbStatus extends ObservedGenerationAwareStatus {
-    private MongoDbState state;
+public class MongoStatus extends ObservedGenerationAwareStatus {
+    private MongoState state;
     private String message;
 
-    public MongodbStatus(MongoDbState state) {
+    public MongoStatus(MongoState state) {
         this.state = state;
         this.message = "";
     }
 
-    public static MongodbStatus withErrorState(String message) {
-        return new MongodbStatus(MongoDbState.ERROR, message);
+    public static MongoStatus withErrorState(String message) {
+        return new MongoStatus(MongoState.ERROR, message);
     }
 }
