@@ -1,10 +1,10 @@
 apiVersion: onyxdb.com/v1
 kind: ManagedMongoDB
 metadata:
-  name: "test"
+  name: sample-db
   namespace: onyxdb
 spec:
   image: mongo:7.0.16
   initUser:
-    user: user1
-    password: password1
+    user: user
+    password: password
