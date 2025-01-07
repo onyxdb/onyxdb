@@ -19,6 +19,7 @@ javaOperatorSdk-operatorFrameworkSpringBootStarter = "5.6.0"
 ioFabric8-crdGeneratorApt = "7.0.1"
 orgBouncycastle-bcprovJdk18on = "1.79"
 orgBouncycastle-bcpkixJdk18on = "1.79"
+orgMongodb-mongodbDriverSync = "5.2.1"
 
 [plugins]
 onyxdb-javaAppConventions = { id = "onyxdb-java-app-conventions" }
@@ -55,3 +56,4 @@ javaOperatorSdk-operatorFrameworkSpringBootStarterTest = { group = "io.javaopera
 ioFabric8-crdGeneratorApt = { group = "io.fabric8", name = "crd-generator-apt", version.ref = "ioFabric8-crdGeneratorApt" }
 orgBouncycastle-bcprovJdk18on = { group = "org.bouncycastle", name = "bcprov-jdk18on", version.ref = "orgBouncycastle-bcprovJdk18on" }
 orgBouncycastle-bcpkixJdk18on = { group = "org.bouncycastle", name = "bcpkix-jdk18on", version.ref = "orgBouncycastle-bcpkixJdk18on" }
+orgMongodb-mongodbDriverSync = { group = "org.mongodb", name = "mongodb-driver-sync", version.ref = "orgMongodb-mongodbDriverSync" }

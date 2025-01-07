@@ -36,6 +36,10 @@ public class MongoDbService extends CRUDKubernetesDependentResource<Service, Man
                 .build();
     }
 
+    public static String getServiceName(String primaryName) {
+        return K8sUtils.buildResourceName(RESOURCE_NAME_PREFIX, primaryName);
+    }
+
     private ServiceSpec buildServiceSpec(ManagedMongoDB primary) {
         return new ServiceSpecBuilder()
                 .withSelector(LabelsUtil.getClusterLabels(primary.getMetadata().getName()))

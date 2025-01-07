@@ -1,12 +1,19 @@
 package com.onyxdb.mongodbOperator.reconcilers;
 
+import java.io.ByteArrayOutputStream;
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import com.mongodb.MongoClientSettings;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import io.fabric8.kubernetes.api.model.LabelSelectorBuilder;
 import io.fabric8.kubernetes.api.model.Pod;
+import io.fabric8.kubernetes.api.model.apps.StatefulSet;
 import io.fabric8.kubernetes.client.KubernetesClient;
+import io.fabric8.kubernetes.client.dsl.ExecWatch;
 import io.javaoperatorsdk.operator.api.reconciler.Cleaner;
 import io.javaoperatorsdk.operator.api.reconciler.Context;
 import io.javaoperatorsdk.operator.api.reconciler.ControllerConfiguration;
@@ -20,6 +27,7 @@ import io.javaoperatorsdk.operator.processing.dependent.workflow.WorkflowReconci
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.mongo.StandardMongoClientSettingsBuilderCustomizer;
 import org.springframework.stereotype.Component;
 
 import com.onyxdb.mongodbOperator.condition.MongoDBSecretReadyCondition;
@@ -60,24 +68,26 @@ import com.onyxdb.mongodbOperator.utils.PodsUtil;
 public class MongoDBReconciler
         implements Reconciler<ManagedMongoDB>,
         ErrorStatusHandler<ManagedMongoDB>,
-        Cleaner<ManagedMongoDB> {
+        Cleaner<ManagedMongoDB>
+{
     private static final Logger logger = LoggerFactory.getLogger(MongoDBReconciler.class);
 
-    private static final Duration RECONCILE_SHORT_DELAY = Duration.ofSeconds(5);
-//    private static final Duration RECONCILE_LONG_DELAY = Duration.ofHours(1);
+//    private static final String RESOURCE_NAME
+    private static final Duration RECONCILE_DELAY = Duration.ofSeconds(5);
 
     private final KubernetesClient kubernetesClient;
 
     @Override
     public UpdateControl<ManagedMongoDB> reconcile(ManagedMongoDB primaryResource, Context<ManagedMongoDB> context) {
+        String crdName = primaryResource.getCRDName();
         String primaryName = primaryResource.getMetadata().getName();
 
-        logger.info("Reconciling ManagedMongoDB with name={}", primaryName);
+        logger.info("Reconciling {} with name={}", crdName, primaryName);
         UpdateControl<ManagedMongoDB> updateControl = context.managedDependentResourceContext()
                 .getWorkflowReconcileResult()
                 .map(r -> handleWorkflowReconcileResult(primaryResource, context, r))
                 .orElseThrow();
-        logger.info("Reconciled ManagedMongoDB with name={}", primaryName);
+        logger.info("Reconciled {} with name={}", crdName, primaryName);
 
         return updateControl;
     }
@@ -99,8 +109,9 @@ public class MongoDBReconciler
             WorkflowReconcileResult reconcileResult)
     {
         if (!reconcileResult.allDependentResourcesReady()) {
+            logger.info("Pending secondary resources for primary resource {}", primaryResource.getMetadata().getName());
             primaryResource.setStatus(new MongodbStatus(MongoDbState.INITIALIZING, "Pending secondary resources"));
-            return UpdateControl.patchStatus(primaryResource).rescheduleAfter(RECONCILE_SHORT_DELAY);
+            return UpdateControl.patchStatus(primaryResource).rescheduleAfter(RECONCILE_DELAY);
         }
 
         return reconcileMongoDBCluster(primaryResource, context);
@@ -153,44 +164,44 @@ public class MongoDBReconciler
 //            var mongodbContainer = pod.getSpec().getContainers().stream().filter(rr -> Objects.equals(rr.getName(), "mongodb"))
 //                    .findFirst().orElseThrow(() -> new RuntimeException("Can't find mongodb container in pod " + pod.getMetadata().getName()));
 //            logger.info(mongodbContainer.getImage());
-////            String[] command = {
-////                    "mongosh",
-////                    "--eval",
-//////                    "sh", "-c",
-////                    "\"rs.initiate(" +
-////                            "{" +
-////                            "_id: \"rs0\"," +
-////                            " members: [" +
-////                            " { _id: 0, host: \"managed-mongodb-test-0.managed-mongodb-test.onyxdb:27017\" }," +
-////                            " { _id: 1, host: \"managed-mongodb-test-1.managed-mongodb-test.onyxdb:27017\" }," +
-////                            " { _id: 2, host: \"managed-mongodb-test-2.managed-mongodb-test.onyxdb:27017\" }" +
-////                            "]" +
-////                            "}" + ")\""
-////            };
+//            String[] command = {
+//                    "mongosh",
+//                    "--eval",
+////                    "sh", "-c",
+//                    "\"rs.initiate(" +
+//                            "{" +
+//                            "_id: \"rs0\"," +
+//                            " members: [" +
+//                            " { _id: 0, host: \"managed-mongodb-test-0.managed-mongodb-test.onyxdb:27017\" }," +
+//                            " { _id: 1, host: \"managed-mongodb-test-1.managed-mongodb-test.onyxdb:27017\" }," +
+//                            " { _id: 2, host: \"managed-mongodb-test-2.managed-mongodb-test.onyxdb:27017\" }" +
+//                            "]" +
+//                            "}" + ")\""
+//            };
 ////
-////            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-////            ByteArrayOutputStream errorStream = new ByteArrayOutputStream();
-////
+//            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+//            ByteArrayOutputStream errorStream = new ByteArrayOutputStream();
+
 ////            // TODO exec with retries
-////            try (ExecWatch execWatch = kubernetesClient.pods()
-////                    .inNamespace("onyxdb")
-////                    .withName(r.get().getMetadata().getName())
-////                    .inContainer("mongodb") // Optional; remove if not targeting a specific container
-////                    .writingOutput(outputStream)
-////                    .writingError(errorStream)
-////                    .exec(command)) {
-////
-////                // Wait for the command to complete
-////                try {
-////                    Thread.sleep(5000);
-////                } catch (InterruptedException e) {
-////                    throw new RuntimeException(e);
-////                }
-////                // Command Output: { ok: 1 }
-////                // Command Error: MongoServerError: already initialized
-////                System.out.println("Command Output: " + outputStream.toString());
-////                System.err.println("Command Error: " + errorStream.toString());
-////            }
+//            try (ExecWatch execWatch = kubernetesClient.pods()
+//                    .inNamespace("onyxdb")
+//                    .withName(r.get().getMetadata().getName())
+//                    .inContainer("mongodb") // Optional; remove if not targeting a specific container
+//                    .writingOutput(outputStream)
+//                    .writingError(errorStream)
+//                    .exec(command)) {
+//
+//                // Wait for the command to complete
+//                try {
+//                    Thread.sleep(5000);
+//                } catch (InterruptedException e) {
+//                    throw new RuntimeException(e);
+//                }
+//                // Command Output: { ok: 1 }
+//                // Command Error: MongoServerError: already initialized
+//                System.out.println("Command Output: " + outputStream.toString());
+//                System.err.println("Command Error: " + errorStream.toString());
+//            }
 //        });
 //        mongodbStatus
 
@@ -199,22 +210,95 @@ public class MongoDBReconciler
     }
 
     private UpdateControl<ManagedMongoDB> reconcileMongoDBCluster(
-            ManagedMongoDB primaryResource,
+            ManagedMongoDB primary,
             Context<ManagedMongoDB> context)
     {
-        String primaryName = primaryResource.getMetadata().getName();
-        String primaryNamespace = primaryResource.getMetadata().getNamespace();
+        String primaryNamespace = primary.getMetadata().getNamespace();
+        String primaryName = primary.getMetadata().getName();
 
-        List<Pod> pods = getStatefulSetPods(primaryName, primaryNamespace);
+        var kubernetesClient2 = context.getClient();
 
-//        Optional<UpdateControl<ManagedMongoDB>> updateControlAfterHandledPodsO = handlePods(primaryResource, pods);
+        MongoClient mongoClient = MongoClients.create(MongoClientSettings.builder()
+                .applyToClusterSettings(b -> b.hosts(List.of())).build());
+
+        mongoClient.close();
+
+        try {
+            StatefulSet statefulSet = context.getSecondaryResource(StatefulSet.class).orElseThrow();
+            List<Pod> pods = getStatefulSetPods(primaryNamespace, primaryName);
+            String serviceName = MongoDbService.getServiceName(primaryName);
+
+            initMongoReplicaSet(statefulSet, pods, serviceName, primaryNamespace);
+        } catch (Exception e) {
+            mongoClient.close();
+        }
+
+
+//        Optional<UpdateControl<ManagedMongoDB>> updateControlAfterHandledPodsO = handlePods(primary, pods);
 //        if (updateControlAfterHandledPodsO.isPresent()) {
 //            return updateControlAfterHandledPodsO.get();
 //        }
 
-        var i = 0;
+//        var i = 0;
 
-        return UpdateControl.noUpdate();
+        return UpdateControl.patchStatus(primary).rescheduleAfter(RECONCILE_DELAY);
+    }
+
+    private void initMongoReplicaSet(StatefulSet statefulSet, List<Pod> pods, String serviceName, String namespace) {
+        StringBuilder membersStringBuilder = new StringBuilder();
+        logger.info("" + pods.size());
+        for (int i = 0; i < pods.size(); i++) {
+            String member = String.format("{ _id: %d, host: \"%s.%s.%s:27017\" }", i, pods.get(i).getMetadata().getName(), serviceName, namespace);
+            membersStringBuilder.append(member);
+            if (i < pods.size() - 1) {
+                membersStringBuilder.append(",");
+            }
+            membersStringBuilder.append("\n");
+        }
+//        logger.info(membersStringBuilder.toString());
+
+        String[] command = {
+                "mongosh",
+                "--eval",
+                String.format("""
+                        rs.initiate(
+                            {
+                                _id: "rs0",
+                                members: [
+                                    %s
+                                ]
+                            }
+                        )
+                        """, membersStringBuilder)
+        };
+        logger.info(Arrays.toString(command));
+        var outputStream = new ByteArrayOutputStream();
+        var errorStream = new ByteArrayOutputStream();
+
+        try (ExecWatch execWatch = kubernetesClient.pods()
+                .inNamespace(namespace)
+                .withName(pods.getFirst().getMetadata().getName())
+                .inContainer(MongoDBStatefulSet.MONGODB_CONTAINER_NAME) // Optional; remove if not targeting a specific container
+                .writingOutput(outputStream)
+                .writingError(errorStream)
+                .exec(command)) {
+
+            // Wait for the command to complete
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            execWatch.
+            // Command Output: { ok: 1 }
+            // Command Error: MongoServerError: already initialized
+            System.out.println("Command Output: " + outputStream.size());
+            System.err.println("Command Error: " + errorStream.size());
+            var r = execWatch.exitCode().join();
+            logger.info("code: "+ r);
+//            r.complete()
+        }
+
     }
 
 //    private Optional<UpdateControl<ManagedMongoDB>> handlePods(ManagedMongoDB primaryResource, List<Pod> pods) {
@@ -222,15 +306,17 @@ public class MongoDBReconciler
 //            if (!PodsUtil.isPodRunning(pod) ||
 //                    !PodsUtil.isPodContainerReady(pod, MongoDBStatefulSet.MONGODB_CONTAINER_NAME))
 //            {
+//                logger.info("Pod with MongoDB {} is not ready", pod.getMetadata().getName());
 //                var status = new MongodbStatus(MongoDbState.INITIALIZING, "Waiting for the pods");
 //                primaryResource.setStatus(status);
-//                return Optional.of(UpdateControl.patchStatus(primaryResource).rescheduleAfter(RECONCILE_SHORT_DELAY));
+//                return Optional.of(UpdateControl.patchStatus(primaryResource).rescheduleAfter(RECONCILE_DELAY));
 //            }
 //        }
 //        return Optional.empty();
 //    }
 
-    private List<Pod> getStatefulSetPods(String primaryName, String primaryNamespace) {
+    private List<Pod> getStatefulSetPods(String primaryNamespace, String primaryName) {
+        logger.info(String.format("%s-%s",primaryNamespace, primaryName));
         return kubernetesClient
                 .pods()
                 .inNamespace(primaryNamespace)
