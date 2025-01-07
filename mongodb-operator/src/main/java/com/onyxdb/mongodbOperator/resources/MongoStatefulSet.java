@@ -30,8 +30,8 @@ import io.javaoperatorsdk.operator.processing.dependent.kubernetes.CRUDKubernete
 import io.javaoperatorsdk.operator.processing.dependent.kubernetes.KubernetesDependent;
 
 import com.onyxdb.mongodbOperator.discriminators.MongoStatefulSetDiscriminator;
-import com.onyxdb.mongodbOperator.utils.K8sUtils;
 import com.onyxdb.mongodbOperator.utils.LabelsUtils;
+import com.onyxdb.mongodbOperator.utils.MetaUtils;
 
 
 /**
@@ -61,7 +61,7 @@ public class MongoStatefulSet extends CRUDKubernetesDependentResource<StatefulSe
 
     @Override
     protected StatefulSet desired(ManagedMongoDB primary, Context<ManagedMongoDB> context) {
-        ObjectMeta currentMeta = K8sUtils.createMetaFromPrimary(primary);
+        ObjectMeta currentMeta = MetaUtils.createMetaFromPrimary(primary);
         return new StatefulSetBuilder()
                 .withMetadata(currentMeta)
                 .withSpec(buildSpec(primary, currentMeta))
@@ -101,7 +101,7 @@ public class MongoStatefulSet extends CRUDKubernetesDependentResource<StatefulSe
                 .withRequests(Map.ofEntries(Map.entry("memory", Quantity.parse("1Gi"))))
                 .build();
 
-        String managedMongodbSecret = K8sUtils.getResourceInstanceNameWithPrefix(primary);
+        String managedMongodbSecret = MetaUtils.getResourceInstanceNameWithPrefix(primary);
 
         return new PodSpecBuilder()
                 .addNewContainer()
