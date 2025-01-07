@@ -11,8 +11,8 @@ import io.javaoperatorsdk.operator.processing.dependent.kubernetes.CRUDKubernete
 import io.javaoperatorsdk.operator.processing.dependent.kubernetes.KubernetesDependent;
 
 import com.onyxdb.mongodbOperator.discriminators.MongoServiceDiscriminator;
-import com.onyxdb.mongodbOperator.utils.K8sUtil;
-import com.onyxdb.mongodbOperator.utils.LabelsUtil;
+import com.onyxdb.mongodbOperator.utils.K8sUtils;
+import com.onyxdb.mongodbOperator.utils.LabelsUtils;
 
 /**
  * @author foxleren
@@ -28,14 +28,14 @@ public class MongoService extends CRUDKubernetesDependentResource<Service, Manag
     @Override
     protected Service desired(ManagedMongoDB primary, Context<ManagedMongoDB> context) {
         return new ServiceBuilder()
-                .withMetadata(K8sUtil.createMetaFromPrimary(primary))
+                .withMetadata(K8sUtils.createMetaFromPrimary(primary))
                 .withSpec(buildServiceSpec(primary))
                 .build();
     }
 
     private ServiceSpec buildServiceSpec(ManagedMongoDB primary) {
         return new ServiceSpecBuilder()
-                .withSelector(LabelsUtil.getClusterLabels(primary))
+                .withSelector(LabelsUtils.getClusterLabels(primary))
                 .withType("ClusterIP")
                 .withClusterIP("None")
                 .withPorts(new ServicePortBuilder()

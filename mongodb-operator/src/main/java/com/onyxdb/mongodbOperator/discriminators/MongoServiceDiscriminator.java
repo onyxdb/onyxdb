@@ -6,7 +6,7 @@ import io.javaoperatorsdk.operator.processing.event.ResourceID;
 
 import com.onyxdb.mongodbOperator.resources.ManagedMongoDB;
 import com.onyxdb.mongodbOperator.resources.MongoService;
-import com.onyxdb.mongodbOperator.utils.K8sUtil;
+import com.onyxdb.mongodbOperator.utils.K8sUtils;
 
 /**
  * @author foxleren
@@ -16,7 +16,7 @@ public class MongoServiceDiscriminator extends ResourceIDMatcherDiscriminator<Se
         super(
                 MongoService.DEPENDENT_NAME,
                 primary -> new ResourceID(
-                        K8sUtil.getResourceInstanceNameWithPrefix(primary),
+                        K8sUtils.getResourceInstanceNameWithPrefix(primary),
                         primary.getMetadata().getNamespace()
                 )
         );

@@ -12,7 +12,7 @@ import io.fabric8.kubernetes.client.CustomResource;
  *
  * @author foxleren
  */
-public class LabelsUtil {
+public class LabelsUtils {
     public static final String APP_KUBERNETES_LABEL_PREFIX = "app.kubernetes.io/";
 
     public static final String APP_KUBERNETES_NAME_LABEL = APP_KUBERNETES_LABEL_PREFIX + "name";

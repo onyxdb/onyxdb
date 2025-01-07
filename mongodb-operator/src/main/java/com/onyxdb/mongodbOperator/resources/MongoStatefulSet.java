@@ -6,7 +6,6 @@ import java.util.Map;
 import io.fabric8.kubernetes.api.model.ContainerPortBuilder;
 import io.fabric8.kubernetes.api.model.EnvVarBuilder;
 import io.fabric8.kubernetes.api.model.EnvVarSourceBuilder;
-import io.fabric8.kubernetes.api.model.LabelSelector;
 import io.fabric8.kubernetes.api.model.LabelSelectorBuilder;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.ObjectMetaBuilder;
@@ -15,7 +14,6 @@ import io.fabric8.kubernetes.api.model.PersistentVolumeClaimBuilder;
 import io.fabric8.kubernetes.api.model.PersistentVolumeClaimSpecBuilder;
 import io.fabric8.kubernetes.api.model.PodSpec;
 import io.fabric8.kubernetes.api.model.PodSpecBuilder;
-import io.fabric8.kubernetes.api.model.PodTemplateSpec;
 import io.fabric8.kubernetes.api.model.PodTemplateSpecBuilder;
 import io.fabric8.kubernetes.api.model.Quantity;
 import io.fabric8.kubernetes.api.model.ResourceRequirements;
@@ -32,7 +30,8 @@ import io.javaoperatorsdk.operator.processing.dependent.kubernetes.CRUDKubernete
 import io.javaoperatorsdk.operator.processing.dependent.kubernetes.KubernetesDependent;
 
 import com.onyxdb.mongodbOperator.discriminators.MongoStatefulSetDiscriminator;
-import com.onyxdb.mongodbOperator.utils.K8sUtil;
+import com.onyxdb.mongodbOperator.utils.K8sUtils;
+import com.onyxdb.mongodbOperator.utils.LabelsUtils;
 
 
 /**
@@ -41,9 +40,8 @@ import com.onyxdb.mongodbOperator.utils.K8sUtil;
 @KubernetesDependent(resourceDiscriminator = MongoStatefulSetDiscriminator.class)
 public class MongoStatefulSet extends CRUDKubernetesDependentResource<StatefulSet, ManagedMongoDB> {
     public static final String DEPENDENT_NAME = "managed-mongodb-stateful-set";
-
-//    private static final String RESOURCE_NAME_PREFIX = "managed-mongodb";
     public static final String MONGODB_CONTAINER_NAME = "mongodb";
+
     private static final String MONGODB_CONTAINER_MOUNT_PATH = "/data/db";
     private static final String PVC_NAME = "managed-mongodb-pvc";
     private static final List<String> PVC_ACCESS_MODES = List.of("ReadWriteOnce");
@@ -63,37 +61,31 @@ public class MongoStatefulSet extends CRUDKubernetesDependentResource<StatefulSe
 
     @Override
     protected StatefulSet desired(ManagedMongoDB primary, Context<ManagedMongoDB> context) {
-        ObjectMeta meta = K8sUtil.createMetaFromPrimary(primary);
+        ObjectMeta currentMeta = K8sUtils.createMetaFromPrimary(primary);
         return new StatefulSetBuilder()
-                .withMetadata(meta)
-                .withSpec(buildSpec(primary, meta))
+                .withMetadata(currentMeta)
+                .withSpec(buildSpec(primary, currentMeta))
                 .build();
     }
 
-    private StatefulSetSpec buildSpec(ManagedMongoDB primary, ObjectMeta meta) {
+    private StatefulSetSpec buildSpec(ManagedMongoDB primary, ObjectMeta currentMeta) {
         return new StatefulSetSpecBuilder()
-                .withServiceName(K8sUtil.getResourceInstanceNameWithPrefix(primary))
+                .withServiceName(currentMeta.getName())
                 .withReplicas(DEFAULT_REPLICAS)
-                .withSelector(buildSelector(meta.getLabels()))
-                .withTemplate(buildPodTemplate(primary, meta))
-                .withVolumeClaimTemplates(buildPVC(meta.getNamespace()))
+                .withSelector(new LabelSelectorBuilder()
+                        .addToMatchLabels(LabelsUtils.getClusterLabels(currentMeta.getName()))
+                        .build()
+                )
+                .withTemplate(new PodTemplateSpecBuilder()
+                        .withMetadata(currentMeta)
+                        .withSpec(buildPodSpec(primary))
+                        .build()
+                )
+                .withVolumeClaimTemplates(buildPVC(currentMeta.getNamespace()))
                 .build();
     }
 
-    private LabelSelector buildSelector(Map<String, String> labels) {
-        return new LabelSelectorBuilder()
-                .addToMatchLabels(labels)
-                .build();
-    }
-
-    private PodTemplateSpec buildPodTemplate(ManagedMongoDB primary, ObjectMeta meta) {
-        return new PodTemplateSpecBuilder()
-                .withMetadata(meta)
-                .withSpec(buildPodSpec(primary, meta))
-                .build();
-    }
-
-    private PodSpec buildPodSpec(ManagedMongoDB primary, ObjectMeta meta) {
+    private PodSpec buildPodSpec(ManagedMongoDB primary) {
         MongoSpec primarySpec = primary.getSpec();
         List<String> mongodbContainerCommand = List.of(
                 "mongod",
@@ -103,11 +95,13 @@ public class MongoStatefulSet extends CRUDKubernetesDependentResource<StatefulSe
                 "--replSet",
                 "rs0"
         );
+
         ResourceRequirements mongodbContainerResources = new ResourceRequirementsBuilder()
                 .withLimits(Map.ofEntries(Map.entry("memory", Quantity.parse("1Gi"))))
                 .withRequests(Map.ofEntries(Map.entry("memory", Quantity.parse("1Gi"))))
                 .build();
-        String managedMongodbSecret = K8sUtil.getResourceInstanceNameWithPrefix(primary);
+
+        String managedMongodbSecret = K8sUtils.getResourceInstanceNameWithPrefix(primary);
 
         return new PodSpecBuilder()
                 .addNewContainer()
@@ -126,14 +120,14 @@ public class MongoStatefulSet extends CRUDKubernetesDependentResource<StatefulSe
                         .build()
                 )
                 .withEnv(new EnvVarBuilder()
-                        .withName(MONGO_INITDB_ROOT_USERNAME_ENV)
-                        .withValueFrom(new EnvVarSourceBuilder()
-                                .withSecretKeyRef(new SecretKeySelectorBuilder()
-                                        .withKey("user")
-                                        .withName(managedMongodbSecret)
+                                .withName(MONGO_INITDB_ROOT_USERNAME_ENV)
+                                .withValueFrom(new EnvVarSourceBuilder()
+                                        .withSecretKeyRef(new SecretKeySelectorBuilder()
+                                                .withKey("user")
+                                                .withName(managedMongodbSecret)
+                                                .build())
                                         .build())
-                                .build())
-                        .build(),
+                                .build(),
                         new EnvVarBuilder()
                                 .withName(MONGO_INITDB_ROOT_PASSWORD_ENV)
                                 .withValueFrom(new EnvVarSourceBuilder()
@@ -142,7 +136,8 @@ public class MongoStatefulSet extends CRUDKubernetesDependentResource<StatefulSe
                                                 .withName(managedMongodbSecret)
                                                 .build())
                                         .build())
-                                .build())
+                                .build()
+                )
                 .and()
                 .build();
     }
@@ -168,19 +163,4 @@ public class MongoStatefulSet extends CRUDKubernetesDependentResource<StatefulSe
                 .withSpec(spec)
                 .build());
     }
-
-    // TODO
-//    @SuppressWarnings("unused")
-//    static class Discriminator extends ResourceIDMatcherDiscriminator<Secret, ManagedMongoDB> {
-//        public Discriminator() {
-//            super(RESOURCE_NAME_PREFIX, r -> {
-//                        ObjectMeta meta = r.getMetadata();
-//                        return new ResourceID(
-//                                K8sUtils.buildResourceName(RESOURCE_NAME_PREFIX, meta.getName()),
-//                                meta.getNamespace()
-//                        );
-//                    }
-//            );
-//        }
-//    }
 }

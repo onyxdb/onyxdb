@@ -7,15 +7,15 @@ import io.fabric8.kubernetes.client.CustomResource;
 /**
  * @author foxleren
  */
-public final class K8sUtil {
+public final class K8sUtils {
     private static final String RESOURCE_INSTANCE_NAME_PREFIX = "managed-mongodb-";
 
     public static <T extends CustomResource<?, ?>> ObjectMeta createMetaFromPrimary(T primary) {
         ObjectMeta primaryMeta = primary.getMetadata();
         return new ObjectMetaBuilder()
                 .withNamespace(primaryMeta.getNamespace())
-                .withName(K8sUtil.getResourceInstanceNameWithPrefix(primary))
-                .withLabels(LabelsUtil.getClusterLabels(primaryMeta.getName()))
+                .withName(K8sUtils.getResourceInstanceNameWithPrefix(primary))
+                .withLabels(LabelsUtils.getClusterLabels(primaryMeta.getName()))
                 .build();
     }
 

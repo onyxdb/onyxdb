@@ -9,7 +9,7 @@ import io.javaoperatorsdk.operator.processing.dependent.kubernetes.CRUDKubernete
 import io.javaoperatorsdk.operator.processing.dependent.kubernetes.KubernetesDependent;
 
 import com.onyxdb.mongodbOperator.discriminators.MongoSecretDiscriminator;
-import com.onyxdb.mongodbOperator.utils.K8sUtil;
+import com.onyxdb.mongodbOperator.utils.K8sUtils;
 
 /**
  * @author foxleren
@@ -31,7 +31,7 @@ public class MongoSecret extends CRUDKubernetesDependentResource<Secret, Managed
         );
 
         return new SecretBuilder()
-                .withMetadata(K8sUtil.createMetaFromPrimary(primary))
+                .withMetadata(K8sUtils.createMetaFromPrimary(primary))
                 .withType("Opaque")
                 .withStringData(stringData)
                 .build();
