@@ -2,9 +2,11 @@ package com.onyxdb.mongodbOperator.reconcilers;
 
 import java.io.ByteArrayOutputStream;
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.List;
 
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import io.fabric8.kubernetes.api.model.LabelSelectorBuilder;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.apps.StatefulSet;
 import io.fabric8.kubernetes.client.KubernetesClient;
@@ -31,8 +33,12 @@ import com.onyxdb.mongodbOperator.resources.ManagedMongoDB;
 import com.onyxdb.mongodbOperator.resources.MongoSecret;
 import com.onyxdb.mongodbOperator.resources.MongoService;
 import com.onyxdb.mongodbOperator.resources.MongoStatefulSet;
-import com.onyxdb.mongodbOperator.status.MongoState;
-import com.onyxdb.mongodbOperator.status.MongoStatus;
+import com.onyxdb.mongodbOperator.resources.MongoState;
+import com.onyxdb.mongodbOperator.resources.MongoStatus;
+import com.onyxdb.mongodbOperator.utils.K8sUtil;
+import com.onyxdb.mongodbOperator.utils.LabelsUtils;
+import com.onyxdb.mongodbOperator.utils.MetaUtils;
+import com.onyxdb.mongodbOperator.utils.MongoUtil;
 
 /**
  * @author foxleren
@@ -60,8 +66,7 @@ import com.onyxdb.mongodbOperator.status.MongoStatus;
 public class ManagedMongoDBReconciler
         implements Reconciler<ManagedMongoDB>,
         ErrorStatusHandler<ManagedMongoDB>,
-        Cleaner<ManagedMongoDB>
-{
+        Cleaner<ManagedMongoDB> {
     private static final Logger logger = LoggerFactory.getLogger(ManagedMongoDBReconciler.class);
     private static final Duration RECONCILE_DELAY = Duration.ofSeconds(5);
 
@@ -101,8 +106,7 @@ public class ManagedMongoDBReconciler
     private UpdateControl<ManagedMongoDB> handleWorkflowReconcileResult(
             ManagedMongoDB primaryResource,
             Context<ManagedMongoDB> context,
-            WorkflowReconcileResult reconcileResult)
-    {
+            WorkflowReconcileResult reconcileResult) {
         if (!reconcileResult.allDependentResourcesReady()) {
             logger.info("Pending secondary resources for primary resource {}", primaryResource.getMetadata().getName());
             primaryResource.setStatus(new MongoStatus(MongoState.INITIALIZING, "Pending secondary resources"));
@@ -206,94 +210,68 @@ public class ManagedMongoDBReconciler
 
     private UpdateControl<ManagedMongoDB> reconcileMongoDBCluster(
             ManagedMongoDB primary,
-            Context<ManagedMongoDB> context)
-    {
+            Context<ManagedMongoDB> context) {
         String primaryNamespace = primary.getMetadata().getNamespace();
         String primaryName = primary.getMetadata().getName();
 
-        var kubernetesClient2 = context.getClient();
+        StatefulSet statefulSet = context.getSecondaryResource(StatefulSet.class).orElseThrow();
+        List<Pod> pods = getStatefulSetPods(primaryNamespace, primaryName);
+        String serviceName = MetaUtils.getResourceInstanceNameWithPrefix(primary);
 
-//        MongoClient mongoClient = MongoClients.create(MongoClientSettings.builder()
-//                .applyToClusterSettings(b -> b.hosts(List.of())).build());
-//
-//        mongoClient.close();
-
-//        try {
-//            StatefulSet statefulSet = context.getSecondaryResource(StatefulSet.class).orElseThrow();
-//            List<Pod> pods = getStatefulSetPods(primaryNamespace, primaryName);
-//            String serviceName = MongoService.getServiceName(primaryName);
-//
-//            initMongoReplicaSet(statefulSet, pods, serviceName, primaryNamespace);
-//        } catch (Exception e) {
-//            mongoClient.close();
-//        }
-
-
-//        Optional<UpdateControl<ManagedMongoDB>> updateControlAfterHandledPodsO = handlePods(primary, pods);
-//        if (updateControlAfterHandledPodsO.isPresent()) {
-//            return updateControlAfterHandledPodsO.get();
-//        }
-
-//        var i = 0;
+        var mongoUrl = "mongodb://root:password@managed-mongodb-sample-db-0.managed-mongodb-sample-db.onyxdb:28017,managed-mongodb-sample-db-1.managed-mongodb-sample-db.onyxdb:28017,managed-mongodb-sample-db-2.managed-mongodb-sample-db.onyxdb:28017/?replicaSet=rs0";
+        try(MongoClient mongoClient = MongoClients.create(mongoUrl)) {
+            var desc = mongoClient.getClusterDescription();
+//            logger.info(desc.getShortDescription());
+            for (var a : mongoClient.listDatabaseNames()) {
+                logger.info("db=" + a);
+            }
+        }
+        // TODO if cant init mongo rs, then set error state
+//        initMongoReplicaSet(statefulSet, pods, serviceName, primaryNamespace);
 
         primary.setStatus(new MongoStatus(MongoState.READY));
         return UpdateControl.patchStatus(primary).rescheduleAfter(RECONCILE_DELAY);
     }
 
     private void initMongoReplicaSet(StatefulSet statefulSet, List<Pod> pods, String serviceName, String namespace) {
-        StringBuilder membersStringBuilder = new StringBuilder();
-        logger.info("" + pods.size());
-        for (int i = 0; i < pods.size(); i++) {
-            String member = String.format("{ _id: %d, host: \"%s.%s.%s:27017\" }", i, pods.get(i).getMetadata().getName(), serviceName, namespace);
-            membersStringBuilder.append(member);
-            if (i < pods.size() - 1) {
-                membersStringBuilder.append(",");
-            }
-            membersStringBuilder.append("\n");
-        }
-//        logger.info(membersStringBuilder.toString());
+        List<String> hosts = pods.stream()
+                .map(p -> K8sUtil.getPodFqdn(p.getMetadata().getName(), serviceName, namespace))
+                .toList();
+        String initRsCmd = MongoUtil.buildInitReplicaSetCommand("rs0", hosts, MongoStatefulSet.MONGODB_CONTAINER_PORT);
+        logger.info(initRsCmd);
 
-        String[] command = {
-                "mongosh",
-                "--eval",
-                String.format("""
-                        rs.initiate(
-                            {
-                                _id: "rs0",
-                                members: [
-                                    %s
-                                ]
-                            }
-                        )
-                        """, membersStringBuilder)
-        };
-        logger.info(Arrays.toString(command));
-        var outputStream = new ByteArrayOutputStream();
-        var errorStream = new ByteArrayOutputStream();
+        String[] command = {"mongosh", "--eval", initRsCmd};
 
-        try (ExecWatch execWatch = kubernetesClient.pods()
-                .inNamespace(namespace)
-                .withName(pods.getFirst().getMetadata().getName())
-                .inContainer(MongoStatefulSet.MONGODB_CONTAINER_NAME) // Optional; remove if not targeting a specific container
-                .writingOutput(outputStream)
-                .writingError(errorStream)
-                .exec(command)) {
+//        var outputStream = new ByteArrayOutputStream();
+//        var errorStream = new ByteArrayOutputStream();
+//
+//        ExecWatch execWatch = kubernetesClient.pods()
+//                .inNamespace(namespace)
+//                .withName(pods.getFirst().getMetadata().getName())
+//                .inContainer(MongoStatefulSet.MONGODB_CONTAINER_NAME) // Optional; remove if not targeting a specific container
+//                .writingOutput(outputStream)
+//                .writingError(errorStream)
+//                .exec(command);
+//        try (execWatch) {
+//            int exitCode = execWatch.exitCode().join();
+//            if (exitCode != 0) {
+//                throw new RuntimeException(String.format(
+//                        "Failed to init mongo ReplicaSet; exitCode=%d; message=%s",
+//                        exitCode,
+//                        errorStream
+//                ));
+//            }
+//        }
+    }
 
-            // Wait for the command to complete
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-//            execWatch.
-            // Command Output: { ok: 1 }
-            // Command Error: MongoServerError: already initialized
-            System.out.println("Command Output: " + outputStream.size());
-            System.err.println("Command Error: " + errorStream.size());
-            var r = execWatch.exitCode().join();
-            logger.info("code: "+ r);
-//            r.complete()
-        }
-
+    private List<Pod> getStatefulSetPods(String primaryNamespace, String primaryName) {
+        return kubernetesClient
+                .pods()
+                .inNamespace(primaryNamespace)
+                .withLabelSelector(new LabelSelectorBuilder()
+                        .withMatchLabels(LabelsUtils.getClusterLabels(primaryName))
+                        .build())
+                .list()
+                .getItems();
     }
 }

@@ -1,4 +1,4 @@
-package com.onyxdb.mongodbOperator.status;
+package com.onyxdb.mongodbOperator.resources;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 

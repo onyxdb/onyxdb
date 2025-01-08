@@ -1,4 +1,4 @@
-package com.onyxdb.mongodbOperator.status;
+package com.onyxdb.mongodbOperator.resources;
 
 import io.javaoperatorsdk.operator.api.ObservedGenerationAwareStatus;
 import lombok.AllArgsConstructor;

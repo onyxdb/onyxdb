@@ -8,8 +8,6 @@ import io.fabric8.kubernetes.model.annotation.Plural;
 import io.fabric8.kubernetes.model.annotation.Singular;
 import io.fabric8.kubernetes.model.annotation.Version;
 
-import com.onyxdb.mongodbOperator.status.MongoStatus;
-
 /**
  * @author foxleren
  */

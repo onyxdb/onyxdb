@@ -32,6 +32,8 @@ dependencies {
     testImplementation(libs.javaOperatorSdk.operatorFrameworkSpringBootStarterTest)
     // generateCrds task
     compileOnly(libs.ioFabric8.kubernetesClientApi)
+
+    implementation(libs.orgMongodb.mongodbDriverSync)
 }
 
 // Based on https://github.com/fabric8io/kubernetes-client/blob/main/crd-generator/gradle/README.md
@@ -90,4 +92,8 @@ tasks.register(generateCrdsTask) {
             generateCrdsForOutput(outputDir)
         }
     }
+}
+
+tasks.named(JvmConstants.CLASSES_TASK_NAME) {
+    finalizedBy(generateCrdsTask)
 }

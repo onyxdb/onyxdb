@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: onyxdb-mongodb-operator
+  namespace: onyxdb
+  labels:
+    app: onyxdb-mongodb-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: onyxdb-mongodb-operator
+  template:
+    metadata:
+      labels:
+        app: onyxdb-mongodb-operator
+    spec:
+      containers:
+        - name: onyxdb-mongodb-operator
+          image: foxleren/onyxdb-mongodb-operator:testing
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+#          readinessProbe:
+#            httpGet:
+#              path: /actuator/health/readiness
+#              port: 8080
+#            initialDelaySeconds: 15
+#            periodSeconds: 5
+#          livenessProbe:
+#            httpGet:
+#              path: /actuator/health/liveness
+#              port: 8080
+#            initialDelaySeconds: 15
+#            periodSeconds: 5
+#          env:
+#            - name: XOR_MDB_TYPE
+#              value: master
+#            - name: XOR_MDB_POSTGRES_HOST
+#              valueFrom:
+#                secretKeyRef:
+#                  name: xor-mdb-master.production.xority
+#                  key: postgres_host
+#            - name: XOR_MDB_POSTGRES_PORT
+#              valueFrom:
+#                secretKeyRef:
+#                  name: xor-mdb-master.production.xority
+#                  key: postgres_port
+#            - name: XOR_MDB_POSTGRES_DB
+#              valueFrom:
+#                secretKeyRef:
+#                  name: xor-mdb-master.production.xority
+#                  key: postgres_db
+#            - name: XOR_MDB_POSTGRES_USERNAME
+#              valueFrom:
+#                secretKeyRef:
+#                  name: xor-mdb-master.production.xority
+#                  key: postgres_username
+#            - name: XOR_MDB_POSTGRES_PASSWORD
+#              valueFrom:
+#                secretKeyRef:
+#                  name: xor-mdb-master.production.xority
+#                  key: postgres_password

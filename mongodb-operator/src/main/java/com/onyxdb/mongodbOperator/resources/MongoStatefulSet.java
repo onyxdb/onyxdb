@@ -70,10 +70,10 @@ public class MongoStatefulSet extends CRUDKubernetesDependentResource<StatefulSe
 
     private StatefulSetSpec buildSpec(ManagedMongoDB primary, ObjectMeta currentMeta) {
         return new StatefulSetSpecBuilder()
-                .withServiceName(currentMeta.getName())
+                .withServiceName(MetaUtils.getResourceInstanceNameWithPrefix(primary))
                 .withReplicas(DEFAULT_REPLICAS)
                 .withSelector(new LabelSelectorBuilder()
-                        .addToMatchLabels(LabelsUtils.getClusterLabels(currentMeta.getName()))
+                        .withMatchLabels(currentMeta.getLabels())
                         .build()
                 )
                 .withTemplate(new PodTemplateSpecBuilder()

@@ -1,7 +1,7 @@
 FROM amazoncorretto:21
 
-WORKDIR /onyxdb-mongodb-operator
+WORKDIR /mongodb-operator
 
-COPY ./onyxdb-mongodb-operator/build/libs/*.jar /onyxdb-mongodb-operator/onyxdb-mongodb-operator.jar
+COPY ./mongodb-operator/build/export/mongodb-operator.jar /mongodb-operator/mongodb-operator.jar
 
-ENTRYPOINT ["java", "-jar", "onyxdb-mongodb-operator.jar"]
+ENTRYPOINT ["java", "-jar", "mongodb-operator.jar"]
