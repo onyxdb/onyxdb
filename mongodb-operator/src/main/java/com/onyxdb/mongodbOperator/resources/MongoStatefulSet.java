@@ -3,10 +3,13 @@ package com.onyxdb.mongodbOperator.resources;
 import java.util.List;
 import java.util.Map;
 
+import io.fabric8.kubernetes.api.model.ContainerBuilder;
 import io.fabric8.kubernetes.api.model.ContainerPortBuilder;
-import io.fabric8.kubernetes.api.model.EnvVarBuilder;
-import io.fabric8.kubernetes.api.model.EnvVarSourceBuilder;
+import io.fabric8.kubernetes.api.model.ExecActionBuilder;
+import io.fabric8.kubernetes.api.model.KeyToPathBuilder;
 import io.fabric8.kubernetes.api.model.LabelSelectorBuilder;
+import io.fabric8.kubernetes.api.model.LifecycleBuilder;
+import io.fabric8.kubernetes.api.model.LifecycleHandlerBuilder;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.ObjectMetaBuilder;
 import io.fabric8.kubernetes.api.model.PersistentVolumeClaim;
@@ -18,7 +21,8 @@ import io.fabric8.kubernetes.api.model.PodTemplateSpecBuilder;
 import io.fabric8.kubernetes.api.model.Quantity;
 import io.fabric8.kubernetes.api.model.ResourceRequirements;
 import io.fabric8.kubernetes.api.model.ResourceRequirementsBuilder;
-import io.fabric8.kubernetes.api.model.SecretKeySelectorBuilder;
+import io.fabric8.kubernetes.api.model.SecretVolumeSourceBuilder;
+import io.fabric8.kubernetes.api.model.VolumeBuilder;
 import io.fabric8.kubernetes.api.model.VolumeMountBuilder;
 import io.fabric8.kubernetes.api.model.VolumeResourceRequirementsBuilder;
 import io.fabric8.kubernetes.api.model.apps.StatefulSet;
@@ -30,7 +34,6 @@ import io.javaoperatorsdk.operator.processing.dependent.kubernetes.CRUDKubernete
 import io.javaoperatorsdk.operator.processing.dependent.kubernetes.KubernetesDependent;
 
 import com.onyxdb.mongodbOperator.discriminators.MongoStatefulSetDiscriminator;
-import com.onyxdb.mongodbOperator.utils.LabelsUtils;
 import com.onyxdb.mongodbOperator.utils.MetaUtils;
 
 
@@ -43,6 +46,7 @@ public class MongoStatefulSet extends CRUDKubernetesDependentResource<StatefulSe
     public static final String MONGODB_CONTAINER_NAME = "mongodb";
 
     private static final String MONGODB_CONTAINER_MOUNT_PATH = "/data/db";
+    public static final String MONGO_KEY_FILE_PATH = "/etc/onyxdb-managed-mongodb/key";
     private static final String PVC_NAME = "managed-mongodb-pvc";
     private static final List<String> PVC_ACCESS_MODES = List.of("ReadWriteOnce");
 
@@ -88,11 +92,14 @@ public class MongoStatefulSet extends CRUDKubernetesDependentResource<StatefulSe
     private PodSpec buildPodSpec(ManagedMongoDB primary) {
         MongoSpec primarySpec = primary.getSpec();
         List<String> mongodbContainerCommand = List.of(
+//                "cat /etc/onyxdb-managed-mongodb/key"
                 "mongod",
                 "--bind_ip_all",
                 "--auth",
                 "--dbpath",
                 MONGODB_CONTAINER_MOUNT_PATH,
+                "--keyFile",
+                MONGO_KEY_FILE_PATH,
                 "--replSet",
                 "rs0"
         );
@@ -105,21 +112,47 @@ public class MongoStatefulSet extends CRUDKubernetesDependentResource<StatefulSe
         String managedMongodbSecret = MetaUtils.getResourceInstanceNameWithPrefix(primary);
 
         return new PodSpecBuilder()
-                .addNewContainer()
-                .withName(MONGODB_CONTAINER_NAME)
-                .withImage(primarySpec.image())
-                .withImagePullPolicy("IfNotPresent")
-                .withCommand(mongodbContainerCommand)
-                .withResources(mongodbContainerResources)
-                .withPorts(new ContainerPortBuilder()
-                        .withContainerPort(MONGODB_CONTAINER_PORT)
-                        .build()
-                )
-                .withVolumeMounts(new VolumeMountBuilder()
-                        .withMountPath(MONGODB_CONTAINER_MOUNT_PATH)
-                        .withName(PVC_NAME)
-                        .build()
-                )
+                .addToContainers(new ContainerBuilder()
+                        .withName(MONGODB_CONTAINER_NAME)
+                        .withImage(primarySpec.image())
+                        .withImagePullPolicy("IfNotPresent")
+                        .withCommand(mongodbContainerCommand)
+                        .withResources(mongodbContainerResources)
+                        .withPorts(new ContainerPortBuilder()
+                                .withContainerPort(MONGODB_CONTAINER_PORT)
+                                .build()
+                        )
+                        .withVolumeMounts(new VolumeMountBuilder()
+                                .withMountPath(MONGODB_CONTAINER_MOUNT_PATH)
+                                .withName(PVC_NAME)
+                                .build()
+                        )
+                        .withVolumeMounts(new VolumeMountBuilder()
+                                .withName("mongo-key")
+                                .withMountPath(MONGO_KEY_FILE_PATH)
+                                .withReadOnly()
+                                .build())
+                        .withLifecycle(new LifecycleBuilder()
+                                .withPostStart(new LifecycleHandlerBuilder()
+                                        .withExec(new ExecActionBuilder()
+                                                .withCommand("chmod 600 /etc/onyxdb-managed-mongodb/key")
+                                                .build())
+                                        .build())
+                                .build())
+//                                .withPostStart(new LifecycleHandler()
+//                                        .setExec(new ExecActionBuilder()
+//                                                .withCommand("chmod 400 /etc/onyxdb-managed-mongodb/key")
+//                                                .build())
+//                                .build())
+//                        .withStartupProbe(new ProbeBuilder()
+//                                .withPeriodSeconds(60)
+//                                .build())
+                        .build())
+//                .with
+//                .withVolumeMounts(new VolumeMountBuilder()
+//                        .withName("mongoKey")
+//                        .withMountPath("/etc/")
+//                        .build())
 //                .withEnv(new EnvVarBuilder()
 //                                .withName(MONGO_INITDB_ROOT_USERNAME_ENV)
 //                                .withValueFrom(new EnvVarSourceBuilder()
@@ -139,7 +172,18 @@ public class MongoStatefulSet extends CRUDKubernetesDependentResource<StatefulSe
 //                                        .build())
 //                                .build()
 //                )
-                .and()
+                .addToVolumes(
+                        new VolumeBuilder()
+                                .withName("mongo-key")
+                                .withSecret(new SecretVolumeSourceBuilder()
+                                        .withSecretName(managedMongodbSecret)
+                                        .withItems(List.of(new KeyToPathBuilder()
+                                                .withKey("key")
+                                                .withPath("key")
+                                                .build()))
+                                        .build())
+                                .build()
+                )
                 .build();
     }
 

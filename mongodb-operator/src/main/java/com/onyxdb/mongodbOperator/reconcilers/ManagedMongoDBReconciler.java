@@ -26,10 +26,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.onyxdb.mongodbOperator.condition.MongoKeySecretReadyCondition;
 import com.onyxdb.mongodbOperator.condition.MongoSecretReadyCondition;
 import com.onyxdb.mongodbOperator.condition.MongoServiceReadyCondition;
 import com.onyxdb.mongodbOperator.condition.MongoStatefulSetReadyCondition;
 import com.onyxdb.mongodbOperator.resources.ManagedMongoDB;
+import com.onyxdb.mongodbOperator.resources.MongoKeySecret;
 import com.onyxdb.mongodbOperator.resources.MongoSecret;
 import com.onyxdb.mongodbOperator.resources.MongoService;
 import com.onyxdb.mongodbOperator.resources.MongoStatefulSet;
@@ -44,11 +46,18 @@ import com.onyxdb.mongodbOperator.utils.MongoUtil;
  * @author foxleren
  */
 @Component
-@ControllerConfiguration(dependents = {
+@ControllerConfiguration(
+//        namespaces = {"onyxdb"},
+        dependents = {
+//        @Dependent(
+//                name = MongoSecret.DEPENDENT_NAME,
+//                type = MongoSecret.class,
+//                readyPostcondition = MongoSecretReadyCondition.class
+//        ),
         @Dependent(
-                name = MongoSecret.DEPENDENT_NAME,
-                type = MongoSecret.class,
-                readyPostcondition = MongoSecretReadyCondition.class
+                name = MongoKeySecret.DEPENDENT_NAME,
+                type = MongoKeySecret.class,
+                readyPostcondition = MongoKeySecretReadyCondition.class
         ),
         @Dependent(
                 name = MongoService.DEPENDENT_NAME,
@@ -58,7 +67,7 @@ import com.onyxdb.mongodbOperator.utils.MongoUtil;
         @Dependent(
                 name = MongoStatefulSet.DEPENDENT_NAME,
                 type = MongoStatefulSet.class,
-                dependsOn = {MongoSecret.DEPENDENT_NAME, MongoService.DEPENDENT_NAME},
+                dependsOn = {MongoKeySecret.DEPENDENT_NAME, MongoService.DEPENDENT_NAME},
                 readyPostcondition = MongoStatefulSetReadyCondition.class
         ),
 })
@@ -73,7 +82,7 @@ public class ManagedMongoDBReconciler
     private final KubernetesClient kubernetesClient;
 
     // TODO init mongod with --auth, then create users with client
-    //  https://www.mongodb.com/docs/manual/reference/program/mongod/#std-option-mongod.--auth
+    // https://www.mongodb.com/docs/manual/reference/program/mongod/#std-option-mongod.--auth
 
     // TODO create secret with generated keyfile for auth
     // https://www.mongodb.com/docs/manual/tutorial/deploy-replica-set-with-keyfile-access-control/
@@ -118,7 +127,9 @@ public class ManagedMongoDBReconciler
             Context<ManagedMongoDB> context,
             WorkflowReconcileResult reconcileResult) {
         if (!reconcileResult.allDependentResourcesReady()) {
-            logger.info("Pending secondary resources for primary resource {}", primaryResource.getMetadata().getName());
+            List<String> notReady = reconcileResult.getNotReadyDependents().stream().map(r -> r.resourceType().getName()).toList();
+            logger.info("Pending secondary resources for primary resource {}: {}", primaryResource.getMetadata().getName(),
+                    String.join(", ", notReady));
             primaryResource.setStatus(new MongoStatus(MongoState.INITIALIZING, "Pending secondary resources"));
             return UpdateControl.patchStatus(primaryResource).rescheduleAfter(RECONCILE_DELAY);
         }
@@ -228,6 +239,8 @@ public class ManagedMongoDBReconciler
         List<Pod> pods = getStatefulSetPods(primaryNamespace, primaryName);
         String serviceName = MetaUtils.getResourceInstanceNameWithPrefix(primary);
 
+//        logger.info("KEY=" + K8sUtil.generateBase64Key(1024));
+
 //        var mongoUrl = "mongodb://managed-mongodb-sample-db-0.managed-mongodb-sample-db.onyxdb:27017,managed-mongodb-sample-db-1.managed-mongodb-sample-db.onyxdb:27017,managed-mongodb-sample-db-2.managed-mongodb-sample-db.onyxdb:27017/admin?replicaSet=rs0";
 //        try(MongoClient mongoClient = MongoClients.create(mongoUrl)) {
 //            var desc = mongoClient.getClusterDescription();
@@ -237,7 +250,7 @@ public class ManagedMongoDBReconciler
 //            }
 //        }
         // TODO if cant init mongo rs, then set error state
-        initMongoReplicaSet(statefulSet, pods, serviceName, primaryNamespace);
+//        initMongoReplicaSet(statefulSet, pods, serviceName, primaryNamespace);
 
         primary.setStatus(new MongoStatus(MongoState.READY));
         return UpdateControl.patchStatus(primary).rescheduleAfter(RECONCILE_DELAY);

@@ -14,7 +14,7 @@ import com.onyxdb.mongodbOperator.utils.MetaUtils;
 /**
  * @author foxleren
  */
-@KubernetesDependent(resourceDiscriminator = MongoSecretDiscriminator.class)
+//@KubernetesDependent(resourceDiscriminator = MongoSecretDiscriminator.class)
 public class MongoSecret extends CRUDKubernetesDependentResource<Secret, ManagedMongoDB> {
     public static final String DEPENDENT_NAME = "managed-mongodb-secret";
 
