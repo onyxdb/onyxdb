@@ -15,6 +15,7 @@ spec:
       labels:
         app: onyxdb-mongodb-operator
     spec:
+      serviceAccountName: onyxdb-mongodb-operator
       containers:
         - name: onyxdb-mongodb-operator
           image: foxleren/onyxdb-mongodb-operator:testing
