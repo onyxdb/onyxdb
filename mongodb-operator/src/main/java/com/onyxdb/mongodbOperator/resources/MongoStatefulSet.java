@@ -90,6 +90,7 @@ public class MongoStatefulSet extends CRUDKubernetesDependentResource<StatefulSe
         List<String> mongodbContainerCommand = List.of(
                 "mongod",
                 "--bind_ip_all",
+                "--auth",
                 "--dbpath",
                 MONGODB_CONTAINER_MOUNT_PATH,
                 "--replSet",
@@ -119,25 +120,25 @@ public class MongoStatefulSet extends CRUDKubernetesDependentResource<StatefulSe
                         .withName(PVC_NAME)
                         .build()
                 )
-                .withEnv(new EnvVarBuilder()
-                                .withName(MONGO_INITDB_ROOT_USERNAME_ENV)
-                                .withValueFrom(new EnvVarSourceBuilder()
-                                        .withSecretKeyRef(new SecretKeySelectorBuilder()
-                                                .withKey("user")
-                                                .withName(managedMongodbSecret)
-                                                .build())
-                                        .build())
-                                .build(),
-                        new EnvVarBuilder()
-                                .withName(MONGO_INITDB_ROOT_PASSWORD_ENV)
-                                .withValueFrom(new EnvVarSourceBuilder()
-                                        .withSecretKeyRef(new SecretKeySelectorBuilder()
-                                                .withKey("password")
-                                                .withName(managedMongodbSecret)
-                                                .build())
-                                        .build())
-                                .build()
-                )
+//                .withEnv(new EnvVarBuilder()
+//                                .withName(MONGO_INITDB_ROOT_USERNAME_ENV)
+//                                .withValueFrom(new EnvVarSourceBuilder()
+//                                        .withSecretKeyRef(new SecretKeySelectorBuilder()
+//                                                .withKey("user")
+//                                                .withName(managedMongodbSecret)
+//                                                .build())
+//                                        .build())
+//                                .build(),
+//                        new EnvVarBuilder()
+//                                .withName(MONGO_INITDB_ROOT_PASSWORD_ENV)
+//                                .withValueFrom(new EnvVarSourceBuilder()
+//                                        .withSecretKeyRef(new SecretKeySelectorBuilder()
+//                                                .withKey("password")
+//                                                .withName(managedMongodbSecret)
+//                                                .build())
+//                                        .build())
+//                                .build()
+//                )
                 .and()
                 .build();
     }

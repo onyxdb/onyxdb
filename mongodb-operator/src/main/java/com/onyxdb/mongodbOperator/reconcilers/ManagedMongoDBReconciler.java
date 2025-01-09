@@ -72,10 +72,20 @@ public class ManagedMongoDBReconciler
 
     private final KubernetesClient kubernetesClient;
 
+    // TODO init mongod with --auth, then create users with client
+    //  https://www.mongodb.com/docs/manual/reference/program/mongod/#std-option-mongod.--auth
+
+    // TODO create secret with generated keyfile for auth
+    // https://www.mongodb.com/docs/manual/tutorial/deploy-replica-set-with-keyfile-access-control/
+    // https://www.mongodb.com/docs/manual/core/security-internal-authentication/#keyfiles
+    // https://www.digitalocean.com/community/tutorials/how-to-configure-keyfile-authentication-for-mongodb-replica-sets-on-ubuntu-20-04
+
     @Override
     public UpdateControl<ManagedMongoDB> reconcile(ManagedMongoDB primary, Context<ManagedMongoDB> context) {
         String crdName = primary.getCRDName();
         String primaryName = primary.getMetadata().getName();
+
+        logger.info("MOKHOV_V=4");
 
         try {
             logger.info("Reconciling {} with name={}", crdName, primaryName);
@@ -218,16 +228,16 @@ public class ManagedMongoDBReconciler
         List<Pod> pods = getStatefulSetPods(primaryNamespace, primaryName);
         String serviceName = MetaUtils.getResourceInstanceNameWithPrefix(primary);
 
-        var mongoUrl = "mongodb://root:password@managed-mongodb-sample-db-0.managed-mongodb-sample-db.onyxdb:28017,managed-mongodb-sample-db-1.managed-mongodb-sample-db.onyxdb:28017,managed-mongodb-sample-db-2.managed-mongodb-sample-db.onyxdb:28017/?replicaSet=rs0";
-        try(MongoClient mongoClient = MongoClients.create(mongoUrl)) {
-            var desc = mongoClient.getClusterDescription();
+//        var mongoUrl = "mongodb://managed-mongodb-sample-db-0.managed-mongodb-sample-db.onyxdb:27017,managed-mongodb-sample-db-1.managed-mongodb-sample-db.onyxdb:27017,managed-mongodb-sample-db-2.managed-mongodb-sample-db.onyxdb:27017/admin?replicaSet=rs0";
+//        try(MongoClient mongoClient = MongoClients.create(mongoUrl)) {
+//            var desc = mongoClient.getClusterDescription();
 //            logger.info(desc.getShortDescription());
-            for (var a : mongoClient.listDatabaseNames()) {
-                logger.info("db=" + a);
-            }
-        }
+//            for (var a : mongoClient.listDatabaseNames()) {
+//                logger.info("db=" + a);
+//            }
+//        }
         // TODO if cant init mongo rs, then set error state
-//        initMongoReplicaSet(statefulSet, pods, serviceName, primaryNamespace);
+        initMongoReplicaSet(statefulSet, pods, serviceName, primaryNamespace);
 
         primary.setStatus(new MongoStatus(MongoState.READY));
         return UpdateControl.patchStatus(primary).rescheduleAfter(RECONCILE_DELAY);
@@ -242,26 +252,26 @@ public class ManagedMongoDBReconciler
 
         String[] command = {"mongosh", "--eval", initRsCmd};
 
-//        var outputStream = new ByteArrayOutputStream();
-//        var errorStream = new ByteArrayOutputStream();
-//
-//        ExecWatch execWatch = kubernetesClient.pods()
-//                .inNamespace(namespace)
-//                .withName(pods.getFirst().getMetadata().getName())
-//                .inContainer(MongoStatefulSet.MONGODB_CONTAINER_NAME) // Optional; remove if not targeting a specific container
-//                .writingOutput(outputStream)
-//                .writingError(errorStream)
-//                .exec(command);
-//        try (execWatch) {
-//            int exitCode = execWatch.exitCode().join();
-//            if (exitCode != 0) {
-//                throw new RuntimeException(String.format(
-//                        "Failed to init mongo ReplicaSet; exitCode=%d; message=%s",
-//                        exitCode,
-//                        errorStream
-//                ));
-//            }
-//        }
+        var outputStream = new ByteArrayOutputStream();
+        var errorStream = new ByteArrayOutputStream();
+
+        ExecWatch execWatch = kubernetesClient.pods()
+                .inNamespace(namespace)
+                .withName(pods.getFirst().getMetadata().getName())
+                .inContainer(MongoStatefulSet.MONGODB_CONTAINER_NAME) // Optional; remove if not targeting a specific container
+                .writingOutput(outputStream)
+                .writingError(errorStream)
+                .exec(command);
+        try (execWatch) {
+            int exitCode = execWatch.exitCode().join();
+            if (exitCode != 0) {
+                throw new RuntimeException(String.format(
+                        "Failed to init mongo ReplicaSet; exitCode=%d; message=%s",
+                        exitCode,
+                        errorStream
+                ));
+            }
+        }
     }
 
     private List<Pod> getStatefulSetPods(String primaryNamespace, String primaryName) {
