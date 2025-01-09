@@ -79,7 +79,7 @@ public class ManagedMongoDBReconciler
     // https://www.mongodb.com/docs/manual/tutorial/deploy-replica-set-with-keyfile-access-control/
     // https://www.mongodb.com/docs/manual/core/security-internal-authentication/#keyfiles
     // https://www.digitalocean.com/community/tutorials/how-to-configure-keyfile-authentication-for-mongodb-replica-sets-on-ubuntu-20-04
-
+    // https://stackoverflow.com/questions/53296057/how-do-i-mount-a-single-file-from-a-secret-in-kubernetes
     @Override
     public UpdateControl<ManagedMongoDB> reconcile(ManagedMongoDB primary, Context<ManagedMongoDB> context) {
         String crdName = primary.getCRDName();
