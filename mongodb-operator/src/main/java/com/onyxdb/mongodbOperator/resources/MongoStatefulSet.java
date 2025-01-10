@@ -5,11 +5,8 @@ import java.util.Map;
 
 import io.fabric8.kubernetes.api.model.ContainerBuilder;
 import io.fabric8.kubernetes.api.model.ContainerPortBuilder;
-import io.fabric8.kubernetes.api.model.ExecActionBuilder;
 import io.fabric8.kubernetes.api.model.KeyToPathBuilder;
 import io.fabric8.kubernetes.api.model.LabelSelectorBuilder;
-import io.fabric8.kubernetes.api.model.LifecycleBuilder;
-import io.fabric8.kubernetes.api.model.LifecycleHandlerBuilder;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.ObjectMetaBuilder;
 import io.fabric8.kubernetes.api.model.PersistentVolumeClaim;
@@ -112,67 +109,28 @@ public class MongoStatefulSet extends CRUDKubernetesDependentResource<StatefulSe
         String managedMongodbSecret = MetaUtils.getResourceInstanceNameWithPrefix(primary);
 
         return new PodSpecBuilder()
-                .addToContainers(new ContainerBuilder()
+                .withContainers(new ContainerBuilder()
                         .withName(MONGODB_CONTAINER_NAME)
                         .withImage(primarySpec.image())
                         .withImagePullPolicy("IfNotPresent")
                         .withCommand(mongodbContainerCommand)
                         .withResources(mongodbContainerResources)
-                        .withPorts(new ContainerPortBuilder()
-                                .withContainerPort(MONGODB_CONTAINER_PORT)
-                                .build()
+                        .withPorts(
+                                new ContainerPortBuilder()
+                                        .withContainerPort(MONGODB_CONTAINER_PORT)
+                                        .build()
                         )
-                        .withVolumeMounts(new VolumeMountBuilder()
-                                .withMountPath(MONGODB_CONTAINER_MOUNT_PATH)
-                                .withName(PVC_NAME)
-                                .build()
-                        )
-                        .withVolumeMounts(new VolumeMountBuilder()
-                                .withName("mongo-key")
-                                .withMountPath(MONGO_KEY_FILE_PATH)
-                                .withReadOnly()
-                                .build())
-                        .withLifecycle(new LifecycleBuilder()
-                                .withPostStart(new LifecycleHandlerBuilder()
-                                        .withExec(new ExecActionBuilder()
-                                                .withCommand("chmod 600 /etc/onyxdb-managed-mongodb/key")
-                                                .build())
-                                        .build())
-                                .build())
-//                                .withPostStart(new LifecycleHandler()
-//                                        .setExec(new ExecActionBuilder()
-//                                                .withCommand("chmod 400 /etc/onyxdb-managed-mongodb/key")
-//                                                .build())
-//                                .build())
-//                        .withStartupProbe(new ProbeBuilder()
-//                                .withPeriodSeconds(60)
-//                                .build())
-                        .build())
-//                .with
-//                .withVolumeMounts(new VolumeMountBuilder()
-//                        .withName("mongoKey")
-//                        .withMountPath("/etc/")
-//                        .build())
-//                .withEnv(new EnvVarBuilder()
-//                                .withName(MONGO_INITDB_ROOT_USERNAME_ENV)
-//                                .withValueFrom(new EnvVarSourceBuilder()
-//                                        .withSecretKeyRef(new SecretKeySelectorBuilder()
-//                                                .withKey("user")
-//                                                .withName(managedMongodbSecret)
-//                                                .build())
-//                                        .build())
-//                                .build(),
-//                        new EnvVarBuilder()
-//                                .withName(MONGO_INITDB_ROOT_PASSWORD_ENV)
-//                                .withValueFrom(new EnvVarSourceBuilder()
-//                                        .withSecretKeyRef(new SecretKeySelectorBuilder()
-//                                                .withKey("password")
-//                                                .withName(managedMongodbSecret)
-//                                                .build())
-//                                        .build())
-//                                .build()
-//                )
-                .addToVolumes(
+                        .withVolumeMounts(
+                                new VolumeMountBuilder()
+                                        .withName(PVC_NAME)
+                                        .withMountPath(MONGODB_CONTAINER_MOUNT_PATH)
+                                        .build(),
+                                new VolumeMountBuilder()
+                                        .withName("mongo-key")
+                                        .withMountPath("/etc/onyxdb-managed-mongodb")
+                                        .build()
+                        ).build())
+                .withVolumes(
                         new VolumeBuilder()
                                 .withName("mongo-key")
                                 .withSecret(new SecretVolumeSourceBuilder()
@@ -180,6 +138,7 @@ public class MongoStatefulSet extends CRUDKubernetesDependentResource<StatefulSe
                                         .withItems(List.of(new KeyToPathBuilder()
                                                 .withKey("key")
                                                 .withPath("key")
+                                                .withMode(256)
                                                 .build()))
                                         .build())
                                 .build()
