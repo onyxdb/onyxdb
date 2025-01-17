@@ -15,6 +15,9 @@ testcontainers-postgresql = "1.17.3"
 postgresql-postgresql = "42.7.2"
 apacheCommons-commonsLang3 = "3.17.0"
 springDoc-springdocOpenapiStarterWebmvcUi = "2.6.0"
+# GraphQL:
+netflixDgsVersion = "10.0.1"
+netflixDgsCodegenVersion = "7.0.3"
 
 [plugins]
 onyxdb-javaAppConventions = { id = "onyxdb-java-app-conventions" }
@@ -25,6 +28,7 @@ onyxdb-jooqManualConventions = { id = "onyxdb-jooq-manual-conventions" }
 springBoot = { id = "org.springframework.boot" }
 openapiGenerator = { id = "org.openapi.generator", version.ref = "openapiGenerator" }
 lombok = { id = "io.freefair.lombok", version.ref = "lombok-gradlePlugin" }
+netflixDGSCodegen  = { id = "com.netflix.dgs.codegen", version.ref = "netflixDgsCodegenVersion" }
 
 [libraries]
 springBoot-gradlePlugin = { group = "org.springframework.boot", name = "spring-boot-gradle-plugin", version.ref = "springBoot" }
@@ -46,3 +50,7 @@ testcontainers-postgresql = { group = "org.testcontainers", name = "postgresql",
 postgresql-postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "postgresql-postgresql" }
 apacheCommons-commonsLang3 = { group = "org.apache.commons", name = "commons-lang3", version.ref = "apacheCommons-commonsLang3" }
 springDoc-springdocOpenapiStarterWebmvcUi = { group = "org.springdoc", name = "springdoc-openapi-starter-webmvc-ui", version.ref = "springDoc-springdocOpenapiStarterWebmvcUi" }
+# GraphQL:
+netflix-graphql-dgs-codegen  = { group = "com.netflix.graphql.dgs", name = "graphql-dgs-spring-graphql-starter"}
+netflix-graphql-dgs-starterTest  = { group = "com.netflix.graphql.dgs", name = "graphql-dgs-spring-graphql-starter-test"}
+junit-platformLauncher  = { group = "org.junit.platform", name = "junit-platform-launcher"}

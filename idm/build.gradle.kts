@@ -2,30 +2,29 @@ plugins {
     alias(libs.plugins.onyxdb.javaSpringAppConventions)
     alias(libs.plugins.onyxdb.jooqManualConventions)
     alias(libs.plugins.lombok)
+    alias(libs.plugins.netflixDGSCodegen)
 
     id("io.spring.dependency-management")
-    id("com.netflix.dgs.codegen") version "7.0.3"
 }
 
 configurations.all {
     exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
 }
 
-extra["netflixDgsVersion"] = "10.0.1"
+extra["netflixDgsVersion"] = libs.versions.netflixDgsVersion
 
 dependencies {
     implementation(project(":common:postgres"))
 
-//    NETFLIX START
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("com.netflix.graphql.dgs:graphql-dgs-spring-graphql-starter")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("com.netflix.graphql.dgs:graphql-dgs-spring-graphql-starter-test")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-//    NETFLIX END
-
     implementation(libs.springBoot.starterWeb)
     implementation(libs.springBoot.starterLog4j2)
+
+//    NETFLIX START
+    implementation(libs.netflix.graphql.dgs.codegen)
+    testImplementation(libs.netflix.graphql.dgs.starterTest)
+    testRuntimeOnly(libs.junit.platformLauncher)
+//    NETFLIX END
+
 
     testImplementation(libs.springBoot.starterTest)
     testImplementation(libs.testcontainers.junitJupiter)
