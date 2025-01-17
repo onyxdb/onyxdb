@@ -1,0 +1,27 @@
+type Mutation {
+    createAccount(input: AccountInput!): Account!
+    updateAccount(id: ID!, input: AccountInput!): Account!
+    deleteAccount(id: ID!): Boolean!
+
+    createService(input: ServiceInput!): Service!
+    updateService(id: ID!, input: ServiceInput!): Service!
+    deleteService(id: ID!): Boolean!
+
+    createProject(input: ProjectInput!): Project!
+    updateProject(id: ID!, input: ProjectInput!): Project!
+    deleteProject(id: ID!): Boolean!
+
+    createOrganization(input: OrganizationInput!): Organization!
+    updateOrganization(id: ID!, input: OrganizationInput!): Organization!
+    deleteOrganization(id: ID!): Boolean!
+
+    createRole(input: RoleInput!): Role!
+    updateRole(id: ID!, input: RoleInput!): Role!
+    deleteRole(id: ID!): Boolean!
+
+    createGroup(input: GroupInput!): Group!
+    updateGroup(id: ID!, input: GroupInput!): Group!
+    deleteGroup(id: ID!): Boolean!
+
+    assignRoleToSubject(subjectId: ID!, roleId: ID!, resourceId: ID!): Boolean!
+}
