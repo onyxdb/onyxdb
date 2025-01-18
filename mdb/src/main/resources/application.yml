@@ -3,9 +3,9 @@ spring:
     name: mdb
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${ONYXDB_MDB_API_PSQL_URL:jdbc:postgresql://localhost:5432/dev}
-    username: ${ONYXDB_MDB_API_PSQL_USERNAME:postgres}
-    password: ${ONYXDB_MDB_API_PSQL_PASSWORD:qwerty}
+    url: ${ONYXDB_MDB_API_PSQL_URL:jdbc:postgresql://localhost:5432/postgres}
+    username: ${ONYXDB_MDB_API_PSQL_USERNAME:ao.fedorov}
+    password: ${ONYXDB_MDB_API_PSQL_PASSWORD:root}
   jooq:
     sql-dialect: Postgres
   flyway:
