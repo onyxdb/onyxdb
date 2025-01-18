@@ -5,6 +5,7 @@ import java.util.Map;
 
 import io.fabric8.kubernetes.api.model.ContainerBuilder;
 import io.fabric8.kubernetes.api.model.ContainerPortBuilder;
+import io.fabric8.kubernetes.api.model.EnvVarBuilder;
 import io.fabric8.kubernetes.api.model.KeyToPathBuilder;
 import io.fabric8.kubernetes.api.model.LabelSelectorBuilder;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
@@ -92,7 +93,7 @@ public class MongoStatefulSet extends CRUDKubernetesDependentResource<StatefulSe
 //                "cat /etc/onyxdb-managed-mongodb/key"
                 "mongod",
                 "--bind_ip_all",
-                "--auth",
+//                "--auth",
                 "--dbpath",
                 MONGODB_CONTAINER_MOUNT_PATH,
                 "--keyFile",
@@ -129,7 +130,18 @@ public class MongoStatefulSet extends CRUDKubernetesDependentResource<StatefulSe
                                         .withName("mongo-key")
                                         .withMountPath("/etc/onyxdb-managed-mongodb")
                                         .build()
-                        ).build())
+                        )
+                        .withEnv(new EnvVarBuilder()
+                                        .withName(MONGO_INITDB_ROOT_USERNAME_ENV)
+                                        .withValue("user")
+                                        .build(),
+                                new EnvVarBuilder()
+                                        .withName(MONGO_INITDB_ROOT_PASSWORD_ENV)
+                                        .withValue("password")
+                                        .build()
+                        )
+                        .build()
+                )
                 .withVolumes(
                         new VolumeBuilder()
                                 .withName("mongo-key")

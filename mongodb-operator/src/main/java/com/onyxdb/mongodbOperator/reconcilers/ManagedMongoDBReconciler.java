@@ -241,7 +241,7 @@ public class ManagedMongoDBReconciler
 
 //        logger.info("KEY=" + K8sUtil.generateBase64Key(1024));
 
-//        var mongoUrl = "mongodb://managed-mongodb-sample-db-0.managed-mongodb-sample-db.onyxdb:27017,managed-mongodb-sample-db-1.managed-mongodb-sample-db.onyxdb:27017,managed-mongodb-sample-db-2.managed-mongodb-sample-db.onyxdb:27017/admin?replicaSet=rs0";
+//        var mongoUrl = "mongodb://user:password@managed-mongodb-sample-db-0.managed-mongodb-sample-db.onyxdb:27017,managed-mongodb-sample-db-1.managed-mongodb-sample-db.onyxdb:27017,managed-mongodb-sample-db-2.managed-mongodb-sample-db.onyxdb:27017/admin?replicaSet=rs0";
 //        try(MongoClient mongoClient = MongoClients.create(mongoUrl)) {
 //            var desc = mongoClient.getClusterDescription();
 //            logger.info(desc.getShortDescription());
@@ -263,7 +263,7 @@ public class ManagedMongoDBReconciler
         String initRsCmd = MongoUtil.buildInitReplicaSetCommand("rs0", hosts, MongoStatefulSet.MONGODB_CONTAINER_PORT);
         logger.info(initRsCmd);
 
-        String[] command = {"mongosh", "--eval", initRsCmd};
+        String[] command = {"mongosh", "-u user -p password ", "--eval", initRsCmd};
 
         var outputStream = new ByteArrayOutputStream();
         var errorStream = new ByteArrayOutputStream();
