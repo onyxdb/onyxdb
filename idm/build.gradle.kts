@@ -21,6 +21,9 @@ dependencies {
 
     implementation(libs.springBoot.starterWeb)
     implementation(libs.springBoot.starterLog4j2)
+    implementation(libs.springBoot.starterValidation)
+    implementation(libs.apacheCommons.commonsLang3)
+    implementation(libs.springDoc.springdocOpenapiStarterWebmvcUi)
 
     // NETFLIX START
     implementation(libs.netflix.graphql.dgs.codegen)
@@ -64,6 +67,16 @@ openApiGenerate {
 dependencyManagement {
     imports {
         mavenBom("com.netflix.graphql.dgs:graphql-dgs-platform-dependencies:${property("netflixDgsVersion")}")
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs(
+                "$projectDir/generated/openapi/src/main/java"
+            )
+        }
     }
 }
 

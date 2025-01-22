@@ -1,115 +1,979 @@
 openapi: 3.0.0
 info:
   version: 1.0.0
-  title: onyxdb-mdb
+  title: IDM - Role Based Access Control
 servers:
   - url: http://localhost:8080
-    description: localhost
+    description: Local server
+
 paths:
-  /api/v1/clusters:
-    post:
-      summary: Create cluster.
-      operationId: v1ClustersCreateCluster
+  /api/v1/accounts:
+    get:
+      summary: Get all accounts
+      operationId: getAllAccounts
       tags:
-        - v1Clusters
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/V1CreateClusterRequest'
+        - Accounts
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/V1CreateClusterResponse'
-        '400':
-          description: Bad request
+                type: array
+                items:
+                  $ref: '#/components/schemas/Account'
+    post:
+      summary: Create account
+      operationId: createAccount
+      tags:
+        - Accounts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountInput'
+      responses:
+        '201':
+          description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/V1BadRequestResponse'
+                $ref: '#/components/schemas/Account'
+  /api/v1/accounts/{accountId}:
+    get:
+      summary: Get account by ID
+      operationId: getAccountById
+      tags:
+        - Accounts
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+    put:
+      summary: Update account
+      operationId: updateAccount
+      tags:
+        - Accounts
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAccountRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+    delete:
+      summary: Delete account
+      operationId: deleteAccount
+      tags:
+        - Accounts
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+
+  /api/v1/groups:
+    get:
+      summary: Get all groups
+      operationId: getAllGroups
+      tags:
+        - Groups
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Group'
+    post:
+      summary: Create group
+      operationId: createGroup
+      tags:
+        - Groups
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupInput'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+  /api/v1/groups/{groupId}:
+    get:
+      summary: Get group by ID
+      operationId: getGroupById
+      tags:
+        - Groups
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+    put:
+      summary: Update group
+      operationId: updateGroup
+      tags:
+        - Groups
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateGroupRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+    delete:
+      summary: Delete group
+      operationId: deleteGroup
+      tags:
+        - Groups
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+
+  /api/v1/organizations:
+    get:
+      summary: Get all organizations
+      operationId: getAllOrganizations
+      tags:
+        - Organizations
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Organization'
+    post:
+      summary: Create organization
+      operationId: createOrganization
+      tags:
+        - Organizations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganizationInput'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+  /api/v1/organizations/{organizationId}:
+    get:
+      summary: Get organization by ID
+      operationId: getOrganizationById
+      tags:
+        - Organizations
+      parameters:
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+    put:
+      summary: Update organization
+      operationId: updateOrganization
+      tags:
+        - Organizations
+      parameters:
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrganizationRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+    delete:
+      summary: Delete organization
+      operationId: deleteOrganization
+      tags:
+        - Organizations
+      parameters:
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+
+  /api/v1/projects:
+    get:
+      summary: Get all projects
+      operationId: getAllProjects
+      tags:
+        - Projects
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Project'
+    post:
+      summary: Create project
+      operationId: createProject
+      tags:
+        - Projects
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectInput'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+  /api/v1/projects/{projectId}:
+    get:
+      summary: Get project by ID
+      operationId: getProjectById
+      tags:
+        - Projects
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+    put:
+      summary: Update project
+      operationId: updateProject
+      tags:
+        - Projects
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProjectRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+    delete:
+      summary: Delete project
+      operationId: deleteProject
+      tags:
+        - Projects
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+
+  /api/v1/services:
+    get:
+      summary: Get all services
+      operationId: getAllServices
+      tags:
+        - Services
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Service'
+    post:
+      summary: Create service
+      operationId: createService
+      tags:
+        - Services
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceInput'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+  /api/v1/services/{serviceId}:
+    get:
+      summary: Get service by ID
+      operationId: getServiceById
+      tags:
+        - Services
+      parameters:
+        - name: serviceId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+    put:
+      summary: Update service
+      operationId: updateService
+      tags:
+        - Services
+      parameters:
+        - name: serviceId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateServiceRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+    delete:
+      summary: Delete service
+      operationId: deleteService
+      tags:
+        - Services
+      parameters:
+        - name: serviceId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+
+  /api/v1/roles:
+    get:
+      summary: Get all roles
+      operationId: getAllRoles
+      tags:
+        - Roles
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Role'
+    post:
+      summary: Create role
+      operationId: createRole
+      tags:
+        - Roles
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleInput'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+  /api/v1/roles/{roleId}:
+    get:
+      summary: Get role by ID
+      operationId: getRoleById
+      tags:
+        - Roles
+      parameters:
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+    put:
+      summary: Update role
+      operationId: updateRole
+      tags:
+        - Roles
+      parameters:
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRoleRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+    delete:
+      summary: Delete role
+      operationId: deleteRole
+      tags:
+        - Roles
+      parameters:
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+
+  /api/v1/subjects/{subjectId}/roles:
+    get:
+      summary: Get roles for a subject
+      operationId: getRolesBySubjectId
+      tags:
+        - Subjects
+      parameters:
+        - name: subjectId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Role'
+    post:
+      summary: Assign role to a subject
+      operationId: assignRoleToSubject
+      tags:
+        - Subjects
+      parameters:
+        - name: subjectId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignRoleRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+
+  /api/v1/resources/{resourceId}/roles:
+    get:
+      summary: Get roles for a resource
+      operationId: getRolesByResourceId
+      tags:
+        - Resources
+      parameters:
+        - name: resourceId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Role'
+    post:
+      summary: Assign role to a resource
+      operationId: assignRoleToResource
+      tags:
+        - Resources
+      parameters:
+        - name: resourceId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignRoleRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
 
 components:
   schemas:
-    V1BadRequestResponse:
+    Account:
+      type: object
+      required:
+        - id
+        - username
+        - email
+      properties:
+        id:
+          type: string
+          format: uuid
+        username:
+          type: string
+        email:
+          type: string
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/Group'
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
+
+    AccountInput:
+      type: object
+      required:
+        - username
+        - email
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+
+    UpdateAccountRequest:
+      type: object
+      required:
+        - username
+        - email
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+
+    Group:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        accounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Account'
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/Group'
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
+
+    GroupInput:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+        accountIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+        groupIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+        roleIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+
+    UpdateGroupRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+        accountIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+        groupIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+        roleIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+
+    Organization:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        projects:
+          type: array
+          items:
+            $ref: '#/components/schemas/Project'
+
+    OrganizationInput:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+
+    UpdateOrganizationRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+
+    Project:
+      type: object
+      required:
+        - id
+        - name
+        - organizationId
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        organizationId:
+          type: string
+          format: uuid
+        organization:
+          $ref: '#/components/schemas/Organization'
+        services:
+          type: array
+          items:
+            $ref: '#/components/schemas/Service'
+
+    ProjectInput:
+      type: object
+      required:
+        - name
+        - organizationId
+      properties:
+        name:
+          type: string
+        organizationId:
+          type: string
+          format: uuid
+
+    UpdateProjectRequest:
+      type: object
+      required:
+        - name
+        - organizationId
+      properties:
+        name:
+          type: string
+        organizationId:
+          type: string
+          format: uuid
+
+    Service:
+      type: object
+      required:
+        - id
+        - name
+        - type
+        - projectId
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        type:
+          type: string
+        projectId:
+          type: string
+          format: uuid
+        project:
+          $ref: '#/components/schemas/Project'
+
+    ServiceInput:
+      type: object
+      required:
+        - name
+        - type
+        - projectId
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        projectId:
+          type: string
+          format: uuid
+
+    UpdateServiceRequest:
+      type: object
+      required:
+        - name
+        - type
+        - projectId
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        projectId:
+          type: string
+          format: uuid
+
+    RoleType:
+      type: string
+      enum:
+        - ADMIN
+        - EDITOR
+        - VIEWER
+        - AUDITOR
+
+    Role:
+      type: object
+      required:
+        - id
+        - name
+        - permissions
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          $ref: '#/components/schemas/RoleType'
+        permissions:
+          type: array
+          items:
+            type: string
+
+    RoleInput:
+      type: object
+      required:
+        - name
+        - permissions
+      properties:
+        name:
+          $ref: '#/components/schemas/RoleType'
+        permissions:
+          type: array
+          items:
+            type: string
+
+    UpdateRoleRequest:
+      type: object
+      required:
+        - permissions
+      properties:
+        permissions:
+          type: array
+          items:
+            type: string
+
+    AssignRoleRequest:
+      type: object
+      required:
+        - roleId
+      properties:
+        roleId:
+          type: string
+          format: uuid
+
+    BadRequestResponse:
       type: object
       required:
         - message
       properties:
         message:
           type: string
-    V1CreateClusterRequest:
-      type: object
-      required:
-        - name
-        - resources
-        - spec
-      properties:
-        name:
-          type: string
-          minLength: 1
-          maxLength: 64
-          example: Cluster name
-        description:
-          type: string
-          minLength: 1
-          maxLength: 256
-          example: Cluster description
-        resources:
-          type: object
-          required:
-            - storage
-          properties:
-            storage:
-              type: object
-              required:
-                - diskSizeBytes
-                - storageClass
-              properties:
-                diskSizeBytes:
-                  type: integer
-                  format: int64
-                  minimum: 1073741824 # 1Gb
-                  maximum: 10737418240 # 10 Gb
-                  example: 1073741824
-                storageClass:
-                  type: string
-                  enum:
-                    - standard
-                  example: standard
-        spec:
-          type: object
-          required:
-            - type
-          properties:
-            type:
-              type: string
-              enum:
-                - mongodb
-              example: mongodb
-            mongodb:
-              type: object
-              required:
-                - version
-              properties:
-                version:
-                  type: string
-                  enum:
-                    - '6.0'
-                    - '5.0'
-                  example: '6.0'
-                mongodbV6x0:
-                  type: object
-                  additionalProperties:
-                    type: string
-    V1CreateClusterResponse:
-      type: object
-      required:
-        - clusterId
-      properties:
-        clusterId:
-          type: string
-          format: uuid
