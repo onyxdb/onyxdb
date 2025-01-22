@@ -1,5 +1,6 @@
 package com.onyxdb.idm.models;
 
+import java.util.List;
 import java.util.UUID;
 
 import lombok.Builder;
@@ -14,10 +15,8 @@ import lombok.experimental.FieldNameConstants;
 @Builder
 @EqualsAndHashCode
 @FieldNameConstants
-public class Service {
+public class OrganizationDTO {
     private UUID id;
     private String name;
-    private String type;
-    private UUID projectId;
-    private Project project;
+    private List<ProjectDTO> projects;
 }

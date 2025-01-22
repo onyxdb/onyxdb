@@ -4,19 +4,19 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import com.onyxdb.idm.models.Group;
+import com.onyxdb.idm.models.GroupDTO;
 
 /**
  * @author ArtemFed
  */
 public interface GroupRepository {
-    Optional<Group> findById(UUID id);
+    Optional<GroupDTO> findById(UUID id);
 
-    List<Group> findAll();
+    List<GroupDTO> findAll();
 
-    void create(Group group);
+    void create(GroupDTO group);
 
-    void update(Group group);
+    void update(GroupDTO group);
 
     void delete(UUID id);
 }

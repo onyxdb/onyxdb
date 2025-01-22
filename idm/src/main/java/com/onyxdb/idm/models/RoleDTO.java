@@ -8,6 +8,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldNameConstants;
 
+import com.onyxdb.idm.codegen.types.RoleType;
+
+
 /**
  * @author ArtemFed
  */
@@ -15,8 +18,9 @@ import lombok.experimental.FieldNameConstants;
 @Builder
 @EqualsAndHashCode
 @FieldNameConstants
-public class Organization {
+public class RoleDTO {
     private UUID id;
-    private String name;
-    private List<Project> projects;
+    private RoleType name;
+    private List<String> permissions;
 }
+

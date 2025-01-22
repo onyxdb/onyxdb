@@ -7,11 +7,13 @@ plugins {
     id("io.spring.dependency-management")
 }
 
+
 configurations.all {
     exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
 }
 
-extra["netflixDgsVersion"] = libs.versions.netflixDgsVersion
+//extra["netflixDgsVersion"] = libs.versions.netflixDgsVersion
+extra["netflixDgsVersion"] = "10.0.1"
 
 dependencies {
     implementation(project(":common:postgres"))

@@ -8,9 +8,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldNameConstants;
 
-import com.onyxdb.idm.codegen.types.RoleType;
-
-
 /**
  * @author ArtemFed
  */
@@ -18,9 +15,10 @@ import com.onyxdb.idm.codegen.types.RoleType;
 @Builder
 @EqualsAndHashCode
 @FieldNameConstants
-public class Role {
+public class ProjectDTO {
     private UUID id;
-    private RoleType name;
-    private List<String> permissions;
+    private String name;
+    private UUID organizationId;
+    private OrganizationDTO organization;
+    private List<ServiceDTO> services;
 }
-

@@ -4,19 +4,19 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import com.onyxdb.idm.models.Project;
+import com.onyxdb.idm.models.ProjectDTO;
 
 /**
  * @author ArtemFed
  */
 public interface ProjectRepository {
-    Optional<Project> findById(UUID id);
+    Optional<ProjectDTO> findById(UUID id);
 
-    List<Project> findByOrganizationId(UUID organizationId);
+    List<ProjectDTO> findByOrganizationId(UUID organizationId);
 
-    void create(Project project);
+    void create(ProjectDTO project);
 
-    void update(Project project);
+    void update(ProjectDTO project);
 
     void delete(UUID id);
 }

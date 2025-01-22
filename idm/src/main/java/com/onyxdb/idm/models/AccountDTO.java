@@ -16,11 +16,10 @@ import java.util.UUID;
 @Builder
 @EqualsAndHashCode
 @FieldNameConstants
-public class Account {
+public class AccountDTO {
     private UUID id;
     private String username;
     private String email;
     private List<UUID> groupIds;
-    private List<Role> roles;
+    private List<RoleDTO> roles;
 }
-

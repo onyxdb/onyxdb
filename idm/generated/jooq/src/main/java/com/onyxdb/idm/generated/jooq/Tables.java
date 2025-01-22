@@ -4,7 +4,15 @@
 package com.onyxdb.idm.generated.jooq;
 
 
-import com.onyxdb.idm.generated.jooq.tables.Roles;
+import com.onyxdb.idm.generated.jooq.tables.AccountGroupTable;
+import com.onyxdb.idm.generated.jooq.tables.AccountRoleTable;
+import com.onyxdb.idm.generated.jooq.tables.AccountTable;
+import com.onyxdb.idm.generated.jooq.tables.GroupRoleTable;
+import com.onyxdb.idm.generated.jooq.tables.GroupTable;
+import com.onyxdb.idm.generated.jooq.tables.OrganizationTable;
+import com.onyxdb.idm.generated.jooq.tables.ProjectTable;
+import com.onyxdb.idm.generated.jooq.tables.RoleTable;
+import com.onyxdb.idm.generated.jooq.tables.ServiceTable;
 
 
 /**
@@ -14,7 +22,47 @@ import com.onyxdb.idm.generated.jooq.tables.Roles;
 public class Tables {
 
     /**
-     * The table <code>public.roles</code>.
+     * The table <code>public.account_group_table</code>.
      */
-    public static final Roles ROLES = Roles.ROLES;
+    public static final AccountGroupTable ACCOUNT_GROUP_TABLE = AccountGroupTable.ACCOUNT_GROUP_TABLE;
+
+    /**
+     * The table <code>public.account_role_table</code>.
+     */
+    public static final AccountRoleTable ACCOUNT_ROLE_TABLE = AccountRoleTable.ACCOUNT_ROLE_TABLE;
+
+    /**
+     * The table <code>public.account_table</code>.
+     */
+    public static final AccountTable ACCOUNT_TABLE = AccountTable.ACCOUNT_TABLE;
+
+    /**
+     * The table <code>public.group_role_table</code>.
+     */
+    public static final GroupRoleTable GROUP_ROLE_TABLE = GroupRoleTable.GROUP_ROLE_TABLE;
+
+    /**
+     * The table <code>public.group_table</code>.
+     */
+    public static final GroupTable GROUP_TABLE = GroupTable.GROUP_TABLE;
+
+    /**
+     * The table <code>public.organization_table</code>.
+     */
+    public static final OrganizationTable ORGANIZATION_TABLE = OrganizationTable.ORGANIZATION_TABLE;
+
+    /**
+     * The table <code>public.project_table</code>.
+     */
+    public static final ProjectTable PROJECT_TABLE = ProjectTable.PROJECT_TABLE;
+
+    /**
+     * The table <code>public.role_table</code>.
+     */
+    public static final RoleTable ROLE_TABLE = RoleTable.ROLE_TABLE;
+
+    /**
+     * The table <code>public.service_table</code>.
+     */
+    public static final ServiceTable SERVICE_TABLE = ServiceTable.SERVICE_TABLE;
 }

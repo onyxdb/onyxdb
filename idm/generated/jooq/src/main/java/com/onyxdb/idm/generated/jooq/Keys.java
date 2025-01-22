@@ -4,9 +4,26 @@
 package com.onyxdb.idm.generated.jooq;
 
 
-import com.onyxdb.idm.generated.jooq.tables.Roles;
-import com.onyxdb.idm.generated.jooq.tables.records.RolesRecord;
+import com.onyxdb.idm.generated.jooq.tables.AccountGroupTable;
+import com.onyxdb.idm.generated.jooq.tables.AccountRoleTable;
+import com.onyxdb.idm.generated.jooq.tables.AccountTable;
+import com.onyxdb.idm.generated.jooq.tables.GroupRoleTable;
+import com.onyxdb.idm.generated.jooq.tables.GroupTable;
+import com.onyxdb.idm.generated.jooq.tables.OrganizationTable;
+import com.onyxdb.idm.generated.jooq.tables.ProjectTable;
+import com.onyxdb.idm.generated.jooq.tables.RoleTable;
+import com.onyxdb.idm.generated.jooq.tables.ServiceTable;
+import com.onyxdb.idm.generated.jooq.tables.records.AccountGroupTableRecord;
+import com.onyxdb.idm.generated.jooq.tables.records.AccountRoleTableRecord;
+import com.onyxdb.idm.generated.jooq.tables.records.AccountTableRecord;
+import com.onyxdb.idm.generated.jooq.tables.records.GroupRoleTableRecord;
+import com.onyxdb.idm.generated.jooq.tables.records.GroupTableRecord;
+import com.onyxdb.idm.generated.jooq.tables.records.OrganizationTableRecord;
+import com.onyxdb.idm.generated.jooq.tables.records.ProjectTableRecord;
+import com.onyxdb.idm.generated.jooq.tables.records.RoleTableRecord;
+import com.onyxdb.idm.generated.jooq.tables.records.ServiceTableRecord;
 
+import org.jooq.ForeignKey;
 import org.jooq.TableField;
 import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
@@ -24,5 +41,26 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final UniqueKey<RolesRecord> ROLES_PKEY = Internal.createUniqueKey(Roles.ROLES, DSL.name("roles_pkey"), new TableField[] { Roles.ROLES.ID }, true);
+    public static final UniqueKey<AccountGroupTableRecord> ACCOUNT_GROUP_TABLE_PKEY = Internal.createUniqueKey(AccountGroupTable.ACCOUNT_GROUP_TABLE, DSL.name("account_group_table_pkey"), new TableField[] { AccountGroupTable.ACCOUNT_GROUP_TABLE.ACCOUNT_ID, AccountGroupTable.ACCOUNT_GROUP_TABLE.GROUP_ID }, true);
+    public static final UniqueKey<AccountRoleTableRecord> ACCOUNT_ROLE_TABLE_PKEY = Internal.createUniqueKey(AccountRoleTable.ACCOUNT_ROLE_TABLE, DSL.name("account_role_table_pkey"), new TableField[] { AccountRoleTable.ACCOUNT_ROLE_TABLE.ACCOUNT_ID, AccountRoleTable.ACCOUNT_ROLE_TABLE.ROLE_ID, AccountRoleTable.ACCOUNT_ROLE_TABLE.RESOURCE_ID }, true);
+    public static final UniqueKey<AccountTableRecord> ACCOUNT_TABLE_PKEY = Internal.createUniqueKey(AccountTable.ACCOUNT_TABLE, DSL.name("account_table_pkey"), new TableField[] { AccountTable.ACCOUNT_TABLE.ID }, true);
+    public static final UniqueKey<GroupRoleTableRecord> GROUP_ROLE_TABLE_PKEY = Internal.createUniqueKey(GroupRoleTable.GROUP_ROLE_TABLE, DSL.name("group_role_table_pkey"), new TableField[] { GroupRoleTable.GROUP_ROLE_TABLE.GROUP_ID, GroupRoleTable.GROUP_ROLE_TABLE.ROLE_ID, GroupRoleTable.GROUP_ROLE_TABLE.RESOURCE_ID }, true);
+    public static final UniqueKey<GroupTableRecord> GROUP_TABLE_PKEY = Internal.createUniqueKey(GroupTable.GROUP_TABLE, DSL.name("group_table_pkey"), new TableField[] { GroupTable.GROUP_TABLE.ID }, true);
+    public static final UniqueKey<OrganizationTableRecord> ORGANIZATION_TABLE_PKEY = Internal.createUniqueKey(OrganizationTable.ORGANIZATION_TABLE, DSL.name("organization_table_pkey"), new TableField[] { OrganizationTable.ORGANIZATION_TABLE.ID }, true);
+    public static final UniqueKey<ProjectTableRecord> PROJECT_TABLE_PKEY = Internal.createUniqueKey(ProjectTable.PROJECT_TABLE, DSL.name("project_table_pkey"), new TableField[] { ProjectTable.PROJECT_TABLE.ID }, true);
+    public static final UniqueKey<RoleTableRecord> ROLE_TABLE_PKEY = Internal.createUniqueKey(RoleTable.ROLE_TABLE, DSL.name("role_table_pkey"), new TableField[] { RoleTable.ROLE_TABLE.ID }, true);
+    public static final UniqueKey<ServiceTableRecord> SERVICE_TABLE_PKEY = Internal.createUniqueKey(ServiceTable.SERVICE_TABLE, DSL.name("service_table_pkey"), new TableField[] { ServiceTable.SERVICE_TABLE.ID }, true);
+
+    // -------------------------------------------------------------------------
+    // FOREIGN KEY definitions
+    // -------------------------------------------------------------------------
+
+    public static final ForeignKey<AccountGroupTableRecord, AccountTableRecord> ACCOUNT_GROUP_TABLE__ACCOUNT_GROUP_TABLE_ACCOUNT_ID_FKEY = Internal.createForeignKey(AccountGroupTable.ACCOUNT_GROUP_TABLE, DSL.name("account_group_table_account_id_fkey"), new TableField[] { AccountGroupTable.ACCOUNT_GROUP_TABLE.ACCOUNT_ID }, Keys.ACCOUNT_TABLE_PKEY, new TableField[] { AccountTable.ACCOUNT_TABLE.ID }, true);
+    public static final ForeignKey<AccountGroupTableRecord, GroupTableRecord> ACCOUNT_GROUP_TABLE__ACCOUNT_GROUP_TABLE_GROUP_ID_FKEY = Internal.createForeignKey(AccountGroupTable.ACCOUNT_GROUP_TABLE, DSL.name("account_group_table_group_id_fkey"), new TableField[] { AccountGroupTable.ACCOUNT_GROUP_TABLE.GROUP_ID }, Keys.GROUP_TABLE_PKEY, new TableField[] { GroupTable.GROUP_TABLE.ID }, true);
+    public static final ForeignKey<AccountRoleTableRecord, AccountTableRecord> ACCOUNT_ROLE_TABLE__ACCOUNT_ROLE_TABLE_ACCOUNT_ID_FKEY = Internal.createForeignKey(AccountRoleTable.ACCOUNT_ROLE_TABLE, DSL.name("account_role_table_account_id_fkey"), new TableField[] { AccountRoleTable.ACCOUNT_ROLE_TABLE.ACCOUNT_ID }, Keys.ACCOUNT_TABLE_PKEY, new TableField[] { AccountTable.ACCOUNT_TABLE.ID }, true);
+    public static final ForeignKey<AccountRoleTableRecord, RoleTableRecord> ACCOUNT_ROLE_TABLE__ACCOUNT_ROLE_TABLE_ROLE_ID_FKEY = Internal.createForeignKey(AccountRoleTable.ACCOUNT_ROLE_TABLE, DSL.name("account_role_table_role_id_fkey"), new TableField[] { AccountRoleTable.ACCOUNT_ROLE_TABLE.ROLE_ID }, Keys.ROLE_TABLE_PKEY, new TableField[] { RoleTable.ROLE_TABLE.ID }, true);
+    public static final ForeignKey<GroupRoleTableRecord, GroupTableRecord> GROUP_ROLE_TABLE__GROUP_ROLE_TABLE_GROUP_ID_FKEY = Internal.createForeignKey(GroupRoleTable.GROUP_ROLE_TABLE, DSL.name("group_role_table_group_id_fkey"), new TableField[] { GroupRoleTable.GROUP_ROLE_TABLE.GROUP_ID }, Keys.GROUP_TABLE_PKEY, new TableField[] { GroupTable.GROUP_TABLE.ID }, true);
+    public static final ForeignKey<GroupRoleTableRecord, RoleTableRecord> GROUP_ROLE_TABLE__GROUP_ROLE_TABLE_ROLE_ID_FKEY = Internal.createForeignKey(GroupRoleTable.GROUP_ROLE_TABLE, DSL.name("group_role_table_role_id_fkey"), new TableField[] { GroupRoleTable.GROUP_ROLE_TABLE.ROLE_ID }, Keys.ROLE_TABLE_PKEY, new TableField[] { RoleTable.ROLE_TABLE.ID }, true);
+    public static final ForeignKey<ProjectTableRecord, OrganizationTableRecord> PROJECT_TABLE__PROJECT_TABLE_ORGANIZATION_ID_FKEY = Internal.createForeignKey(ProjectTable.PROJECT_TABLE, DSL.name("project_table_organization_id_fkey"), new TableField[] { ProjectTable.PROJECT_TABLE.ORGANIZATION_ID }, Keys.ORGANIZATION_TABLE_PKEY, new TableField[] { OrganizationTable.ORGANIZATION_TABLE.ID }, true);
+    public static final ForeignKey<ServiceTableRecord, ProjectTableRecord> SERVICE_TABLE__SERVICE_TABLE_PROJECT_ID_FKEY = Internal.createForeignKey(ServiceTable.SERVICE_TABLE, DSL.name("service_table_project_id_fkey"), new TableField[] { ServiceTable.SERVICE_TABLE.PROJECT_ID }, Keys.PROJECT_TABLE_PKEY, new TableField[] { ProjectTable.PROJECT_TABLE.ID }, true);
 }

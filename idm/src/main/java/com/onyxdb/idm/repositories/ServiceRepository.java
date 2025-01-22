@@ -4,19 +4,19 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import com.onyxdb.idm.models.Service;
+import com.onyxdb.idm.models.ServiceDTO;
 
 /**
  * @author ArtemFed
  */
 public interface ServiceRepository {
-    Optional<Service> findById(UUID id);
+    Optional<ServiceDTO> findById(UUID id);
 
-    List<Service> findByProjectId(UUID projectId);
+    List<ServiceDTO> findByProjectId(UUID projectId);
 
-    void create(Service service);
+    void create(ServiceDTO service);
 
-    void update(Service service);
+    void update(ServiceDTO service);
 
     void delete(UUID id);
 }

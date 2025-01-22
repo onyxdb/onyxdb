@@ -4,7 +4,15 @@
 package com.onyxdb.idm.generated.jooq;
 
 
-import com.onyxdb.idm.generated.jooq.tables.Roles;
+import com.onyxdb.idm.generated.jooq.tables.AccountGroupTable;
+import com.onyxdb.idm.generated.jooq.tables.AccountRoleTable;
+import com.onyxdb.idm.generated.jooq.tables.AccountTable;
+import com.onyxdb.idm.generated.jooq.tables.GroupRoleTable;
+import com.onyxdb.idm.generated.jooq.tables.GroupTable;
+import com.onyxdb.idm.generated.jooq.tables.OrganizationTable;
+import com.onyxdb.idm.generated.jooq.tables.ProjectTable;
+import com.onyxdb.idm.generated.jooq.tables.RoleTable;
+import com.onyxdb.idm.generated.jooq.tables.ServiceTable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,9 +36,49 @@ public class Public extends SchemaImpl {
     public static final Public PUBLIC = new Public();
 
     /**
-     * The table <code>public.roles</code>.
+     * The table <code>public.account_group_table</code>.
      */
-    public final Roles ROLES = Roles.ROLES;
+    public final AccountGroupTable ACCOUNT_GROUP_TABLE = AccountGroupTable.ACCOUNT_GROUP_TABLE;
+
+    /**
+     * The table <code>public.account_role_table</code>.
+     */
+    public final AccountRoleTable ACCOUNT_ROLE_TABLE = AccountRoleTable.ACCOUNT_ROLE_TABLE;
+
+    /**
+     * The table <code>public.account_table</code>.
+     */
+    public final AccountTable ACCOUNT_TABLE = AccountTable.ACCOUNT_TABLE;
+
+    /**
+     * The table <code>public.group_role_table</code>.
+     */
+    public final GroupRoleTable GROUP_ROLE_TABLE = GroupRoleTable.GROUP_ROLE_TABLE;
+
+    /**
+     * The table <code>public.group_table</code>.
+     */
+    public final GroupTable GROUP_TABLE = GroupTable.GROUP_TABLE;
+
+    /**
+     * The table <code>public.organization_table</code>.
+     */
+    public final OrganizationTable ORGANIZATION_TABLE = OrganizationTable.ORGANIZATION_TABLE;
+
+    /**
+     * The table <code>public.project_table</code>.
+     */
+    public final ProjectTable PROJECT_TABLE = ProjectTable.PROJECT_TABLE;
+
+    /**
+     * The table <code>public.role_table</code>.
+     */
+    public final RoleTable ROLE_TABLE = RoleTable.ROLE_TABLE;
+
+    /**
+     * The table <code>public.service_table</code>.
+     */
+    public final ServiceTable SERVICE_TABLE = ServiceTable.SERVICE_TABLE;
 
     /**
      * No further instances allowed
@@ -48,7 +96,15 @@ public class Public extends SchemaImpl {
     @Override
     public final List<Table<?>> getTables() {
         return Arrays.asList(
-            Roles.ROLES
+            AccountGroupTable.ACCOUNT_GROUP_TABLE,
+            AccountRoleTable.ACCOUNT_ROLE_TABLE,
+            AccountTable.ACCOUNT_TABLE,
+            GroupRoleTable.GROUP_ROLE_TABLE,
+            GroupTable.GROUP_TABLE,
+            OrganizationTable.ORGANIZATION_TABLE,
+            ProjectTable.PROJECT_TABLE,
+            RoleTable.ROLE_TABLE,
+            ServiceTable.SERVICE_TABLE
         );
     }
 }
