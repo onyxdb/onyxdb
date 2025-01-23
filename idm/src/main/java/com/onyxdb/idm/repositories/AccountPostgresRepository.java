@@ -1,8 +1,8 @@
 package com.onyxdb.idm.repositories;
 
-import com.onyxdb.idm.generated.jooq.tables.AccountTable;
 import com.onyxdb.idm.generated.jooq.tables.AccountGroupTable;
 import com.onyxdb.idm.generated.jooq.tables.AccountRoleTable;
+import com.onyxdb.idm.generated.jooq.tables.AccountTable;
 import com.onyxdb.idm.models.AccountDTO;
 import com.onyxdb.idm.models.GroupDTO;
 import com.onyxdb.idm.models.RoleDTO;
@@ -31,27 +31,17 @@ public class AccountPostgresRepository implements AccountRepository {
                 .where(accountTable.ID.eq(id))
                 .fetchOptional()
                 .map(record -> {
-                    List<GroupDTO> groups = dslContext.selectFrom(groupTable)
-                            .where(groupTable.ID.in(dslContext.select(accountGroupTable.GROUP_ID)
-                                    .from(accountGroupTable)
-                                    .where(accountGroupTable.ACCOUNT_ID.eq(id))))
+                    List<GroupDTO> groups = dslContext.selectFrom(accountGroupTable)
+                            .where(accountGroupTable.ACCOUNT_ID.eq(id))
                             .fetch()
-                            .map(groupRecord -> groupRepository.findById(groupRecord.getId()).orElse(null))
-                            .stream()
-                            .filter(Optional::isPresent)
-                            .map(Optional::get)
-                            .collect(Collectors.toList());
+                            .map(recordGroup -> groupRepository.findById(recordGroup.getGroupId()).orElse(null))
+                            .stream().toList();
 
-                    List<RoleDTO> roles = dslContext.selectFrom(roleTable)
-                            .where(roleTable.ID.in(dslContext.select(accountRoleTable.ROLE_ID)
-                                    .from(accountRoleTable)
-                                    .where(accountRoleTable.ACCOUNT_ID.eq(id))))
+                    List<RoleDTO> roles = dslContext.selectFrom(accountRoleTable)
+                            .where(accountRoleTable.ACCOUNT_ID.eq(id))
                             .fetch()
-                            .map(roleRecord -> roleRepository.findById(roleRecord.getId()).orElse(null))
-                            .stream()
-                            .filter(Optional::isPresent)
-                            .map(Optional::get)
-                            .collect(Collectors.toList());
+                            .map(recordRole -> roleRepository.findById(recordRole.getRoleId()).orElse(null))
+                            .stream().toList();
 
                     return AccountDTO.builder()
                             .id(record.getId())
@@ -59,7 +49,7 @@ public class AccountPostgresRepository implements AccountRepository {
                             .email(record.getEmail())
                             .groups(groups)
                             .roles(roles)
-                            .ldapGroups(List.of(record.getLdapGroups())) // Предполагается, что ldapGroups и adGroups хранятся как текст в базе
+                            .ldapGroups(List.of(record.getLdapGroups()))
                             .adGroups(List.of(record.getAdGroups()))
                             .build();
                 });
