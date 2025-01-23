@@ -20,44 +20,49 @@ public class RoleAssignmentRepository {
     private final GroupRoleTable groupRoleTable = GroupRoleTable.GROUP_ROLE_TABLE;
     private final RolePostgresRepository roleRepository;
 
-    public List<RoleDTO> getRolesBySubjectId(UUID subjectId) {
-        List<RoleDTO> accountRoles = dslContext.selectFrom(accountRoleTable)
-                .where(accountRoleTable.ACCOUNT_ID.eq(subjectId))
+    public List<RoleDTO> getRolesByAccountId(UUID accountId) {
+        return dslContext.selectFrom(accountRoleTable)
+                .where(accountRoleTable.ACCOUNT_ID.eq(accountId))
                 .fetch()
                 .map(record -> roleRepository.findById(record.getRoleId()).orElse(null))
                 .stream()
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .collect(Collectors.toList());
-
-        List<RoleDTO> groupRoles = dslContext.selectFrom(groupRoleTable)
-                .where(groupRoleTable.GROUP_ID.eq(subjectId))
-                .fetch()
-                .map(record -> roleRepository.findById(record.getRoleId()).orElse(null))
-                .stream()
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toList());
-
-        return List.of(accountRoles, groupRoles).stream()
-                .flatMap(List::stream)
                 .distinct()
                 .collect(Collectors.toList());
     }
 
-    public void assignRoleToSubject(UUID subjectId, UUID roleId) {
+    public void assignRoleToAccount(UUID accountId, UUID roleId) {
         if (dslContext.selectFrom(accountRoleTable)
-                .where(accountRoleTable.ACCOUNT_ID.eq(subjectId).and(accountRoleTable.ROLE_ID.eq(roleId)))
+                .where(accountRoleTable.ACCOUNT_ID.eq(accountId).and(accountRoleTable.ROLE_ID.eq(roleId)))
                 .fetchOne() == null) {
-            if (dslContext.selectFrom(groupRoleTable)
-                    .where(groupRoleTable.GROUP_ID.eq(subjectId).and(groupRoleTable.ROLE_ID.eq(roleId)))
-                    .fetchOne() == null) {
-                dslContext.insertInto(accountRoleTable)
-                        .set(accountRoleTable.ACCOUNT_ID, subjectId)
-                        .set(accountRoleTable.ROLE_ID, roleId)
-                        .set(accountRoleTable.RESOURCE_ID, UUID.randomUUID()) // Замените на реальный ресурс, если нужно
-                        .execute();
-            }
+            dslContext.insertInto(accountRoleTable)
+                    .set(accountRoleTable.ACCOUNT_ID, accountId)
+                    .set(accountRoleTable.ROLE_ID, roleId)
+                    .execute();
+        }
+    }
+
+    public List<RoleDTO> getRolesByGroupId(UUID groupId) {
+        return dslContext.selectFrom(groupRoleTable)
+                .where(groupRoleTable.GROUP_ID.eq(groupId))
+                .fetch()
+                .map(record -> roleRepository.findById(record.getRoleId()).orElse(null))
+                .stream()
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    public void assignRoleToGroup(UUID groupId, UUID roleId) {
+        if (dslContext.selectFrom(groupRoleTable)
+                .where(groupRoleTable.GROUP_ID.eq(groupId).and(groupRoleTable.ROLE_ID.eq(roleId)))
+                .fetchOne() == null) {
+            dslContext.insertInto(groupRoleTable)
+                    .set(groupRoleTable.GROUP_ID, groupId)
+                    .set(groupRoleTable.ROLE_ID, roleId)
+                    .execute();
         }
     }
 
@@ -69,6 +74,7 @@ public class RoleAssignmentRepository {
                 .stream()
                 .filter(Optional::isPresent)
                 .map(Optional::get)
+                .distinct()
                 .collect(Collectors.toList());
 
         List<RoleDTO> groupRoles = dslContext.selectFrom(groupRoleTable)
@@ -78,6 +84,7 @@ public class RoleAssignmentRepository {
                 .stream()
                 .filter(Optional::isPresent)
                 .map(Optional::get)
+                .distinct()
                 .collect(Collectors.toList());
 
         return List.of(accountRoles, groupRoles).stream()

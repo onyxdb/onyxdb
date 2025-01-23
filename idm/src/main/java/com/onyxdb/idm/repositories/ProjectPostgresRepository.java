@@ -13,14 +13,15 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
 public class ProjectPostgresRepository implements ProjectRepository {
     private final DSLContext dslContext;
-    private final ServiceTable serviceTable = ServiceTable.SERVICE_TABLE;
     private final ProjectTable projectTable = ProjectTable.PROJECT_TABLE;
     private final OrganizationTable organizationTable = OrganizationTable.ORGANIZATION_TABLE;
+    private final ServiceTable serviceTable = ServiceTable.SERVICE_TABLE;
     private final OrganizationPostgresRepository organizationRepository;
     private final ServicePostgresRepository serviceRepository;
 
@@ -33,13 +34,17 @@ public class ProjectPostgresRepository implements ProjectRepository {
                     OrganizationDTO organization = dslContext.selectFrom(organizationTable)
                             .where(organizationTable.ID.eq(record.getOrganizationId()))
                             .fetchOptional()
-                            .flatMap(orgRecord -> organizationRepository.findById(orgRecord.getId()))
+                            .map(orgRecord -> organizationRepository.findById(orgRecord.getId()).orElse(null))
                             .orElse(null);
 
                     List<ServiceDTO> services = dslContext.selectFrom(serviceTable)
                             .where(serviceTable.PROJECT_ID.eq(id))
                             .fetch()
-                            .map(serviceRecord -> serviceRepository.findById(serviceRecord.getId()).orElse(null));
+                            .map(serviceRecord -> serviceRepository.findById(serviceRecord.getId()).orElse(null))
+                            .stream()
+                            .filter(Optional::isPresent)
+                            .map(Optional::get)
+                            .collect(Collectors.toList());
 
                     return ProjectDTO.builder()
                             .id(record.getId())

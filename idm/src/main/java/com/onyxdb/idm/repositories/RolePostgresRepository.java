@@ -37,7 +37,8 @@ public class RolePostgresRepository implements RoleRepository {
                         .id(record.getId())
                         .name(RoleType.valueOf(record.getName()))
                         .permissions(List.of(record.getPermissions()))
-                        .build());
+                        .build())
+                .stream().toList();
     }
 
     @Override

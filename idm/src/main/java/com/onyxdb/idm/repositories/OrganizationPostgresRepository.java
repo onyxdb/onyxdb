@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -29,7 +30,11 @@ public class OrganizationPostgresRepository implements OrganizationRepository {
                     List<ProjectDTO> projects = dslContext.selectFrom(projectTable)
                             .where(projectTable.ORGANIZATION_ID.eq(id))
                             .fetch()
-                            .map(projectRecord -> projectRepository.findById(projectRecord.getId()).orElse(null));
+                            .map(projectRecord -> projectRepository.findById(projectRecord.getId()).orElse(null))
+                            .stream()
+                            .filter(Optional::isPresent)
+                            .map(Optional::get)
+                            .collect(Collectors.toList());
 
                     return OrganizationDTO.builder()
                             .id(record.getId())

@@ -4,7 +4,7 @@ import com.onyxdb.idm.generated.jooq.tables.ProjectTable;
 import com.onyxdb.idm.generated.jooq.tables.ServiceTable;
 import com.onyxdb.idm.models.ProjectDTO;
 import com.onyxdb.idm.models.ServiceDTO;
-import com.onyxdb.idm.repositories.ProjectPostgresRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
@@ -30,7 +30,7 @@ public class ServicePostgresRepository implements ServiceRepository {
                     ProjectDTO project = dslContext.selectFrom(projectTable)
                             .where(projectTable.ID.eq(record.getProjectId()))
                             .fetchOptional()
-                            .flatMap(projectRecord -> projectRepository.findById(projectRecord.getId()))
+                            .map(projectRecord -> projectRepository.findById(projectRecord.getId()).orElse(null))
                             .orElse(null);
 
                     return ServiceDTO.builder()
@@ -46,7 +46,6 @@ public class ServicePostgresRepository implements ServiceRepository {
     @Override
     public List<ServiceDTO> findByProjectId(UUID projectId) {
         return dslContext.selectFrom(serviceTable)
-                .where(serviceTable.PROJECT_ID.eq(projectId))
                 .fetch()
                 .map(record -> ServiceDTO.builder()
                         .id(record.getId())

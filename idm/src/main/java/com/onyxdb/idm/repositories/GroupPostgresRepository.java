@@ -1,10 +1,9 @@
 package com.onyxdb.idm.repositories;
 
-import com.onyxdb.idm.codegen.types.RoleType;
 import com.onyxdb.idm.generated.jooq.tables.AccountGroupTable;
 import com.onyxdb.idm.generated.jooq.tables.AccountTable;
-import com.onyxdb.idm.generated.jooq.tables.GroupRoleTable;
 import com.onyxdb.idm.generated.jooq.tables.GroupTable;
+import com.onyxdb.idm.generated.jooq.tables.GroupRoleTable;
 import com.onyxdb.idm.generated.jooq.tables.RoleTable;
 import com.onyxdb.idm.models.AccountDTO;
 import com.onyxdb.idm.models.GroupDTO;
@@ -16,17 +15,19 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
 public class GroupPostgresRepository implements GroupRepository {
     private final DSLContext dslContext;
-    private final AccountTable accountTable = AccountTable.ACCOUNT_TABLE;
-    private final GroupTable groupTable = GroupTable.GROUP_TABLE;
     private final RoleTable roleTable = RoleTable.ROLE_TABLE;
-    private final GroupRoleTable groupRoleTable = GroupRoleTable.GROUP_ROLE_TABLE;
+    private final GroupTable groupTable = GroupTable.GROUP_TABLE;
+    private final AccountTable accountTable = AccountTable.ACCOUNT_TABLE;
     private final AccountGroupTable accountGroupTable = AccountGroupTable.ACCOUNT_GROUP_TABLE;
+    private final GroupRoleTable groupRoleTable = GroupRoleTable.GROUP_ROLE_TABLE;
     private final AccountPostgresRepository accountRepository;
+    private final RolePostgresRepository roleRepository;
 
     @Override
     public Optional<GroupDTO> findById(UUID id) {
@@ -39,11 +40,11 @@ public class GroupPostgresRepository implements GroupRepository {
                                     .from(accountGroupTable)
                                     .where(accountGroupTable.GROUP_ID.eq(id))))
                             .fetch()
-                            .map(accountRecord -> AccountDTO.builder()
-                                    .id(accountRecord.getId())
-                                    .username(accountRecord.getUsername())
-                                    .email(accountRecord.getEmail())
-                                    .build());
+                            .map(accountRecord -> accountRepository.findById(accountRecord.getId()).orElse(null))
+                            .stream()
+                            .filter(Optional::isPresent)
+                            .map(Optional::get)
+                            .collect(Collectors.toList());
 
                     List<GroupDTO> nestedGroups = dslContext.selectFrom(groupTable)
                             .where(groupTable.ID.in(dslContext.select(accountGroupTable.GROUP_ID)
@@ -51,21 +52,22 @@ public class GroupPostgresRepository implements GroupRepository {
                                             .where(accountGroupTable.GROUP_ID.eq(id)
                                                     .and(accountGroupTable.ACCOUNT_ID.isNull()))))
                                     .fetch()
-                                    .map(groupRecord -> GroupDTO.builder()
-                                            .id(groupRecord.getId())
-                                            .name(groupRecord.getName())
-                                            .build());
+                                    .map(groupRecord -> findById(groupRecord.getId()).orElse(null))
+                                    .stream()
+                                    .filter(Optional::isPresent)
+                                    .map(Optional::get)
+                                    .collect(Collectors.toList());
 
                     List<RoleDTO> roles = dslContext.selectFrom(roleTable)
                             .where(roleTable.ID.in(dslContext.select(groupRoleTable.ROLE_ID)
                                     .from(groupRoleTable)
                                     .where(groupRoleTable.GROUP_ID.eq(id))))
                             .fetch()
-                            .map(roleRecord -> RoleDTO.builder()
-                                    .id(roleRecord.getId())
-                                    .name(RoleType.valueOf(roleRecord.getName()))
-                                    .permissions(List.of(roleRecord.getPermissions()))
-                                    .build());
+                            .map(roleRecord -> roleRepository.findById(roleRecord.getId()).orElse(null))
+                            .stream()
+                            .filter(Optional::isPresent)
+                            .map(Optional::get)
+                            .collect(Collectors.toList());
 
                     return GroupDTO.builder()
                             .id(record.getId())
