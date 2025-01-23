@@ -15,7 +15,7 @@ import lombok.experimental.FieldNameConstants;
 @Builder
 @EqualsAndHashCode
 @FieldNameConstants
-public class GroupDTO {
+public class GroupInputDTO {
     private UUID id;
     private String name;
     private List<AccountDTO> accounts;

@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldNameConstants;
 
+
 /**
  * @author ArtemFed
  */
@@ -15,10 +16,9 @@ import lombok.experimental.FieldNameConstants;
 @Builder
 @EqualsAndHashCode
 @FieldNameConstants
-public class GroupDTO {
-    private UUID id;
-    private String name;
-    private List<AccountDTO> accounts;
-    private List<GroupDTO> groups;
-    private List<RoleDTO> roles;
+public class AccountInputDTO {
+    private String username;
+    private String email;
+    private List<String> ldapGroups;
+    private List<String> adGroups;
 }

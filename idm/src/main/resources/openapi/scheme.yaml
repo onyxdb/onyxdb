@@ -571,14 +571,14 @@ paths:
         '204':
           description: No Content
 
-  /api/v1/subjects/{subjectId}/roles:
+  /api/v1/accounts/{accountId}/roles:
     get:
-      summary: Get roles for a subject
-      operationId: getRolesBySubjectId
+      summary: Get roles for an account
+      operationId: getRolesByAccountId
       tags:
-        - Subjects
+        - Accounts
       parameters:
-        - name: subjectId
+        - name: accountId
           in: path
           required: true
           schema:
@@ -594,12 +594,12 @@ paths:
                 items:
                   $ref: '#/components/schemas/Role'
     post:
-      summary: Assign role to a subject
-      operationId: assignRoleToSubject
+      summary: Assign role to an account
+      operationId: assignRoleToAccount
       tags:
-        - Subjects
+        - Accounts
       parameters:
-        - name: subjectId
+        - name: accountId
           in: path
           required: true
           schema:
@@ -619,14 +619,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/Role'
 
-  /api/v1/resources/{resourceId}/roles:
+  /api/v1/groups/{groupId}/roles:
     get:
-      summary: Get roles for a resource
-      operationId: getRolesByResourceId
+      summary: Get roles for a group
+      operationId: getRolesByGroupId
       tags:
-        - Resources
+        - Groups
       parameters:
-        - name: resourceId
+        - name: groupId
           in: path
           required: true
           schema:
@@ -642,12 +642,12 @@ paths:
                 items:
                   $ref: '#/components/schemas/Role'
     post:
-      summary: Assign role to a resource
-      operationId: assignRoleToResource
+      summary: Assign role to a group
+      operationId: assignRoleToGroup
       tags:
-        - Resources
+        - Groups
       parameters:
-        - name: resourceId
+        - name: groupId
           in: path
           required: true
           schema:
@@ -691,6 +691,14 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Role'
+        ldapGroups:
+          type: array
+          items:
+            type: string
+        adGroups:
+          type: array
+          items:
+            type: string
 
     AccountInput:
       type: object
@@ -702,17 +710,30 @@ components:
           type: string
         email:
           type: string
+        ldapGroups:
+          type: array
+          items:
+            type: string
+        adGroups:
+          type: array
+          items:
+            type: string
 
     UpdateAccountRequest:
       type: object
-      required:
-        - username
-        - email
       properties:
         username:
           type: string
         email:
           type: string
+        ldapGroups:
+          type: array
+          items:
+            type: string
+        adGroups:
+          type: array
+          items:
+            type: string
 
     Group:
       type: object
@@ -763,8 +784,6 @@ components:
 
     UpdateGroupRequest:
       type: object
-      required:
-        - name
       properties:
         name:
           type: string
@@ -810,8 +829,6 @@ components:
 
     UpdateOrganizationRequest:
       type: object
-      required:
-        - name
       properties:
         name:
           type: string
@@ -852,9 +869,6 @@ components:
 
     UpdateProjectRequest:
       type: object
-      required:
-        - name
-        - organizationId
       properties:
         name:
           type: string
@@ -900,10 +914,6 @@ components:
 
     UpdateServiceRequest:
       type: object
-      required:
-        - name
-        - type
-        - projectId
       properties:
         name:
           type: string
@@ -953,8 +963,6 @@ components:
 
     UpdateRoleRequest:
       type: object
-      required:
-        - permissions
       properties:
         permissions:
           type: array

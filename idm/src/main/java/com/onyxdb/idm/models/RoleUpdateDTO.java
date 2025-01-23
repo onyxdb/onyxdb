@@ -1,12 +1,14 @@
 package com.onyxdb.idm.models;
 
 import java.util.List;
-import java.util.UUID;
 
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldNameConstants;
+
+import com.onyxdb.idm.codegen.types.RoleType;
+
 
 /**
  * @author ArtemFed
@@ -15,10 +17,7 @@ import lombok.experimental.FieldNameConstants;
 @Builder
 @EqualsAndHashCode
 @FieldNameConstants
-public class GroupDTO {
-    private UUID id;
-    private String name;
-    private List<AccountDTO> accounts;
-    private List<GroupDTO> groups;
-    private List<RoleDTO> roles;
+public class RoleUpdateDTO {
+    private List<String> permissions;
 }
+

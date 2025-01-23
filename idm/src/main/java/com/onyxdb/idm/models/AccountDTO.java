@@ -20,6 +20,8 @@ public class AccountDTO {
     private UUID id;
     private String username;
     private String email;
-    private List<UUID> groupIds;
+    private List<GroupDTO> groups;
     private List<RoleDTO> roles;
+    private List<String> ldapGroups;
+    private List<String> adGroups;
 }

@@ -25,7 +25,6 @@ public class AccountPostgresRepository implements AccountRepository {
                         .id(record.getId())
                         .username(record.getUsername())
                         .email(record.getEmail())
-                        // Добавьте остальные поля при необходимости
                         .build());
     }
 
@@ -37,7 +36,6 @@ public class AccountPostgresRepository implements AccountRepository {
                         .id(record.getId())
                         .username(record.getUsername())
                         .email(record.getEmail())
-                        // Добавьте остальные поля при необходимости
                         .build());
     }
 
@@ -47,7 +45,6 @@ public class AccountPostgresRepository implements AccountRepository {
                 .set(accountTable.ID, account.getId())
                 .set(accountTable.USERNAME, account.getUsername())
                 .set(accountTable.EMAIL, account.getEmail())
-                // Добавьте остальные поля при необходимости
                 .execute();
     }
 
@@ -56,7 +53,6 @@ public class AccountPostgresRepository implements AccountRepository {
         dslContext.update(accountTable)
                 .set(accountTable.USERNAME, account.getUsername())
                 .set(accountTable.EMAIL, account.getEmail())
-                // Добавьте остальные поля при необходимости
                 .where(accountTable.ID.eq(account.getId()))
                 .execute();
     }
