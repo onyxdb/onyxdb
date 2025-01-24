@@ -8,15 +8,13 @@ import java.util.UUID;
 
 @Data
 @Builder
-public class ServiceDTO {
+public class OrganizationUnitDTO {
     private UUID id;
     private String name;
-    private String type;
     private String description;
+    private UUID domainComponentId;
+    private UUID parentId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private UUID resourceId;
-    private UUID projectId;
     private UUID ownerId;
-    private String[] participants;
 }

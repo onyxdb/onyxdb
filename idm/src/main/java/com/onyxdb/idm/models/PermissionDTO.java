@@ -8,15 +8,11 @@ import java.util.UUID;
 
 @Data
 @Builder
-public class ServiceDTO {
+public class PermissionDTO {
     private UUID id;
-    private String name;
-    private String type;
-    private String description;
+    private String actionType;
+    private String resourceType;
+    private String[] resourceFields;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private UUID resourceId;
-    private UUID projectId;
-    private UUID ownerId;
-    private String[] participants;
 }

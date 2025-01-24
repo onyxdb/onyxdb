@@ -2,26 +2,19 @@ package com.onyxdb.idm.models;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.FieldNameConstants;
 
-import java.util.List;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
-
-/**
- * @author ArtemFed
- */
 @Data
 @Builder
-@EqualsAndHashCode
-@FieldNameConstants
 public class AccountDTO {
     private UUID id;
     private String username;
+    private String password;
     private String email;
-    private List<GroupDTO> groups;
-    private List<RoleDTO> roles;
-    private List<String> ldapGroups;
-    private List<String> adGroups;
+    private String firstName;
+    private String lastName;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

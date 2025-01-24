@@ -20,4 +20,3 @@ public interface AccountRepository {
 
     void delete(UUID id);
 }
-

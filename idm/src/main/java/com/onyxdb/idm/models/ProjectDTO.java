@@ -1,24 +1,20 @@
 package com.onyxdb.idm.models;
 
-import java.util.List;
-import java.util.UUID;
-
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.FieldNameConstants;
 
-/**
- * @author ArtemFed
- */
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 @Data
 @Builder
-@EqualsAndHashCode
-@FieldNameConstants
 public class ProjectDTO {
     private UUID id;
     private String name;
+    private String description;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private UUID resourceId;
     private UUID organizationId;
-    private OrganizationDTO organization;
-    private List<ServiceDTO> services;
+    private UUID ownerId;
 }

@@ -1,9 +1,9 @@
 package com.onyxdb.idm.repositories;
 
+import com.onyxdb.idm.generated.jooq.Tables;
 import com.onyxdb.idm.generated.jooq.tables.OrganizationTable;
-import com.onyxdb.idm.generated.jooq.tables.ProjectTable;
 import com.onyxdb.idm.models.OrganizationDTO;
-import com.onyxdb.idm.models.ProjectDTO;
+
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
@@ -11,46 +11,40 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
 public class OrganizationPostgresRepository implements OrganizationRepository {
+
     private final DSLContext dslContext;
-    private final OrganizationTable organizationTable = OrganizationTable.ORGANIZATION_TABLE;
-    private final ProjectTable projectTable = ProjectTable.PROJECT_TABLE;
-    private final ProjectPostgresRepository projectRepository;
+    private final OrganizationTable organizationTable = Tables.ORGANIZATION_TABLE;
 
     @Override
     public Optional<OrganizationDTO> findById(UUID id) {
         return dslContext.selectFrom(organizationTable)
                 .where(organizationTable.ID.eq(id))
-                .fetchOptional()
-                .map(record -> {
-                    List<ProjectDTO> projects = dslContext.selectFrom(projectTable)
-                            .where(projectTable.ORGANIZATION_ID.eq(id))
-                            .fetch()
-                            .map(projectRecord -> projectRepository.findById(projectRecord.getId()).orElse(null))
-                            .stream()
-                            .filter(Optional::isPresent)
-                            .map(Optional::get)
-                            .collect(Collectors.toList());
-
-                    return OrganizationDTO.builder()
-                            .id(record.getId())
-                            .name(record.getName())
-                            .projects(projects)
-                            .build();
-                });
+                .fetchOptional(record -> OrganizationDTO.builder()
+                        .id(record.getId())
+                        .name(record.getName())
+                        .description(record.getDescription())
+                        .createdAt(record.getCreatedAt())
+                        .updatedAt(record.getUpdatedAt())
+                        .resourceId(record.getResourceId())
+                        .ownerId(record.getOwnerId())
+                        .build());
     }
 
     @Override
     public List<OrganizationDTO> findAll() {
         return dslContext.selectFrom(organizationTable)
-                .fetch()
-                .map(record -> OrganizationDTO.builder()
+                .fetch(record -> OrganizationDTO.builder()
                         .id(record.getId())
                         .name(record.getName())
+                        .description(record.getDescription())
+                        .createdAt(record.getCreatedAt())
+                        .updatedAt(record.getUpdatedAt())
+                        .resourceId(record.getResourceId())
+                        .ownerId(record.getOwnerId())
                         .build());
     }
 
@@ -59,6 +53,10 @@ public class OrganizationPostgresRepository implements OrganizationRepository {
         dslContext.insertInto(organizationTable)
                 .set(organizationTable.ID, organization.getId())
                 .set(organizationTable.NAME, organization.getName())
+                .set(organizationTable.DESCRIPTION, organization.getDescription())
+                .set(organizationTable.CREATED_AT, organization.getCreatedAt())
+                .set(organizationTable.UPDATED_AT, organization.getUpdatedAt())
+                .set(organizationTable.RESOURCE_ID, organization.getResourceId())
                 .execute();
     }
 
@@ -66,6 +64,10 @@ public class OrganizationPostgresRepository implements OrganizationRepository {
     public void update(OrganizationDTO organization) {
         dslContext.update(organizationTable)
                 .set(organizationTable.NAME, organization.getName())
+                .set(organizationTable.DESCRIPTION, organization.getDescription())
+                .set(organizationTable.UPDATED_AT, organization.getUpdatedAt())
+                .set(organizationTable.RESOURCE_ID, organization.getResourceId())
+                .set(organizationTable.OWNER_ID, organization.getOwnerId())
                 .where(organizationTable.ID.eq(organization.getId()))
                 .execute();
     }

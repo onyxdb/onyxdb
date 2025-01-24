@@ -1,6 +1,6 @@
 package com.onyxdb.idm.repositories;
 
-import com.onyxdb.idm.codegen.types.RoleType;
+import com.onyxdb.idm.generated.jooq.Tables;
 import com.onyxdb.idm.generated.jooq.tables.RoleTable;
 import com.onyxdb.idm.models.RoleDTO;
 import lombok.RequiredArgsConstructor;
@@ -14,47 +14,52 @@ import java.util.UUID;
 @Repository
 @RequiredArgsConstructor
 public class RolePostgresRepository implements RoleRepository {
+
     private final DSLContext dslContext;
-    private final RoleTable roleTable = RoleTable.ROLE_TABLE;
+    private final RoleTable roleTable = Tables.ROLE_TABLE;
 
     @Override
     public Optional<RoleDTO> findById(UUID id) {
         return dslContext.selectFrom(roleTable)
                 .where(roleTable.ID.eq(id))
-                .fetchOptional()
-                .map(record -> RoleDTO.builder()
+                .fetchOptional(record -> RoleDTO.builder()
                         .id(record.getId())
-                        .name(RoleType.valueOf(record.getName()))
-                        .permissions(List.of(record.getPermissions()))
+                        .name(record.getName())
+                        .description(record.getDescription())
+                        .createdAt(record.getCreatedAt())
+                        .updatedAt(record.getUpdatedAt())
                         .build());
     }
 
     @Override
     public List<RoleDTO> findAll() {
         return dslContext.selectFrom(roleTable)
-                .fetch()
-                .map(record -> RoleDTO.builder()
+                .fetch(record -> RoleDTO.builder()
                         .id(record.getId())
-                        .name(RoleType.valueOf(record.getName()))
-                        .permissions(List.of(record.getPermissions()))
-                        .build())
-                .stream().toList();
+                        .name(record.getName())
+                        .description(record.getDescription())
+                        .createdAt(record.getCreatedAt())
+                        .updatedAt(record.getUpdatedAt())
+                        .build());
     }
 
     @Override
     public void create(RoleDTO role) {
         dslContext.insertInto(roleTable)
                 .set(roleTable.ID, role.getId())
-                .set(roleTable.NAME, role.getName().name())
-                .set(roleTable.PERMISSIONS, role.getPermissions().toArray(new String[0]))
+                .set(roleTable.NAME, role.getName())
+                .set(roleTable.DESCRIPTION, role.getDescription())
+                .set(roleTable.CREATED_AT, role.getCreatedAt())
+                .set(roleTable.UPDATED_AT, role.getUpdatedAt())
                 .execute();
     }
 
     @Override
     public void update(RoleDTO role) {
         dslContext.update(roleTable)
-                .set(roleTable.NAME, role.getName().name())
-                .set(roleTable.PERMISSIONS, role.getPermissions().toArray(new String[0]))
+                .set(roleTable.NAME, role.getName())
+                .set(roleTable.DESCRIPTION, role.getDescription())
+                .set(roleTable.UPDATED_AT, role.getUpdatedAt())
                 .where(roleTable.ID.eq(role.getId()))
                 .execute();
     }

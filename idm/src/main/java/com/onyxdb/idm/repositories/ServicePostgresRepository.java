@@ -1,8 +1,7 @@
 package com.onyxdb.idm.repositories;
 
-import com.onyxdb.idm.generated.jooq.tables.ProjectTable;
+import com.onyxdb.idm.generated.jooq.Tables;
 import com.onyxdb.idm.generated.jooq.tables.ServiceTable;
-import com.onyxdb.idm.models.ProjectDTO;
 import com.onyxdb.idm.models.ServiceDTO;
 
 import lombok.RequiredArgsConstructor;
@@ -16,42 +15,57 @@ import java.util.UUID;
 @Repository
 @RequiredArgsConstructor
 public class ServicePostgresRepository implements ServiceRepository {
+
     private final DSLContext dslContext;
-    private final ServiceTable serviceTable = ServiceTable.SERVICE_TABLE;
-    private final ProjectTable projectTable = ProjectTable.PROJECT_TABLE;
-    private final ProjectPostgresRepository projectRepository;
+    private final ServiceTable serviceTable = Tables.SERVICE_TABLE;
 
     @Override
     public Optional<ServiceDTO> findById(UUID id) {
         return dslContext.selectFrom(serviceTable)
                 .where(serviceTable.ID.eq(id))
-                .fetchOptional()
-                .map(record -> {
-                    ProjectDTO project = dslContext.selectFrom(projectTable)
-                            .where(projectTable.ID.eq(record.getProjectId()))
-                            .fetchOptional()
-                            .map(projectRecord -> projectRepository.findById(projectRecord.getId()).orElse(null))
-                            .orElse(null);
+                .fetchOptional(record -> ServiceDTO.builder()
+                        .id(record.getId())
+                        .name(record.getName())
+                        .type(record.getType())
+                        .description(record.getDescription())
+                        .createdAt(record.getCreatedAt())
+                        .updatedAt(record.getUpdatedAt())
+                        .resourceId(record.getResourceId())
+                        .projectId(record.getProjectId())
+                        .ownerId(record.getOwnerId())
+                        .build());
+    }
 
-                    return ServiceDTO.builder()
-                            .id(record.getId())
-                            .name(record.getName())
-                            .type(record.getType())
-                            .projectId(record.getProjectId())
-                            .project(project)
-                            .build();
-                });
+    @Override
+    public List<ServiceDTO> findAll() {
+        return dslContext.selectFrom(serviceTable)
+                .fetch(record -> ServiceDTO.builder()
+                        .id(record.getId())
+                        .name(record.getName())
+                        .type(record.getType())
+                        .description(record.getDescription())
+                        .createdAt(record.getCreatedAt())
+                        .updatedAt(record.getUpdatedAt())
+                        .resourceId(record.getResourceId())
+                        .projectId(record.getProjectId())
+                        .ownerId(record.getOwnerId())
+                        .build());
     }
 
     @Override
     public List<ServiceDTO> findByProjectId(UUID projectId) {
         return dslContext.selectFrom(serviceTable)
-                .fetch()
-                .map(record -> ServiceDTO.builder()
+                .where(serviceTable.PROJECT_ID.eq(projectId))
+                .fetch(record -> ServiceDTO.builder()
                         .id(record.getId())
                         .name(record.getName())
                         .type(record.getType())
+                        .description(record.getDescription())
+                        .createdAt(record.getCreatedAt())
+                        .updatedAt(record.getUpdatedAt())
+                        .resourceId(record.getResourceId())
                         .projectId(record.getProjectId())
+                        .ownerId(record.getOwnerId())
                         .build());
     }
 
@@ -61,7 +75,12 @@ public class ServicePostgresRepository implements ServiceRepository {
                 .set(serviceTable.ID, service.getId())
                 .set(serviceTable.NAME, service.getName())
                 .set(serviceTable.TYPE, service.getType())
+                .set(serviceTable.DESCRIPTION, service.getDescription())
+                .set(serviceTable.CREATED_AT, service.getCreatedAt())
+                .set(serviceTable.UPDATED_AT, service.getUpdatedAt())
+                .set(serviceTable.RESOURCE_ID, service.getResourceId())
                 .set(serviceTable.PROJECT_ID, service.getProjectId())
+                .set(serviceTable.OWNER_ID, service.getOwnerId())
                 .execute();
     }
 
@@ -70,7 +89,11 @@ public class ServicePostgresRepository implements ServiceRepository {
         dslContext.update(serviceTable)
                 .set(serviceTable.NAME, service.getName())
                 .set(serviceTable.TYPE, service.getType())
+                .set(serviceTable.DESCRIPTION, service.getDescription())
+                .set(serviceTable.UPDATED_AT, service.getUpdatedAt())
+                .set(serviceTable.RESOURCE_ID, service.getResourceId())
                 .set(serviceTable.PROJECT_ID, service.getProjectId())
+                .set(serviceTable.OWNER_ID, service.getOwnerId())
                 .where(serviceTable.ID.eq(service.getId()))
                 .execute();
     }

@@ -4,22 +4,22 @@
 package com.onyxdb.idm.generated.jooq;
 
 
-import com.onyxdb.idm.generated.jooq.tables.Account;
-import com.onyxdb.idm.generated.jooq.tables.AccountBusinessRole;
-import com.onyxdb.idm.generated.jooq.tables.AccountOu;
-import com.onyxdb.idm.generated.jooq.tables.AccountResourceRole;
-import com.onyxdb.idm.generated.jooq.tables.AccountRole;
-import com.onyxdb.idm.generated.jooq.tables.BusinessRole;
-import com.onyxdb.idm.generated.jooq.tables.BusinessRoleRole;
-import com.onyxdb.idm.generated.jooq.tables.DomainComponent;
-import com.onyxdb.idm.generated.jooq.tables.Organization;
-import com.onyxdb.idm.generated.jooq.tables.OrganizationUnit;
-import com.onyxdb.idm.generated.jooq.tables.Permission;
-import com.onyxdb.idm.generated.jooq.tables.Project;
-import com.onyxdb.idm.generated.jooq.tables.Resource;
-import com.onyxdb.idm.generated.jooq.tables.Role;
-import com.onyxdb.idm.generated.jooq.tables.RolePermission;
-import com.onyxdb.idm.generated.jooq.tables.Service;
+import com.onyxdb.idm.generated.jooq.tables.AccountBusinessRoleTable;
+import com.onyxdb.idm.generated.jooq.tables.AccountOuTable;
+import com.onyxdb.idm.generated.jooq.tables.AccountResourceRoleTable;
+import com.onyxdb.idm.generated.jooq.tables.AccountRoleTable;
+import com.onyxdb.idm.generated.jooq.tables.AccountTable;
+import com.onyxdb.idm.generated.jooq.tables.BusinessRoleRoleTable;
+import com.onyxdb.idm.generated.jooq.tables.BusinessRoleTable;
+import com.onyxdb.idm.generated.jooq.tables.DomainComponentTable;
+import com.onyxdb.idm.generated.jooq.tables.OrganizationTable;
+import com.onyxdb.idm.generated.jooq.tables.OrganizationUnitTable;
+import com.onyxdb.idm.generated.jooq.tables.PermissionTable;
+import com.onyxdb.idm.generated.jooq.tables.ProjectTable;
+import com.onyxdb.idm.generated.jooq.tables.ResourceTable;
+import com.onyxdb.idm.generated.jooq.tables.RolePermissionTable;
+import com.onyxdb.idm.generated.jooq.tables.RoleTable;
+import com.onyxdb.idm.generated.jooq.tables.ServiceTable;
 
 
 /**
@@ -29,82 +29,82 @@ import com.onyxdb.idm.generated.jooq.tables.Service;
 public class Tables {
 
     /**
-     * The table <code>public.account</code>.
+     * The table <code>public.account_business_role_table</code>.
      */
-    public static final Account ACCOUNT = Account.ACCOUNT;
+    public static final AccountBusinessRoleTable ACCOUNT_BUSINESS_ROLE_TABLE = AccountBusinessRoleTable.ACCOUNT_BUSINESS_ROLE_TABLE;
 
     /**
-     * The table <code>public.account_business_role</code>.
+     * The table <code>public.account_ou_table</code>.
      */
-    public static final AccountBusinessRole ACCOUNT_BUSINESS_ROLE = AccountBusinessRole.ACCOUNT_BUSINESS_ROLE;
+    public static final AccountOuTable ACCOUNT_OU_TABLE = AccountOuTable.ACCOUNT_OU_TABLE;
 
     /**
-     * The table <code>public.account_ou</code>.
+     * The table <code>public.account_resource_role_table</code>.
      */
-    public static final AccountOu ACCOUNT_OU = AccountOu.ACCOUNT_OU;
+    public static final AccountResourceRoleTable ACCOUNT_RESOURCE_ROLE_TABLE = AccountResourceRoleTable.ACCOUNT_RESOURCE_ROLE_TABLE;
 
     /**
-     * The table <code>public.account_resource_role</code>.
+     * The table <code>public.account_role_table</code>.
      */
-    public static final AccountResourceRole ACCOUNT_RESOURCE_ROLE = AccountResourceRole.ACCOUNT_RESOURCE_ROLE;
+    public static final AccountRoleTable ACCOUNT_ROLE_TABLE = AccountRoleTable.ACCOUNT_ROLE_TABLE;
 
     /**
-     * The table <code>public.account_role</code>.
+     * The table <code>public.account_table</code>.
      */
-    public static final AccountRole ACCOUNT_ROLE = AccountRole.ACCOUNT_ROLE;
+    public static final AccountTable ACCOUNT_TABLE = AccountTable.ACCOUNT_TABLE;
 
     /**
-     * The table <code>public.business_role</code>.
+     * The table <code>public.business_role_role_table</code>.
      */
-    public static final BusinessRole BUSINESS_ROLE = BusinessRole.BUSINESS_ROLE;
+    public static final BusinessRoleRoleTable BUSINESS_ROLE_ROLE_TABLE = BusinessRoleRoleTable.BUSINESS_ROLE_ROLE_TABLE;
 
     /**
-     * The table <code>public.business_role_role</code>.
+     * The table <code>public.business_role_table</code>.
      */
-    public static final BusinessRoleRole BUSINESS_ROLE_ROLE = BusinessRoleRole.BUSINESS_ROLE_ROLE;
+    public static final BusinessRoleTable BUSINESS_ROLE_TABLE = BusinessRoleTable.BUSINESS_ROLE_TABLE;
 
     /**
-     * The table <code>public.domain_component</code>.
+     * The table <code>public.domain_component_table</code>.
      */
-    public static final DomainComponent DOMAIN_COMPONENT = DomainComponent.DOMAIN_COMPONENT;
+    public static final DomainComponentTable DOMAIN_COMPONENT_TABLE = DomainComponentTable.DOMAIN_COMPONENT_TABLE;
 
     /**
-     * The table <code>public.organization</code>.
+     * The table <code>public.organization_table</code>.
      */
-    public static final Organization ORGANIZATION = Organization.ORGANIZATION;
+    public static final OrganizationTable ORGANIZATION_TABLE = OrganizationTable.ORGANIZATION_TABLE;
 
     /**
-     * The table <code>public.organization_unit</code>.
+     * The table <code>public.organization_unit_table</code>.
      */
-    public static final OrganizationUnit ORGANIZATION_UNIT = OrganizationUnit.ORGANIZATION_UNIT;
+    public static final OrganizationUnitTable ORGANIZATION_UNIT_TABLE = OrganizationUnitTable.ORGANIZATION_UNIT_TABLE;
 
     /**
-     * The table <code>public.permission</code>.
+     * The table <code>public.permission_table</code>.
      */
-    public static final Permission PERMISSION = Permission.PERMISSION;
+    public static final PermissionTable PERMISSION_TABLE = PermissionTable.PERMISSION_TABLE;
 
     /**
-     * The table <code>public.project</code>.
+     * The table <code>public.project_table</code>.
      */
-    public static final Project PROJECT = Project.PROJECT;
+    public static final ProjectTable PROJECT_TABLE = ProjectTable.PROJECT_TABLE;
 
     /**
-     * The table <code>public.resource</code>.
+     * The table <code>public.resource_table</code>.
      */
-    public static final Resource RESOURCE = Resource.RESOURCE;
+    public static final ResourceTable RESOURCE_TABLE = ResourceTable.RESOURCE_TABLE;
 
     /**
-     * The table <code>public.role</code>.
+     * The table <code>public.role_permission_table</code>.
      */
-    public static final Role ROLE = Role.ROLE;
+    public static final RolePermissionTable ROLE_PERMISSION_TABLE = RolePermissionTable.ROLE_PERMISSION_TABLE;
 
     /**
-     * The table <code>public.role_permission</code>.
+     * The table <code>public.role_table</code>.
      */
-    public static final RolePermission ROLE_PERMISSION = RolePermission.ROLE_PERMISSION;
+    public static final RoleTable ROLE_TABLE = RoleTable.ROLE_TABLE;
 
     /**
-     * The table <code>public.service</code>.
+     * The table <code>public.service_table</code>.
      */
-    public static final Service SERVICE = Service.SERVICE;
+    public static final ServiceTable SERVICE_TABLE = ServiceTable.SERVICE_TABLE;
 }
