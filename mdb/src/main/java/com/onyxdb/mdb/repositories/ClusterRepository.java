@@ -6,5 +6,5 @@ import com.onyxdb.mdb.models.Cluster;
  * @author foxleren
  */
 public interface ClusterRepository {
-    void createCluster(Cluster cluster);
+    void create(Cluster cluster);
 }

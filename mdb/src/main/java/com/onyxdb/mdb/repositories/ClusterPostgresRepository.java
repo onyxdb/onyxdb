@@ -15,7 +15,7 @@ public class ClusterPostgresRepository implements ClusterRepository {
     private final DSLContext dslContext;
 
     @Override
-    public void createCluster(Cluster cluster) {
+    public void create(Cluster cluster) {
         var clusterTable = com.onyxdb.mdb.generated.jooq.tables.Cluster.CLUSTER;
         dslContext.insertInto(clusterTable)
                 .set(clusterTable.ID, cluster.id())

@@ -1,6 +1,6 @@
 spring:
   application:
-    name: mdb
+    name: onyxdb-mdb
   datasource:
     driver-class-name: org.postgresql.Driver
     url: ${ONYXDB_MDB_PSQL_URL:jdbc:postgresql://localhost:5432/dev}
@@ -10,6 +10,13 @@ spring:
     sql-dialect: Postgres
   flyway:
     enabled: true
+#  task:
+#    scheduling:
+#      pool:
+#        size: 5
+#    execution:
+#      pool:
+#        core-size: 5
 server:
   port: ${ONYXDB_MDB_HTTP_PORT:9001}
 
@@ -20,7 +27,11 @@ springdoc:
     path: /internal/swagger-ui
 
 onyxdb-app:
-  cluster-operations-processing:
-    queue-time:
-      min-seconds: 0
-      max-seconds: 180
+  tasks:
+    process-cluster-operations:
+      executor:
+        core-pool-size: 1
+        max-pool-size: 3
+        queue-capacity: 0
+      initial-delay-string: PT0S
+      fixed-rate-string: PT01S

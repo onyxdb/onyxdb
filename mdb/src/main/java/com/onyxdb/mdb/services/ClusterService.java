@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.onyxdb.mdb.models.Cluster;
-import com.onyxdb.mdb.processors.CompositeClusterOperationProcessor;
 import com.onyxdb.mdb.repositories.ClusterRepository;
 
 /**
@@ -20,7 +19,8 @@ public class ClusterService {
 
     @Transactional
     public void create(Cluster cluster) {
-
-        clusterRepository.createCluster(cluster);
+        // 1. Save operations to db
+        // 2. Save cluster to db
+        clusterRepository.create(cluster);
     }
 }
