@@ -6,9 +6,7 @@
 package com.onyxdb.idm.generated.openapi.apis;
 
 import com.onyxdb.idm.generated.openapi.models.Project;
-import com.onyxdb.idm.generated.openapi.models.ProjectInput;
 import java.util.UUID;
-import com.onyxdb.idm.generated.openapi.models.UpdateProjectRequest;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -41,14 +39,14 @@ import jakarta.annotation.Generated;
 public interface ProjectsApi {
 
     /**
-     * POST /api/v1/projects : Create project
+     * POST /api/v1/projects : Create a new project
      *
-     * @param projectInput  (required)
+     * @param project  (required)
      * @return Created (status code 201)
      */
     @Operation(
         operationId = "createProject",
-        summary = "Create project",
+        summary = "Create a new project",
         tags = { "Projects" },
         responses = {
             @ApiResponse(responseCode = "201", description = "Created", content = {
@@ -64,19 +62,19 @@ public interface ProjectsApi {
     )
     
     ResponseEntity<Project> createProject(
-        @Parameter(name = "ProjectInput", description = "", required = true) @Valid @RequestBody ProjectInput projectInput
+        @Parameter(name = "Project", description = "", required = true) @Valid @RequestBody Project project
     );
 
 
     /**
-     * DELETE /api/v1/projects/{projectId} : Delete project
+     * DELETE /api/v1/projects/{projectId} : Delete a project by ID
      *
      * @param projectId  (required)
      * @return No Content (status code 204)
      */
     @Operation(
         operationId = "deleteProject",
-        summary = "Delete project",
+        summary = "Delete a project by ID",
         tags = { "Projects" },
         responses = {
             @ApiResponse(responseCode = "204", description = "No Content")
@@ -119,19 +117,21 @@ public interface ProjectsApi {
 
 
     /**
-     * GET /api/v1/projects/{projectId} : Get project by ID
+     * GET /api/v1/projects/{projectId} : Get a project by ID
      *
      * @param projectId  (required)
      * @return OK (status code 200)
+     *         or Not Found (status code 404)
      */
     @Operation(
         operationId = "getProjectById",
-        summary = "Get project by ID",
+        summary = "Get a project by ID",
         tags = { "Projects" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Project.class))
-            })
+            }),
+            @ApiResponse(responseCode = "404", description = "Not Found")
         }
     )
     @RequestMapping(
@@ -146,20 +146,22 @@ public interface ProjectsApi {
 
 
     /**
-     * PUT /api/v1/projects/{projectId} : Update project
+     * PUT /api/v1/projects/{projectId} : Update a project by ID
      *
      * @param projectId  (required)
-     * @param updateProjectRequest  (required)
+     * @param project  (required)
      * @return OK (status code 200)
+     *         or Not Found (status code 404)
      */
     @Operation(
         operationId = "updateProject",
-        summary = "Update project",
+        summary = "Update a project by ID",
         tags = { "Projects" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Project.class))
-            })
+            }),
+            @ApiResponse(responseCode = "404", description = "Not Found")
         }
     )
     @RequestMapping(
@@ -171,7 +173,7 @@ public interface ProjectsApi {
     
     ResponseEntity<Project> updateProject(
         @Parameter(name = "projectId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("projectId") UUID projectId,
-        @Parameter(name = "UpdateProjectRequest", description = "", required = true) @Valid @RequestBody UpdateProjectRequest updateProjectRequest
+        @Parameter(name = "Project", description = "", required = true) @Valid @RequestBody Project project
     );
 
 }

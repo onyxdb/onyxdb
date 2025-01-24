@@ -6,9 +6,7 @@
 package com.onyxdb.idm.generated.openapi.apis;
 
 import com.onyxdb.idm.generated.openapi.models.Service;
-import com.onyxdb.idm.generated.openapi.models.ServiceInput;
 import java.util.UUID;
-import com.onyxdb.idm.generated.openapi.models.UpdateServiceRequest;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -41,14 +39,14 @@ import jakarta.annotation.Generated;
 public interface ServicesApi {
 
     /**
-     * POST /api/v1/services : Create service
+     * POST /api/v1/services : Create a new service
      *
-     * @param serviceInput  (required)
+     * @param service  (required)
      * @return Created (status code 201)
      */
     @Operation(
         operationId = "createService",
-        summary = "Create service",
+        summary = "Create a new service",
         tags = { "Services" },
         responses = {
             @ApiResponse(responseCode = "201", description = "Created", content = {
@@ -64,19 +62,19 @@ public interface ServicesApi {
     )
     
     ResponseEntity<Service> createService(
-        @Parameter(name = "ServiceInput", description = "", required = true) @Valid @RequestBody ServiceInput serviceInput
+        @Parameter(name = "Service", description = "", required = true) @Valid @RequestBody Service service
     );
 
 
     /**
-     * DELETE /api/v1/services/{serviceId} : Delete service
+     * DELETE /api/v1/services/{serviceId} : Delete a service by ID
      *
      * @param serviceId  (required)
      * @return No Content (status code 204)
      */
     @Operation(
         operationId = "deleteService",
-        summary = "Delete service",
+        summary = "Delete a service by ID",
         tags = { "Services" },
         responses = {
             @ApiResponse(responseCode = "204", description = "No Content")
@@ -119,19 +117,21 @@ public interface ServicesApi {
 
 
     /**
-     * GET /api/v1/services/{serviceId} : Get service by ID
+     * GET /api/v1/services/{serviceId} : Get a service by ID
      *
      * @param serviceId  (required)
      * @return OK (status code 200)
+     *         or Not Found (status code 404)
      */
     @Operation(
         operationId = "getServiceById",
-        summary = "Get service by ID",
+        summary = "Get a service by ID",
         tags = { "Services" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Service.class))
-            })
+            }),
+            @ApiResponse(responseCode = "404", description = "Not Found")
         }
     )
     @RequestMapping(
@@ -146,20 +146,22 @@ public interface ServicesApi {
 
 
     /**
-     * PUT /api/v1/services/{serviceId} : Update service
+     * PUT /api/v1/services/{serviceId} : Update a service by ID
      *
      * @param serviceId  (required)
-     * @param updateServiceRequest  (required)
+     * @param service  (required)
      * @return OK (status code 200)
+     *         or Not Found (status code 404)
      */
     @Operation(
         operationId = "updateService",
-        summary = "Update service",
+        summary = "Update a service by ID",
         tags = { "Services" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Service.class))
-            })
+            }),
+            @ApiResponse(responseCode = "404", description = "Not Found")
         }
     )
     @RequestMapping(
@@ -171,7 +173,7 @@ public interface ServicesApi {
     
     ResponseEntity<Service> updateService(
         @Parameter(name = "serviceId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("serviceId") UUID serviceId,
-        @Parameter(name = "UpdateServiceRequest", description = "", required = true) @Valid @RequestBody UpdateServiceRequest updateServiceRequest
+        @Parameter(name = "Service", description = "", required = true) @Valid @RequestBody Service service
     );
 
 }

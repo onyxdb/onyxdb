@@ -5,7 +5,7 @@
  */
 package com.onyxdb.idm.generated.openapi.apis;
 
-import com.onyxdb.idm.generated.openapi.models.Resource;
+import com.onyxdb.idm.generated.openapi.models.OrganizationUnit;
 import java.util.UUID;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,145 +35,145 @@ import jakarta.annotation.Generated;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.5.0")
 @Validated
-@Tag(name = "Resources", description = "the Resources API")
-public interface ResourcesApi {
+@Tag(name = "Organization Units", description = "the Organization Units API")
+public interface OrganizationUnitsApi {
 
     /**
-     * POST /api/v1/resources : Create a new resource
+     * POST /api/v1/organization-units : Create a new organization unit
      *
-     * @param resource  (required)
+     * @param organizationUnit  (required)
      * @return Created (status code 201)
      */
     @Operation(
-        operationId = "createResource",
-        summary = "Create a new resource",
-        tags = { "Resources" },
+        operationId = "createOrganizationUnit",
+        summary = "Create a new organization unit",
+        tags = { "Organization Units" },
         responses = {
             @ApiResponse(responseCode = "201", description = "Created", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Resource.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = OrganizationUnit.class))
             })
         }
     )
     @RequestMapping(
         method = RequestMethod.POST,
-        value = "/api/v1/resources",
+        value = "/api/v1/organization-units",
         produces = { "application/json" },
         consumes = { "application/json" }
     )
     
-    ResponseEntity<Resource> createResource(
-        @Parameter(name = "Resource", description = "", required = true) @Valid @RequestBody Resource resource
+    ResponseEntity<OrganizationUnit> createOrganizationUnit(
+        @Parameter(name = "OrganizationUnit", description = "", required = true) @Valid @RequestBody OrganizationUnit organizationUnit
     );
 
 
     /**
-     * DELETE /api/v1/resources/{resourceId} : Delete a resource by ID
+     * DELETE /api/v1/organization-units/{organizationUnitId} : Delete an organization unit by ID
      *
-     * @param resourceId  (required)
+     * @param organizationUnitId  (required)
      * @return No Content (status code 204)
      */
     @Operation(
-        operationId = "deleteResource",
-        summary = "Delete a resource by ID",
-        tags = { "Resources" },
+        operationId = "deleteOrganizationUnit",
+        summary = "Delete an organization unit by ID",
+        tags = { "Organization Units" },
         responses = {
             @ApiResponse(responseCode = "204", description = "No Content")
         }
     )
     @RequestMapping(
         method = RequestMethod.DELETE,
-        value = "/api/v1/resources/{resourceId}"
+        value = "/api/v1/organization-units/{organizationUnitId}"
     )
     
-    ResponseEntity<Void> deleteResource(
-        @Parameter(name = "resourceId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("resourceId") UUID resourceId
+    ResponseEntity<Void> deleteOrganizationUnit(
+        @Parameter(name = "organizationUnitId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("organizationUnitId") UUID organizationUnitId
     );
 
 
     /**
-     * GET /api/v1/resources : Get all resources
+     * GET /api/v1/organization-units : Get all organization units
      *
      * @return OK (status code 200)
      */
     @Operation(
-        operationId = "getAllResources",
-        summary = "Get all resources",
-        tags = { "Resources" },
+        operationId = "getAllOrganizationUnits",
+        summary = "Get all organization units",
+        tags = { "Organization Units" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Resource.class)))
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = OrganizationUnit.class)))
             })
         }
     )
     @RequestMapping(
         method = RequestMethod.GET,
-        value = "/api/v1/resources",
+        value = "/api/v1/organization-units",
         produces = { "application/json" }
     )
     
-    ResponseEntity<List<Resource>> getAllResources(
+    ResponseEntity<List<OrganizationUnit>> getAllOrganizationUnits(
         
     );
 
 
     /**
-     * GET /api/v1/resources/{resourceId} : Get a resource by ID
+     * GET /api/v1/organization-units/{organizationUnitId} : Get an organization unit by ID
      *
-     * @param resourceId  (required)
+     * @param organizationUnitId  (required)
      * @return OK (status code 200)
      *         or Not Found (status code 404)
      */
     @Operation(
-        operationId = "getResourceById",
-        summary = "Get a resource by ID",
-        tags = { "Resources" },
+        operationId = "getOrganizationUnitById",
+        summary = "Get an organization unit by ID",
+        tags = { "Organization Units" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Resource.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = OrganizationUnit.class))
             }),
             @ApiResponse(responseCode = "404", description = "Not Found")
         }
     )
     @RequestMapping(
         method = RequestMethod.GET,
-        value = "/api/v1/resources/{resourceId}",
+        value = "/api/v1/organization-units/{organizationUnitId}",
         produces = { "application/json" }
     )
     
-    ResponseEntity<Resource> getResourceById(
-        @Parameter(name = "resourceId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("resourceId") UUID resourceId
+    ResponseEntity<OrganizationUnit> getOrganizationUnitById(
+        @Parameter(name = "organizationUnitId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("organizationUnitId") UUID organizationUnitId
     );
 
 
     /**
-     * PUT /api/v1/resources/{resourceId} : Update a resource by ID
+     * PUT /api/v1/organization-units/{organizationUnitId} : Update an organization unit by ID
      *
-     * @param resourceId  (required)
-     * @param resource  (required)
+     * @param organizationUnitId  (required)
+     * @param organizationUnit  (required)
      * @return OK (status code 200)
      *         or Not Found (status code 404)
      */
     @Operation(
-        operationId = "updateResource",
-        summary = "Update a resource by ID",
-        tags = { "Resources" },
+        operationId = "updateOrganizationUnit",
+        summary = "Update an organization unit by ID",
+        tags = { "Organization Units" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Resource.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = OrganizationUnit.class))
             }),
             @ApiResponse(responseCode = "404", description = "Not Found")
         }
     )
     @RequestMapping(
         method = RequestMethod.PUT,
-        value = "/api/v1/resources/{resourceId}",
+        value = "/api/v1/organization-units/{organizationUnitId}",
         produces = { "application/json" },
         consumes = { "application/json" }
     )
     
-    ResponseEntity<Resource> updateResource(
-        @Parameter(name = "resourceId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("resourceId") UUID resourceId,
-        @Parameter(name = "Resource", description = "", required = true) @Valid @RequestBody Resource resource
+    ResponseEntity<OrganizationUnit> updateOrganizationUnit(
+        @Parameter(name = "organizationUnitId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("organizationUnitId") UUID organizationUnitId,
+        @Parameter(name = "OrganizationUnit", description = "", required = true) @Valid @RequestBody OrganizationUnit organizationUnit
     );
 
 }

@@ -6,9 +6,7 @@
 package com.onyxdb.idm.generated.openapi.apis;
 
 import com.onyxdb.idm.generated.openapi.models.Organization;
-import com.onyxdb.idm.generated.openapi.models.OrganizationInput;
 import java.util.UUID;
-import com.onyxdb.idm.generated.openapi.models.UpdateOrganizationRequest;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -41,14 +39,14 @@ import jakarta.annotation.Generated;
 public interface OrganizationsApi {
 
     /**
-     * POST /api/v1/organizations : Create organization
+     * POST /api/v1/organizations : Create a new organization
      *
-     * @param organizationInput  (required)
+     * @param organization  (required)
      * @return Created (status code 201)
      */
     @Operation(
         operationId = "createOrganization",
-        summary = "Create organization",
+        summary = "Create a new organization",
         tags = { "Organizations" },
         responses = {
             @ApiResponse(responseCode = "201", description = "Created", content = {
@@ -64,19 +62,19 @@ public interface OrganizationsApi {
     )
     
     ResponseEntity<Organization> createOrganization(
-        @Parameter(name = "OrganizationInput", description = "", required = true) @Valid @RequestBody OrganizationInput organizationInput
+        @Parameter(name = "Organization", description = "", required = true) @Valid @RequestBody Organization organization
     );
 
 
     /**
-     * DELETE /api/v1/organizations/{organizationId} : Delete organization
+     * DELETE /api/v1/organizations/{organizationId} : Delete an organization by ID
      *
      * @param organizationId  (required)
      * @return No Content (status code 204)
      */
     @Operation(
         operationId = "deleteOrganization",
-        summary = "Delete organization",
+        summary = "Delete an organization by ID",
         tags = { "Organizations" },
         responses = {
             @ApiResponse(responseCode = "204", description = "No Content")
@@ -119,19 +117,21 @@ public interface OrganizationsApi {
 
 
     /**
-     * GET /api/v1/organizations/{organizationId} : Get organization by ID
+     * GET /api/v1/organizations/{organizationId} : Get an organization by ID
      *
      * @param organizationId  (required)
      * @return OK (status code 200)
+     *         or Not Found (status code 404)
      */
     @Operation(
         operationId = "getOrganizationById",
-        summary = "Get organization by ID",
+        summary = "Get an organization by ID",
         tags = { "Organizations" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Organization.class))
-            })
+            }),
+            @ApiResponse(responseCode = "404", description = "Not Found")
         }
     )
     @RequestMapping(
@@ -146,20 +146,22 @@ public interface OrganizationsApi {
 
 
     /**
-     * PUT /api/v1/organizations/{organizationId} : Update organization
+     * PUT /api/v1/organizations/{organizationId} : Update an organization by ID
      *
      * @param organizationId  (required)
-     * @param updateOrganizationRequest  (required)
+     * @param organization  (required)
      * @return OK (status code 200)
+     *         or Not Found (status code 404)
      */
     @Operation(
         operationId = "updateOrganization",
-        summary = "Update organization",
+        summary = "Update an organization by ID",
         tags = { "Organizations" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Organization.class))
-            })
+            }),
+            @ApiResponse(responseCode = "404", description = "Not Found")
         }
     )
     @RequestMapping(
@@ -171,7 +173,7 @@ public interface OrganizationsApi {
     
     ResponseEntity<Organization> updateOrganization(
         @Parameter(name = "organizationId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("organizationId") UUID organizationId,
-        @Parameter(name = "UpdateOrganizationRequest", description = "", required = true) @Valid @RequestBody UpdateOrganizationRequest updateOrganizationRequest
+        @Parameter(name = "Organization", description = "", required = true) @Valid @RequestBody Organization organization
     );
 
 }

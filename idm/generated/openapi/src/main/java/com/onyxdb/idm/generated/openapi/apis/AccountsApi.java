@@ -6,9 +6,7 @@
 package com.onyxdb.idm.generated.openapi.apis;
 
 import com.onyxdb.idm.generated.openapi.models.Account;
-import com.onyxdb.idm.generated.openapi.models.AccountInput;
 import java.util.UUID;
-import com.onyxdb.idm.generated.openapi.models.UpdateAccountRequest;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -41,14 +39,14 @@ import jakarta.annotation.Generated;
 public interface AccountsApi {
 
     /**
-     * POST /api/v1/accounts : Create account
+     * POST /api/v1/accounts : Create a new account
      *
-     * @param accountInput  (required)
+     * @param account  (required)
      * @return Created (status code 201)
      */
     @Operation(
         operationId = "createAccount",
-        summary = "Create account",
+        summary = "Create a new account",
         tags = { "Accounts" },
         responses = {
             @ApiResponse(responseCode = "201", description = "Created", content = {
@@ -64,19 +62,19 @@ public interface AccountsApi {
     )
     
     ResponseEntity<Account> createAccount(
-        @Parameter(name = "AccountInput", description = "", required = true) @Valid @RequestBody AccountInput accountInput
+        @Parameter(name = "Account", description = "", required = true) @Valid @RequestBody Account account
     );
 
 
     /**
-     * DELETE /api/v1/accounts/{accountId} : Delete account
+     * DELETE /api/v1/accounts/{accountId} : Delete an account by ID
      *
      * @param accountId  (required)
      * @return No Content (status code 204)
      */
     @Operation(
         operationId = "deleteAccount",
-        summary = "Delete account",
+        summary = "Delete an account by ID",
         tags = { "Accounts" },
         responses = {
             @ApiResponse(responseCode = "204", description = "No Content")
@@ -93,19 +91,21 @@ public interface AccountsApi {
 
 
     /**
-     * GET /api/v1/accounts/{accountId} : Get account by ID
+     * GET /api/v1/accounts/{accountId} : Get an account by ID
      *
      * @param accountId  (required)
      * @return OK (status code 200)
+     *         or Not Found (status code 404)
      */
     @Operation(
         operationId = "getAccountById",
-        summary = "Get account by ID",
+        summary = "Get an account by ID",
         tags = { "Accounts" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Account.class))
-            })
+            }),
+            @ApiResponse(responseCode = "404", description = "Not Found")
         }
     )
     @RequestMapping(
@@ -146,20 +146,22 @@ public interface AccountsApi {
 
 
     /**
-     * PUT /api/v1/accounts/{accountId} : Update account
+     * PUT /api/v1/accounts/{accountId} : Update an account by ID
      *
      * @param accountId  (required)
-     * @param updateAccountRequest  (required)
+     * @param account  (required)
      * @return OK (status code 200)
+     *         or Not Found (status code 404)
      */
     @Operation(
         operationId = "updateAccount",
-        summary = "Update account",
+        summary = "Update an account by ID",
         tags = { "Accounts" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Account.class))
-            })
+            }),
+            @ApiResponse(responseCode = "404", description = "Not Found")
         }
     )
     @RequestMapping(
@@ -171,7 +173,7 @@ public interface AccountsApi {
     
     ResponseEntity<Account> updateAccount(
         @Parameter(name = "accountId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("accountId") UUID accountId,
-        @Parameter(name = "UpdateAccountRequest", description = "", required = true) @Valid @RequestBody UpdateAccountRequest updateAccountRequest
+        @Parameter(name = "Account", description = "", required = true) @Valid @RequestBody Account account
     );
 
 }

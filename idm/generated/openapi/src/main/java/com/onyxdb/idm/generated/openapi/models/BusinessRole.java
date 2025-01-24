@@ -17,11 +17,11 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * Role
+ * BusinessRole
  */
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.5.0")
-public class Role {
+public class BusinessRole {
 
   private UUID id;
 
@@ -29,13 +29,15 @@ public class Role {
 
   private String description;
 
+  private UUID parentId;
+
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private LocalDateTime createdAt;
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private LocalDateTime updatedAt;
 
-  public Role id(UUID id) {
+  public BusinessRole id(UUID id) {
     this.id = id;
     return this;
   }
@@ -55,7 +57,7 @@ public class Role {
     this.id = id;
   }
 
-  public Role name(String name) {
+  public BusinessRole name(String name) {
     this.name = name;
     return this;
   }
@@ -75,7 +77,7 @@ public class Role {
     this.name = name;
   }
 
-  public Role description(String description) {
+  public BusinessRole description(String description) {
     this.description = description;
     return this;
   }
@@ -95,7 +97,27 @@ public class Role {
     this.description = description;
   }
 
-  public Role createdAt(LocalDateTime createdAt) {
+  public BusinessRole parentId(UUID parentId) {
+    this.parentId = parentId;
+    return this;
+  }
+
+  /**
+   * Get parentId
+   * @return parentId
+  */
+  @Valid 
+  @Schema(name = "parentId", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("parentId")
+  public UUID getParentId() {
+    return parentId;
+  }
+
+  public void setParentId(UUID parentId) {
+    this.parentId = parentId;
+  }
+
+  public BusinessRole createdAt(LocalDateTime createdAt) {
     this.createdAt = createdAt;
     return this;
   }
@@ -115,7 +137,7 @@ public class Role {
     this.createdAt = createdAt;
   }
 
-  public Role updatedAt(LocalDateTime updatedAt) {
+  public BusinessRole updatedAt(LocalDateTime updatedAt) {
     this.updatedAt = updatedAt;
     return this;
   }
@@ -143,26 +165,28 @@ public class Role {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Role role = (Role) o;
-    return Objects.equals(this.id, role.id) &&
-        Objects.equals(this.name, role.name) &&
-        Objects.equals(this.description, role.description) &&
-        Objects.equals(this.createdAt, role.createdAt) &&
-        Objects.equals(this.updatedAt, role.updatedAt);
+    BusinessRole businessRole = (BusinessRole) o;
+    return Objects.equals(this.id, businessRole.id) &&
+        Objects.equals(this.name, businessRole.name) &&
+        Objects.equals(this.description, businessRole.description) &&
+        Objects.equals(this.parentId, businessRole.parentId) &&
+        Objects.equals(this.createdAt, businessRole.createdAt) &&
+        Objects.equals(this.updatedAt, businessRole.updatedAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, description, createdAt, updatedAt);
+    return Objects.hash(id, name, description, parentId, createdAt, updatedAt);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Role {\n");
+    sb.append("class BusinessRole {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
+    sb.append("    parentId: ").append(toIndentedString(parentId)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("}");

@@ -6,9 +6,7 @@
 package com.onyxdb.idm.generated.openapi.apis;
 
 import com.onyxdb.idm.generated.openapi.models.Role;
-import com.onyxdb.idm.generated.openapi.models.RoleInput;
 import java.util.UUID;
-import com.onyxdb.idm.generated.openapi.models.UpdateRoleRequest;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -41,14 +39,14 @@ import jakarta.annotation.Generated;
 public interface RolesApi {
 
     /**
-     * POST /api/v1/roles : Create role
+     * POST /api/v1/roles : Create a new role
      *
-     * @param roleInput  (required)
+     * @param role  (required)
      * @return Created (status code 201)
      */
     @Operation(
         operationId = "createRole",
-        summary = "Create role",
+        summary = "Create a new role",
         tags = { "Roles" },
         responses = {
             @ApiResponse(responseCode = "201", description = "Created", content = {
@@ -64,19 +62,19 @@ public interface RolesApi {
     )
     
     ResponseEntity<Role> createRole(
-        @Parameter(name = "RoleInput", description = "", required = true) @Valid @RequestBody RoleInput roleInput
+        @Parameter(name = "Role", description = "", required = true) @Valid @RequestBody Role role
     );
 
 
     /**
-     * DELETE /api/v1/roles/{roleId} : Delete role
+     * DELETE /api/v1/roles/{roleId} : Delete a role by ID
      *
      * @param roleId  (required)
      * @return No Content (status code 204)
      */
     @Operation(
         operationId = "deleteRole",
-        summary = "Delete role",
+        summary = "Delete a role by ID",
         tags = { "Roles" },
         responses = {
             @ApiResponse(responseCode = "204", description = "No Content")
@@ -119,19 +117,21 @@ public interface RolesApi {
 
 
     /**
-     * GET /api/v1/roles/{roleId} : Get role by ID
+     * GET /api/v1/roles/{roleId} : Get a role by ID
      *
      * @param roleId  (required)
      * @return OK (status code 200)
+     *         or Not Found (status code 404)
      */
     @Operation(
         operationId = "getRoleById",
-        summary = "Get role by ID",
+        summary = "Get a role by ID",
         tags = { "Roles" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Role.class))
-            })
+            }),
+            @ApiResponse(responseCode = "404", description = "Not Found")
         }
     )
     @RequestMapping(
@@ -146,20 +146,22 @@ public interface RolesApi {
 
 
     /**
-     * PUT /api/v1/roles/{roleId} : Update role
+     * PUT /api/v1/roles/{roleId} : Update a role by ID
      *
      * @param roleId  (required)
-     * @param updateRoleRequest  (required)
+     * @param role  (required)
      * @return OK (status code 200)
+     *         or Not Found (status code 404)
      */
     @Operation(
         operationId = "updateRole",
-        summary = "Update role",
+        summary = "Update a role by ID",
         tags = { "Roles" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Role.class))
-            })
+            }),
+            @ApiResponse(responseCode = "404", description = "Not Found")
         }
     )
     @RequestMapping(
@@ -171,7 +173,7 @@ public interface RolesApi {
     
     ResponseEntity<Role> updateRole(
         @Parameter(name = "roleId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("roleId") UUID roleId,
-        @Parameter(name = "UpdateRoleRequest", description = "", required = true) @Valid @RequestBody UpdateRoleRequest updateRoleRequest
+        @Parameter(name = "Role", description = "", required = true) @Valid @RequestBody Role role
     );
 
 }

@@ -4,12 +4,9 @@ import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.onyxdb.idm.generated.openapi.models.Group;
-import com.onyxdb.idm.generated.openapi.models.Role;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.time.LocalDateTime;
 import java.util.UUID;
+import org.springframework.format.annotation.DateTimeFormat;
 import java.time.OffsetDateTime;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -30,26 +27,19 @@ public class Account {
 
   private String username;
 
+  private String password;
+
   private String email;
 
-  @Valid
-  private List<@Valid Group> groups = new ArrayList<>();
+  private String firstName;
 
-  @Valid
-  private List<@Valid Role> roles = new ArrayList<>();
+  private String lastName;
 
-  public Account() {
-    super();
-  }
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+  private LocalDateTime createdAt;
 
-  /**
-   * Constructor with only required parameters
-   */
-  public Account(UUID id, String username, String email) {
-    this.id = id;
-    this.username = username;
-    this.email = email;
-  }
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+  private LocalDateTime updatedAt;
 
   public Account id(UUID id) {
     this.id = id;
@@ -60,8 +50,8 @@ public class Account {
    * Get id
    * @return id
   */
-  @NotNull @Valid 
-  @Schema(name = "id", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Valid 
+  @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("id")
   public UUID getId() {
     return id;
@@ -80,8 +70,8 @@ public class Account {
    * Get username
    * @return username
   */
-  @NotNull 
-  @Schema(name = "username", requiredMode = Schema.RequiredMode.REQUIRED)
+  
+  @Schema(name = "username", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("username")
   public String getUsername() {
     return username;
@@ -89,6 +79,26 @@ public class Account {
 
   public void setUsername(String username) {
     this.username = username;
+  }
+
+  public Account password(String password) {
+    this.password = password;
+    return this;
+  }
+
+  /**
+   * Get password
+   * @return password
+  */
+  
+  @Schema(name = "password", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("password")
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
   }
 
   public Account email(String email) {
@@ -100,8 +110,8 @@ public class Account {
    * Get email
    * @return email
   */
-  @NotNull 
-  @Schema(name = "email", requiredMode = Schema.RequiredMode.REQUIRED)
+  
+  @Schema(name = "email", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("email")
   public String getEmail() {
     return email;
@@ -111,60 +121,84 @@ public class Account {
     this.email = email;
   }
 
-  public Account groups(List<@Valid Group> groups) {
-    this.groups = groups;
-    return this;
-  }
-
-  public Account addGroupsItem(Group groupsItem) {
-    if (this.groups == null) {
-      this.groups = new ArrayList<>();
-    }
-    this.groups.add(groupsItem);
+  public Account firstName(String firstName) {
+    this.firstName = firstName;
     return this;
   }
 
   /**
-   * Get groups
-   * @return groups
+   * Get firstName
+   * @return firstName
   */
-  @Valid 
-  @Schema(name = "groups", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("groups")
-  public List<@Valid Group> getGroups() {
-    return groups;
+  
+  @Schema(name = "firstName", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("firstName")
+  public String getFirstName() {
+    return firstName;
   }
 
-  public void setGroups(List<@Valid Group> groups) {
-    this.groups = groups;
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
   }
 
-  public Account roles(List<@Valid Role> roles) {
-    this.roles = roles;
-    return this;
-  }
-
-  public Account addRolesItem(Role rolesItem) {
-    if (this.roles == null) {
-      this.roles = new ArrayList<>();
-    }
-    this.roles.add(rolesItem);
+  public Account lastName(String lastName) {
+    this.lastName = lastName;
     return this;
   }
 
   /**
-   * Get roles
-   * @return roles
+   * Get lastName
+   * @return lastName
   */
-  @Valid 
-  @Schema(name = "roles", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("roles")
-  public List<@Valid Role> getRoles() {
-    return roles;
+  
+  @Schema(name = "lastName", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("lastName")
+  public String getLastName() {
+    return lastName;
   }
 
-  public void setRoles(List<@Valid Role> roles) {
-    this.roles = roles;
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
+
+  public Account createdAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+    return this;
+  }
+
+  /**
+   * Get createdAt
+   * @return createdAt
+  */
+  @Valid 
+  @Schema(name = "createdAt", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("createdAt")
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  public Account updatedAt(LocalDateTime updatedAt) {
+    this.updatedAt = updatedAt;
+    return this;
+  }
+
+  /**
+   * Get updatedAt
+   * @return updatedAt
+  */
+  @Valid 
+  @Schema(name = "updatedAt", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("updatedAt")
+  public LocalDateTime getUpdatedAt() {
+    return updatedAt;
+  }
+
+  public void setUpdatedAt(LocalDateTime updatedAt) {
+    this.updatedAt = updatedAt;
   }
 
   @Override
@@ -178,14 +212,17 @@ public class Account {
     Account account = (Account) o;
     return Objects.equals(this.id, account.id) &&
         Objects.equals(this.username, account.username) &&
+        Objects.equals(this.password, account.password) &&
         Objects.equals(this.email, account.email) &&
-        Objects.equals(this.groups, account.groups) &&
-        Objects.equals(this.roles, account.roles);
+        Objects.equals(this.firstName, account.firstName) &&
+        Objects.equals(this.lastName, account.lastName) &&
+        Objects.equals(this.createdAt, account.createdAt) &&
+        Objects.equals(this.updatedAt, account.updatedAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, username, email, groups, roles);
+    return Objects.hash(id, username, password, email, firstName, lastName, createdAt, updatedAt);
   }
 
   @Override
@@ -194,9 +231,12 @@ public class Account {
     sb.append("class Account {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    username: ").append(toIndentedString(username)).append("\n");
+    sb.append("    password: ").append(toIndentedString(password)).append("\n");
     sb.append("    email: ").append(toIndentedString(email)).append("\n");
-    sb.append("    groups: ").append(toIndentedString(groups)).append("\n");
-    sb.append("    roles: ").append(toIndentedString(roles)).append("\n");
+    sb.append("    firstName: ").append(toIndentedString(firstName)).append("\n");
+    sb.append("    lastName: ").append(toIndentedString(lastName)).append("\n");
+    sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
+    sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("}");
     return sb.toString();
   }

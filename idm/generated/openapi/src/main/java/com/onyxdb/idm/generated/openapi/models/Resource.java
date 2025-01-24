@@ -17,17 +17,15 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * Role
+ * Resource
  */
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.5.0")
-public class Role {
+public class Resource {
 
   private UUID id;
 
-  private String name;
-
-  private String description;
+  private String resourceType;
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private LocalDateTime createdAt;
@@ -35,7 +33,7 @@ public class Role {
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private LocalDateTime updatedAt;
 
-  public Role id(UUID id) {
+  public Resource id(UUID id) {
     this.id = id;
     return this;
   }
@@ -55,47 +53,27 @@ public class Role {
     this.id = id;
   }
 
-  public Role name(String name) {
-    this.name = name;
+  public Resource resourceType(String resourceType) {
+    this.resourceType = resourceType;
     return this;
   }
 
   /**
-   * Get name
-   * @return name
+   * Get resourceType
+   * @return resourceType
   */
   
-  @Schema(name = "name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("name")
-  public String getName() {
-    return name;
+  @Schema(name = "resourceType", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("resourceType")
+  public String getResourceType() {
+    return resourceType;
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public void setResourceType(String resourceType) {
+    this.resourceType = resourceType;
   }
 
-  public Role description(String description) {
-    this.description = description;
-    return this;
-  }
-
-  /**
-   * Get description
-   * @return description
-  */
-  
-  @Schema(name = "description", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("description")
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
-  public Role createdAt(LocalDateTime createdAt) {
+  public Resource createdAt(LocalDateTime createdAt) {
     this.createdAt = createdAt;
     return this;
   }
@@ -115,7 +93,7 @@ public class Role {
     this.createdAt = createdAt;
   }
 
-  public Role updatedAt(LocalDateTime updatedAt) {
+  public Resource updatedAt(LocalDateTime updatedAt) {
     this.updatedAt = updatedAt;
     return this;
   }
@@ -143,26 +121,24 @@ public class Role {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Role role = (Role) o;
-    return Objects.equals(this.id, role.id) &&
-        Objects.equals(this.name, role.name) &&
-        Objects.equals(this.description, role.description) &&
-        Objects.equals(this.createdAt, role.createdAt) &&
-        Objects.equals(this.updatedAt, role.updatedAt);
+    Resource resource = (Resource) o;
+    return Objects.equals(this.id, resource.id) &&
+        Objects.equals(this.resourceType, resource.resourceType) &&
+        Objects.equals(this.createdAt, resource.createdAt) &&
+        Objects.equals(this.updatedAt, resource.updatedAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, description, createdAt, updatedAt);
+    return Objects.hash(id, resourceType, createdAt, updatedAt);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Role {\n");
+    sb.append("class Resource {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    description: ").append(toIndentedString(description)).append("\n");
+    sb.append("    resourceType: ").append(toIndentedString(resourceType)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("}");

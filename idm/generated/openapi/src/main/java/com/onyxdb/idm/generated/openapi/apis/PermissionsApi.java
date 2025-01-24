@@ -5,7 +5,7 @@
  */
 package com.onyxdb.idm.generated.openapi.apis;
 
-import com.onyxdb.idm.generated.openapi.models.Resource;
+import com.onyxdb.idm.generated.openapi.models.Permission;
 import java.util.UUID;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,145 +35,145 @@ import jakarta.annotation.Generated;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.5.0")
 @Validated
-@Tag(name = "Resources", description = "the Resources API")
-public interface ResourcesApi {
+@Tag(name = "Permissions", description = "the Permissions API")
+public interface PermissionsApi {
 
     /**
-     * POST /api/v1/resources : Create a new resource
+     * POST /api/v1/permissions : Create a new permission
      *
-     * @param resource  (required)
+     * @param permission  (required)
      * @return Created (status code 201)
      */
     @Operation(
-        operationId = "createResource",
-        summary = "Create a new resource",
-        tags = { "Resources" },
+        operationId = "createPermission",
+        summary = "Create a new permission",
+        tags = { "Permissions" },
         responses = {
             @ApiResponse(responseCode = "201", description = "Created", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Resource.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = Permission.class))
             })
         }
     )
     @RequestMapping(
         method = RequestMethod.POST,
-        value = "/api/v1/resources",
+        value = "/api/v1/permissions",
         produces = { "application/json" },
         consumes = { "application/json" }
     )
     
-    ResponseEntity<Resource> createResource(
-        @Parameter(name = "Resource", description = "", required = true) @Valid @RequestBody Resource resource
+    ResponseEntity<Permission> createPermission(
+        @Parameter(name = "Permission", description = "", required = true) @Valid @RequestBody Permission permission
     );
 
 
     /**
-     * DELETE /api/v1/resources/{resourceId} : Delete a resource by ID
+     * DELETE /api/v1/permissions/{permissionId} : Delete a permission by ID
      *
-     * @param resourceId  (required)
+     * @param permissionId  (required)
      * @return No Content (status code 204)
      */
     @Operation(
-        operationId = "deleteResource",
-        summary = "Delete a resource by ID",
-        tags = { "Resources" },
+        operationId = "deletePermission",
+        summary = "Delete a permission by ID",
+        tags = { "Permissions" },
         responses = {
             @ApiResponse(responseCode = "204", description = "No Content")
         }
     )
     @RequestMapping(
         method = RequestMethod.DELETE,
-        value = "/api/v1/resources/{resourceId}"
+        value = "/api/v1/permissions/{permissionId}"
     )
     
-    ResponseEntity<Void> deleteResource(
-        @Parameter(name = "resourceId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("resourceId") UUID resourceId
+    ResponseEntity<Void> deletePermission(
+        @Parameter(name = "permissionId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("permissionId") UUID permissionId
     );
 
 
     /**
-     * GET /api/v1/resources : Get all resources
+     * GET /api/v1/permissions : Get all permissions
      *
      * @return OK (status code 200)
      */
     @Operation(
-        operationId = "getAllResources",
-        summary = "Get all resources",
-        tags = { "Resources" },
+        operationId = "getAllPermissions",
+        summary = "Get all permissions",
+        tags = { "Permissions" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Resource.class)))
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Permission.class)))
             })
         }
     )
     @RequestMapping(
         method = RequestMethod.GET,
-        value = "/api/v1/resources",
+        value = "/api/v1/permissions",
         produces = { "application/json" }
     )
     
-    ResponseEntity<List<Resource>> getAllResources(
+    ResponseEntity<List<Permission>> getAllPermissions(
         
     );
 
 
     /**
-     * GET /api/v1/resources/{resourceId} : Get a resource by ID
+     * GET /api/v1/permissions/{permissionId} : Get a permission by ID
      *
-     * @param resourceId  (required)
+     * @param permissionId  (required)
      * @return OK (status code 200)
      *         or Not Found (status code 404)
      */
     @Operation(
-        operationId = "getResourceById",
-        summary = "Get a resource by ID",
-        tags = { "Resources" },
+        operationId = "getPermissionById",
+        summary = "Get a permission by ID",
+        tags = { "Permissions" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Resource.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = Permission.class))
             }),
             @ApiResponse(responseCode = "404", description = "Not Found")
         }
     )
     @RequestMapping(
         method = RequestMethod.GET,
-        value = "/api/v1/resources/{resourceId}",
+        value = "/api/v1/permissions/{permissionId}",
         produces = { "application/json" }
     )
     
-    ResponseEntity<Resource> getResourceById(
-        @Parameter(name = "resourceId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("resourceId") UUID resourceId
+    ResponseEntity<Permission> getPermissionById(
+        @Parameter(name = "permissionId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("permissionId") UUID permissionId
     );
 
 
     /**
-     * PUT /api/v1/resources/{resourceId} : Update a resource by ID
+     * PUT /api/v1/permissions/{permissionId} : Update a permission by ID
      *
-     * @param resourceId  (required)
-     * @param resource  (required)
+     * @param permissionId  (required)
+     * @param permission  (required)
      * @return OK (status code 200)
      *         or Not Found (status code 404)
      */
     @Operation(
-        operationId = "updateResource",
-        summary = "Update a resource by ID",
-        tags = { "Resources" },
+        operationId = "updatePermission",
+        summary = "Update a permission by ID",
+        tags = { "Permissions" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Resource.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = Permission.class))
             }),
             @ApiResponse(responseCode = "404", description = "Not Found")
         }
     )
     @RequestMapping(
         method = RequestMethod.PUT,
-        value = "/api/v1/resources/{resourceId}",
+        value = "/api/v1/permissions/{permissionId}",
         produces = { "application/json" },
         consumes = { "application/json" }
     )
     
-    ResponseEntity<Resource> updateResource(
-        @Parameter(name = "resourceId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("resourceId") UUID resourceId,
-        @Parameter(name = "Resource", description = "", required = true) @Valid @RequestBody Resource resource
+    ResponseEntity<Permission> updatePermission(
+        @Parameter(name = "permissionId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("permissionId") UUID permissionId,
+        @Parameter(name = "Permission", description = "", required = true) @Valid @RequestBody Permission permission
     );
 
 }

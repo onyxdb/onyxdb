@@ -5,6 +5,9 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 import org.springframework.format.annotation.DateTimeFormat;
 import java.time.OffsetDateTime;
@@ -17,17 +20,20 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * Role
+ * Permission
  */
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.5.0")
-public class Role {
+public class Permission {
 
   private UUID id;
 
-  private String name;
+  private String actionType;
 
-  private String description;
+  private String resourceType;
+
+  @Valid
+  private List<String> resourceFields = new ArrayList<>();
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private LocalDateTime createdAt;
@@ -35,7 +41,7 @@ public class Role {
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private LocalDateTime updatedAt;
 
-  public Role id(UUID id) {
+  public Permission id(UUID id) {
     this.id = id;
     return this;
   }
@@ -55,47 +61,75 @@ public class Role {
     this.id = id;
   }
 
-  public Role name(String name) {
-    this.name = name;
+  public Permission actionType(String actionType) {
+    this.actionType = actionType;
     return this;
   }
 
   /**
-   * Get name
-   * @return name
+   * Get actionType
+   * @return actionType
   */
   
-  @Schema(name = "name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("name")
-  public String getName() {
-    return name;
+  @Schema(name = "actionType", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("actionType")
+  public String getActionType() {
+    return actionType;
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public void setActionType(String actionType) {
+    this.actionType = actionType;
   }
 
-  public Role description(String description) {
-    this.description = description;
+  public Permission resourceType(String resourceType) {
+    this.resourceType = resourceType;
     return this;
   }
 
   /**
-   * Get description
-   * @return description
+   * Get resourceType
+   * @return resourceType
   */
   
-  @Schema(name = "description", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("description")
-  public String getDescription() {
-    return description;
+  @Schema(name = "resourceType", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("resourceType")
+  public String getResourceType() {
+    return resourceType;
   }
 
-  public void setDescription(String description) {
-    this.description = description;
+  public void setResourceType(String resourceType) {
+    this.resourceType = resourceType;
   }
 
-  public Role createdAt(LocalDateTime createdAt) {
+  public Permission resourceFields(List<String> resourceFields) {
+    this.resourceFields = resourceFields;
+    return this;
+  }
+
+  public Permission addResourceFieldsItem(String resourceFieldsItem) {
+    if (this.resourceFields == null) {
+      this.resourceFields = new ArrayList<>();
+    }
+    this.resourceFields.add(resourceFieldsItem);
+    return this;
+  }
+
+  /**
+   * Get resourceFields
+   * @return resourceFields
+  */
+  
+  @Schema(name = "resourceFields", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("resourceFields")
+  public List<String> getResourceFields() {
+    return resourceFields;
+  }
+
+  public void setResourceFields(List<String> resourceFields) {
+    this.resourceFields = resourceFields;
+  }
+
+  public Permission createdAt(LocalDateTime createdAt) {
     this.createdAt = createdAt;
     return this;
   }
@@ -115,7 +149,7 @@ public class Role {
     this.createdAt = createdAt;
   }
 
-  public Role updatedAt(LocalDateTime updatedAt) {
+  public Permission updatedAt(LocalDateTime updatedAt) {
     this.updatedAt = updatedAt;
     return this;
   }
@@ -143,26 +177,28 @@ public class Role {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Role role = (Role) o;
-    return Objects.equals(this.id, role.id) &&
-        Objects.equals(this.name, role.name) &&
-        Objects.equals(this.description, role.description) &&
-        Objects.equals(this.createdAt, role.createdAt) &&
-        Objects.equals(this.updatedAt, role.updatedAt);
+    Permission permission = (Permission) o;
+    return Objects.equals(this.id, permission.id) &&
+        Objects.equals(this.actionType, permission.actionType) &&
+        Objects.equals(this.resourceType, permission.resourceType) &&
+        Objects.equals(this.resourceFields, permission.resourceFields) &&
+        Objects.equals(this.createdAt, permission.createdAt) &&
+        Objects.equals(this.updatedAt, permission.updatedAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, description, createdAt, updatedAt);
+    return Objects.hash(id, actionType, resourceType, resourceFields, createdAt, updatedAt);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Role {\n");
+    sb.append("class Permission {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    description: ").append(toIndentedString(description)).append("\n");
+    sb.append("    actionType: ").append(toIndentedString(actionType)).append("\n");
+    sb.append("    resourceType: ").append(toIndentedString(resourceType)).append("\n");
+    sb.append("    resourceFields: ").append(toIndentedString(resourceFields)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("}");

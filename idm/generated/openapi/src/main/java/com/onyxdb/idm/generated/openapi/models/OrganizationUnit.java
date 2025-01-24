@@ -5,9 +5,6 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 import org.springframework.format.annotation.DateTimeFormat;
 import java.time.OffsetDateTime;
@@ -20,11 +17,11 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * Organization
+ * OrganizationUnit
  */
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.5.0")
-public class Organization {
+public class OrganizationUnit {
 
   private UUID id;
 
@@ -32,24 +29,21 @@ public class Organization {
 
   private String description;
 
+  private UUID domainComponentId;
+
+  private UUID parentId;
+
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private LocalDateTime createdAt;
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private LocalDateTime updatedAt;
 
-  private UUID resourceId;
-
-  private UUID accountId;
-
   private UUID ownerId;
 
   private UUID responsibleId;
 
-  @Valid
-  private List<String> participants = new ArrayList<>();
-
-  public Organization id(UUID id) {
+  public OrganizationUnit id(UUID id) {
     this.id = id;
     return this;
   }
@@ -69,7 +63,7 @@ public class Organization {
     this.id = id;
   }
 
-  public Organization name(String name) {
+  public OrganizationUnit name(String name) {
     this.name = name;
     return this;
   }
@@ -89,7 +83,7 @@ public class Organization {
     this.name = name;
   }
 
-  public Organization description(String description) {
+  public OrganizationUnit description(String description) {
     this.description = description;
     return this;
   }
@@ -109,7 +103,47 @@ public class Organization {
     this.description = description;
   }
 
-  public Organization createdAt(LocalDateTime createdAt) {
+  public OrganizationUnit domainComponentId(UUID domainComponentId) {
+    this.domainComponentId = domainComponentId;
+    return this;
+  }
+
+  /**
+   * Get domainComponentId
+   * @return domainComponentId
+  */
+  @Valid 
+  @Schema(name = "domainComponentId", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("domainComponentId")
+  public UUID getDomainComponentId() {
+    return domainComponentId;
+  }
+
+  public void setDomainComponentId(UUID domainComponentId) {
+    this.domainComponentId = domainComponentId;
+  }
+
+  public OrganizationUnit parentId(UUID parentId) {
+    this.parentId = parentId;
+    return this;
+  }
+
+  /**
+   * Get parentId
+   * @return parentId
+  */
+  @Valid 
+  @Schema(name = "parentId", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("parentId")
+  public UUID getParentId() {
+    return parentId;
+  }
+
+  public void setParentId(UUID parentId) {
+    this.parentId = parentId;
+  }
+
+  public OrganizationUnit createdAt(LocalDateTime createdAt) {
     this.createdAt = createdAt;
     return this;
   }
@@ -129,7 +163,7 @@ public class Organization {
     this.createdAt = createdAt;
   }
 
-  public Organization updatedAt(LocalDateTime updatedAt) {
+  public OrganizationUnit updatedAt(LocalDateTime updatedAt) {
     this.updatedAt = updatedAt;
     return this;
   }
@@ -149,47 +183,7 @@ public class Organization {
     this.updatedAt = updatedAt;
   }
 
-  public Organization resourceId(UUID resourceId) {
-    this.resourceId = resourceId;
-    return this;
-  }
-
-  /**
-   * Get resourceId
-   * @return resourceId
-  */
-  @Valid 
-  @Schema(name = "resourceId", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("resourceId")
-  public UUID getResourceId() {
-    return resourceId;
-  }
-
-  public void setResourceId(UUID resourceId) {
-    this.resourceId = resourceId;
-  }
-
-  public Organization accountId(UUID accountId) {
-    this.accountId = accountId;
-    return this;
-  }
-
-  /**
-   * Get accountId
-   * @return accountId
-  */
-  @Valid 
-  @Schema(name = "accountId", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("accountId")
-  public UUID getAccountId() {
-    return accountId;
-  }
-
-  public void setAccountId(UUID accountId) {
-    this.accountId = accountId;
-  }
-
-  public Organization ownerId(UUID ownerId) {
+  public OrganizationUnit ownerId(UUID ownerId) {
     this.ownerId = ownerId;
     return this;
   }
@@ -209,7 +203,7 @@ public class Organization {
     this.ownerId = ownerId;
   }
 
-  public Organization responsibleId(UUID responsibleId) {
+  public OrganizationUnit responsibleId(UUID responsibleId) {
     this.responsibleId = responsibleId;
     return this;
   }
@@ -229,34 +223,6 @@ public class Organization {
     this.responsibleId = responsibleId;
   }
 
-  public Organization participants(List<String> participants) {
-    this.participants = participants;
-    return this;
-  }
-
-  public Organization addParticipantsItem(String participantsItem) {
-    if (this.participants == null) {
-      this.participants = new ArrayList<>();
-    }
-    this.participants.add(participantsItem);
-    return this;
-  }
-
-  /**
-   * Get participants
-   * @return participants
-  */
-  
-  @Schema(name = "participants", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("participants")
-  public List<String> getParticipants() {
-    return participants;
-  }
-
-  public void setParticipants(List<String> participants) {
-    this.participants = participants;
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -265,38 +231,36 @@ public class Organization {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Organization organization = (Organization) o;
-    return Objects.equals(this.id, organization.id) &&
-        Objects.equals(this.name, organization.name) &&
-        Objects.equals(this.description, organization.description) &&
-        Objects.equals(this.createdAt, organization.createdAt) &&
-        Objects.equals(this.updatedAt, organization.updatedAt) &&
-        Objects.equals(this.resourceId, organization.resourceId) &&
-        Objects.equals(this.accountId, organization.accountId) &&
-        Objects.equals(this.ownerId, organization.ownerId) &&
-        Objects.equals(this.responsibleId, organization.responsibleId) &&
-        Objects.equals(this.participants, organization.participants);
+    OrganizationUnit organizationUnit = (OrganizationUnit) o;
+    return Objects.equals(this.id, organizationUnit.id) &&
+        Objects.equals(this.name, organizationUnit.name) &&
+        Objects.equals(this.description, organizationUnit.description) &&
+        Objects.equals(this.domainComponentId, organizationUnit.domainComponentId) &&
+        Objects.equals(this.parentId, organizationUnit.parentId) &&
+        Objects.equals(this.createdAt, organizationUnit.createdAt) &&
+        Objects.equals(this.updatedAt, organizationUnit.updatedAt) &&
+        Objects.equals(this.ownerId, organizationUnit.ownerId) &&
+        Objects.equals(this.responsibleId, organizationUnit.responsibleId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, description, createdAt, updatedAt, resourceId, accountId, ownerId, responsibleId, participants);
+    return Objects.hash(id, name, description, domainComponentId, parentId, createdAt, updatedAt, ownerId, responsibleId);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Organization {\n");
+    sb.append("class OrganizationUnit {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
+    sb.append("    domainComponentId: ").append(toIndentedString(domainComponentId)).append("\n");
+    sb.append("    parentId: ").append(toIndentedString(parentId)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
-    sb.append("    resourceId: ").append(toIndentedString(resourceId)).append("\n");
-    sb.append("    accountId: ").append(toIndentedString(accountId)).append("\n");
     sb.append("    ownerId: ").append(toIndentedString(ownerId)).append("\n");
     sb.append("    responsibleId: ").append(toIndentedString(responsibleId)).append("\n");
-    sb.append("    participants: ").append(toIndentedString(participants)).append("\n");
     sb.append("}");
     return sb.toString();
   }
