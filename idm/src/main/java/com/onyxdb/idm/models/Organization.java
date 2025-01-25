@@ -1,26 +1,20 @@
 package com.onyxdb.idm.models;
 
-import lombok.Builder;
-import lombok.Data;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
+
 import com.onyxdb.idm.generated.openapi.models.OrganizationDTO;
 
-@Data
-@Builder
-public class Organization {
-    private UUID id;
-    private String name;
-    private String description;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private UUID resourceId;
-    private UUID accountId;
-    private UUID ownerId;
-    private UUID responsibleId;
-    private String[] participants;
-
+public record Organization(
+        UUID id,
+        String name,
+        String description,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt,
+        UUID resourceId,
+        UUID accountId,
+        UUID ownerId
+) {
     public OrganizationDTO toDTO() {
         return new OrganizationDTO()
                 .id(id)
@@ -34,15 +28,15 @@ public class Organization {
     }
 
     public static Organization fromDTO(OrganizationDTO organizationDTO) {
-        return Organization.builder()
-                .id(organizationDTO.getId())
-                .name(organizationDTO.getName())
-                .description(organizationDTO.getDescription())
-                .createdAt(organizationDTO.getCreatedAt())
-                .updatedAt(organizationDTO.getUpdatedAt())
-                .resourceId(organizationDTO.getResourceId())
-                .accountId(organizationDTO.getAccountId())
-                .ownerId(organizationDTO.getOwnerId())
-                .build();
+        return new Organization(
+                organizationDTO.getId(),
+                organizationDTO.getName(),
+                organizationDTO.getDescription(),
+                organizationDTO.getCreatedAt(),
+                organizationDTO.getUpdatedAt(),
+                organizationDTO.getResourceId(),
+                organizationDTO.getAccountId(),
+                organizationDTO.getOwnerId()
+        );
     }
 }

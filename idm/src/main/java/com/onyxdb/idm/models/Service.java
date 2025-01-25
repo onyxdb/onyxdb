@@ -1,25 +1,21 @@
 package com.onyxdb.idm.models;
 
-import lombok.Builder;
-import lombok.Data;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
+
 import com.onyxdb.idm.generated.openapi.models.ServiceDTO;
 
-@Data
-@Builder
-public class Service {
-    private UUID id;
-    private String name;
-    private String type;
-    private String description;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private UUID resourceId;
-    private UUID projectId;
-    private UUID ownerId;
-
+public record Service(
+        UUID id,
+        String name,
+        String type,
+        String description,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt,
+        UUID resourceId,
+        UUID projectId,
+        UUID ownerId
+) {
     public ServiceDTO toDTO() {
         return new ServiceDTO()
                 .id(id)
@@ -34,16 +30,16 @@ public class Service {
     }
 
     public static Service fromDTO(ServiceDTO serviceDTO) {
-        return Service.builder()
-                .id(serviceDTO.getId())
-                .name(serviceDTO.getName())
-                .type(serviceDTO.getType())
-                .description(serviceDTO.getDescription())
-                .createdAt(serviceDTO.getCreatedAt())
-                .updatedAt(serviceDTO.getUpdatedAt())
-                .resourceId(serviceDTO.getResourceId())
-                .projectId(serviceDTO.getProjectId())
-                .ownerId(serviceDTO.getOwnerId())
-                .build();
+        return new Service(
+                serviceDTO.getId(),
+                serviceDTO.getName(),
+                serviceDTO.getType(),
+                serviceDTO.getDescription(),
+                serviceDTO.getCreatedAt(),
+                serviceDTO.getUpdatedAt(),
+                serviceDTO.getResourceId(),
+                serviceDTO.getProjectId(),
+                serviceDTO.getOwnerId()
+        );
     }
 }

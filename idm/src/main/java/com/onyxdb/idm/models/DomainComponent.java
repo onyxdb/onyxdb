@@ -1,17 +1,33 @@
 package com.onyxdb.idm.models;
 
-import lombok.Builder;
-import lombok.Data;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Data
-@Builder
-public class DomainComponent {
-    private UUID id;
-    private String name;
-    private String description;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+import com.onyxdb.idm.generated.openapi.models.DomainComponentDTO;
+
+public record DomainComponent(
+        UUID id,
+        String name,
+        String description,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt
+) {
+    public DomainComponentDTO toDTO() {
+        return new DomainComponentDTO()
+                .id(id)
+                .name(name)
+                .description(description)
+                .createdAt(createdAt)
+                .updatedAt(updatedAt);
+    }
+
+    public static DomainComponent fromDTO(DomainComponentDTO domainComponentDTO) {
+        return new DomainComponent(
+                domainComponentDTO.getId(),
+                domainComponentDTO.getName(),
+                domainComponentDTO.getDescription(),
+                domainComponentDTO.getCreatedAt(),
+                domainComponentDTO.getUpdatedAt()
+        );
+    }
 }

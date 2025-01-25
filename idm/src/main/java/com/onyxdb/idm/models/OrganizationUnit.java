@@ -1,20 +1,42 @@
 package com.onyxdb.idm.models;
 
-import lombok.Builder;
-import lombok.Data;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Data
-@Builder
-public class OrganizationUnit {
-    private UUID id;
-    private String name;
-    private String description;
-    private UUID domainComponentId;
-    private UUID parentId;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private UUID ownerId;
+import com.onyxdb.idm.generated.openapi.models.OrganizationUnitDTO;
+
+public record OrganizationUnit(
+        UUID id,
+        String name,
+        String description,
+        UUID domainComponentId,
+        UUID parentId,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt,
+        UUID ownerId
+) {
+    public OrganizationUnitDTO toDTO() {
+        return new OrganizationUnitDTO()
+                .id(id)
+                .name(name)
+                .description(description)
+                .domainComponentId(domainComponentId)
+                .parentId(parentId)
+                .createdAt(createdAt)
+                .updatedAt(updatedAt)
+                .ownerId(ownerId);
+    }
+
+    public static OrganizationUnit fromDTO(OrganizationUnitDTO organizationUnitDTO) {
+        return new OrganizationUnit(
+                organizationUnitDTO.getId(),
+                organizationUnitDTO.getName(),
+                organizationUnitDTO.getDescription(),
+                organizationUnitDTO.getDomainComponentId(),
+                organizationUnitDTO.getParentId(),
+                organizationUnitDTO.getCreatedAt(),
+                organizationUnitDTO.getUpdatedAt(),
+                organizationUnitDTO.getOwnerId()
+        );
+    }
 }
