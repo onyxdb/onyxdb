@@ -23,49 +23,49 @@ public class PermissionPostgresRepository implements PermissionRepository {
     public Optional<Permission> findById(UUID id) {
         return dslContext.selectFrom(permissionTable)
                 .where(permissionTable.ID.eq(id))
-                .fetchOptional(record -> Permission.builder()
-                        .id(record.getId())
-                        .actionType(record.getActionType())
-                        .resourceType(record.getResourceType())
-                        .resourceFields(record.getResourceFields())
-                        .createdAt(record.getCreatedAt())
-                        .updatedAt(record.getUpdatedAt())
-                        .build());
+                .fetchOptional(record -> new Permission(
+                        record.getId(),
+                        record.getActionType(),
+                        record.getResourceType(),
+                        List.of(record.getResourceFields()),
+                        record.getCreatedAt(),
+                        record.getUpdatedAt()
+                ));
     }
 
     @Override
     public List<Permission> findAll() {
         return dslContext.selectFrom(permissionTable)
-                .fetch(record -> Permission.builder()
-                        .id(record.getId())
-                        .actionType(record.getActionType())
-                        .resourceType(record.getResourceType())
-                        .resourceFields(record.getResourceFields())
-                        .createdAt(record.getCreatedAt())
-                        .updatedAt(record.getUpdatedAt())
-                        .build());
+                .fetch(record -> new Permission(
+                        record.getId(),
+                        record.getActionType(),
+                        record.getResourceType(),
+                        List.of(record.getResourceFields()),
+                        record.getCreatedAt(),
+                        record.getUpdatedAt()
+                ));
     }
 
     @Override
     public void create(Permission permission) {
         dslContext.insertInto(permissionTable)
-                .set(permissionTable.ID, permission.getId())
-                .set(permissionTable.ACTION_TYPE, permission.getActionType())
-                .set(permissionTable.RESOURCE_TYPE, permission.getResourceType())
-                .set(permissionTable.RESOURCE_FIELDS, permission.getResourceFields())
-                .set(permissionTable.CREATED_AT, permission.getCreatedAt())
-                .set(permissionTable.UPDATED_AT, permission.getUpdatedAt())
+                .set(permissionTable.ID, permission.id())
+                .set(permissionTable.ACTION_TYPE, permission.actionType())
+                .set(permissionTable.RESOURCE_TYPE, permission.resourceType())
+                .set(permissionTable.RESOURCE_FIELDS, permission.resourceFields().toArray(String[]::new))
+                .set(permissionTable.CREATED_AT, permission.createdAt())
+                .set(permissionTable.UPDATED_AT, permission.updatedAt())
                 .execute();
     }
 
     @Override
     public void update(Permission permission) {
         dslContext.update(permissionTable)
-                .set(permissionTable.ACTION_TYPE, permission.getActionType())
-                .set(permissionTable.RESOURCE_TYPE, permission.getResourceType())
-                .set(permissionTable.RESOURCE_FIELDS, permission.getResourceFields())
-                .set(permissionTable.UPDATED_AT, permission.getUpdatedAt())
-                .where(permissionTable.ID.eq(permission.getId()))
+                .set(permissionTable.ACTION_TYPE, permission.actionType())
+                .set(permissionTable.RESOURCE_TYPE, permission.resourceType())
+                .set(permissionTable.RESOURCE_FIELDS, permission.resourceFields().toArray(String[]::new))
+                .set(permissionTable.UPDATED_AT, permission.updatedAt())
+                .where(permissionTable.ID.eq(permission.id()))
                 .execute();
     }
 

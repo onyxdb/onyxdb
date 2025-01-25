@@ -22,45 +22,45 @@ public class DomainComponentPostgresRepository implements DomainComponentReposit
     public Optional<DomainComponent> findById(UUID id) {
         return dslContext.selectFrom(domainComponentTable)
                 .where(domainComponentTable.ID.eq(id))
-                .fetchOptional(record -> DomainComponent.builder()
-                        .id(record.getId())
-                        .name(record.getName())
-                        .description(record.getDescription())
-                        .createdAt(record.getCreatedAt())
-                        .updatedAt(record.getUpdatedAt())
-                        .build());
+                .fetchOptional(record -> new DomainComponent(
+                        record.getId(),
+                        record.getName(),
+                        record.getDescription(),
+                        record.getCreatedAt(),
+                        record.getUpdatedAt()
+                ));
     }
 
     @Override
     public List<DomainComponent> findAll() {
         return dslContext.selectFrom(domainComponentTable)
-                .fetch(record -> DomainComponent.builder()
-                        .id(record.getId())
-                        .name(record.getName())
-                        .description(record.getDescription())
-                        .createdAt(record.getCreatedAt())
-                        .updatedAt(record.getUpdatedAt())
-                        .build());
+                .fetch(record -> new DomainComponent(
+                        record.getId(),
+                        record.getName(),
+                        record.getDescription(),
+                        record.getCreatedAt(),
+                        record.getUpdatedAt()
+                ));
     }
 
     @Override
     public void create(DomainComponent domainComponent) {
         dslContext.insertInto(domainComponentTable)
-                .set(domainComponentTable.ID, domainComponent.getId())
-                .set(domainComponentTable.NAME, domainComponent.getName())
-                .set(domainComponentTable.DESCRIPTION, domainComponent.getDescription())
-                .set(domainComponentTable.CREATED_AT, domainComponent.getCreatedAt())
-                .set(domainComponentTable.UPDATED_AT, domainComponent.getUpdatedAt())
+                .set(domainComponentTable.ID, domainComponent.id())
+                .set(domainComponentTable.NAME, domainComponent.name())
+                .set(domainComponentTable.DESCRIPTION, domainComponent.description())
+                .set(domainComponentTable.CREATED_AT, domainComponent.createdAt())
+                .set(domainComponentTable.UPDATED_AT, domainComponent.updatedAt())
                 .execute();
     }
 
     @Override
     public void update(DomainComponent domainComponent) {
         dslContext.update(domainComponentTable)
-                .set(domainComponentTable.NAME, domainComponent.getName())
-                .set(domainComponentTable.DESCRIPTION, domainComponent.getDescription())
-                .set(domainComponentTable.UPDATED_AT, domainComponent.getUpdatedAt())
-                .where(domainComponentTable.ID.eq(domainComponent.getId()))
+                .set(domainComponentTable.NAME, domainComponent.name())
+                .set(domainComponentTable.DESCRIPTION, domainComponent.description())
+                .set(domainComponentTable.UPDATED_AT, domainComponent.updatedAt())
+                .where(domainComponentTable.ID.eq(domainComponent.id()))
                 .execute();
     }
 

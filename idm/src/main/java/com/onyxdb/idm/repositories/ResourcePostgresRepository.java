@@ -23,41 +23,41 @@ public class ResourcePostgresRepository implements ResourceRepository {
     public Optional<Resource> findById(UUID id) {
         return dslContext.selectFrom(resourceTable)
                 .where(resourceTable.ID.eq(id))
-                .fetchOptional(record -> Resource.builder()
-                        .id(record.getId())
-                        .resourceType(record.getResourceType())
-                        .createdAt(record.getCreatedAt())
-                        .updatedAt(record.getUpdatedAt())
-                        .build());
+                .fetchOptional(record -> new Resource(
+                        record.getId(),
+                        record.getResourceType(),
+                        record.getCreatedAt(),
+                        record.getUpdatedAt()
+                ));
     }
 
     @Override
     public List<Resource> findAll() {
         return dslContext.selectFrom(resourceTable)
-                .fetch(record -> Resource.builder()
-                        .id(record.getId())
-                        .resourceType(record.getResourceType())
-                        .createdAt(record.getCreatedAt())
-                        .updatedAt(record.getUpdatedAt())
-                        .build());
+                .fetch(record -> new Resource(
+                        record.getId(),
+                        record.getResourceType(),
+                        record.getCreatedAt(),
+                        record.getUpdatedAt()
+                ));
     }
 
     @Override
     public void create(Resource resource) {
         dslContext.insertInto(resourceTable)
-                .set(resourceTable.ID, resource.getId())
-                .set(resourceTable.RESOURCE_TYPE, resource.getResourceType())
-                .set(resourceTable.CREATED_AT, resource.getCreatedAt())
-                .set(resourceTable.UPDATED_AT, resource.getUpdatedAt())
+                .set(resourceTable.ID, resource.id())
+                .set(resourceTable.RESOURCE_TYPE, resource.resourceType())
+                .set(resourceTable.CREATED_AT, resource.createdAt())
+                .set(resourceTable.UPDATED_AT, resource.updatedAt())
                 .execute();
     }
 
     @Override
     public void update(Resource resource) {
         dslContext.update(resourceTable)
-                .set(resourceTable.RESOURCE_TYPE, resource.getResourceType())
-                .set(resourceTable.UPDATED_AT, resource.getUpdatedAt())
-                .where(resourceTable.ID.eq(resource.getId()))
+                .set(resourceTable.RESOURCE_TYPE, resource.resourceType())
+                .set(resourceTable.UPDATED_AT, resource.updatedAt())
+                .where(resourceTable.ID.eq(resource.id()))
                 .execute();
     }
 

@@ -23,52 +23,53 @@ public class OrganizationPostgresRepository implements OrganizationRepository {
     public Optional<Organization> findById(UUID id) {
         return dslContext.selectFrom(organizationTable)
                 .where(organizationTable.ID.eq(id))
-                .fetchOptional(record -> Organization.builder()
-                        .id(record.getId())
-                        .name(record.getName())
-                        .description(record.getDescription())
-                        .createdAt(record.getCreatedAt())
-                        .updatedAt(record.getUpdatedAt())
-                        .resourceId(record.getResourceId())
-                        .ownerId(record.getOwnerId())
-                        .build());
+                .fetchOptional(record -> new Organization(
+                        record.getId(),
+                        record.getName(),
+                        record.getDescription(),
+                        record.getCreatedAt(),
+                        record.getUpdatedAt(),
+                        record.getResourceId(),
+                        record.getOwnerId()
+                ));
     }
 
     @Override
     public List<Organization> findAll() {
         return dslContext.selectFrom(organizationTable)
-                .fetch(record -> Organization.builder()
-                        .id(record.getId())
-                        .name(record.getName())
-                        .description(record.getDescription())
-                        .createdAt(record.getCreatedAt())
-                        .updatedAt(record.getUpdatedAt())
-                        .resourceId(record.getResourceId())
-                        .ownerId(record.getOwnerId())
-                        .build());
+                .fetch(record -> new Organization(
+                        record.getId(),
+                        record.getName(),
+                        record.getDescription(),
+                        record.getCreatedAt(),
+                        record.getUpdatedAt(),
+                        record.getResourceId(),
+                        record.getOwnerId()
+                ));
     }
 
     @Override
     public void create(Organization organization) {
         dslContext.insertInto(organizationTable)
-                .set(organizationTable.ID, organization.getId())
-                .set(organizationTable.NAME, organization.getName())
-                .set(organizationTable.DESCRIPTION, organization.getDescription())
-                .set(organizationTable.CREATED_AT, organization.getCreatedAt())
-                .set(organizationTable.UPDATED_AT, organization.getUpdatedAt())
-                .set(organizationTable.RESOURCE_ID, organization.getResourceId())
+                .set(organizationTable.ID, organization.id())
+                .set(organizationTable.NAME, organization.name())
+                .set(organizationTable.DESCRIPTION, organization.description())
+                .set(organizationTable.CREATED_AT, organization.createdAt())
+                .set(organizationTable.UPDATED_AT, organization.updatedAt())
+                .set(organizationTable.RESOURCE_ID, organization.resourceId())
+                .set(organizationTable.OWNER_ID, organization.ownerId())
                 .execute();
     }
 
     @Override
     public void update(Organization organization) {
         dslContext.update(organizationTable)
-                .set(organizationTable.NAME, organization.getName())
-                .set(organizationTable.DESCRIPTION, organization.getDescription())
-                .set(organizationTable.UPDATED_AT, organization.getUpdatedAt())
-                .set(organizationTable.RESOURCE_ID, organization.getResourceId())
-                .set(organizationTable.OWNER_ID, organization.getOwnerId())
-                .where(organizationTable.ID.eq(organization.getId()))
+                .set(organizationTable.NAME, organization.name())
+                .set(organizationTable.DESCRIPTION, organization.description())
+                .set(organizationTable.UPDATED_AT, organization.updatedAt())
+                .set(organizationTable.RESOURCE_ID, organization.resourceId())
+                .set(organizationTable.OWNER_ID, organization.ownerId())
+                .where(organizationTable.ID.eq(organization.id()))
                 .execute();
     }
 

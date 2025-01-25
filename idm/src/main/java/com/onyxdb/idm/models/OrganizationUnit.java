@@ -12,8 +12,7 @@ public record OrganizationUnit(
         UUID domainComponentId,
         UUID parentId,
         LocalDateTime createdAt,
-        LocalDateTime updatedAt,
-        UUID ownerId
+        LocalDateTime updatedAt
 ) {
     public OrganizationUnitDTO toDTO() {
         return new OrganizationUnitDTO()
@@ -23,8 +22,7 @@ public record OrganizationUnit(
                 .domainComponentId(domainComponentId)
                 .parentId(parentId)
                 .createdAt(createdAt)
-                .updatedAt(updatedAt)
-                .ownerId(ownerId);
+                .updatedAt(updatedAt);
     }
 
     public static OrganizationUnit fromDTO(OrganizationUnitDTO organizationUnitDTO) {
@@ -35,8 +33,7 @@ public record OrganizationUnit(
                 organizationUnitDTO.getDomainComponentId(),
                 organizationUnitDTO.getParentId(),
                 organizationUnitDTO.getCreatedAt(),
-                organizationUnitDTO.getUpdatedAt(),
-                organizationUnitDTO.getOwnerId()
+                organizationUnitDTO.getUpdatedAt()
         );
     }
 }

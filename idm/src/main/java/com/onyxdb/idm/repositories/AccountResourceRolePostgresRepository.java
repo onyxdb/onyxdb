@@ -21,30 +21,30 @@ public class AccountResourceRolePostgresRepository implements AccountResourceRol
     public List<AccountResourceRole> findByAccountId(UUID accountId) {
         return dslContext.selectFrom(accountResourceRoleTable)
                 .where(accountResourceRoleTable.ACCOUNT_ID.eq(accountId))
-                .fetch(record -> AccountResourceRole.builder()
-                        .accountId(record.getAccountId())
-                        .resourceId(record.getResourceId())
-                        .roleId(record.getRoleId())
-                        .build());
+                .fetch(record -> new AccountResourceRole(
+                        record.getAccountId(),
+                        record.getResourceId(),
+                        record.getRoleId()
+                ));
     }
 
     @Override
     public List<AccountResourceRole> findByResourceId(UUID resourceId) {
         return dslContext.selectFrom(accountResourceRoleTable)
                 .where(accountResourceRoleTable.RESOURCE_ID.eq(resourceId))
-                .fetch(record -> AccountResourceRole.builder()
-                        .accountId(record.getAccountId())
-                        .resourceId(record.getResourceId())
-                        .roleId(record.getRoleId())
-                        .build());
+                .fetch(record -> new AccountResourceRole(
+                        record.getAccountId(),
+                        record.getResourceId(),
+                        record.getRoleId()
+                ));
     }
 
     @Override
     public void create(AccountResourceRole accountResourceRole) {
         dslContext.insertInto(accountResourceRoleTable)
-                .set(accountResourceRoleTable.ACCOUNT_ID, accountResourceRole.getAccountId())
-                .set(accountResourceRoleTable.RESOURCE_ID, accountResourceRole.getResourceId())
-                .set(accountResourceRoleTable.ROLE_ID, accountResourceRole.getRoleId())
+                .set(accountResourceRoleTable.ACCOUNT_ID, accountResourceRole.accountId())
+                .set(accountResourceRoleTable.RESOURCE_ID, accountResourceRole.resourceId())
+                .set(accountResourceRoleTable.ROLE_ID, accountResourceRole.roleId())
                 .execute();
     }
 

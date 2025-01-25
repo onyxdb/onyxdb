@@ -12,7 +12,6 @@ public record Organization(
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
         UUID resourceId,
-        UUID accountId,
         UUID ownerId
 ) {
     public OrganizationDTO toDTO() {
@@ -23,7 +22,6 @@ public record Organization(
                 .createdAt(createdAt)
                 .updatedAt(updatedAt)
                 .resourceId(resourceId)
-                .accountId(accountId)
                 .ownerId(ownerId);
     }
 
@@ -35,7 +33,6 @@ public record Organization(
                 organizationDTO.getCreatedAt(),
                 organizationDTO.getUpdatedAt(),
                 organizationDTO.getResourceId(),
-                organizationDTO.getAccountId(),
                 organizationDTO.getOwnerId()
         );
     }

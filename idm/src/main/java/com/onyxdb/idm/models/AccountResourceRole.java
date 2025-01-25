@@ -1,14 +1,26 @@
 package com.onyxdb.idm.models;
 
-import lombok.Builder;
-import lombok.Data;
-
 import java.util.UUID;
 
-@Data
-@Builder
-public class AccountResourceRole {
-    private UUID accountId;
-    private UUID resourceId;
-    private UUID roleId;
+import com.onyxdb.idm.generated.openapi.models.AccountResourceRoleDTO;
+
+public record AccountResourceRole(
+        UUID accountId,
+        UUID resourceId,
+        UUID roleId
+) {
+    public AccountResourceRoleDTO toDTO() {
+        return new AccountResourceRoleDTO()
+                .accountId(accountId)
+                .resourceId(resourceId)
+                .roleId(roleId);
+    }
+
+    public static AccountResourceRole fromDTO(AccountResourceRoleDTO accountResourceRoleDTO) {
+        return new AccountResourceRole(
+                accountResourceRoleDTO.getAccountId(),
+                accountResourceRoleDTO.getResourceId(),
+                accountResourceRoleDTO.getRoleId()
+        );
+    }
 }

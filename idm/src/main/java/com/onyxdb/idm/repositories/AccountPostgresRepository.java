@@ -22,57 +22,57 @@ public class AccountPostgresRepository implements AccountRepository {
     public Optional<Account> findById(UUID id) {
         return dslContext.selectFrom(accountTable)
                 .where(accountTable.ID.eq(id))
-                .fetchOptional(record -> Account.builder()
-                        .id(record.getId())
-                        .username(record.getUsername())
-                        .password(record.getPassword())
-                        .email(record.getEmail())
-                        .firstName(record.getFirstName())
-                        .lastName(record.getLastName())
-                        .createdAt(record.getCreatedAt())
-                        .updatedAt(record.getUpdatedAt())
-                        .build());
+                .fetchOptional(record -> new Account(
+                        record.getId(),
+                        record.getUsername(),
+                        record.getPassword(),
+                        record.getEmail(),
+                        record.getFirstName(),
+                        record.getLastName(),
+                        record.getCreatedAt(),
+                        record.getUpdatedAt()
+                ));
     }
 
     @Override
     public List<Account> findAll() {
         return dslContext.selectFrom(accountTable)
-                .fetch(record -> Account.builder()
-                        .id(record.getId())
-                        .username(record.getUsername())
-                        .password(record.getPassword())
-                        .email(record.getEmail())
-                        .firstName(record.getFirstName())
-                        .lastName(record.getLastName())
-                        .createdAt(record.getCreatedAt())
-                        .updatedAt(record.getUpdatedAt())
-                        .build());
+                .fetch(record -> new Account(
+                        record.getId(),
+                        record.getUsername(),
+                        record.getPassword(),
+                        record.getEmail(),
+                        record.getFirstName(),
+                        record.getLastName(),
+                        record.getCreatedAt(),
+                        record.getUpdatedAt()
+                ));
     }
 
     @Override
     public void create(Account account) {
         dslContext.insertInto(accountTable)
-                .set(accountTable.ID, account.getId())
-                .set(accountTable.USERNAME, account.getUsername())
-                .set(accountTable.PASSWORD, account.getPassword())
-                .set(accountTable.EMAIL, account.getEmail())
-                .set(accountTable.FIRST_NAME, account.getFirstName())
-                .set(accountTable.LAST_NAME, account.getLastName())
-                .set(accountTable.CREATED_AT, account.getCreatedAt())
-                .set(accountTable.UPDATED_AT, account.getUpdatedAt())
+                .set(accountTable.ID, account.id())
+                .set(accountTable.USERNAME, account.username())
+                .set(accountTable.PASSWORD, account.password())
+                .set(accountTable.EMAIL, account.email())
+                .set(accountTable.FIRST_NAME, account.firstName())
+                .set(accountTable.LAST_NAME, account.lastName())
+                .set(accountTable.CREATED_AT, account.createdAt())
+                .set(accountTable.UPDATED_AT, account.updatedAt())
                 .execute();
     }
 
     @Override
     public void update(Account account) {
         dslContext.update(accountTable)
-                .set(accountTable.USERNAME, account.getUsername())
-                .set(accountTable.PASSWORD, account.getPassword())
-                .set(accountTable.EMAIL, account.getEmail())
-                .set(accountTable.FIRST_NAME, account.getFirstName())
-                .set(accountTable.LAST_NAME, account.getLastName())
-                .set(accountTable.UPDATED_AT, account.getUpdatedAt())
-                .where(accountTable.ID.eq(account.getId()))
+                .set(accountTable.USERNAME, account.username())
+                .set(accountTable.PASSWORD, account.password())
+                .set(accountTable.EMAIL, account.email())
+                .set(accountTable.FIRST_NAME, account.firstName())
+                .set(accountTable.LAST_NAME, account.lastName())
+                .set(accountTable.UPDATED_AT, account.updatedAt())
+                .where(accountTable.ID.eq(account.id()))
                 .execute();
     }
 

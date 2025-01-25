@@ -23,73 +23,73 @@ public class ProjectPostgresRepository implements ProjectRepository {
     public Optional<Project> findById(UUID id) {
         return dslContext.selectFrom(projectTable)
                 .where(projectTable.ID.eq(id))
-                .fetchOptional(record -> Project.builder()
-                        .id(record.getId())
-                        .name(record.getName())
-                        .description(record.getDescription())
-                        .createdAt(record.getCreatedAt())
-                        .updatedAt(record.getUpdatedAt())
-                        .resourceId(record.getResourceId())
-                        .organizationId(record.getOrganizationId())
-                        .ownerId(record.getOwnerId())
-                        .build());
+                .fetchOptional(record -> new Project(
+                        record.getId(),
+                        record.getName(),
+                        record.getDescription(),
+                        record.getCreatedAt(),
+                        record.getUpdatedAt(),
+                        record.getResourceId(),
+                        record.getOrganizationId(),
+                        record.getOwnerId()
+                ));
     }
 
     @Override
     public List<Project> findAll() {
         return dslContext.selectFrom(projectTable)
-                .fetch(record -> Project.builder()
-                        .id(record.getId())
-                        .name(record.getName())
-                        .description(record.getDescription())
-                        .createdAt(record.getCreatedAt())
-                        .updatedAt(record.getUpdatedAt())
-                        .resourceId(record.getResourceId())
-                        .organizationId(record.getOrganizationId())
-                        .ownerId(record.getOwnerId())
-                        .build());
+                .fetch(record -> new Project(
+                        record.getId(),
+                        record.getName(),
+                        record.getDescription(),
+                        record.getCreatedAt(),
+                        record.getUpdatedAt(),
+                        record.getResourceId(),
+                        record.getOrganizationId(),
+                        record.getOwnerId()
+                ));
     }
 
     @Override
     public List<Project> findByOrganizationId(UUID organizationId) {
         return dslContext.selectFrom(projectTable)
                 .where(projectTable.ORGANIZATION_ID.eq(organizationId))
-                .fetch(record -> Project.builder()
-                        .id(record.getId())
-                        .name(record.getName())
-                        .description(record.getDescription())
-                        .createdAt(record.getCreatedAt())
-                        .updatedAt(record.getUpdatedAt())
-                        .resourceId(record.getResourceId())
-                        .organizationId(record.getOrganizationId())
-                        .ownerId(record.getOwnerId())
-                        .build());
+                .fetch(record -> new Project(
+                        record.getId(),
+                        record.getName(),
+                        record.getDescription(),
+                        record.getCreatedAt(),
+                        record.getUpdatedAt(),
+                        record.getResourceId(),
+                        record.getOrganizationId(),
+                        record.getOwnerId()
+                ));
     }
 
     @Override
     public void create(Project project) {
         dslContext.insertInto(projectTable)
-                .set(projectTable.ID, project.getId())
-                .set(projectTable.NAME, project.getName())
-                .set(projectTable.DESCRIPTION, project.getDescription())
-                .set(projectTable.CREATED_AT, project.getCreatedAt())
-                .set(projectTable.UPDATED_AT, project.getUpdatedAt())
-                .set(projectTable.RESOURCE_ID, project.getResourceId())
-                .set(projectTable.ORGANIZATION_ID, project.getOrganizationId())
-                .set(projectTable.OWNER_ID, project.getOwnerId())
+                .set(projectTable.ID, project.id())
+                .set(projectTable.NAME, project.name())
+                .set(projectTable.DESCRIPTION, project.description())
+                .set(projectTable.CREATED_AT, project.createdAt())
+                .set(projectTable.UPDATED_AT, project.updatedAt())
+                .set(projectTable.RESOURCE_ID, project.resourceId())
+                .set(projectTable.ORGANIZATION_ID, project.organizationId())
+                .set(projectTable.OWNER_ID, project.ownerId())
                 .execute();
     }
 
     @Override
     public void update(Project project) {
         dslContext.update(projectTable)
-                .set(projectTable.NAME, project.getName())
-                .set(projectTable.DESCRIPTION, project.getDescription())
-                .set(projectTable.UPDATED_AT, project.getUpdatedAt())
-                .set(projectTable.RESOURCE_ID, project.getResourceId())
-                .set(projectTable.ORGANIZATION_ID, project.getOrganizationId())
-                .set(projectTable.OWNER_ID, project.getOwnerId())
-                .where(projectTable.ID.eq(project.getId()))
+                .set(projectTable.NAME, project.name())
+                .set(projectTable.DESCRIPTION, project.description())
+                .set(projectTable.UPDATED_AT, project.updatedAt())
+                .set(projectTable.RESOURCE_ID, project.resourceId())
+                .set(projectTable.ORGANIZATION_ID, project.organizationId())
+                .set(projectTable.OWNER_ID, project.ownerId())
+                .where(projectTable.ID.eq(project.id()))
                 .execute();
     }
 

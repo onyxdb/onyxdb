@@ -23,78 +23,78 @@ public class ServicePostgresRepository implements ServiceRepository {
     public Optional<Service> findById(UUID id) {
         return dslContext.selectFrom(serviceTable)
                 .where(serviceTable.ID.eq(id))
-                .fetchOptional(record -> Service.builder()
-                        .id(record.getId())
-                        .name(record.getName())
-                        .type(record.getType())
-                        .description(record.getDescription())
-                        .createdAt(record.getCreatedAt())
-                        .updatedAt(record.getUpdatedAt())
-                        .resourceId(record.getResourceId())
-                        .projectId(record.getProjectId())
-                        .ownerId(record.getOwnerId())
-                        .build());
+                .fetchOptional(record -> new Service(
+                        record.getId(),
+                        record.getName(),
+                        record.getType(),
+                        record.getDescription(),
+                        record.getCreatedAt(),
+                        record.getUpdatedAt(),
+                        record.getResourceId(),
+                        record.getProjectId(),
+                        record.getOwnerId()
+                ));
     }
 
     @Override
     public List<Service> findAll() {
         return dslContext.selectFrom(serviceTable)
-                .fetch(record -> Service.builder()
-                        .id(record.getId())
-                        .name(record.getName())
-                        .type(record.getType())
-                        .description(record.getDescription())
-                        .createdAt(record.getCreatedAt())
-                        .updatedAt(record.getUpdatedAt())
-                        .resourceId(record.getResourceId())
-                        .projectId(record.getProjectId())
-                        .ownerId(record.getOwnerId())
-                        .build());
+                .fetch(record -> new Service(
+                        record.getId(),
+                        record.getName(),
+                        record.getType(),
+                        record.getDescription(),
+                        record.getCreatedAt(),
+                        record.getUpdatedAt(),
+                        record.getResourceId(),
+                        record.getProjectId(),
+                        record.getOwnerId()
+                ));
     }
 
     @Override
     public List<Service> findByProjectId(UUID projectId) {
         return dslContext.selectFrom(serviceTable)
                 .where(serviceTable.PROJECT_ID.eq(projectId))
-                .fetch(record -> Service.builder()
-                        .id(record.getId())
-                        .name(record.getName())
-                        .type(record.getType())
-                        .description(record.getDescription())
-                        .createdAt(record.getCreatedAt())
-                        .updatedAt(record.getUpdatedAt())
-                        .resourceId(record.getResourceId())
-                        .projectId(record.getProjectId())
-                        .ownerId(record.getOwnerId())
-                        .build());
+                .fetch(record ->  new Service(
+                        record.getId(),
+                        record.getName(),
+                        record.getType(),
+                        record.getDescription(),
+                        record.getCreatedAt(),
+                        record.getUpdatedAt(),
+                        record.getResourceId(),
+                        record.getProjectId(),
+                        record.getOwnerId()
+                ));
     }
 
     @Override
     public void create(Service service) {
         dslContext.insertInto(serviceTable)
-                .set(serviceTable.ID, service.getId())
-                .set(serviceTable.NAME, service.getName())
-                .set(serviceTable.TYPE, service.getType())
-                .set(serviceTable.DESCRIPTION, service.getDescription())
-                .set(serviceTable.CREATED_AT, service.getCreatedAt())
-                .set(serviceTable.UPDATED_AT, service.getUpdatedAt())
-                .set(serviceTable.RESOURCE_ID, service.getResourceId())
-                .set(serviceTable.PROJECT_ID, service.getProjectId())
-                .set(serviceTable.OWNER_ID, service.getOwnerId())
+                .set(serviceTable.ID, service.id())
+                .set(serviceTable.NAME, service.name())
+                .set(serviceTable.TYPE, service.type())
+                .set(serviceTable.DESCRIPTION, service.description())
+                .set(serviceTable.CREATED_AT, service.createdAt())
+                .set(serviceTable.UPDATED_AT, service.updatedAt())
+                .set(serviceTable.RESOURCE_ID, service.resourceId())
+                .set(serviceTable.PROJECT_ID, service.projectId())
+                .set(serviceTable.OWNER_ID, service.ownerId())
                 .execute();
     }
 
     @Override
     public void update(Service service) {
         dslContext.update(serviceTable)
-                .set(serviceTable.NAME, service.getName())
-                .set(serviceTable.TYPE, service.getType())
-                .set(serviceTable.DESCRIPTION, service.getDescription())
-                .set(serviceTable.UPDATED_AT, service.getUpdatedAt())
-                .set(serviceTable.RESOURCE_ID, service.getResourceId())
-                .set(serviceTable.PROJECT_ID, service.getProjectId())
-                .set(serviceTable.OWNER_ID, service.getOwnerId())
-                .where(serviceTable.ID.eq(service.getId()))
+                .set(serviceTable.NAME, service.name())
+                .set(serviceTable.TYPE, service.type())
+                .set(serviceTable.DESCRIPTION, service.description())
+                .set(serviceTable.UPDATED_AT, service.updatedAt())
+                .set(serviceTable.RESOURCE_ID, service.resourceId())
+                .set(serviceTable.PROJECT_ID, service.projectId())
+                .set(serviceTable.OWNER_ID, service.ownerId())
+                .where(serviceTable.ID.eq(service.id()))
                 .execute();
     }
 
