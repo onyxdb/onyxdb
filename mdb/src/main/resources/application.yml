@@ -10,10 +10,10 @@ spring:
     sql-dialect: Postgres
   flyway:
     enabled: true
-#  task:
-#    scheduling:
-#      pool:
-#        size: 5
+  task:
+    scheduling:
+      pool:
+        size: 2
 #    execution:
 #      pool:
 #        core-size: 5
@@ -29,9 +29,9 @@ springdoc:
 onyxdb-app:
   tasks:
     process-cluster-operations:
-      executor:
-        core-pool-size: 1
-        max-pool-size: 3
-        queue-capacity: 0
+#      executor:
+#        core-pool-size: 1
+#        max-pool-size: 3
+#        queue-capacity: 0
       initial-delay-string: PT0S
       fixed-rate-string: PT01S

@@ -9,13 +9,13 @@ import org.springframework.stereotype.Component;
  * @author foxleren
  */
 @Component
-@EnableAsync
+//@EnableAsync
 public class ProcessClusterTasksTask {
     @Scheduled(
             initialDelayString = "${onyxdb-app.tasks.process-cluster-operations.initial-delay-string}",
             fixedRateString = "${onyxdb-app.tasks.process-cluster-operations.fixed-rate-string}"
     )
-    @Async("processClusterOperationTaskExecutor")
+//    @Async
     public void execute() throws InterruptedException {
         System.out.println("Start");
         Thread.sleep(100000);
