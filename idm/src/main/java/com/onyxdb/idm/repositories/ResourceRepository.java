@@ -1,19 +1,19 @@
 package com.onyxdb.idm.repositories;
 
-import com.onyxdb.idm.models.ResourceDTO;
+import com.onyxdb.idm.models.Resource;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface ResourceRepository {
-    Optional<ResourceDTO> findById(UUID id);
+    Optional<Resource> findById(UUID id);
 
-    List<ResourceDTO> findAll();
+    List<Resource> findAll();
 
-    void create(ResourceDTO resource);
+    void create(Resource resource);
 
-    void update(ResourceDTO resource);
+    void update(Resource resource);
 
     void delete(UUID id);
 }

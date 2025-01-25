@@ -5,7 +5,9 @@
  */
 package com.onyxdb.idm.generated.openapi.apis;
 
-import com.onyxdb.idm.generated.openapi.models.Role;
+import com.onyxdb.idm.generated.openapi.models.BadRequestResponse;
+import com.onyxdb.idm.generated.openapi.models.NotFoundResponse;
+import com.onyxdb.idm.generated.openapi.models.RoleDTO;
 import java.util.UUID;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,8 +43,9 @@ public interface RolesApi {
     /**
      * POST /api/v1/roles : Create a new role
      *
-     * @param role  (required)
+     * @param roleDTO  (required)
      * @return Created (status code 201)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "createRole",
@@ -50,7 +53,10 @@ public interface RolesApi {
         tags = { "Roles" },
         responses = {
             @ApiResponse(responseCode = "201", description = "Created", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Role.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = RoleDTO.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
             })
         }
     )
@@ -61,8 +67,8 @@ public interface RolesApi {
         consumes = { "application/json" }
     )
     
-    ResponseEntity<Role> createRole(
-        @Parameter(name = "Role", description = "", required = true) @Valid @RequestBody Role role
+    ResponseEntity<RoleDTO> createRole(
+        @Parameter(name = "RoleDTO", description = "", required = true) @Valid @RequestBody RoleDTO roleDTO
     );
 
 
@@ -71,18 +77,27 @@ public interface RolesApi {
      *
      * @param roleId  (required)
      * @return No Content (status code 204)
+     *         or Not Found (status code 404)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "deleteRole",
         summary = "Delete a role by ID",
         tags = { "Roles" },
         responses = {
-            @ApiResponse(responseCode = "204", description = "No Content")
+            @ApiResponse(responseCode = "204", description = "No Content"),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
+            })
         }
     )
     @RequestMapping(
         method = RequestMethod.DELETE,
-        value = "/api/v1/roles/{roleId}"
+        value = "/api/v1/roles/{roleId}",
+        produces = { "application/json" }
     )
     
     ResponseEntity<Void> deleteRole(
@@ -94,6 +109,7 @@ public interface RolesApi {
      * GET /api/v1/roles : Get all roles
      *
      * @return OK (status code 200)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "getAllRoles",
@@ -101,7 +117,10 @@ public interface RolesApi {
         tags = { "Roles" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Role.class)))
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = RoleDTO.class)))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
             })
         }
     )
@@ -111,7 +130,7 @@ public interface RolesApi {
         produces = { "application/json" }
     )
     
-    ResponseEntity<List<Role>> getAllRoles(
+    ResponseEntity<List<RoleDTO>> getAllRoles(
         
     );
 
@@ -122,6 +141,7 @@ public interface RolesApi {
      * @param roleId  (required)
      * @return OK (status code 200)
      *         or Not Found (status code 404)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "getRoleById",
@@ -129,9 +149,14 @@ public interface RolesApi {
         tags = { "Roles" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Role.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = RoleDTO.class))
             }),
-            @ApiResponse(responseCode = "404", description = "Not Found")
+            @ApiResponse(responseCode = "404", description = "Not Found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
+            })
         }
     )
     @RequestMapping(
@@ -140,7 +165,7 @@ public interface RolesApi {
         produces = { "application/json" }
     )
     
-    ResponseEntity<Role> getRoleById(
+    ResponseEntity<RoleDTO> getRoleById(
         @Parameter(name = "roleId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("roleId") UUID roleId
     );
 
@@ -149,9 +174,10 @@ public interface RolesApi {
      * PUT /api/v1/roles/{roleId} : Update a role by ID
      *
      * @param roleId  (required)
-     * @param role  (required)
+     * @param roleDTO  (required)
      * @return OK (status code 200)
      *         or Not Found (status code 404)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "updateRole",
@@ -159,9 +185,14 @@ public interface RolesApi {
         tags = { "Roles" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Role.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = RoleDTO.class))
             }),
-            @ApiResponse(responseCode = "404", description = "Not Found")
+            @ApiResponse(responseCode = "404", description = "Not Found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
+            })
         }
     )
     @RequestMapping(
@@ -171,9 +202,9 @@ public interface RolesApi {
         consumes = { "application/json" }
     )
     
-    ResponseEntity<Role> updateRole(
+    ResponseEntity<RoleDTO> updateRole(
         @Parameter(name = "roleId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("roleId") UUID roleId,
-        @Parameter(name = "Role", description = "", required = true) @Valid @RequestBody Role role
+        @Parameter(name = "RoleDTO", description = "", required = true) @Valid @RequestBody RoleDTO roleDTO
     );
 
 }

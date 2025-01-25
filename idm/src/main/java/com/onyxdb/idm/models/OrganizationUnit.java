@@ -8,13 +8,13 @@ import java.util.UUID;
 
 @Data
 @Builder
-public class ProjectDTO {
+public class OrganizationUnit {
     private UUID id;
     private String name;
     private String description;
+    private UUID domainComponentId;
+    private UUID parentId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private UUID resourceId;
-    private UUID organizationId;
     private UUID ownerId;
 }

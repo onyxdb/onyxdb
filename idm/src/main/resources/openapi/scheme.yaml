@@ -21,7 +21,13 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Account'
+                  $ref: '#/components/schemas/AccountDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
     post:
       summary: Create a new account
       operationId: createAccount
@@ -32,16 +38,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Account'
+              $ref: '#/components/schemas/AccountDTO'
       responses:
         '201':
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Account'
+                $ref: '#/components/schemas/AccountDTO'
         '400':
-          description: Bad request
+          description: Bad Request
           content:
             application/json:
               schema:
@@ -66,9 +72,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Account'
+                $ref: '#/components/schemas/AccountDTO'
         '404':
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
     put:
       summary: Update an account by ID
       operationId: updateAccount
@@ -86,16 +102,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Account'
+              $ref: '#/components/schemas/AccountDTO'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Account'
+                $ref: '#/components/schemas/AccountDTO'
         '404':
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
     delete:
       summary: Delete an account by ID
       operationId: deleteAccount
@@ -111,6 +137,161 @@ paths:
       responses:
         '204':
           description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+
+  /api/v1/domain-components:
+    get:
+      summary: Get all domain components
+      operationId: getAllDomainComponents
+      tags:
+        - Domain Components
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DomainComponentDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+    post:
+      summary: Create a new domain component
+      operationId: createDomainComponent
+      tags:
+        - Domain Components
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DomainComponentDTO'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainComponentDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+
+  /api/v1/domain-components/{domainComponentId}:
+    get:
+      summary: Get a domain component by ID
+      operationId: getDomainComponentById
+      tags:
+        - Domain Components
+      parameters:
+        - name: domainComponentId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainComponentDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+    put:
+      summary: Update a domain component by ID
+      operationId: updateDomainComponent
+      tags:
+        - Domain Components
+      parameters:
+        - name: domainComponentId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DomainComponentDTO'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainComponentDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+    delete:
+      summary: Delete a domain component by ID
+      operationId: deleteDomainComponent
+      tags:
+        - Domain Components
+      parameters:
+        - name: domainComponentId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
 
   /api/v1/roles:
     get:
@@ -126,7 +307,13 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Role'
+                  $ref: '#/components/schemas/RoleDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
     post:
       summary: Create a new role
       operationId: createRole
@@ -137,14 +324,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Role'
+              $ref: '#/components/schemas/RoleDTO'
       responses:
         '201':
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Role'
+                $ref: '#/components/schemas/RoleDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
 
   /api/v1/roles/{roleId}:
     get:
@@ -165,9 +358,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Role'
+                $ref: '#/components/schemas/RoleDTO'
         '404':
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
     put:
       summary: Update a role by ID
       operationId: updateRole
@@ -185,16 +388,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Role'
+              $ref: '#/components/schemas/RoleDTO'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Role'
+                $ref: '#/components/schemas/RoleDTO'
         '404':
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
     delete:
       summary: Delete a role by ID
       operationId: deleteRole
@@ -210,6 +423,18 @@ paths:
       responses:
         '204':
           description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
 
   /api/v1/permissions:
     get:
@@ -225,7 +450,13 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Permission'
+                  $ref: '#/components/schemas/PermissionDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
     post:
       summary: Create a new permission
       operationId: createPermission
@@ -236,14 +467,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Permission'
+              $ref: '#/components/schemas/PermissionDTO'
       responses:
         '201':
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Permission'
+                $ref: '#/components/schemas/PermissionDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
 
   /api/v1/permissions/{permissionId}:
     get:
@@ -264,9 +501,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Permission'
+                $ref: '#/components/schemas/PermissionDTO'
         '404':
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
     put:
       summary: Update a permission by ID
       operationId: updatePermission
@@ -284,16 +531,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Permission'
+              $ref: '#/components/schemas/PermissionDTO'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Permission'
+                $ref: '#/components/schemas/PermissionDTO'
         '404':
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
     delete:
       summary: Delete a permission by ID
       operationId: deletePermission
@@ -309,6 +566,18 @@ paths:
       responses:
         '204':
           description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
 
   /api/v1/business-roles:
     get:
@@ -324,7 +593,13 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/BusinessRole'
+                  $ref: '#/components/schemas/BusinessRoleDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
     post:
       summary: Create a new business role
       operationId: createBusinessRole
@@ -335,14 +610,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BusinessRole'
+              $ref: '#/components/schemas/BusinessRoleDTO'
       responses:
         '201':
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BusinessRole'
+                $ref: '#/components/schemas/BusinessRoleDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
 
   /api/v1/business-roles/{businessRoleId}:
     get:
@@ -363,9 +644,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BusinessRole'
+                $ref: '#/components/schemas/BusinessRoleDTO'
         '404':
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
     put:
       summary: Update a business role by ID
       operationId: updateBusinessRole
@@ -383,16 +674,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BusinessRole'
+              $ref: '#/components/schemas/BusinessRoleDTO'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BusinessRole'
+                $ref: '#/components/schemas/BusinessRoleDTO'
         '404':
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
     delete:
       summary: Delete a business role by ID
       operationId: deleteBusinessRole
@@ -408,6 +709,18 @@ paths:
       responses:
         '204':
           description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
 
   /api/v1/business-roles/{businessRoleId}/roles:
     get:
@@ -430,9 +743,19 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Role'
+                  $ref: '#/components/schemas/RoleDTO'
         '404':
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
 
   /api/v1/organization-units:
     get:
@@ -448,7 +771,13 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/OrganizationUnit'
+                  $ref: '#/components/schemas/OrganizationUnitDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
     post:
       summary: Create a new organization unit
       operationId: createOrganizationUnit
@@ -459,14 +788,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/OrganizationUnit'
+              $ref: '#/components/schemas/OrganizationUnitDTO'
       responses:
         '201':
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OrganizationUnit'
+                $ref: '#/components/schemas/OrganizationUnitDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
 
   /api/v1/organization-units/{organizationUnitId}:
     get:
@@ -487,9 +822,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OrganizationUnit'
+                $ref: '#/components/schemas/OrganizationUnitDTO'
         '404':
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
     put:
       summary: Update an organization unit by ID
       operationId: updateOrganizationUnit
@@ -507,16 +852,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/OrganizationUnit'
+              $ref: '#/components/schemas/OrganizationUnitDTO'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OrganizationUnit'
+                $ref: '#/components/schemas/OrganizationUnitDTO'
         '404':
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
     delete:
       summary: Delete an organization unit by ID
       operationId: deleteOrganizationUnit
@@ -532,6 +887,18 @@ paths:
       responses:
         '204':
           description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
 
   /api/v1/resources:
     get:
@@ -547,7 +914,13 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Resource'
+                  $ref: '#/components/schemas/ResourceDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
     post:
       summary: Create a new resource
       operationId: createResource
@@ -558,14 +931,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Resource'
+              $ref: '#/components/schemas/ResourceDTO'
       responses:
         '201':
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Resource'
+                $ref: '#/components/schemas/ResourceDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
 
   /api/v1/resources/{resourceId}:
     get:
@@ -586,9 +965,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Resource'
+                $ref: '#/components/schemas/ResourceDTO'
         '404':
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
     put:
       summary: Update a resource by ID
       operationId: updateResource
@@ -606,16 +995,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Resource'
+              $ref: '#/components/schemas/ResourceDTO'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Resource'
+                $ref: '#/components/schemas/ResourceDTO'
         '404':
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
     delete:
       summary: Delete a resource by ID
       operationId: deleteResource
@@ -631,6 +1030,18 @@ paths:
       responses:
         '204':
           description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
 
   /api/v1/projects:
     get:
@@ -646,7 +1057,13 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Project'
+                  $ref: '#/components/schemas/ProjectDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
     post:
       summary: Create a new project
       operationId: createProject
@@ -657,14 +1074,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Project'
+              $ref: '#/components/schemas/ProjectDTO'
       responses:
         '201':
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Project'
+                $ref: '#/components/schemas/ProjectDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
 
   /api/v1/projects/{projectId}:
     get:
@@ -685,9 +1108,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Project'
+                $ref: '#/components/schemas/ProjectDTO'
         '404':
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
     put:
       summary: Update a project by ID
       operationId: updateProject
@@ -705,16 +1138,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Project'
+              $ref: '#/components/schemas/ProjectDTO'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Project'
+                $ref: '#/components/schemas/ProjectDTO'
         '404':
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
     delete:
       summary: Delete a project by ID
       operationId: deleteProject
@@ -730,6 +1173,18 @@ paths:
       responses:
         '204':
           description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
 
   /api/v1/services:
     get:
@@ -745,7 +1200,13 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Service'
+                  $ref: '#/components/schemas/ServiceDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
     post:
       summary: Create a new service
       operationId: createService
@@ -756,14 +1217,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Service'
+              $ref: '#/components/schemas/ServiceDTO'
       responses:
         '201':
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Service'
+                $ref: '#/components/schemas/ServiceDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
 
   /api/v1/services/{serviceId}:
     get:
@@ -784,9 +1251,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Service'
+                $ref: '#/components/schemas/ServiceDTO'
         '404':
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
     put:
       summary: Update a service by ID
       operationId: updateService
@@ -804,16 +1281,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Service'
+              $ref: '#/components/schemas/ServiceDTO'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Service'
+                $ref: '#/components/schemas/ServiceDTO'
         '404':
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
     delete:
       summary: Delete a service by ID
       operationId: deleteService
@@ -829,6 +1316,18 @@ paths:
       responses:
         '204':
           description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
 
   /api/v1/organizations:
     get:
@@ -844,7 +1343,13 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Organization'
+                  $ref: '#/components/schemas/OrganizationDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
     post:
       summary: Create a new organization
       operationId: createOrganization
@@ -855,14 +1360,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Organization'
+              $ref: '#/components/schemas/OrganizationDTO'
       responses:
         '201':
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Organization'
+                $ref: '#/components/schemas/OrganizationDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
 
   /api/v1/organizations/{organizationId}:
     get:
@@ -883,9 +1394,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Organization'
+                $ref: '#/components/schemas/OrganizationDTO'
         '404':
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
     put:
       summary: Update an organization by ID
       operationId: updateOrganization
@@ -903,16 +1424,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Organization'
+              $ref: '#/components/schemas/OrganizationDTO'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Organization'
+                $ref: '#/components/schemas/OrganizationDTO'
         '404':
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
     delete:
       summary: Delete an organization by ID
       operationId: deleteOrganization
@@ -928,6 +1459,18 @@ paths:
       responses:
         '204':
           description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
 
   /api/v1/account-resource-roles:
     get:
@@ -943,7 +1486,13 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/AccountResourceRole'
+                  $ref: '#/components/schemas/AccountResourceRoleDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
     post:
       summary: Create a new account resource role
       operationId: createAccountResourceRole
@@ -954,14 +1503,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AccountResourceRole'
+              $ref: '#/components/schemas/AccountResourceRoleDTO'
       responses:
         '201':
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AccountResourceRole'
+                $ref: '#/components/schemas/AccountResourceRoleDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
     delete:
       summary: Delete an account resource role
       operationId: deleteAccountResourceRole
@@ -989,18 +1544,22 @@ paths:
       responses:
         '204':
           description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
 
 components:
   schemas:
-    BadRequestResponse:
-      type: object
-      required:
-        - message
-      properties:
-        message:
-          type: string
-
-    Account:
+    AccountDTO:
       type: object
       properties:
         id:
@@ -1023,7 +1582,7 @@ components:
           type: string
           format: date-time
 
-    Role:
+    RoleDTO:
       type: object
       properties:
         id:
@@ -1040,7 +1599,24 @@ components:
           type: string
           format: date-time
 
-    Permission:
+    DomainComponentDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    PermissionDTO:
       type: object
       properties:
         id:
@@ -1061,7 +1637,7 @@ components:
           type: string
           format: date-time
 
-    BusinessRole:
+    BusinessRoleDTO:
       type: object
       properties:
         id:
@@ -1081,7 +1657,7 @@ components:
           type: string
           format: date-time
 
-    OrganizationUnit:
+    OrganizationUnitDTO:
       type: object
       properties:
         id:
@@ -1106,11 +1682,8 @@ components:
         ownerId:
           type: string
           format: uuid
-        responsibleId:
-          type: string
-          format: uuid
 
-    Resource:
+    ResourceDTO:
       type: object
       properties:
         id:
@@ -1125,7 +1698,7 @@ components:
           type: string
           format: date-time
 
-    Project:
+    ProjectDTO:
       type: object
       properties:
         id:
@@ -1150,11 +1723,8 @@ components:
         ownerId:
           type: string
           format: uuid
-        responsibleId:
-          type: string
-          format: uuid
 
-    Service:
+    ServiceDTO:
       type: object
       properties:
         id:
@@ -1181,15 +1751,8 @@ components:
         ownerId:
           type: string
           format: uuid
-        responsibleId:
-          type: string
-          format: uuid
-        participants:
-          type: array
-          items:
-            type: string
 
-    Organization:
+    OrganizationDTO:
       type: object
       properties:
         id:
@@ -1214,15 +1777,8 @@ components:
         ownerId:
           type: string
           format: uuid
-        responsibleId:
-          type: string
-          format: uuid
-        participants:
-          type: array
-          items:
-            type: string
 
-    AccountResourceRole:
+    AccountResourceRoleDTO:
       type: object
       properties:
         accountId:
@@ -1234,3 +1790,27 @@ components:
         roleId:
           type: string
           format: uuid
+
+    BadRequestResponse:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+
+    NotFoundResponse:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+
+    InternalServerErrorResponse:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string

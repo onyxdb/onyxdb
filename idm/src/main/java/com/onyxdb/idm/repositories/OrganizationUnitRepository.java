@@ -1,21 +1,21 @@
 package com.onyxdb.idm.repositories;
 
-import com.onyxdb.idm.models.OrganizationUnitDTO;
+import com.onyxdb.idm.models.OrganizationUnit;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface OrganizationUnitRepository {
-    Optional<OrganizationUnitDTO> findById(UUID id);
+    Optional<OrganizationUnit> findById(UUID id);
 
-    List<OrganizationUnitDTO> findAll();
+    List<OrganizationUnit> findAll();
 
-    List<OrganizationUnitDTO> findByDomainComponentId(UUID domainComponentId);
+    List<OrganizationUnit> findByDomainComponentId(UUID domainComponentId);
 
-    void create(OrganizationUnitDTO organizationUnit);
+    void create(OrganizationUnit organizationUnit);
 
-    void update(OrganizationUnitDTO organizationUnit);
+    void update(OrganizationUnit organizationUnit);
 
     void delete(UUID id);
 }

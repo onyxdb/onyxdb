@@ -5,7 +5,9 @@
  */
 package com.onyxdb.idm.generated.openapi.apis;
 
-import com.onyxdb.idm.generated.openapi.models.Service;
+import com.onyxdb.idm.generated.openapi.models.BadRequestResponse;
+import com.onyxdb.idm.generated.openapi.models.NotFoundResponse;
+import com.onyxdb.idm.generated.openapi.models.ServiceDTO;
 import java.util.UUID;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,8 +43,9 @@ public interface ServicesApi {
     /**
      * POST /api/v1/services : Create a new service
      *
-     * @param service  (required)
+     * @param serviceDTO  (required)
      * @return Created (status code 201)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "createService",
@@ -50,7 +53,10 @@ public interface ServicesApi {
         tags = { "Services" },
         responses = {
             @ApiResponse(responseCode = "201", description = "Created", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Service.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ServiceDTO.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
             })
         }
     )
@@ -61,8 +67,8 @@ public interface ServicesApi {
         consumes = { "application/json" }
     )
     
-    ResponseEntity<Service> createService(
-        @Parameter(name = "Service", description = "", required = true) @Valid @RequestBody Service service
+    ResponseEntity<ServiceDTO> createService(
+        @Parameter(name = "ServiceDTO", description = "", required = true) @Valid @RequestBody ServiceDTO serviceDTO
     );
 
 
@@ -71,18 +77,27 @@ public interface ServicesApi {
      *
      * @param serviceId  (required)
      * @return No Content (status code 204)
+     *         or Not Found (status code 404)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "deleteService",
         summary = "Delete a service by ID",
         tags = { "Services" },
         responses = {
-            @ApiResponse(responseCode = "204", description = "No Content")
+            @ApiResponse(responseCode = "204", description = "No Content"),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
+            })
         }
     )
     @RequestMapping(
         method = RequestMethod.DELETE,
-        value = "/api/v1/services/{serviceId}"
+        value = "/api/v1/services/{serviceId}",
+        produces = { "application/json" }
     )
     
     ResponseEntity<Void> deleteService(
@@ -94,6 +109,7 @@ public interface ServicesApi {
      * GET /api/v1/services : Get all services
      *
      * @return OK (status code 200)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "getAllServices",
@@ -101,7 +117,10 @@ public interface ServicesApi {
         tags = { "Services" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Service.class)))
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ServiceDTO.class)))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
             })
         }
     )
@@ -111,7 +130,7 @@ public interface ServicesApi {
         produces = { "application/json" }
     )
     
-    ResponseEntity<List<Service>> getAllServices(
+    ResponseEntity<List<ServiceDTO>> getAllServices(
         
     );
 
@@ -122,6 +141,7 @@ public interface ServicesApi {
      * @param serviceId  (required)
      * @return OK (status code 200)
      *         or Not Found (status code 404)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "getServiceById",
@@ -129,9 +149,14 @@ public interface ServicesApi {
         tags = { "Services" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Service.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ServiceDTO.class))
             }),
-            @ApiResponse(responseCode = "404", description = "Not Found")
+            @ApiResponse(responseCode = "404", description = "Not Found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
+            })
         }
     )
     @RequestMapping(
@@ -140,7 +165,7 @@ public interface ServicesApi {
         produces = { "application/json" }
     )
     
-    ResponseEntity<Service> getServiceById(
+    ResponseEntity<ServiceDTO> getServiceById(
         @Parameter(name = "serviceId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("serviceId") UUID serviceId
     );
 
@@ -149,9 +174,10 @@ public interface ServicesApi {
      * PUT /api/v1/services/{serviceId} : Update a service by ID
      *
      * @param serviceId  (required)
-     * @param service  (required)
+     * @param serviceDTO  (required)
      * @return OK (status code 200)
      *         or Not Found (status code 404)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "updateService",
@@ -159,9 +185,14 @@ public interface ServicesApi {
         tags = { "Services" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Service.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ServiceDTO.class))
             }),
-            @ApiResponse(responseCode = "404", description = "Not Found")
+            @ApiResponse(responseCode = "404", description = "Not Found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
+            })
         }
     )
     @RequestMapping(
@@ -171,9 +202,9 @@ public interface ServicesApi {
         consumes = { "application/json" }
     )
     
-    ResponseEntity<Service> updateService(
+    ResponseEntity<ServiceDTO> updateService(
         @Parameter(name = "serviceId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("serviceId") UUID serviceId,
-        @Parameter(name = "Service", description = "", required = true) @Valid @RequestBody Service service
+        @Parameter(name = "ServiceDTO", description = "", required = true) @Valid @RequestBody ServiceDTO serviceDTO
     );
 
 }

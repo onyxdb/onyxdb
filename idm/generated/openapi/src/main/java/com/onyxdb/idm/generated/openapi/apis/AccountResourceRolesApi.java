@@ -5,7 +5,9 @@
  */
 package com.onyxdb.idm.generated.openapi.apis;
 
-import com.onyxdb.idm.generated.openapi.models.AccountResourceRole;
+import com.onyxdb.idm.generated.openapi.models.AccountResourceRoleDTO;
+import com.onyxdb.idm.generated.openapi.models.BadRequestResponse;
+import com.onyxdb.idm.generated.openapi.models.NotFoundResponse;
 import java.util.UUID;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,8 +43,9 @@ public interface AccountResourceRolesApi {
     /**
      * POST /api/v1/account-resource-roles : Create a new account resource role
      *
-     * @param accountResourceRole  (required)
+     * @param accountResourceRoleDTO  (required)
      * @return Created (status code 201)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "createAccountResourceRole",
@@ -50,7 +53,10 @@ public interface AccountResourceRolesApi {
         tags = { "Account Resource Roles" },
         responses = {
             @ApiResponse(responseCode = "201", description = "Created", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = AccountResourceRole.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = AccountResourceRoleDTO.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
             })
         }
     )
@@ -61,8 +67,8 @@ public interface AccountResourceRolesApi {
         consumes = { "application/json" }
     )
     
-    ResponseEntity<AccountResourceRole> createAccountResourceRole(
-        @Parameter(name = "AccountResourceRole", description = "", required = true) @Valid @RequestBody AccountResourceRole accountResourceRole
+    ResponseEntity<AccountResourceRoleDTO> createAccountResourceRole(
+        @Parameter(name = "AccountResourceRoleDTO", description = "", required = true) @Valid @RequestBody AccountResourceRoleDTO accountResourceRoleDTO
     );
 
 
@@ -73,18 +79,27 @@ public interface AccountResourceRolesApi {
      * @param resourceId  (required)
      * @param roleId  (required)
      * @return No Content (status code 204)
+     *         or Not Found (status code 404)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "deleteAccountResourceRole",
         summary = "Delete an account resource role",
         tags = { "Account Resource Roles" },
         responses = {
-            @ApiResponse(responseCode = "204", description = "No Content")
+            @ApiResponse(responseCode = "204", description = "No Content"),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
+            })
         }
     )
     @RequestMapping(
         method = RequestMethod.DELETE,
-        value = "/api/v1/account-resource-roles"
+        value = "/api/v1/account-resource-roles",
+        produces = { "application/json" }
     )
     
     ResponseEntity<Void> deleteAccountResourceRole(
@@ -98,6 +113,7 @@ public interface AccountResourceRolesApi {
      * GET /api/v1/account-resource-roles : Get all account resource roles
      *
      * @return OK (status code 200)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "getAllAccountResourceRoles",
@@ -105,7 +121,10 @@ public interface AccountResourceRolesApi {
         tags = { "Account Resource Roles" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AccountResourceRole.class)))
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AccountResourceRoleDTO.class)))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
             })
         }
     )
@@ -115,7 +134,7 @@ public interface AccountResourceRolesApi {
         produces = { "application/json" }
     )
     
-    ResponseEntity<List<AccountResourceRole>> getAllAccountResourceRoles(
+    ResponseEntity<List<AccountResourceRoleDTO>> getAllAccountResourceRoles(
         
     );
 

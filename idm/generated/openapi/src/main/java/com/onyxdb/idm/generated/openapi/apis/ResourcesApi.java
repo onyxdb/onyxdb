@@ -5,7 +5,9 @@
  */
 package com.onyxdb.idm.generated.openapi.apis;
 
-import com.onyxdb.idm.generated.openapi.models.Resource;
+import com.onyxdb.idm.generated.openapi.models.BadRequestResponse;
+import com.onyxdb.idm.generated.openapi.models.NotFoundResponse;
+import com.onyxdb.idm.generated.openapi.models.ResourceDTO;
 import java.util.UUID;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,8 +43,9 @@ public interface ResourcesApi {
     /**
      * POST /api/v1/resources : Create a new resource
      *
-     * @param resource  (required)
+     * @param resourceDTO  (required)
      * @return Created (status code 201)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "createResource",
@@ -50,7 +53,10 @@ public interface ResourcesApi {
         tags = { "Resources" },
         responses = {
             @ApiResponse(responseCode = "201", description = "Created", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Resource.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ResourceDTO.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
             })
         }
     )
@@ -61,8 +67,8 @@ public interface ResourcesApi {
         consumes = { "application/json" }
     )
     
-    ResponseEntity<Resource> createResource(
-        @Parameter(name = "Resource", description = "", required = true) @Valid @RequestBody Resource resource
+    ResponseEntity<ResourceDTO> createResource(
+        @Parameter(name = "ResourceDTO", description = "", required = true) @Valid @RequestBody ResourceDTO resourceDTO
     );
 
 
@@ -71,18 +77,27 @@ public interface ResourcesApi {
      *
      * @param resourceId  (required)
      * @return No Content (status code 204)
+     *         or Not Found (status code 404)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "deleteResource",
         summary = "Delete a resource by ID",
         tags = { "Resources" },
         responses = {
-            @ApiResponse(responseCode = "204", description = "No Content")
+            @ApiResponse(responseCode = "204", description = "No Content"),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
+            })
         }
     )
     @RequestMapping(
         method = RequestMethod.DELETE,
-        value = "/api/v1/resources/{resourceId}"
+        value = "/api/v1/resources/{resourceId}",
+        produces = { "application/json" }
     )
     
     ResponseEntity<Void> deleteResource(
@@ -94,6 +109,7 @@ public interface ResourcesApi {
      * GET /api/v1/resources : Get all resources
      *
      * @return OK (status code 200)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "getAllResources",
@@ -101,7 +117,10 @@ public interface ResourcesApi {
         tags = { "Resources" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Resource.class)))
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ResourceDTO.class)))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
             })
         }
     )
@@ -111,7 +130,7 @@ public interface ResourcesApi {
         produces = { "application/json" }
     )
     
-    ResponseEntity<List<Resource>> getAllResources(
+    ResponseEntity<List<ResourceDTO>> getAllResources(
         
     );
 
@@ -122,6 +141,7 @@ public interface ResourcesApi {
      * @param resourceId  (required)
      * @return OK (status code 200)
      *         or Not Found (status code 404)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "getResourceById",
@@ -129,9 +149,14 @@ public interface ResourcesApi {
         tags = { "Resources" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Resource.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ResourceDTO.class))
             }),
-            @ApiResponse(responseCode = "404", description = "Not Found")
+            @ApiResponse(responseCode = "404", description = "Not Found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
+            })
         }
     )
     @RequestMapping(
@@ -140,7 +165,7 @@ public interface ResourcesApi {
         produces = { "application/json" }
     )
     
-    ResponseEntity<Resource> getResourceById(
+    ResponseEntity<ResourceDTO> getResourceById(
         @Parameter(name = "resourceId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("resourceId") UUID resourceId
     );
 
@@ -149,9 +174,10 @@ public interface ResourcesApi {
      * PUT /api/v1/resources/{resourceId} : Update a resource by ID
      *
      * @param resourceId  (required)
-     * @param resource  (required)
+     * @param resourceDTO  (required)
      * @return OK (status code 200)
      *         or Not Found (status code 404)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "updateResource",
@@ -159,9 +185,14 @@ public interface ResourcesApi {
         tags = { "Resources" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Resource.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ResourceDTO.class))
             }),
-            @ApiResponse(responseCode = "404", description = "Not Found")
+            @ApiResponse(responseCode = "404", description = "Not Found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
+            })
         }
     )
     @RequestMapping(
@@ -171,9 +202,9 @@ public interface ResourcesApi {
         consumes = { "application/json" }
     )
     
-    ResponseEntity<Resource> updateResource(
+    ResponseEntity<ResourceDTO> updateResource(
         @Parameter(name = "resourceId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("resourceId") UUID resourceId,
-        @Parameter(name = "Resource", description = "", required = true) @Valid @RequestBody Resource resource
+        @Parameter(name = "ResourceDTO", description = "", required = true) @Valid @RequestBody ResourceDTO resourceDTO
     );
 
 }

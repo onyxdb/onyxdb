@@ -5,7 +5,9 @@
  */
 package com.onyxdb.idm.generated.openapi.apis;
 
-import com.onyxdb.idm.generated.openapi.models.OrganizationUnit;
+import com.onyxdb.idm.generated.openapi.models.BadRequestResponse;
+import com.onyxdb.idm.generated.openapi.models.NotFoundResponse;
+import com.onyxdb.idm.generated.openapi.models.OrganizationUnitDTO;
 import java.util.UUID;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,8 +43,9 @@ public interface OrganizationUnitsApi {
     /**
      * POST /api/v1/organization-units : Create a new organization unit
      *
-     * @param organizationUnit  (required)
+     * @param organizationUnitDTO  (required)
      * @return Created (status code 201)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "createOrganizationUnit",
@@ -50,7 +53,10 @@ public interface OrganizationUnitsApi {
         tags = { "Organization Units" },
         responses = {
             @ApiResponse(responseCode = "201", description = "Created", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = OrganizationUnit.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = OrganizationUnitDTO.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
             })
         }
     )
@@ -61,8 +67,8 @@ public interface OrganizationUnitsApi {
         consumes = { "application/json" }
     )
     
-    ResponseEntity<OrganizationUnit> createOrganizationUnit(
-        @Parameter(name = "OrganizationUnit", description = "", required = true) @Valid @RequestBody OrganizationUnit organizationUnit
+    ResponseEntity<OrganizationUnitDTO> createOrganizationUnit(
+        @Parameter(name = "OrganizationUnitDTO", description = "", required = true) @Valid @RequestBody OrganizationUnitDTO organizationUnitDTO
     );
 
 
@@ -71,18 +77,27 @@ public interface OrganizationUnitsApi {
      *
      * @param organizationUnitId  (required)
      * @return No Content (status code 204)
+     *         or Not Found (status code 404)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "deleteOrganizationUnit",
         summary = "Delete an organization unit by ID",
         tags = { "Organization Units" },
         responses = {
-            @ApiResponse(responseCode = "204", description = "No Content")
+            @ApiResponse(responseCode = "204", description = "No Content"),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
+            })
         }
     )
     @RequestMapping(
         method = RequestMethod.DELETE,
-        value = "/api/v1/organization-units/{organizationUnitId}"
+        value = "/api/v1/organization-units/{organizationUnitId}",
+        produces = { "application/json" }
     )
     
     ResponseEntity<Void> deleteOrganizationUnit(
@@ -94,6 +109,7 @@ public interface OrganizationUnitsApi {
      * GET /api/v1/organization-units : Get all organization units
      *
      * @return OK (status code 200)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "getAllOrganizationUnits",
@@ -101,7 +117,10 @@ public interface OrganizationUnitsApi {
         tags = { "Organization Units" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = OrganizationUnit.class)))
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = OrganizationUnitDTO.class)))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
             })
         }
     )
@@ -111,7 +130,7 @@ public interface OrganizationUnitsApi {
         produces = { "application/json" }
     )
     
-    ResponseEntity<List<OrganizationUnit>> getAllOrganizationUnits(
+    ResponseEntity<List<OrganizationUnitDTO>> getAllOrganizationUnits(
         
     );
 
@@ -122,6 +141,7 @@ public interface OrganizationUnitsApi {
      * @param organizationUnitId  (required)
      * @return OK (status code 200)
      *         or Not Found (status code 404)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "getOrganizationUnitById",
@@ -129,9 +149,14 @@ public interface OrganizationUnitsApi {
         tags = { "Organization Units" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = OrganizationUnit.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = OrganizationUnitDTO.class))
             }),
-            @ApiResponse(responseCode = "404", description = "Not Found")
+            @ApiResponse(responseCode = "404", description = "Not Found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
+            })
         }
     )
     @RequestMapping(
@@ -140,7 +165,7 @@ public interface OrganizationUnitsApi {
         produces = { "application/json" }
     )
     
-    ResponseEntity<OrganizationUnit> getOrganizationUnitById(
+    ResponseEntity<OrganizationUnitDTO> getOrganizationUnitById(
         @Parameter(name = "organizationUnitId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("organizationUnitId") UUID organizationUnitId
     );
 
@@ -149,9 +174,10 @@ public interface OrganizationUnitsApi {
      * PUT /api/v1/organization-units/{organizationUnitId} : Update an organization unit by ID
      *
      * @param organizationUnitId  (required)
-     * @param organizationUnit  (required)
+     * @param organizationUnitDTO  (required)
      * @return OK (status code 200)
      *         or Not Found (status code 404)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "updateOrganizationUnit",
@@ -159,9 +185,14 @@ public interface OrganizationUnitsApi {
         tags = { "Organization Units" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = OrganizationUnit.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = OrganizationUnitDTO.class))
             }),
-            @ApiResponse(responseCode = "404", description = "Not Found")
+            @ApiResponse(responseCode = "404", description = "Not Found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
+            })
         }
     )
     @RequestMapping(
@@ -171,9 +202,9 @@ public interface OrganizationUnitsApi {
         consumes = { "application/json" }
     )
     
-    ResponseEntity<OrganizationUnit> updateOrganizationUnit(
+    ResponseEntity<OrganizationUnitDTO> updateOrganizationUnit(
         @Parameter(name = "organizationUnitId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("organizationUnitId") UUID organizationUnitId,
-        @Parameter(name = "OrganizationUnit", description = "", required = true) @Valid @RequestBody OrganizationUnit organizationUnit
+        @Parameter(name = "OrganizationUnitDTO", description = "", required = true) @Valid @RequestBody OrganizationUnitDTO organizationUnitDTO
     );
 
 }

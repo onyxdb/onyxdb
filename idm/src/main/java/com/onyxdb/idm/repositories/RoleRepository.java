@@ -1,19 +1,19 @@
 package com.onyxdb.idm.repositories;
 
-import com.onyxdb.idm.models.RoleDTO;
+import com.onyxdb.idm.models.Role;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface RoleRepository {
-    Optional<RoleDTO> findById(UUID id);
+    Optional<Role> findById(UUID id);
 
-    List<RoleDTO> findAll();
+    List<Role> findAll();
 
-    void create(RoleDTO role);
+    void create(Role role);
 
-    void update(RoleDTO role);
+    void update(Role role);
 
     void delete(UUID id);
 }

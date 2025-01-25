@@ -2,7 +2,7 @@ package com.onyxdb.idm.repositories;
 
 import com.onyxdb.idm.generated.jooq.Tables;
 import com.onyxdb.idm.generated.jooq.tables.ServiceTable;
-import com.onyxdb.idm.models.ServiceDTO;
+import com.onyxdb.idm.models.Service;
 
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
@@ -20,10 +20,10 @@ public class ServicePostgresRepository implements ServiceRepository {
     private final ServiceTable serviceTable = Tables.SERVICE_TABLE;
 
     @Override
-    public Optional<ServiceDTO> findById(UUID id) {
+    public Optional<Service> findById(UUID id) {
         return dslContext.selectFrom(serviceTable)
                 .where(serviceTable.ID.eq(id))
-                .fetchOptional(record -> ServiceDTO.builder()
+                .fetchOptional(record -> Service.builder()
                         .id(record.getId())
                         .name(record.getName())
                         .type(record.getType())
@@ -37,9 +37,9 @@ public class ServicePostgresRepository implements ServiceRepository {
     }
 
     @Override
-    public List<ServiceDTO> findAll() {
+    public List<Service> findAll() {
         return dslContext.selectFrom(serviceTable)
-                .fetch(record -> ServiceDTO.builder()
+                .fetch(record -> Service.builder()
                         .id(record.getId())
                         .name(record.getName())
                         .type(record.getType())
@@ -53,10 +53,10 @@ public class ServicePostgresRepository implements ServiceRepository {
     }
 
     @Override
-    public List<ServiceDTO> findByProjectId(UUID projectId) {
+    public List<Service> findByProjectId(UUID projectId) {
         return dslContext.selectFrom(serviceTable)
                 .where(serviceTable.PROJECT_ID.eq(projectId))
-                .fetch(record -> ServiceDTO.builder()
+                .fetch(record -> Service.builder()
                         .id(record.getId())
                         .name(record.getName())
                         .type(record.getType())
@@ -70,7 +70,7 @@ public class ServicePostgresRepository implements ServiceRepository {
     }
 
     @Override
-    public void create(ServiceDTO service) {
+    public void create(Service service) {
         dslContext.insertInto(serviceTable)
                 .set(serviceTable.ID, service.getId())
                 .set(serviceTable.NAME, service.getName())
@@ -85,7 +85,7 @@ public class ServicePostgresRepository implements ServiceRepository {
     }
 
     @Override
-    public void update(ServiceDTO service) {
+    public void update(Service service) {
         dslContext.update(serviceTable)
                 .set(serviceTable.NAME, service.getName())
                 .set(serviceTable.TYPE, service.getType())

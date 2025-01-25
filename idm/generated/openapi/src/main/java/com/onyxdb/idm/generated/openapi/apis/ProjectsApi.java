@@ -5,7 +5,9 @@
  */
 package com.onyxdb.idm.generated.openapi.apis;
 
-import com.onyxdb.idm.generated.openapi.models.Project;
+import com.onyxdb.idm.generated.openapi.models.BadRequestResponse;
+import com.onyxdb.idm.generated.openapi.models.NotFoundResponse;
+import com.onyxdb.idm.generated.openapi.models.ProjectDTO;
 import java.util.UUID;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,8 +43,9 @@ public interface ProjectsApi {
     /**
      * POST /api/v1/projects : Create a new project
      *
-     * @param project  (required)
+     * @param projectDTO  (required)
      * @return Created (status code 201)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "createProject",
@@ -50,7 +53,10 @@ public interface ProjectsApi {
         tags = { "Projects" },
         responses = {
             @ApiResponse(responseCode = "201", description = "Created", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Project.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ProjectDTO.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
             })
         }
     )
@@ -61,8 +67,8 @@ public interface ProjectsApi {
         consumes = { "application/json" }
     )
     
-    ResponseEntity<Project> createProject(
-        @Parameter(name = "Project", description = "", required = true) @Valid @RequestBody Project project
+    ResponseEntity<ProjectDTO> createProject(
+        @Parameter(name = "ProjectDTO", description = "", required = true) @Valid @RequestBody ProjectDTO projectDTO
     );
 
 
@@ -71,18 +77,27 @@ public interface ProjectsApi {
      *
      * @param projectId  (required)
      * @return No Content (status code 204)
+     *         or Not Found (status code 404)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "deleteProject",
         summary = "Delete a project by ID",
         tags = { "Projects" },
         responses = {
-            @ApiResponse(responseCode = "204", description = "No Content")
+            @ApiResponse(responseCode = "204", description = "No Content"),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
+            })
         }
     )
     @RequestMapping(
         method = RequestMethod.DELETE,
-        value = "/api/v1/projects/{projectId}"
+        value = "/api/v1/projects/{projectId}",
+        produces = { "application/json" }
     )
     
     ResponseEntity<Void> deleteProject(
@@ -94,6 +109,7 @@ public interface ProjectsApi {
      * GET /api/v1/projects : Get all projects
      *
      * @return OK (status code 200)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "getAllProjects",
@@ -101,7 +117,10 @@ public interface ProjectsApi {
         tags = { "Projects" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Project.class)))
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ProjectDTO.class)))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
             })
         }
     )
@@ -111,7 +130,7 @@ public interface ProjectsApi {
         produces = { "application/json" }
     )
     
-    ResponseEntity<List<Project>> getAllProjects(
+    ResponseEntity<List<ProjectDTO>> getAllProjects(
         
     );
 
@@ -122,6 +141,7 @@ public interface ProjectsApi {
      * @param projectId  (required)
      * @return OK (status code 200)
      *         or Not Found (status code 404)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "getProjectById",
@@ -129,9 +149,14 @@ public interface ProjectsApi {
         tags = { "Projects" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Project.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ProjectDTO.class))
             }),
-            @ApiResponse(responseCode = "404", description = "Not Found")
+            @ApiResponse(responseCode = "404", description = "Not Found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
+            })
         }
     )
     @RequestMapping(
@@ -140,7 +165,7 @@ public interface ProjectsApi {
         produces = { "application/json" }
     )
     
-    ResponseEntity<Project> getProjectById(
+    ResponseEntity<ProjectDTO> getProjectById(
         @Parameter(name = "projectId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("projectId") UUID projectId
     );
 
@@ -149,9 +174,10 @@ public interface ProjectsApi {
      * PUT /api/v1/projects/{projectId} : Update a project by ID
      *
      * @param projectId  (required)
-     * @param project  (required)
+     * @param projectDTO  (required)
      * @return OK (status code 200)
      *         or Not Found (status code 404)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "updateProject",
@@ -159,9 +185,14 @@ public interface ProjectsApi {
         tags = { "Projects" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Project.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ProjectDTO.class))
             }),
-            @ApiResponse(responseCode = "404", description = "Not Found")
+            @ApiResponse(responseCode = "404", description = "Not Found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
+            })
         }
     )
     @RequestMapping(
@@ -171,9 +202,9 @@ public interface ProjectsApi {
         consumes = { "application/json" }
     )
     
-    ResponseEntity<Project> updateProject(
+    ResponseEntity<ProjectDTO> updateProject(
         @Parameter(name = "projectId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("projectId") UUID projectId,
-        @Parameter(name = "Project", description = "", required = true) @Valid @RequestBody Project project
+        @Parameter(name = "ProjectDTO", description = "", required = true) @Valid @RequestBody ProjectDTO projectDTO
     );
 
 }

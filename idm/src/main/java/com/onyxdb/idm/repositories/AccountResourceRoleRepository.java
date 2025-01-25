@@ -1,16 +1,16 @@
 package com.onyxdb.idm.repositories;
 
-import com.onyxdb.idm.models.AccountResourceRoleDTO;
+import com.onyxdb.idm.models.AccountResourceRole;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface AccountResourceRoleRepository {
-    List<AccountResourceRoleDTO> findByAccountId(UUID accountId);
+    List<AccountResourceRole> findByAccountId(UUID accountId);
 
-    List<AccountResourceRoleDTO> findByResourceId(UUID resourceId);
+    List<AccountResourceRole> findByResourceId(UUID resourceId);
 
-    void create(AccountResourceRoleDTO accountResourceRole);
+    void create(AccountResourceRole accountResourceRole);
 
     void delete(UUID accountId, UUID resourceId, UUID roleId);
 }

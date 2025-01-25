@@ -5,7 +5,9 @@
  */
 package com.onyxdb.idm.generated.openapi.apis;
 
-import com.onyxdb.idm.generated.openapi.models.Account;
+import com.onyxdb.idm.generated.openapi.models.AccountDTO;
+import com.onyxdb.idm.generated.openapi.models.BadRequestResponse;
+import com.onyxdb.idm.generated.openapi.models.NotFoundResponse;
 import java.util.UUID;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,8 +43,9 @@ public interface AccountsApi {
     /**
      * POST /api/v1/accounts : Create a new account
      *
-     * @param account  (required)
+     * @param accountDTO  (required)
      * @return Created (status code 201)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "createAccount",
@@ -50,7 +53,10 @@ public interface AccountsApi {
         tags = { "Accounts" },
         responses = {
             @ApiResponse(responseCode = "201", description = "Created", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Account.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = AccountDTO.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
             })
         }
     )
@@ -61,8 +67,8 @@ public interface AccountsApi {
         consumes = { "application/json" }
     )
     
-    ResponseEntity<Account> createAccount(
-        @Parameter(name = "Account", description = "", required = true) @Valid @RequestBody Account account
+    ResponseEntity<AccountDTO> createAccount(
+        @Parameter(name = "AccountDTO", description = "", required = true) @Valid @RequestBody AccountDTO accountDTO
     );
 
 
@@ -71,18 +77,27 @@ public interface AccountsApi {
      *
      * @param accountId  (required)
      * @return No Content (status code 204)
+     *         or Not Found (status code 404)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "deleteAccount",
         summary = "Delete an account by ID",
         tags = { "Accounts" },
         responses = {
-            @ApiResponse(responseCode = "204", description = "No Content")
+            @ApiResponse(responseCode = "204", description = "No Content"),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
+            })
         }
     )
     @RequestMapping(
         method = RequestMethod.DELETE,
-        value = "/api/v1/accounts/{accountId}"
+        value = "/api/v1/accounts/{accountId}",
+        produces = { "application/json" }
     )
     
     ResponseEntity<Void> deleteAccount(
@@ -96,6 +111,7 @@ public interface AccountsApi {
      * @param accountId  (required)
      * @return OK (status code 200)
      *         or Not Found (status code 404)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "getAccountById",
@@ -103,9 +119,14 @@ public interface AccountsApi {
         tags = { "Accounts" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Account.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = AccountDTO.class))
             }),
-            @ApiResponse(responseCode = "404", description = "Not Found")
+            @ApiResponse(responseCode = "404", description = "Not Found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
+            })
         }
     )
     @RequestMapping(
@@ -114,7 +135,7 @@ public interface AccountsApi {
         produces = { "application/json" }
     )
     
-    ResponseEntity<Account> getAccountById(
+    ResponseEntity<AccountDTO> getAccountById(
         @Parameter(name = "accountId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("accountId") UUID accountId
     );
 
@@ -123,6 +144,7 @@ public interface AccountsApi {
      * GET /api/v1/accounts : Get all accounts
      *
      * @return OK (status code 200)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "getAllAccounts",
@@ -130,7 +152,10 @@ public interface AccountsApi {
         tags = { "Accounts" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Account.class)))
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AccountDTO.class)))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
             })
         }
     )
@@ -140,7 +165,7 @@ public interface AccountsApi {
         produces = { "application/json" }
     )
     
-    ResponseEntity<List<Account>> getAllAccounts(
+    ResponseEntity<List<AccountDTO>> getAllAccounts(
         
     );
 
@@ -149,9 +174,10 @@ public interface AccountsApi {
      * PUT /api/v1/accounts/{accountId} : Update an account by ID
      *
      * @param accountId  (required)
-     * @param account  (required)
+     * @param accountDTO  (required)
      * @return OK (status code 200)
      *         or Not Found (status code 404)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "updateAccount",
@@ -159,9 +185,14 @@ public interface AccountsApi {
         tags = { "Accounts" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Account.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = AccountDTO.class))
             }),
-            @ApiResponse(responseCode = "404", description = "Not Found")
+            @ApiResponse(responseCode = "404", description = "Not Found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
+            })
         }
     )
     @RequestMapping(
@@ -171,9 +202,9 @@ public interface AccountsApi {
         consumes = { "application/json" }
     )
     
-    ResponseEntity<Account> updateAccount(
+    ResponseEntity<AccountDTO> updateAccount(
         @Parameter(name = "accountId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("accountId") UUID accountId,
-        @Parameter(name = "Account", description = "", required = true) @Valid @RequestBody Account account
+        @Parameter(name = "AccountDTO", description = "", required = true) @Valid @RequestBody AccountDTO accountDTO
     );
 
 }

@@ -1,21 +1,21 @@
 package com.onyxdb.idm.repositories;
 
-import com.onyxdb.idm.models.ProjectDTO;
+import com.onyxdb.idm.models.Project;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface ProjectRepository {
-    Optional<ProjectDTO> findById(UUID id);
+    Optional<Project> findById(UUID id);
 
-    List<ProjectDTO> findAll();
+    List<Project> findAll();
 
-    List<ProjectDTO> findByOrganizationId(UUID organizationId);
+    List<Project> findByOrganizationId(UUID organizationId);
 
-    void create(ProjectDTO project);
+    void create(Project project);
 
-    void update(ProjectDTO project);
+    void update(Project project);
 
     void delete(UUID id);
 }

@@ -5,8 +5,10 @@
  */
 package com.onyxdb.idm.generated.openapi.apis;
 
-import com.onyxdb.idm.generated.openapi.models.BusinessRole;
-import com.onyxdb.idm.generated.openapi.models.Role;
+import com.onyxdb.idm.generated.openapi.models.BadRequestResponse;
+import com.onyxdb.idm.generated.openapi.models.BusinessRoleDTO;
+import com.onyxdb.idm.generated.openapi.models.NotFoundResponse;
+import com.onyxdb.idm.generated.openapi.models.RoleDTO;
 import java.util.UUID;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,8 +44,9 @@ public interface BusinessRolesApi {
     /**
      * POST /api/v1/business-roles : Create a new business role
      *
-     * @param businessRole  (required)
+     * @param businessRoleDTO  (required)
      * @return Created (status code 201)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "createBusinessRole",
@@ -51,7 +54,10 @@ public interface BusinessRolesApi {
         tags = { "Business Roles" },
         responses = {
             @ApiResponse(responseCode = "201", description = "Created", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = BusinessRole.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BusinessRoleDTO.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
             })
         }
     )
@@ -62,8 +68,8 @@ public interface BusinessRolesApi {
         consumes = { "application/json" }
     )
     
-    ResponseEntity<BusinessRole> createBusinessRole(
-        @Parameter(name = "BusinessRole", description = "", required = true) @Valid @RequestBody BusinessRole businessRole
+    ResponseEntity<BusinessRoleDTO> createBusinessRole(
+        @Parameter(name = "BusinessRoleDTO", description = "", required = true) @Valid @RequestBody BusinessRoleDTO businessRoleDTO
     );
 
 
@@ -72,18 +78,27 @@ public interface BusinessRolesApi {
      *
      * @param businessRoleId  (required)
      * @return No Content (status code 204)
+     *         or Not Found (status code 404)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "deleteBusinessRole",
         summary = "Delete a business role by ID",
         tags = { "Business Roles" },
         responses = {
-            @ApiResponse(responseCode = "204", description = "No Content")
+            @ApiResponse(responseCode = "204", description = "No Content"),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
+            })
         }
     )
     @RequestMapping(
         method = RequestMethod.DELETE,
-        value = "/api/v1/business-roles/{businessRoleId}"
+        value = "/api/v1/business-roles/{businessRoleId}",
+        produces = { "application/json" }
     )
     
     ResponseEntity<Void> deleteBusinessRole(
@@ -95,6 +110,7 @@ public interface BusinessRolesApi {
      * GET /api/v1/business-roles : Get all business roles
      *
      * @return OK (status code 200)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "getAllBusinessRoles",
@@ -102,7 +118,10 @@ public interface BusinessRolesApi {
         tags = { "Business Roles" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = BusinessRole.class)))
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = BusinessRoleDTO.class)))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
             })
         }
     )
@@ -112,7 +131,7 @@ public interface BusinessRolesApi {
         produces = { "application/json" }
     )
     
-    ResponseEntity<List<BusinessRole>> getAllBusinessRoles(
+    ResponseEntity<List<BusinessRoleDTO>> getAllBusinessRoles(
         
     );
 
@@ -123,6 +142,7 @@ public interface BusinessRolesApi {
      * @param businessRoleId  (required)
      * @return OK (status code 200)
      *         or Not Found (status code 404)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "getBusinessRoleById",
@@ -130,9 +150,14 @@ public interface BusinessRolesApi {
         tags = { "Business Roles" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = BusinessRole.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BusinessRoleDTO.class))
             }),
-            @ApiResponse(responseCode = "404", description = "Not Found")
+            @ApiResponse(responseCode = "404", description = "Not Found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
+            })
         }
     )
     @RequestMapping(
@@ -141,7 +166,7 @@ public interface BusinessRolesApi {
         produces = { "application/json" }
     )
     
-    ResponseEntity<BusinessRole> getBusinessRoleById(
+    ResponseEntity<BusinessRoleDTO> getBusinessRoleById(
         @Parameter(name = "businessRoleId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("businessRoleId") UUID businessRoleId
     );
 
@@ -152,6 +177,7 @@ public interface BusinessRolesApi {
      * @param businessRoleId  (required)
      * @return OK (status code 200)
      *         or Not Found (status code 404)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "getRolesByBusinessRoleId",
@@ -159,9 +185,14 @@ public interface BusinessRolesApi {
         tags = { "Business Roles" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Role.class)))
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = RoleDTO.class)))
             }),
-            @ApiResponse(responseCode = "404", description = "Not Found")
+            @ApiResponse(responseCode = "404", description = "Not Found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
+            })
         }
     )
     @RequestMapping(
@@ -170,7 +201,7 @@ public interface BusinessRolesApi {
         produces = { "application/json" }
     )
     
-    ResponseEntity<List<Role>> getRolesByBusinessRoleId(
+    ResponseEntity<List<RoleDTO>> getRolesByBusinessRoleId(
         @Parameter(name = "businessRoleId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("businessRoleId") UUID businessRoleId
     );
 
@@ -179,9 +210,10 @@ public interface BusinessRolesApi {
      * PUT /api/v1/business-roles/{businessRoleId} : Update a business role by ID
      *
      * @param businessRoleId  (required)
-     * @param businessRole  (required)
+     * @param businessRoleDTO  (required)
      * @return OK (status code 200)
      *         or Not Found (status code 404)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "updateBusinessRole",
@@ -189,9 +221,14 @@ public interface BusinessRolesApi {
         tags = { "Business Roles" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = BusinessRole.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BusinessRoleDTO.class))
             }),
-            @ApiResponse(responseCode = "404", description = "Not Found")
+            @ApiResponse(responseCode = "404", description = "Not Found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
+            })
         }
     )
     @RequestMapping(
@@ -201,9 +238,9 @@ public interface BusinessRolesApi {
         consumes = { "application/json" }
     )
     
-    ResponseEntity<BusinessRole> updateBusinessRole(
+    ResponseEntity<BusinessRoleDTO> updateBusinessRole(
         @Parameter(name = "businessRoleId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("businessRoleId") UUID businessRoleId,
-        @Parameter(name = "BusinessRole", description = "", required = true) @Valid @RequestBody BusinessRole businessRole
+        @Parameter(name = "BusinessRoleDTO", description = "", required = true) @Valid @RequestBody BusinessRoleDTO businessRoleDTO
     );
 
 }

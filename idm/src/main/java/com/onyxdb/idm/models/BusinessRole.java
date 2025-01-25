@@ -8,11 +8,11 @@ import java.util.UUID;
 
 @Data
 @Builder
-public class PermissionDTO {
+public class BusinessRole {
     private UUID id;
-    private String actionType;
-    private String resourceType;
-    private String[] resourceFields;
+    private String name;
+    private String description;
+    private UUID parentId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

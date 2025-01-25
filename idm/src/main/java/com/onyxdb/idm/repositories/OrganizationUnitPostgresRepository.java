@@ -2,7 +2,7 @@ package com.onyxdb.idm.repositories;
 
 import com.onyxdb.idm.generated.jooq.Tables;
 import com.onyxdb.idm.generated.jooq.tables.OrganizationUnitTable;
-import com.onyxdb.idm.models.OrganizationUnitDTO;
+import com.onyxdb.idm.models.OrganizationUnit;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
@@ -19,10 +19,10 @@ public class OrganizationUnitPostgresRepository implements OrganizationUnitRepos
     private final OrganizationUnitTable organizationUnitTable = Tables.ORGANIZATION_UNIT_TABLE;
 
     @Override
-    public Optional<OrganizationUnitDTO> findById(UUID id) {
+    public Optional<OrganizationUnit> findById(UUID id) {
         return dslContext.selectFrom(organizationUnitTable)
                 .where(organizationUnitTable.ID.eq(id))
-                .fetchOptional(record -> OrganizationUnitDTO.builder()
+                .fetchOptional(record -> OrganizationUnit.builder()
                         .id(record.getId())
                         .name(record.getName())
                         .description(record.getDescription())
@@ -34,9 +34,9 @@ public class OrganizationUnitPostgresRepository implements OrganizationUnitRepos
     }
 
     @Override
-    public List<OrganizationUnitDTO> findAll() {
+    public List<OrganizationUnit> findAll() {
         return dslContext.selectFrom(organizationUnitTable)
-                .fetch(record -> OrganizationUnitDTO.builder()
+                .fetch(record -> OrganizationUnit.builder()
                         .id(record.getId())
                         .name(record.getName())
                         .description(record.getDescription())
@@ -48,10 +48,10 @@ public class OrganizationUnitPostgresRepository implements OrganizationUnitRepos
     }
 
     @Override
-    public List<OrganizationUnitDTO> findByDomainComponentId(UUID domainComponentId) {
+    public List<OrganizationUnit> findByDomainComponentId(UUID domainComponentId) {
         return dslContext.selectFrom(organizationUnitTable)
                 .where(organizationUnitTable.DOMAIN_COMPONENT_ID.eq(domainComponentId))
-                .fetch(record -> OrganizationUnitDTO.builder()
+                .fetch(record -> OrganizationUnit.builder()
                         .id(record.getId())
                         .name(record.getName())
                         .description(record.getDescription())
@@ -63,7 +63,7 @@ public class OrganizationUnitPostgresRepository implements OrganizationUnitRepos
     }
 
     @Override
-    public void create(OrganizationUnitDTO organizationUnit) {
+    public void create(OrganizationUnit organizationUnit) {
         dslContext.insertInto(organizationUnitTable)
                 .set(organizationUnitTable.ID, organizationUnit.getId())
                 .set(organizationUnitTable.NAME, organizationUnit.getName())
@@ -76,7 +76,7 @@ public class OrganizationUnitPostgresRepository implements OrganizationUnitRepos
     }
 
     @Override
-    public void update(OrganizationUnitDTO organizationUnit) {
+    public void update(OrganizationUnit organizationUnit) {
         dslContext.update(organizationUnitTable)
                 .set(organizationUnitTable.NAME, organizationUnit.getName())
                 .set(organizationUnitTable.DESCRIPTION, organizationUnit.getDescription())

@@ -1,4 +1,4 @@
-package com.onyxdb.idm.v1;
+package com.onyxdb.idm.controllers.v1;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

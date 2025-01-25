@@ -1,7 +1,11 @@
 package com.onyxdb.idm.services;
 
-import com.onyxdb.idm.models.AccountDTO;
+import com.onyxdb.idm.controllers.v1.ResourceNotFoundException;
+import com.onyxdb.idm.generated.jooq.Tables;
+import com.onyxdb.idm.generated.jooq.tables.AccountTable;
+import com.onyxdb.idm.models.Account;
 import com.onyxdb.idm.repositories.AccountRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,27 +16,29 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class AccountService {
-    private final AccountRepository accountRepository;
 
-    public Optional<AccountDTO> getAccountById(UUID id) {
-        return accountRepository.findById(id);
+    private final AccountRepository accountRepository;
+    private final AccountTable accountTable = Tables.ACCOUNT_TABLE;
+
+    public Account findById(UUID id) {
+        Optional<Account> account = accountRepository.findById(id);
+        account.orElseThrow(() -> new ResourceNotFoundException("Account not found"));
+        return account.get();
     }
 
-    public List<AccountDTO> getAllAccounts() {
+    public List<Account> findAll() {
         return accountRepository.findAll();
     }
 
-    public AccountDTO createAccount(AccountDTO account) {
+    public void create(Account account) {
         accountRepository.create(account);
-        return account;
     }
 
-    public AccountDTO updateAccount(AccountDTO account) {
+    public void update(Account account) {
         accountRepository.update(account);
-        return account;
     }
 
-    public void deleteAccount(UUID id) {
+    public void delete(UUID id) {
         accountRepository.delete(id);
     }
 }

@@ -2,7 +2,7 @@ package com.onyxdb.idm.repositories;
 
 import com.onyxdb.idm.generated.jooq.Tables;
 import com.onyxdb.idm.generated.jooq.tables.AccountResourceRoleTable;
-import com.onyxdb.idm.models.AccountResourceRoleDTO;
+import com.onyxdb.idm.models.AccountResourceRole;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
@@ -18,10 +18,10 @@ public class AccountResourceRolePostgresRepository implements AccountResourceRol
     private final AccountResourceRoleTable accountResourceRoleTable = Tables.ACCOUNT_RESOURCE_ROLE_TABLE;
 
     @Override
-    public List<AccountResourceRoleDTO> findByAccountId(UUID accountId) {
+    public List<AccountResourceRole> findByAccountId(UUID accountId) {
         return dslContext.selectFrom(accountResourceRoleTable)
                 .where(accountResourceRoleTable.ACCOUNT_ID.eq(accountId))
-                .fetch(record -> AccountResourceRoleDTO.builder()
+                .fetch(record -> AccountResourceRole.builder()
                         .accountId(record.getAccountId())
                         .resourceId(record.getResourceId())
                         .roleId(record.getRoleId())
@@ -29,10 +29,10 @@ public class AccountResourceRolePostgresRepository implements AccountResourceRol
     }
 
     @Override
-    public List<AccountResourceRoleDTO> findByResourceId(UUID resourceId) {
+    public List<AccountResourceRole> findByResourceId(UUID resourceId) {
         return dslContext.selectFrom(accountResourceRoleTable)
                 .where(accountResourceRoleTable.RESOURCE_ID.eq(resourceId))
-                .fetch(record -> AccountResourceRoleDTO.builder()
+                .fetch(record -> AccountResourceRole.builder()
                         .accountId(record.getAccountId())
                         .resourceId(record.getResourceId())
                         .roleId(record.getRoleId())
@@ -40,7 +40,7 @@ public class AccountResourceRolePostgresRepository implements AccountResourceRol
     }
 
     @Override
-    public void create(AccountResourceRoleDTO accountResourceRole) {
+    public void create(AccountResourceRole accountResourceRole) {
         dslContext.insertInto(accountResourceRoleTable)
                 .set(accountResourceRoleTable.ACCOUNT_ID, accountResourceRole.getAccountId())
                 .set(accountResourceRoleTable.RESOURCE_ID, accountResourceRole.getResourceId())

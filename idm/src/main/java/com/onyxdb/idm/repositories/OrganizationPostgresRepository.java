@@ -2,7 +2,7 @@ package com.onyxdb.idm.repositories;
 
 import com.onyxdb.idm.generated.jooq.Tables;
 import com.onyxdb.idm.generated.jooq.tables.OrganizationTable;
-import com.onyxdb.idm.models.OrganizationDTO;
+import com.onyxdb.idm.models.Organization;
 
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
@@ -20,10 +20,10 @@ public class OrganizationPostgresRepository implements OrganizationRepository {
     private final OrganizationTable organizationTable = Tables.ORGANIZATION_TABLE;
 
     @Override
-    public Optional<OrganizationDTO> findById(UUID id) {
+    public Optional<Organization> findById(UUID id) {
         return dslContext.selectFrom(organizationTable)
                 .where(organizationTable.ID.eq(id))
-                .fetchOptional(record -> OrganizationDTO.builder()
+                .fetchOptional(record -> Organization.builder()
                         .id(record.getId())
                         .name(record.getName())
                         .description(record.getDescription())
@@ -35,9 +35,9 @@ public class OrganizationPostgresRepository implements OrganizationRepository {
     }
 
     @Override
-    public List<OrganizationDTO> findAll() {
+    public List<Organization> findAll() {
         return dslContext.selectFrom(organizationTable)
-                .fetch(record -> OrganizationDTO.builder()
+                .fetch(record -> Organization.builder()
                         .id(record.getId())
                         .name(record.getName())
                         .description(record.getDescription())
@@ -49,7 +49,7 @@ public class OrganizationPostgresRepository implements OrganizationRepository {
     }
 
     @Override
-    public void create(OrganizationDTO organization) {
+    public void create(Organization organization) {
         dslContext.insertInto(organizationTable)
                 .set(organizationTable.ID, organization.getId())
                 .set(organizationTable.NAME, organization.getName())
@@ -61,7 +61,7 @@ public class OrganizationPostgresRepository implements OrganizationRepository {
     }
 
     @Override
-    public void update(OrganizationDTO organization) {
+    public void update(Organization organization) {
         dslContext.update(organizationTable)
                 .set(organizationTable.NAME, organization.getName())
                 .set(organizationTable.DESCRIPTION, organization.getDescription())

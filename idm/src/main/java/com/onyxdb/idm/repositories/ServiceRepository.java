@@ -1,21 +1,21 @@
 package com.onyxdb.idm.repositories;
 
-import com.onyxdb.idm.models.ServiceDTO;
+import com.onyxdb.idm.models.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface ServiceRepository {
-    Optional<ServiceDTO> findById(UUID id);
+    Optional<Service> findById(UUID id);
 
-    List<ServiceDTO> findAll();
+    List<Service> findAll();
 
-    List<ServiceDTO> findByProjectId(UUID projectId);
+    List<Service> findByProjectId(UUID projectId);
 
-    void create(ServiceDTO service);
+    void create(Service service);
 
-    void update(ServiceDTO service);
+    void update(Service service);
 
     void delete(UUID id);
 }

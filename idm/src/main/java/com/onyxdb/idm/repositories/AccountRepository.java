@@ -1,6 +1,6 @@
 package com.onyxdb.idm.repositories;
 
-import com.onyxdb.idm.models.AccountDTO;
+import com.onyxdb.idm.models.Account;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,13 +10,13 @@ import java.util.UUID;
  * @author ArtemFed
  */
 public interface AccountRepository {
-    Optional<AccountDTO> findById(UUID id);
+    Optional<Account> findById(UUID id);
 
-    List<AccountDTO> findAll();
+    List<Account> findAll();
 
-    void create(AccountDTO account);
+    void create(Account account);
 
-    void update(AccountDTO account);
+    void update(Account account);
 
     void delete(UUID id);
 }

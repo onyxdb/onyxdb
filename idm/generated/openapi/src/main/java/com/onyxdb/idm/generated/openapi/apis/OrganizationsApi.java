@@ -5,7 +5,9 @@
  */
 package com.onyxdb.idm.generated.openapi.apis;
 
-import com.onyxdb.idm.generated.openapi.models.Organization;
+import com.onyxdb.idm.generated.openapi.models.BadRequestResponse;
+import com.onyxdb.idm.generated.openapi.models.NotFoundResponse;
+import com.onyxdb.idm.generated.openapi.models.OrganizationDTO;
 import java.util.UUID;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,8 +43,9 @@ public interface OrganizationsApi {
     /**
      * POST /api/v1/organizations : Create a new organization
      *
-     * @param organization  (required)
+     * @param organizationDTO  (required)
      * @return Created (status code 201)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "createOrganization",
@@ -50,7 +53,10 @@ public interface OrganizationsApi {
         tags = { "Organizations" },
         responses = {
             @ApiResponse(responseCode = "201", description = "Created", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Organization.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = OrganizationDTO.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
             })
         }
     )
@@ -61,8 +67,8 @@ public interface OrganizationsApi {
         consumes = { "application/json" }
     )
     
-    ResponseEntity<Organization> createOrganization(
-        @Parameter(name = "Organization", description = "", required = true) @Valid @RequestBody Organization organization
+    ResponseEntity<OrganizationDTO> createOrganization(
+        @Parameter(name = "OrganizationDTO", description = "", required = true) @Valid @RequestBody OrganizationDTO organizationDTO
     );
 
 
@@ -71,18 +77,27 @@ public interface OrganizationsApi {
      *
      * @param organizationId  (required)
      * @return No Content (status code 204)
+     *         or Not Found (status code 404)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "deleteOrganization",
         summary = "Delete an organization by ID",
         tags = { "Organizations" },
         responses = {
-            @ApiResponse(responseCode = "204", description = "No Content")
+            @ApiResponse(responseCode = "204", description = "No Content"),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
+            })
         }
     )
     @RequestMapping(
         method = RequestMethod.DELETE,
-        value = "/api/v1/organizations/{organizationId}"
+        value = "/api/v1/organizations/{organizationId}",
+        produces = { "application/json" }
     )
     
     ResponseEntity<Void> deleteOrganization(
@@ -94,6 +109,7 @@ public interface OrganizationsApi {
      * GET /api/v1/organizations : Get all organizations
      *
      * @return OK (status code 200)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "getAllOrganizations",
@@ -101,7 +117,10 @@ public interface OrganizationsApi {
         tags = { "Organizations" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Organization.class)))
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = OrganizationDTO.class)))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
             })
         }
     )
@@ -111,7 +130,7 @@ public interface OrganizationsApi {
         produces = { "application/json" }
     )
     
-    ResponseEntity<List<Organization>> getAllOrganizations(
+    ResponseEntity<List<OrganizationDTO>> getAllOrganizations(
         
     );
 
@@ -122,6 +141,7 @@ public interface OrganizationsApi {
      * @param organizationId  (required)
      * @return OK (status code 200)
      *         or Not Found (status code 404)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "getOrganizationById",
@@ -129,9 +149,14 @@ public interface OrganizationsApi {
         tags = { "Organizations" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Organization.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = OrganizationDTO.class))
             }),
-            @ApiResponse(responseCode = "404", description = "Not Found")
+            @ApiResponse(responseCode = "404", description = "Not Found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
+            })
         }
     )
     @RequestMapping(
@@ -140,7 +165,7 @@ public interface OrganizationsApi {
         produces = { "application/json" }
     )
     
-    ResponseEntity<Organization> getOrganizationById(
+    ResponseEntity<OrganizationDTO> getOrganizationById(
         @Parameter(name = "organizationId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("organizationId") UUID organizationId
     );
 
@@ -149,9 +174,10 @@ public interface OrganizationsApi {
      * PUT /api/v1/organizations/{organizationId} : Update an organization by ID
      *
      * @param organizationId  (required)
-     * @param organization  (required)
+     * @param organizationDTO  (required)
      * @return OK (status code 200)
      *         or Not Found (status code 404)
+     *         or Bad Request (status code 400)
      */
     @Operation(
         operationId = "updateOrganization",
@@ -159,9 +185,14 @@ public interface OrganizationsApi {
         tags = { "Organizations" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Organization.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = OrganizationDTO.class))
             }),
-            @ApiResponse(responseCode = "404", description = "Not Found")
+            @ApiResponse(responseCode = "404", description = "Not Found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
+            })
         }
     )
     @RequestMapping(
@@ -171,9 +202,9 @@ public interface OrganizationsApi {
         consumes = { "application/json" }
     )
     
-    ResponseEntity<Organization> updateOrganization(
+    ResponseEntity<OrganizationDTO> updateOrganization(
         @Parameter(name = "organizationId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("organizationId") UUID organizationId,
-        @Parameter(name = "Organization", description = "", required = true) @Valid @RequestBody Organization organization
+        @Parameter(name = "OrganizationDTO", description = "", required = true) @Valid @RequestBody OrganizationDTO organizationDTO
     );
 
 }

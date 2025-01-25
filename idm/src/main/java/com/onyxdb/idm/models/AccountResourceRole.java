@@ -7,7 +7,7 @@ import java.util.UUID;
 
 @Data
 @Builder
-public class AccountResourceRoleDTO {
+public class AccountResourceRole {
     private UUID accountId;
     private UUID resourceId;
     private UUID roleId;

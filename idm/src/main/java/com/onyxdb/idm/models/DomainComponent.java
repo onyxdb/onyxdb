@@ -8,13 +8,10 @@ import java.util.UUID;
 
 @Data
 @Builder
-public class AccountDTO {
+public class DomainComponent {
     private UUID id;
-    private String username;
-    private String password;
-    private String email;
-    private String firstName;
-    private String lastName;
+    private String name;
+    private String description;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

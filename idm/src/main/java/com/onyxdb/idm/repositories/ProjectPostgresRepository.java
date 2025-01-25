@@ -2,7 +2,7 @@ package com.onyxdb.idm.repositories;
 
 import com.onyxdb.idm.generated.jooq.Tables;
 import com.onyxdb.idm.generated.jooq.tables.ProjectTable;
-import com.onyxdb.idm.models.ProjectDTO;
+import com.onyxdb.idm.models.Project;
 
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
@@ -20,10 +20,10 @@ public class ProjectPostgresRepository implements ProjectRepository {
     private final ProjectTable projectTable = Tables.PROJECT_TABLE;
 
     @Override
-    public Optional<ProjectDTO> findById(UUID id) {
+    public Optional<Project> findById(UUID id) {
         return dslContext.selectFrom(projectTable)
                 .where(projectTable.ID.eq(id))
-                .fetchOptional(record -> ProjectDTO.builder()
+                .fetchOptional(record -> Project.builder()
                         .id(record.getId())
                         .name(record.getName())
                         .description(record.getDescription())
@@ -36,9 +36,9 @@ public class ProjectPostgresRepository implements ProjectRepository {
     }
 
     @Override
-    public List<ProjectDTO> findAll() {
+    public List<Project> findAll() {
         return dslContext.selectFrom(projectTable)
-                .fetch(record -> ProjectDTO.builder()
+                .fetch(record -> Project.builder()
                         .id(record.getId())
                         .name(record.getName())
                         .description(record.getDescription())
@@ -51,10 +51,10 @@ public class ProjectPostgresRepository implements ProjectRepository {
     }
 
     @Override
-    public List<ProjectDTO> findByOrganizationId(UUID organizationId) {
+    public List<Project> findByOrganizationId(UUID organizationId) {
         return dslContext.selectFrom(projectTable)
                 .where(projectTable.ORGANIZATION_ID.eq(organizationId))
-                .fetch(record -> ProjectDTO.builder()
+                .fetch(record -> Project.builder()
                         .id(record.getId())
                         .name(record.getName())
                         .description(record.getDescription())
@@ -67,7 +67,7 @@ public class ProjectPostgresRepository implements ProjectRepository {
     }
 
     @Override
-    public void create(ProjectDTO project) {
+    public void create(Project project) {
         dslContext.insertInto(projectTable)
                 .set(projectTable.ID, project.getId())
                 .set(projectTable.NAME, project.getName())
@@ -81,7 +81,7 @@ public class ProjectPostgresRepository implements ProjectRepository {
     }
 
     @Override
-    public void update(ProjectDTO project) {
+    public void update(Project project) {
         dslContext.update(projectTable)
                 .set(projectTable.NAME, project.getName())
                 .set(projectTable.DESCRIPTION, project.getDescription())

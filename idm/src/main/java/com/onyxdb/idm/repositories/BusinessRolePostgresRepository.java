@@ -2,7 +2,7 @@ package com.onyxdb.idm.repositories;
 
 import com.onyxdb.idm.generated.jooq.Tables;
 import com.onyxdb.idm.generated.jooq.tables.BusinessRoleTable;
-import com.onyxdb.idm.models.BusinessRoleDTO;
+import com.onyxdb.idm.models.BusinessRole;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
@@ -19,10 +19,10 @@ public class BusinessRolePostgresRepository implements BusinessRoleRepository {
     private final BusinessRoleTable businessRoleTable = Tables.BUSINESS_ROLE_TABLE;
 
     @Override
-    public Optional<BusinessRoleDTO> findById(UUID id) {
+    public Optional<BusinessRole> findById(UUID id) {
         return dslContext.selectFrom(businessRoleTable)
                 .where(businessRoleTable.ID.eq(id))
-                .fetchOptional(record -> BusinessRoleDTO.builder()
+                .fetchOptional(record -> BusinessRole.builder()
                         .id(record.getId())
                         .name(record.getName())
                         .description(record.getDescription())
@@ -33,9 +33,9 @@ public class BusinessRolePostgresRepository implements BusinessRoleRepository {
     }
 
     @Override
-    public List<BusinessRoleDTO> findAll() {
+    public List<BusinessRole> findAll() {
         return dslContext.selectFrom(businessRoleTable)
-                .fetch(record -> BusinessRoleDTO.builder()
+                .fetch(record -> BusinessRole.builder()
                         .id(record.getId())
                         .name(record.getName())
                         .description(record.getDescription())
@@ -46,7 +46,7 @@ public class BusinessRolePostgresRepository implements BusinessRoleRepository {
     }
 
     @Override
-    public void create(BusinessRoleDTO businessRole) {
+    public void create(BusinessRole businessRole) {
         dslContext.insertInto(businessRoleTable)
                 .set(businessRoleTable.ID, businessRole.getId())
                 .set(businessRoleTable.NAME, businessRole.getName())
@@ -58,7 +58,7 @@ public class BusinessRolePostgresRepository implements BusinessRoleRepository {
     }
 
     @Override
-    public void update(BusinessRoleDTO businessRole) {
+    public void update(BusinessRole businessRole) {
         dslContext.update(businessRoleTable)
                 .set(businessRoleTable.NAME, businessRole.getName())
                 .set(businessRoleTable.DESCRIPTION, businessRole.getDescription())
@@ -76,10 +76,10 @@ public class BusinessRolePostgresRepository implements BusinessRoleRepository {
     }
 
     @Override
-    public List<BusinessRoleDTO> findByParentId(UUID parentId) {
+    public List<BusinessRole> findByParentId(UUID parentId) {
         return dslContext.selectFrom(businessRoleTable)
                 .where(businessRoleTable.PARENT_ID.eq(parentId))
-                .fetch(record -> BusinessRoleDTO.builder()
+                .fetch(record -> BusinessRole.builder()
                         .id(record.getId())
                         .name(record.getName())
                         .description(record.getDescription())

@@ -2,7 +2,7 @@ package com.onyxdb.idm.repositories;
 
 import com.onyxdb.idm.generated.jooq.Tables;
 import com.onyxdb.idm.generated.jooq.tables.PermissionTable;
-import com.onyxdb.idm.models.PermissionDTO;
+import com.onyxdb.idm.models.Permission;
 
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
@@ -20,10 +20,10 @@ public class PermissionPostgresRepository implements PermissionRepository {
     private final PermissionTable permissionTable = Tables.PERMISSION_TABLE;
 
     @Override
-    public Optional<PermissionDTO> findById(UUID id) {
+    public Optional<Permission> findById(UUID id) {
         return dslContext.selectFrom(permissionTable)
                 .where(permissionTable.ID.eq(id))
-                .fetchOptional(record -> PermissionDTO.builder()
+                .fetchOptional(record -> Permission.builder()
                         .id(record.getId())
                         .actionType(record.getActionType())
                         .resourceType(record.getResourceType())
@@ -34,9 +34,9 @@ public class PermissionPostgresRepository implements PermissionRepository {
     }
 
     @Override
-    public List<PermissionDTO> findAll() {
+    public List<Permission> findAll() {
         return dslContext.selectFrom(permissionTable)
-                .fetch(record -> PermissionDTO.builder()
+                .fetch(record -> Permission.builder()
                         .id(record.getId())
                         .actionType(record.getActionType())
                         .resourceType(record.getResourceType())
@@ -47,7 +47,7 @@ public class PermissionPostgresRepository implements PermissionRepository {
     }
 
     @Override
-    public void create(PermissionDTO permission) {
+    public void create(Permission permission) {
         dslContext.insertInto(permissionTable)
                 .set(permissionTable.ID, permission.getId())
                 .set(permissionTable.ACTION_TYPE, permission.getActionType())
@@ -59,7 +59,7 @@ public class PermissionPostgresRepository implements PermissionRepository {
     }
 
     @Override
-    public void update(PermissionDTO permission) {
+    public void update(Permission permission) {
         dslContext.update(permissionTable)
                 .set(permissionTable.ACTION_TYPE, permission.getActionType())
                 .set(permissionTable.RESOURCE_TYPE, permission.getResourceType())

@@ -1,19 +1,19 @@
 package com.onyxdb.idm.repositories;
 
-import com.onyxdb.idm.models.PermissionDTO;
+import com.onyxdb.idm.models.Permission;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface PermissionRepository {
-    Optional<PermissionDTO> findById(UUID id);
+    Optional<Permission> findById(UUID id);
 
-    List<PermissionDTO> findAll();
+    List<Permission> findAll();
 
-    void create(PermissionDTO permission);
+    void create(Permission permission);
 
-    void update(PermissionDTO permission);
+    void update(Permission permission);
 
     void delete(UUID id);
 }
