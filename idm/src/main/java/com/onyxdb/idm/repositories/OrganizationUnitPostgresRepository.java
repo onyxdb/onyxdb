@@ -1,7 +1,10 @@
 package com.onyxdb.idm.repositories;
 
 import com.onyxdb.idm.generated.jooq.Tables;
+import com.onyxdb.idm.generated.jooq.tables.AccountOuTable;
+import com.onyxdb.idm.generated.jooq.tables.AccountTable;
 import com.onyxdb.idm.generated.jooq.tables.OrganizationUnitTable;
+import com.onyxdb.idm.models.Account;
 import com.onyxdb.idm.models.OrganizationUnit;
 
 import lombok.RequiredArgsConstructor;
@@ -18,6 +21,8 @@ public class OrganizationUnitPostgresRepository implements OrganizationUnitRepos
 
     private final DSLContext dslContext;
     private final OrganizationUnitTable organizationUnitTable = Tables.ORGANIZATION_UNIT_TABLE;
+    private final AccountOuTable organizationUnitAccountTable = Tables.ACCOUNT_OU_TABLE;
+    private final AccountTable accountTable = Tables.ACCOUNT_TABLE;
 
     @Override
     public Optional<OrganizationUnit> findById(UUID id) {
@@ -52,7 +57,7 @@ public class OrganizationUnitPostgresRepository implements OrganizationUnitRepos
     public List<OrganizationUnit> findByDomainComponentId(UUID domainComponentId) {
         return dslContext.selectFrom(organizationUnitTable)
                 .where(organizationUnitTable.DOMAIN_COMPONENT_ID.eq(domainComponentId))
-                .fetch(record ->  new OrganizationUnit(
+                .fetch(record -> new OrganizationUnit(
                         record.getId(),
                         record.getName(),
                         record.getDescription(),
@@ -93,5 +98,52 @@ public class OrganizationUnitPostgresRepository implements OrganizationUnitRepos
         dslContext.deleteFrom(organizationUnitTable)
                 .where(organizationUnitTable.ID.eq(id))
                 .execute();
+    }
+
+    /**
+     * @param ouId
+     * @param accountId
+     */
+    @Override
+    public void addAccount(UUID ouId, UUID accountId) {
+        dslContext.insertInto(organizationUnitAccountTable)
+                .set(organizationUnitAccountTable.OU_ID, ouId)
+                .set(organizationUnitAccountTable.ACCOUNT_ID, accountId)
+                .execute();
+    }
+
+    /**
+     * @param ouId
+     * @param accountId
+     */
+    @Override
+    public void removeAccount(UUID ouId, UUID accountId) {
+        dslContext.deleteFrom(organizationUnitAccountTable)
+                .where(organizationUnitAccountTable.OU_ID.eq(ouId)
+                        .and(organizationUnitAccountTable.ACCOUNT_ID.eq(accountId)))
+                .execute();
+    }
+
+    /**
+     * @param ouId
+     * @return
+     */
+    @Override
+    public List<Account> getOUAccounts(UUID ouId) {
+        return dslContext.selectFrom(organizationUnitAccountTable)
+                .where(organizationUnitAccountTable.OU_ID.eq(ouId))
+                .fetch(link -> dslContext.selectFrom(accountTable)
+                        .where(accountTable.ID.eq(link.getAccountId()))
+                        .fetchOne(item -> new Account(
+                                item.getId(),
+                                item.getUsername(),
+                                item.getPassword(),
+                                item.getEmail(),
+                                item.getFirstName(),
+                                item.getLastName(),
+                                item.getCreatedAt(),
+                                item.getUpdatedAt()
+                        ))
+                );
     }
 }

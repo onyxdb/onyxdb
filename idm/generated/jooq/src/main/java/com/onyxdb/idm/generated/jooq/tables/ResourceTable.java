@@ -6,9 +6,9 @@ package com.onyxdb.idm.generated.jooq.tables;
 
 import com.onyxdb.idm.generated.jooq.Keys;
 import com.onyxdb.idm.generated.jooq.Public;
-import com.onyxdb.idm.generated.jooq.tables.AccountResourceRoleTable.AccountResourceRoleTablePath;
 import com.onyxdb.idm.generated.jooq.tables.OrganizationTable.OrganizationTablePath;
 import com.onyxdb.idm.generated.jooq.tables.ProjectTable.ProjectTablePath;
+import com.onyxdb.idm.generated.jooq.tables.RoleTable.RoleTablePath;
 import com.onyxdb.idm.generated.jooq.tables.ServiceTable.ServiceTablePath;
 import com.onyxdb.idm.generated.jooq.tables.records.ResourceTableRecord;
 
@@ -156,19 +156,6 @@ public class ResourceTable extends TableImpl<ResourceTableRecord> {
         return Keys.RESOURCE_TABLE_PKEY;
     }
 
-    private transient AccountResourceRoleTablePath _accountResourceRoleTable;
-
-    /**
-     * Get the implicit to-many join path to the
-     * <code>public.account_resource_role_table</code> table
-     */
-    public AccountResourceRoleTablePath accountResourceRoleTable() {
-        if (_accountResourceRoleTable == null)
-            _accountResourceRoleTable = new AccountResourceRoleTablePath(this, null, Keys.ACCOUNT_RESOURCE_ROLE_TABLE__ACCOUNT_RESOURCE_ROLE_TABLE_RESOURCE_ID_FKEY.getInverseKey());
-
-        return _accountResourceRoleTable;
-    }
-
     private transient OrganizationTablePath _organizationTable;
 
     /**
@@ -193,6 +180,19 @@ public class ResourceTable extends TableImpl<ResourceTableRecord> {
             _projectTable = new ProjectTablePath(this, null, Keys.PROJECT_TABLE__PROJECT_TABLE_RESOURCE_ID_FKEY.getInverseKey());
 
         return _projectTable;
+    }
+
+    private transient RoleTablePath _roleTable;
+
+    /**
+     * Get the implicit to-many join path to the <code>public.role_table</code>
+     * table
+     */
+    public RoleTablePath roleTable() {
+        if (_roleTable == null)
+            _roleTable = new RoleTablePath(this, null, Keys.ROLE_TABLE__ROLE_TABLE_RESOURCE_ID_FKEY.getInverseKey());
+
+        return _roleTable;
     }
 
     private transient ServiceTablePath _serviceTable;

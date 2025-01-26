@@ -26,9 +26,9 @@ spring:
 #
 #server:
 #  port: ${ONYXDB_IDM_API_HTTP_PORT:9002}
-#
-#springdoc:
-#  api-docs:
-#    path: /internal/api-docs
-#  swagger-ui:
-#    path: /internal/swagger-ui
+
+springdoc:
+  api-docs:
+    path: /internal/api-docs
+  swagger-ui:
+    path: /internal/swagger-ui

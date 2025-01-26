@@ -29,6 +29,8 @@ public class RoleDTO {
 
   private String description;
 
+  private UUID resourceId;
+
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private LocalDateTime createdAt;
 
@@ -95,6 +97,26 @@ public class RoleDTO {
     this.description = description;
   }
 
+  public RoleDTO resourceId(UUID resourceId) {
+    this.resourceId = resourceId;
+    return this;
+  }
+
+  /**
+   * Get resourceId
+   * @return resourceId
+  */
+  @Valid 
+  @Schema(name = "resourceId", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("resourceId")
+  public UUID getResourceId() {
+    return resourceId;
+  }
+
+  public void setResourceId(UUID resourceId) {
+    this.resourceId = resourceId;
+  }
+
   public RoleDTO createdAt(LocalDateTime createdAt) {
     this.createdAt = createdAt;
     return this;
@@ -147,13 +169,14 @@ public class RoleDTO {
     return Objects.equals(this.id, roleDTO.id) &&
         Objects.equals(this.name, roleDTO.name) &&
         Objects.equals(this.description, roleDTO.description) &&
+        Objects.equals(this.resourceId, roleDTO.resourceId) &&
         Objects.equals(this.createdAt, roleDTO.createdAt) &&
         Objects.equals(this.updatedAt, roleDTO.updatedAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, description, createdAt, updatedAt);
+    return Objects.hash(id, name, description, resourceId, createdAt, updatedAt);
   }
 
   @Override
@@ -163,6 +186,7 @@ public class RoleDTO {
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
+    sb.append("    resourceId: ").append(toIndentedString(resourceId)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("}");

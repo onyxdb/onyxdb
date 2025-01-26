@@ -1,5 +1,6 @@
 package com.onyxdb.idm.repositories;
 
+import com.onyxdb.idm.models.Permission;
 import com.onyxdb.idm.models.Role;
 
 import java.util.List;
@@ -16,4 +17,10 @@ public interface RoleRepository {
     void update(Role role);
 
     void delete(UUID id);
+
+    void addPermission(UUID roleId, UUID permissionId);
+
+    void removePermission(UUID roleId, UUID permissionId);
+
+    List<Permission> getPermissionsByRoleId(UUID roleId);
 }

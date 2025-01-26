@@ -5,7 +5,6 @@
 //import com.onyxdb.idm.generated.openapi.models.BadRequestResponse;
 //import com.onyxdb.idm.generated.openapi.models.NotFoundResponse;
 //import com.onyxdb.idm.models.Organization;
-//import com.onyxdb.idm.services.OrganizationService;
 //import lombok.RequiredArgsConstructor;
 //import org.springframework.http.HttpStatus;
 //import org.springframework.http.ResponseEntity;

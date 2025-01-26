@@ -9,6 +9,7 @@ public record Role(
         UUID id,
         String name,
         String description,
+        UUID resourceId,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
@@ -17,6 +18,7 @@ public record Role(
                 .id(id)
                 .name(name)
                 .description(description)
+                .resourceId(resourceId)
                 .createdAt(createdAt)
                 .updatedAt(updatedAt);
     }
@@ -26,6 +28,7 @@ public record Role(
                 roleDTO.getId(),
                 roleDTO.getName(),
                 roleDTO.getDescription(),
+                roleDTO.getResourceId(),
                 roleDTO.getCreatedAt(),
                 roleDTO.getUpdatedAt()
         );

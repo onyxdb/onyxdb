@@ -1,8 +1,12 @@
 package com.onyxdb.idm.repositories;
 
 import com.onyxdb.idm.generated.jooq.Tables;
+import com.onyxdb.idm.generated.jooq.tables.BusinessRoleRoleTable;
 import com.onyxdb.idm.generated.jooq.tables.BusinessRoleTable;
+import com.onyxdb.idm.generated.jooq.tables.RoleTable;
 import com.onyxdb.idm.models.BusinessRole;
+import com.onyxdb.idm.models.Permission;
+import com.onyxdb.idm.models.Role;
 
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
@@ -18,6 +22,8 @@ public class BusinessRolePostgresRepository implements BusinessRoleRepository {
 
     private final DSLContext dslContext;
     private final BusinessRoleTable businessRoleTable = Tables.BUSINESS_ROLE_TABLE;
+    private final BusinessRoleRoleTable businessRoleToRoleTable = Tables.BUSINESS_ROLE_ROLE_TABLE;
+    private final RoleTable roleTable = Tables.ROLE_TABLE;
 
     @Override
     public Optional<BusinessRole> findById(UUID id) {
@@ -89,5 +95,50 @@ public class BusinessRolePostgresRepository implements BusinessRoleRepository {
         dslContext.deleteFrom(businessRoleTable)
                 .where(businessRoleTable.ID.eq(id))
                 .execute();
+    }
+
+    /**
+     * @param businessRoleId
+     * @param roleId
+     */
+    @Override
+    public void addRole(UUID businessRoleId, UUID roleId) {
+        dslContext.insertInto(businessRoleToRoleTable)
+                .set(businessRoleToRoleTable.BUSINESS_ROLE_ID, businessRoleId)
+                .set(businessRoleToRoleTable.ROLE_ID, roleId)
+                .execute();
+    }
+
+    /**
+     * @param businessRoleId
+     * @param roleId
+     */
+    @Override
+    public void removeRole(UUID businessRoleId, UUID roleId) {
+        dslContext.deleteFrom(businessRoleToRoleTable)
+                .where(businessRoleToRoleTable.ROLE_ID.eq(roleId)
+                        .and(businessRoleToRoleTable.BUSINESS_ROLE_ID.eq(businessRoleId)))
+                .execute();
+    }
+
+    /**
+     * @param businessRoleId
+     * @return
+     */
+    @Override
+    public List<Role> getRoleByBusinessRoleId(UUID businessRoleId) {
+        return dslContext.selectFrom(businessRoleToRoleTable)
+                .where(businessRoleToRoleTable.BUSINESS_ROLE_ID.eq(businessRoleId))
+                .fetch(link -> dslContext.selectFrom(roleTable)
+                        .where(roleTable.ID.eq(link.getRoleId()))
+                        .fetchOne(item -> new Role(
+                                item.getId(),
+                                item.getName(),
+                                item.getDescription(),
+                                item.getResourceId(),
+                                item.getCreatedAt(),
+                                item.getUpdatedAt()
+                        ))
+                );
     }
 }

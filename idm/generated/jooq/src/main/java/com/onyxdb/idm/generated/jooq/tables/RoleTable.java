@@ -6,12 +6,12 @@ package com.onyxdb.idm.generated.jooq.tables;
 
 import com.onyxdb.idm.generated.jooq.Keys;
 import com.onyxdb.idm.generated.jooq.Public;
-import com.onyxdb.idm.generated.jooq.tables.AccountResourceRoleTable.AccountResourceRoleTablePath;
 import com.onyxdb.idm.generated.jooq.tables.AccountRoleTable.AccountRoleTablePath;
 import com.onyxdb.idm.generated.jooq.tables.AccountTable.AccountTablePath;
 import com.onyxdb.idm.generated.jooq.tables.BusinessRoleRoleTable.BusinessRoleRoleTablePath;
 import com.onyxdb.idm.generated.jooq.tables.BusinessRoleTable.BusinessRoleTablePath;
 import com.onyxdb.idm.generated.jooq.tables.PermissionTable.PermissionTablePath;
+import com.onyxdb.idm.generated.jooq.tables.ResourceTable.ResourceTablePath;
 import com.onyxdb.idm.generated.jooq.tables.RolePermissionTable.RolePermissionTablePath;
 import com.onyxdb.idm.generated.jooq.tables.records.RoleTableRecord;
 
@@ -25,7 +25,7 @@ import java.util.function.Function;
 import org.jooq.Condition;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function5;
+import org.jooq.Function6;
 import org.jooq.InverseForeignKey;
 import org.jooq.Name;
 import org.jooq.Path;
@@ -33,7 +33,7 @@ import org.jooq.PlainSQL;
 import org.jooq.QueryPart;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row5;
+import org.jooq.Row6;
 import org.jooq.SQL;
 import org.jooq.Schema;
 import org.jooq.Select;
@@ -83,6 +83,11 @@ public class RoleTable extends TableImpl<RoleTableRecord> {
      * The column <code>public.role_table.description</code>.
      */
     public final TableField<RoleTableRecord, String> DESCRIPTION = createField(DSL.name("description"), SQLDataType.CLOB, this, "");
+
+    /**
+     * The column <code>public.role_table.resource_id</code>.
+     */
+    public final TableField<RoleTableRecord, UUID> RESOURCE_ID = createField(DSL.name("resource_id"), SQLDataType.UUID.nullable(false), this, "");
 
     /**
      * The column <code>public.role_table.created_at</code>.
@@ -171,17 +176,22 @@ public class RoleTable extends TableImpl<RoleTableRecord> {
         return Arrays.asList(Keys.ROLE_TABLE_NAME_KEY);
     }
 
-    private transient AccountResourceRoleTablePath _accountResourceRoleTable;
+    @Override
+    public List<ForeignKey<RoleTableRecord, ?>> getReferences() {
+        return Arrays.asList(Keys.ROLE_TABLE__ROLE_TABLE_RESOURCE_ID_FKEY);
+    }
+
+    private transient ResourceTablePath _resourceTable;
 
     /**
-     * Get the implicit to-many join path to the
-     * <code>public.account_resource_role_table</code> table
+     * Get the implicit join path to the <code>public.resource_table</code>
+     * table.
      */
-    public AccountResourceRoleTablePath accountResourceRoleTable() {
-        if (_accountResourceRoleTable == null)
-            _accountResourceRoleTable = new AccountResourceRoleTablePath(this, null, Keys.ACCOUNT_RESOURCE_ROLE_TABLE__ACCOUNT_RESOURCE_ROLE_TABLE_ROLE_ID_FKEY.getInverseKey());
+    public ResourceTablePath resourceTable() {
+        if (_resourceTable == null)
+            _resourceTable = new ResourceTablePath(this, Keys.ROLE_TABLE__ROLE_TABLE_RESOURCE_ID_FKEY, null);
 
-        return _accountResourceRoleTable;
+        return _resourceTable;
     }
 
     private transient AccountRoleTablePath _accountRoleTable;
@@ -371,18 +381,18 @@ public class RoleTable extends TableImpl<RoleTableRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row5 type methods
+    // Row6 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row5<UUID, String, String, LocalDateTime, LocalDateTime> fieldsRow() {
-        return (Row5) super.fieldsRow();
+    public Row6<UUID, String, String, UUID, LocalDateTime, LocalDateTime> fieldsRow() {
+        return (Row6) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function5<? super UUID, ? super String, ? super String, ? super LocalDateTime, ? super LocalDateTime, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function6<? super UUID, ? super String, ? super String, ? super UUID, ? super LocalDateTime, ? super LocalDateTime, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -390,7 +400,7 @@ public class RoleTable extends TableImpl<RoleTableRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function5<? super UUID, ? super String, ? super String, ? super LocalDateTime, ? super LocalDateTime, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function6<? super UUID, ? super String, ? super String, ? super UUID, ? super LocalDateTime, ? super LocalDateTime, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

@@ -8,7 +8,6 @@ import com.onyxdb.idm.generated.jooq.Keys;
 import com.onyxdb.idm.generated.jooq.Public;
 import com.onyxdb.idm.generated.jooq.tables.AccountBusinessRoleTable.AccountBusinessRoleTablePath;
 import com.onyxdb.idm.generated.jooq.tables.AccountOuTable.AccountOuTablePath;
-import com.onyxdb.idm.generated.jooq.tables.AccountResourceRoleTable.AccountResourceRoleTablePath;
 import com.onyxdb.idm.generated.jooq.tables.AccountRoleTable.AccountRoleTablePath;
 import com.onyxdb.idm.generated.jooq.tables.BusinessRoleTable.BusinessRoleTablePath;
 import com.onyxdb.idm.generated.jooq.tables.OrganizationTable.OrganizationTablePath;
@@ -213,19 +212,6 @@ public class AccountTable extends TableImpl<AccountTableRecord> {
             _accountOuTable = new AccountOuTablePath(this, null, Keys.ACCOUNT_OU_TABLE__ACCOUNT_OU_TABLE_ACCOUNT_ID_FKEY.getInverseKey());
 
         return _accountOuTable;
-    }
-
-    private transient AccountResourceRoleTablePath _accountResourceRoleTable;
-
-    /**
-     * Get the implicit to-many join path to the
-     * <code>public.account_resource_role_table</code> table
-     */
-    public AccountResourceRoleTablePath accountResourceRoleTable() {
-        if (_accountResourceRoleTable == null)
-            _accountResourceRoleTable = new AccountResourceRoleTablePath(this, null, Keys.ACCOUNT_RESOURCE_ROLE_TABLE__ACCOUNT_RESOURCE_ROLE_TABLE_ACCOUNT_ID_FKEY.getInverseKey());
-
-        return _accountResourceRoleTable;
     }
 
     private transient AccountRoleTablePath _accountRoleTable;

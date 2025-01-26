@@ -6,7 +6,6 @@ package com.onyxdb.idm.generated.jooq;
 
 import com.onyxdb.idm.generated.jooq.tables.AccountBusinessRoleTable;
 import com.onyxdb.idm.generated.jooq.tables.AccountOuTable;
-import com.onyxdb.idm.generated.jooq.tables.AccountResourceRoleTable;
 import com.onyxdb.idm.generated.jooq.tables.AccountRoleTable;
 import com.onyxdb.idm.generated.jooq.tables.AccountTable;
 import com.onyxdb.idm.generated.jooq.tables.BusinessRoleRoleTable;
@@ -51,11 +50,6 @@ public class Public extends SchemaImpl {
      * The table <code>public.account_ou_table</code>.
      */
     public final AccountOuTable ACCOUNT_OU_TABLE = AccountOuTable.ACCOUNT_OU_TABLE;
-
-    /**
-     * The table <code>public.account_resource_role_table</code>.
-     */
-    public final AccountResourceRoleTable ACCOUNT_RESOURCE_ROLE_TABLE = AccountResourceRoleTable.ACCOUNT_RESOURCE_ROLE_TABLE;
 
     /**
      * The table <code>public.account_role_table</code>.
@@ -140,7 +134,6 @@ public class Public extends SchemaImpl {
         return Arrays.asList(
             AccountBusinessRoleTable.ACCOUNT_BUSINESS_ROLE_TABLE,
             AccountOuTable.ACCOUNT_OU_TABLE,
-            AccountResourceRoleTable.ACCOUNT_RESOURCE_ROLE_TABLE,
             AccountRoleTable.ACCOUNT_ROLE_TABLE,
             AccountTable.ACCOUNT_TABLE,
             BusinessRoleRoleTable.BUSINESS_ROLE_ROLE_TABLE,

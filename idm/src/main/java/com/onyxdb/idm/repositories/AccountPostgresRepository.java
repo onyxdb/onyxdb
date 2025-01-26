@@ -1,8 +1,14 @@
 package com.onyxdb.idm.repositories;
 
 import com.onyxdb.idm.generated.jooq.Tables;
+import com.onyxdb.idm.generated.jooq.tables.AccountBusinessRoleTable;
+import com.onyxdb.idm.generated.jooq.tables.AccountRoleTable;
 import com.onyxdb.idm.generated.jooq.tables.AccountTable;
+import com.onyxdb.idm.generated.jooq.tables.BusinessRoleTable;
+import com.onyxdb.idm.generated.jooq.tables.RoleTable;
 import com.onyxdb.idm.models.Account;
+import com.onyxdb.idm.models.BusinessRole;
+import com.onyxdb.idm.models.Role;
 
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
@@ -17,6 +23,10 @@ import java.util.UUID;
 public class AccountPostgresRepository implements AccountRepository {
     private final DSLContext dslContext;
     private final AccountTable accountTable = Tables.ACCOUNT_TABLE;
+    private final AccountBusinessRoleTable accountBusinessRoleTable = Tables.ACCOUNT_BUSINESS_ROLE_TABLE;
+    private final BusinessRoleTable businessRoleTable = Tables.BUSINESS_ROLE_TABLE;
+    private final AccountRoleTable accountRoleTable = Tables.ACCOUNT_ROLE_TABLE;
+    private final RoleTable roleTable = Tables.ROLE_TABLE;
 
     @Override
     public Optional<Account> findById(UUID id) {
@@ -81,5 +91,95 @@ public class AccountPostgresRepository implements AccountRepository {
         dslContext.deleteFrom(accountTable)
                 .where(accountTable.ID.eq(id))
                 .execute();
+    }
+
+    /**
+     * @param accountId
+     * @param businessRoleId
+     */
+    @Override
+    public void addBusinessRole(UUID accountId, UUID businessRoleId) {
+        dslContext.insertInto(accountBusinessRoleTable)
+                .set(accountBusinessRoleTable.ACCOUNT_ID, accountId)
+                .set(accountBusinessRoleTable.BUSINESS_ROLE_ID, businessRoleId)
+                .execute();
+    }
+
+    /**
+     * @param accountId
+     * @param businessRoleId
+     */
+    @Override
+    public void removeBusinessRole(UUID accountId, UUID businessRoleId) {
+        dslContext.deleteFrom(accountBusinessRoleTable)
+                .where(accountBusinessRoleTable.ACCOUNT_ID.eq(accountId)
+                        .and(accountBusinessRoleTable.BUSINESS_ROLE_ID.eq(businessRoleId)))
+                .execute();
+    }
+
+    /**
+     * @param accountId
+     * @return
+     */
+    @Override
+    public List<BusinessRole> getAccountBusinessRoles(UUID accountId) {
+        return dslContext.selectFrom(accountBusinessRoleTable)
+                .where(accountBusinessRoleTable.ACCOUNT_ID.eq(accountId))
+                .fetch(link -> dslContext.selectFrom(businessRoleTable)
+                        .where(businessRoleTable.ID.eq(link.getBusinessRoleId()))
+                        .fetchOne(item -> new BusinessRole(
+                                item.getId(),
+                                item.getName(),
+                                item.getDescription(),
+                                item.getParentId(),
+                                item.getCreatedAt(),
+                                item.getUpdatedAt()
+                        ))
+                );
+    }
+
+    /**
+     * @param accountId
+     * @param roleId
+     */
+    @Override
+    public void addRole(UUID accountId, UUID roleId) {
+        dslContext.insertInto(accountRoleTable)
+                .set(accountRoleTable.ACCOUNT_ID, accountId)
+                .set(accountRoleTable.ROLE_ID, roleId)
+                .execute();
+    }
+
+    /**
+     * @param accountId
+     * @param roleId
+     */
+    @Override
+    public void removeRole(UUID accountId, UUID roleId) {
+        dslContext.deleteFrom(accountRoleTable)
+                .where(accountRoleTable.ROLE_ID.eq(roleId)
+                        .and(accountRoleTable.ACCOUNT_ID.eq(accountId)))
+                .execute();
+    }
+
+    /**
+     * @param accountId
+     * @return
+     */
+    @Override
+    public List<Role> getRoleByBusinessRoleId(UUID accountId) {
+        return dslContext.selectFrom(accountRoleTable)
+                .where(accountRoleTable.ACCOUNT_ID.eq(accountId))
+                .fetch(link -> dslContext.selectFrom(roleTable)
+                        .where(roleTable.ID.eq(link.getRoleId()))
+                        .fetchOne(item -> new Role(
+                                item.getId(),
+                                item.getName(),
+                                item.getDescription(),
+                                item.getResourceId(),
+                                item.getCreatedAt(),
+                                item.getUpdatedAt()
+                        ))
+                );
     }
 }

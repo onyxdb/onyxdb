@@ -1,5 +1,6 @@
 package com.onyxdb.idm.repositories;
 
+import com.onyxdb.idm.models.Account;
 import com.onyxdb.idm.models.OrganizationUnit;
 
 import java.util.List;
@@ -18,4 +19,10 @@ public interface OrganizationUnitRepository {
     void update(OrganizationUnit organizationUnit);
 
     void delete(UUID id);
+
+    void addAccount(UUID ouId, UUID accountId);
+
+    void removeAccount(UUID ouId, UUID accountId);
+
+    List<Account> getOUAccounts(UUID ouId);
 }

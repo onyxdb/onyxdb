@@ -1,14 +1,15 @@
 package com.onyxdb.idm.services;
 
 import com.onyxdb.idm.controllers.v1.ResourceNotFoundException;
-import com.onyxdb.idm.generated.jooq.Tables;
-import com.onyxdb.idm.generated.jooq.tables.AccountTable;
 import com.onyxdb.idm.models.Account;
 import com.onyxdb.idm.repositories.AccountRepository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -16,9 +17,10 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class AccountService {
+//    TODO: Добавить смену пароля
 
     private final AccountRepository accountRepository;
-    private final AccountTable accountTable = Tables.ACCOUNT_TABLE;
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public Account findById(UUID id) {
         Optional<Account> account = accountRepository.findById(id);
@@ -31,14 +33,39 @@ public class AccountService {
     }
 
     public void create(Account account) {
-        accountRepository.create(account);
+        Account forCreate = new Account(
+                UUID.randomUUID(),
+                account.username(),
+                account.password(),
+                account.email(),
+                account.firstName(),
+                account.lastName(),
+                LocalDateTime.now(),
+                LocalDateTime.now()
+        );
+        accountRepository.create(forCreate);
     }
 
     public void update(Account account) {
-        accountRepository.update(account);
+        Account forUpdate = new Account(
+                account.id(),
+                account.username(),
+                account.password(),
+                account.email(),
+                account.firstName(),
+                account.lastName(),
+                account.createdAt(),
+                LocalDateTime.now()
+        );
+        accountRepository.update(forUpdate);
     }
 
     public void delete(UUID id) {
         accountRepository.delete(id);
+    }
+
+
+    private String encodePassword(String password) {
+        return passwordEncoder.encode(password);
     }
 }

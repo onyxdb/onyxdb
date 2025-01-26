@@ -1472,91 +1472,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
 
-  /api/v1/account-resource-roles:
-    get:
-      summary: Get all account resource roles
-      operationId: getAllAccountResourceRoles
-      tags:
-        - Account Resource Roles
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/AccountResourceRoleDTO'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
-    post:
-      summary: Create a new account resource role
-      operationId: createAccountResourceRole
-      tags:
-        - Account Resource Roles
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AccountResourceRoleDTO'
-      responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AccountResourceRoleDTO'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
-    delete:
-      summary: Delete an account resource role
-      operationId: deleteAccountResourceRole
-      tags:
-        - Account Resource Roles
-      parameters:
-        - name: accountId
-          in: query
-          required: true
-          schema:
-            type: string
-            format: uuid
-        - name: resourceId
-          in: query
-          required: true
-          schema:
-            type: string
-            format: uuid
-        - name: roleId
-          in: query
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '204':
-          description: No Content
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
-
 components:
   schemas:
     AccountDTO:
@@ -1592,6 +1507,9 @@ components:
           type: string
         description:
           type: string
+        resourceId:
+          type: string
+          format: uuid
         createdAt:
           type: string
           format: date-time
@@ -1775,19 +1693,6 @@ components:
           type: string
           format: uuid
         ownerId:
-          type: string
-          format: uuid
-
-    AccountResourceRoleDTO:
-      type: object
-      properties:
-        accountId:
-          type: string
-          format: uuid
-        resourceId:
-          type: string
-          format: uuid
-        roleId:
           type: string
           format: uuid
 
