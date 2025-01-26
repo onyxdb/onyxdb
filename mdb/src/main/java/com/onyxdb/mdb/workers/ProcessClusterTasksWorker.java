@@ -83,6 +83,7 @@ public class ProcessClusterTasksWorker implements Runnable {
             for (var clusterTask : clusterTasks) {
                 executor.execute(() -> processor.processTask(clusterTask));
             }
+
             Thread.sleep(pollingIntervalSeconds * 1000L);
         }
     }
