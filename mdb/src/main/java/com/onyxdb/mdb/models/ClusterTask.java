@@ -23,22 +23,22 @@ public record ClusterTask(
         List<UUID> dependsOnTaskIds,
         boolean isLast)
 {
-//    public ClusterTasksRecord toJooqClusterTasksRecord() {
-//        return new ClusterTasksRecord(
-//                id,
-//                clusterId,
-//                operationId,
-//                com.onyxdb.mdb.generated.jooq.enums.ClusterType.valueOf(clusterType.toString()),
-//                com.onyxdb.mdb.generated.jooq.enums.ClusterTaskType.valueOf(type.toString()),
-//                com.onyxdb.mdb.generated.jooq.enums.ClusterTaskStatus.valueOf(status.toString()),
-//                createdAt,
-//                updatedAt,
-//                scheduledAt,
-//                retriesLeft,
-//                dependsOnTaskIds,
-//                isLast
-//        );
-//    }
+    public ClusterTasksRecord toJooqClusterTasksRecord() {
+        return new ClusterTasksRecord(
+                id,
+                clusterId,
+                operationId,
+                com.onyxdb.mdb.generated.jooq.enums.ClusterType.valueOf(clusterType.toString()),
+                com.onyxdb.mdb.generated.jooq.enums.ClusterTaskType.valueOf(type.toString()),
+                com.onyxdb.mdb.generated.jooq.enums.ClusterTaskStatus.valueOf(status.toString()),
+                createdAt,
+                updatedAt,
+                scheduledAt,
+                retriesLeft,
+                dependsOnTaskIds.toArray(UUID[]::new),
+                isLast
+        );
+    }
 
     public static ClusterTask scheduled(
             UUID clusterId,

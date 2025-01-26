@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.onyxdb.mdb.exceptions.InternalServerErrorException;
-import com.onyxdb.mdb.models.ClusterOperation;
 import com.onyxdb.mdb.models.ClusterTask;
 import com.onyxdb.mdb.models.ClusterType;
 

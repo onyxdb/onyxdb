@@ -43,7 +43,7 @@ CREATE TYPE public.cluster_task_status AS ENUM (
 
 CREATE TYPE public.cluster_task_type AS ENUM (
     'mongodb_create_cluster_apply_manifest',
-    'mongodb_create_cluster_check_cluster_readiness',
+    'mongodb_create_cluster_save_hosts',
     'mongodb_create_cluster_generate_grafana_dashboard'
     );
 

@@ -19,7 +19,7 @@ public enum ClusterTaskType implements EnumType {
 
     mongodb_create_cluster_apply_manifest("mongodb_create_cluster_apply_manifest"),
 
-    mongodb_create_cluster_check_cluster_readiness("mongodb_create_cluster_check_cluster_readiness"),
+    mongodb_create_cluster_save_hosts("mongodb_create_cluster_save_hosts"),
 
     mongodb_create_cluster_generate_grafana_dashboard("mongodb_create_cluster_generate_grafana_dashboard");
 

@@ -3,7 +3,6 @@ package com.onyxdb.mdb.processors;
 import org.springframework.stereotype.Component;
 
 import com.onyxdb.mdb.models.ClusterOperation;
-import com.onyxdb.mdb.models.ClusterTaskType;
 import com.onyxdb.mdb.models.ClusterType;
 
 /**

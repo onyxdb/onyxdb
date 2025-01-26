@@ -43,33 +43,33 @@ public class MongoClusterTasksGenerator implements ClusterTasksGenerator {
                 clusterId,
                 operationId,
                 CLUSTER_TYPE,
-                ClusterTaskType.MONGODB_CREATE_CLUSTER_APPLY_CLUSTER_MANIFEST,
+                ClusterTaskType.MONGODB_CREATE_CLUSTER_APPLY_MANIFEST,
                 now,
                 DEFAULT_RETRIES_LEFT,
                 List.of()
         );
-        var waitReadinessTask = ClusterTask.scheduledNotLast(
+        var saveHostsTask = ClusterTask.scheduledNotLast(
                 clusterId,
                 operationId,
                 CLUSTER_TYPE,
-                ClusterTaskType.MONGODB_CREATE_CLUSTER_CHECK_CLUSTER_READINESS,
+                ClusterTaskType.MONGODB_CREATE_CLUSTER_SAVE_HOSTS,
                 now,
                 DEFAULT_RETRIES_LEFT,
                 List.of(applyManifestTask.id())
         );
-        var generateDashboardTask = ClusterTask.scheduledLast(
+        var generateGrafanaDashboardTask = ClusterTask.scheduledLast(
                 clusterId,
                 operationId,
                 CLUSTER_TYPE,
                 ClusterTaskType.MONGODB_CREATE_CLUSTER_GENERATE_GRAFANA_DASHBOARD,
                 now,
                 DEFAULT_RETRIES_LEFT,
-                List.of(applyManifestTask.id(), waitReadinessTask.id())
+                List.of(applyManifestTask.id(), saveHostsTask.id())
         );
         return List.of(
                 applyManifestTask,
-                waitReadinessTask,
-                generateDashboardTask
+                saveHostsTask,
+                generateGrafanaDashboardTask
         );
     }
 }

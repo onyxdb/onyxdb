@@ -1,6 +1,7 @@
 package com.onyxdb.mdb.services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
@@ -44,7 +45,7 @@ public class ClusterService implements BaseClusterService {
                 cluster.id(),
                 cluster.type(),
                 clusterOperation.id(),
-                ClusterOperationType.CREATE_CLUSTER
+                clusterOperation.type()
         );
 
         transactionTemplate.execute(new TransactionCallbackWithoutResult() {
@@ -57,5 +58,10 @@ public class ClusterService implements BaseClusterService {
         });
 
         return cluster.id();
+    }
+
+    @Override
+    public Optional<Cluster> getByIdO(UUID id) {
+        return clusterRepository.getByIdO(id);
     }
 }
