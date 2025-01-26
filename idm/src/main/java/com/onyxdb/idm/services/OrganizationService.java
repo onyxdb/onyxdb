@@ -1,92 +1,79 @@
 package com.onyxdb.idm.services;
 
 import com.onyxdb.idm.controllers.v1.ResourceNotFoundException;
+import com.onyxdb.idm.models.Organization;
 import com.onyxdb.idm.models.Resource;
-import com.onyxdb.idm.models.Project;
-import com.onyxdb.idm.models.Service;
 import com.onyxdb.idm.repositories.OrganizationRepository;
-import com.onyxdb.idm.repositories.ProjectRepository;
 import com.onyxdb.idm.repositories.ResourceRepository;
-import com.onyxdb.idm.repositories.ServiceRepository;
+
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@org.springframework.stereotype.Service
+@Service
 @RequiredArgsConstructor
-public class ProjectService {
-    private final ProjectRepository projectRepository;
+public class OrganizationService {
     private final ResourceRepository resourceRepository;
     private final OrganizationRepository organizationRepository;
-    private final ServiceRepository serviceRepository;
 
-    public Project findById(UUID id) {
-        Optional<Project> project = projectRepository.findById(id);
-        return project.orElseThrow(() -> new ResourceNotFoundException("Project not found"));
+    public Organization findById(UUID id) {
+        Optional<Organization> project = organizationRepository.findById(id);
+        return project.orElseThrow(() -> new ResourceNotFoundException("Organization not found"));
     }
 
-    public List<Project> findAll() {
-        return projectRepository.findAll();
+    public List<Organization> findAll() {
+        return organizationRepository.findAll();
     }
 
-    public List<Project> findByOrganizationId(UUID organizationId) {
-        return projectRepository.findByOrganizationId(organizationId);
-    }
-
-    public Project create(Project project) {
+    public Organization create(Organization project) {
         Resource resource = new Resource(
                 UUID.randomUUID(),
-                "project",
+                "organization",
                 LocalDateTime.now(),
                 LocalDateTime.now()
         );
         resourceRepository.create(resource);
 
-        Project forCreate = new Project(
+        Organization forCreate = new Organization(
                 UUID.randomUUID(),
                 project.name(),
                 project.description(),
                 LocalDateTime.now(),
                 LocalDateTime.now(),
                 resource.id(),
-                project.organizationId(),
                 project.ownerId()
         );
-        projectRepository.create(forCreate);
+        organizationRepository.create(forCreate);
         return forCreate;
     }
 
-    public Project update(Project project) {
+    public Organization update(Organization project) {
         Resource resource = new Resource(
                 project.resourceId(),
-                "project",
+                "organization",
                 project.createdAt(),
                 LocalDateTime.now()
         );
         resourceRepository.update(resource);
 
-        Project forUpdate = new Project(
+        Organization forUpdate = new Organization(
                 project.id(),
                 project.name(),
                 project.description(),
                 project.createdAt(),
                 LocalDateTime.now(),
                 project.resourceId(),
-                project.organizationId(),
                 project.ownerId()
         );
-        projectRepository.update(forUpdate);
+        organizationRepository.update(forUpdate);
         return forUpdate;
     }
 
     public void delete(UUID id) {
-        projectRepository.delete(id);
-    }
-
-    public List<Service> getServicesByProjectId(UUID projectId) {
-        return serviceRepository.findByProjectId(projectId);
+        organizationRepository.delete(id);
     }
 }

@@ -1,14 +1,13 @@
 package com.onyxdb.idm.services;
 
-import com.onyxdb.idm.generated.jooq.Tables;
-import com.onyxdb.idm.generated.jooq.tables.DomainComponentTable;
+import com.onyxdb.idm.controllers.v1.ResourceNotFoundException;
 import com.onyxdb.idm.models.DomainComponent;
 import com.onyxdb.idm.repositories.DomainComponentRepository;
-
+import com.onyxdb.idm.repositories.OrganizationUnitRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -16,29 +15,42 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class DomainComponentService {
-
     private final DomainComponentRepository domainComponentRepository;
-    private final DomainComponentTable domainComponentTable = Tables.DOMAIN_COMPONENT_TABLE;
+    private final OrganizationUnitRepository organizationUnitRepository;
 
-    public Optional<DomainComponent> findById(UUID id) {
-        return domainComponentRepository.findById(id);
+    public DomainComponent findById(UUID id) {
+        Optional<DomainComponent> domainComponent = domainComponentRepository.findById(id);
+        return domainComponent.orElseThrow(() -> new ResourceNotFoundException("DomainComponent not found"));
     }
 
     public List<DomainComponent> findAll() {
         return domainComponentRepository.findAll();
     }
 
-    @Transactional
-    public void create(DomainComponent domainComponent) {
-        domainComponentRepository.create(domainComponent);
+    public DomainComponent create(DomainComponent domainComponent) {
+        DomainComponent forCreate = new DomainComponent(
+                UUID.randomUUID(),
+                domainComponent.name(),
+                domainComponent.description(),
+                LocalDateTime.now(),
+                LocalDateTime.now()
+        );
+        domainComponentRepository.create(forCreate);
+        return forCreate;
     }
 
-    @Transactional
-    public void update(DomainComponent domainComponent) {
-        domainComponentRepository.update(domainComponent);
+    public DomainComponent update(DomainComponent domainComponent) {
+        DomainComponent forUpdate = new DomainComponent(
+                domainComponent.id(),
+                domainComponent.name(),
+                domainComponent.description(),
+                domainComponent.createdAt(),
+                LocalDateTime.now()
+        );
+        domainComponentRepository.update(forUpdate);
+        return forUpdate;
     }
 
-    @Transactional
     public void delete(UUID id) {
         domainComponentRepository.delete(id);
     }

@@ -2,6 +2,7 @@ package com.onyxdb.idm.services;
 
 import com.onyxdb.idm.controllers.v1.ResourceNotFoundException;
 import com.onyxdb.idm.models.Account;
+import com.onyxdb.idm.models.BusinessRole;
 import com.onyxdb.idm.repositories.AccountRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -64,8 +65,20 @@ public class AccountService {
         accountRepository.delete(id);
     }
 
-
     private String encodePassword(String password) {
         return passwordEncoder.encode(password);
+    }
+
+
+    public void addBusinessRole(UUID accountId, UUID businessRoleId) {
+        accountRepository.addBusinessRole(accountId, businessRoleId);
+    }
+
+    public void removeBusinessRole(UUID accountId, UUID businessRoleId) {
+        accountRepository.removeBusinessRole(accountId, businessRoleId);
+    }
+
+    public List<BusinessRole> getBusinessRoles(UUID accountId) {
+        return accountRepository.getAccountBusinessRoles(accountId);
     }
 }
