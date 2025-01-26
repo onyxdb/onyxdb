@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * @author ArtemFed
+ */
 public interface ProjectRepository {
     Optional<Project> findById(UUID id);
 

@@ -7,6 +7,9 @@ import java.util.UUID;
 import com.onyxdb.idm.generated.jooq.tables.records.PermissionTableRecord;
 import com.onyxdb.idm.generated.openapi.models.PermissionDTO;
 
+/**
+ * @author ArtemFed
+ */
 public record Permission(
         UUID id,
         String actionType,

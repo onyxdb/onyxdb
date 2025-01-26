@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * @author ArtemFed
+ */
 public interface OrganizationUnitRepository {
     Optional<OrganizationUnit> findById(UUID id);
 

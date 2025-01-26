@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * @author ArtemFed
+ */
 @Repository
 @RequiredArgsConstructor
 public class OrganizationUnitPostgresRepository implements OrganizationUnitRepository {
@@ -76,10 +79,6 @@ public class OrganizationUnitPostgresRepository implements OrganizationUnitRepos
                 .execute();
     }
 
-    /**
-     * @param ouId
-     * @param accountId
-     */
     @Override
     public void addAccount(UUID ouId, UUID accountId) {
         dslContext.insertInto(organizationUnitAccountTable)
@@ -88,10 +87,6 @@ public class OrganizationUnitPostgresRepository implements OrganizationUnitRepos
                 .execute();
     }
 
-    /**
-     * @param ouId
-     * @param accountId
-     */
     @Override
     public void removeAccount(UUID ouId, UUID accountId) {
         dslContext.deleteFrom(organizationUnitAccountTable)
@@ -100,10 +95,6 @@ public class OrganizationUnitPostgresRepository implements OrganizationUnitRepos
                 .execute();
     }
 
-    /**
-     * @param ouId
-     * @return
-     */
     @Override
     public List<Account> getOUAccounts(UUID ouId) {
         return dslContext.selectFrom(organizationUnitAccountTable)

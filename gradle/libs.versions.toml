@@ -54,6 +54,6 @@ postgresql-postgresql = { group = "org.postgresql", name = "postgresql", version
 apacheCommons-commonsLang3 = { group = "org.apache.commons", name = "commons-lang3", version.ref = "apacheCommons-commonsLang3" }
 springDoc-springdocOpenapiStarterWebmvcUi = { group = "org.springdoc", name = "springdoc-openapi-starter-webmvc-ui", version.ref = "springDoc-springdocOpenapiStarterWebmvcUi" }
 # GraphQL:
-netflix-graphql-dgs-codegen  = { group = "com.netflix.graphql.dgs", name = "graphql-dgs-spring-graphql-starter"}
-netflix-graphql-dgs-starterTest  = { group = "com.netflix.graphql.dgs", name = "graphql-dgs-spring-graphql-starter-test"}
-junit-platformLauncher  = { group = "org.junit.platform", name = "junit-platform-launcher"}
+netflix-graphql-dgs-codegen  = { group = "com.netflix.graphql.dgs", name = "graphql-dgs-spring-graphql-starter" }
+netflix-graphql-dgs-starterTest  = { group = "com.netflix.graphql.dgs", name = "graphql-dgs-spring-graphql-starter-test" }
+junit-platformLauncher  = { group = "org.junit.platform", name = "junit-platform-launcher" }

@@ -13,6 +13,9 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * @author ArtemFed
+ */
 @RestController
 @RequiredArgsConstructor
 public class ServicesController implements ServicesApi {

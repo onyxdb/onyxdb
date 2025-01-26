@@ -6,6 +6,9 @@ import java.util.UUID;
 import com.onyxdb.idm.generated.jooq.tables.records.DomainComponentTableRecord;
 import com.onyxdb.idm.generated.openapi.models.DomainComponentDTO;
 
+/**
+ * @author ArtemFed
+ */
 public record DomainComponent(
         UUID id,
         String name,

@@ -12,9 +12,11 @@ import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * @author ArtemFed
+ */
 @org.springframework.stereotype.Service
 @RequiredArgsConstructor
 public class ProjectService {

@@ -6,6 +6,9 @@ import java.util.UUID;
 import com.onyxdb.idm.generated.jooq.tables.records.ServiceTableRecord;
 import com.onyxdb.idm.generated.openapi.models.ServiceDTO;
 
+/**
+ * @author ArtemFed
+ */
 public record Service(
         UUID id,
         String name,

@@ -3,6 +3,9 @@ package com.onyxdb.idm;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+/**
+ * @author ArtemFed
+ */
 @SpringBootApplication
 public class IdmApplication {
     public static void main(String[] args) {

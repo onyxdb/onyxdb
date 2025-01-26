@@ -6,6 +6,9 @@ import java.util.UUID;
 import com.onyxdb.idm.generated.jooq.tables.records.OrganizationUnitTableRecord;
 import com.onyxdb.idm.generated.openapi.models.OrganizationUnitDTO;
 
+/**
+ * @author ArtemFed
+ */
 public record OrganizationUnit(
         UUID id,
         String name,

@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * @author ArtemFed
+ */
 public interface BusinessRoleRepository {
     Optional<BusinessRole> findById(UUID id);
 

@@ -16,6 +16,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * @author ArtemFed
+ */
 @Repository
 @RequiredArgsConstructor
 public class BusinessRolePostgresRepository implements BusinessRoleRepository {
@@ -76,10 +79,6 @@ public class BusinessRolePostgresRepository implements BusinessRoleRepository {
                 .execute();
     }
 
-    /**
-     * @param businessRoleId
-     * @param roleId
-     */
     @Override
     public void addRole(UUID businessRoleId, UUID roleId) {
         dslContext.insertInto(businessRoleToRoleTable)
@@ -88,10 +87,6 @@ public class BusinessRolePostgresRepository implements BusinessRoleRepository {
                 .execute();
     }
 
-    /**
-     * @param businessRoleId
-     * @param roleId
-     */
     @Override
     public void removeRole(UUID businessRoleId, UUID roleId) {
         dslContext.deleteFrom(businessRoleToRoleTable)
@@ -100,10 +95,6 @@ public class BusinessRolePostgresRepository implements BusinessRoleRepository {
                 .execute();
     }
 
-    /**
-     * @param businessRoleId
-     * @return
-     */
     @Override
     public List<Role> getRoleByBusinessRoleId(UUID businessRoleId) {
         return dslContext.selectFrom(businessRoleToRoleTable)

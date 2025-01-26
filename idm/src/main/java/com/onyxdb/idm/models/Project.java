@@ -6,6 +6,9 @@ import java.util.UUID;
 import com.onyxdb.idm.generated.jooq.tables.records.ProjectTableRecord;
 import com.onyxdb.idm.generated.openapi.models.ProjectDTO;
 
+/**
+ * @author ArtemFed
+ */
 public record Project(
         UUID id,
         String name,

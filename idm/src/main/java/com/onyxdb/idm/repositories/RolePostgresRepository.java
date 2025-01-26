@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * @author ArtemFed
+ */
 @Repository
 @RequiredArgsConstructor
 public class RolePostgresRepository implements RoleRepository {

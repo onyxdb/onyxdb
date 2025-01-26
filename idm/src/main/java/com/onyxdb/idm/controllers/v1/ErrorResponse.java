@@ -22,11 +22,6 @@ public class ErrorResponse {
         this.message = message;
     }
 
-    /**
-     * Get message
-     *
-     * @return message
-     */
     @Schema(name = "message", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     @JsonProperty("message")
     public String getMessage() {

@@ -6,6 +6,9 @@ import java.util.UUID;
 import com.onyxdb.idm.generated.jooq.tables.records.ResourceTableRecord;
 import com.onyxdb.idm.generated.openapi.models.ResourceDTO;
 
+/**
+ * @author ArtemFed
+ */
 public record Resource(
         UUID id,
         String resourceType,

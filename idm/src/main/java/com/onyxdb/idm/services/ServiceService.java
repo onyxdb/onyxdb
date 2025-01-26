@@ -11,6 +11,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * @author ArtemFed
+ */
 @org.springframework.stereotype.Service
 @RequiredArgsConstructor
 public class ServiceService {

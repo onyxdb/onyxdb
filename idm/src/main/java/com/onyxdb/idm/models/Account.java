@@ -6,6 +6,9 @@ import java.util.UUID;
 import com.onyxdb.idm.generated.jooq.tables.records.AccountTableRecord;
 import com.onyxdb.idm.generated.openapi.models.AccountDTO;
 
+/**
+ * @author ArtemFed
+ */
 public record Account(
         UUID id,
         String username,

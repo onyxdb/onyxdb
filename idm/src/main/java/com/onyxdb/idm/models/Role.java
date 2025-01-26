@@ -6,6 +6,9 @@ import java.util.UUID;
 import com.onyxdb.idm.generated.jooq.tables.records.RoleTableRecord;
 import com.onyxdb.idm.generated.openapi.models.RoleDTO;
 
+/**
+ * @author ArtemFed
+ */
 public record Role(
         UUID id,
         String name,
