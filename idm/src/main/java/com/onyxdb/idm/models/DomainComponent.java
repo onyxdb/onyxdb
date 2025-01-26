@@ -3,6 +3,7 @@ package com.onyxdb.idm.models;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.onyxdb.idm.generated.jooq.tables.records.DomainComponentTableRecord;
 import com.onyxdb.idm.generated.openapi.models.DomainComponentDTO;
 
 public record DomainComponent(
@@ -28,6 +29,16 @@ public record DomainComponent(
                 domainComponentDTO.getDescription(),
                 domainComponentDTO.getCreatedAt(),
                 domainComponentDTO.getUpdatedAt()
+        );
+    }
+
+    public static DomainComponent fromDAO(DomainComponentTableRecord domainComponentDAO) {
+        return new DomainComponent(
+                domainComponentDAO.getId(),
+                domainComponentDAO.getName(),
+                domainComponentDAO.getDescription(),
+                domainComponentDAO.getCreatedAt(),
+                domainComponentDAO.getUpdatedAt()
         );
     }
 }

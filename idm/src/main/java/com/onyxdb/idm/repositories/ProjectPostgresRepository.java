@@ -23,47 +23,20 @@ public class ProjectPostgresRepository implements ProjectRepository {
     public Optional<Project> findById(UUID id) {
         return dslContext.selectFrom(projectTable)
                 .where(projectTable.ID.eq(id))
-                .fetchOptional(record -> new Project(
-                        record.getId(),
-                        record.getName(),
-                        record.getDescription(),
-                        record.getCreatedAt(),
-                        record.getUpdatedAt(),
-                        record.getResourceId(),
-                        record.getOrganizationId(),
-                        record.getOwnerId()
-                ));
+                .fetchOptional(Project::fromDAO);
     }
 
     @Override
     public List<Project> findAll() {
         return dslContext.selectFrom(projectTable)
-                .fetch(record -> new Project(
-                        record.getId(),
-                        record.getName(),
-                        record.getDescription(),
-                        record.getCreatedAt(),
-                        record.getUpdatedAt(),
-                        record.getResourceId(),
-                        record.getOrganizationId(),
-                        record.getOwnerId()
-                ));
+                .fetch(Project::fromDAO);
     }
 
     @Override
     public List<Project> findByOrganizationId(UUID organizationId) {
         return dslContext.selectFrom(projectTable)
                 .where(projectTable.ORGANIZATION_ID.eq(organizationId))
-                .fetch(record -> new Project(
-                        record.getId(),
-                        record.getName(),
-                        record.getDescription(),
-                        record.getCreatedAt(),
-                        record.getUpdatedAt(),
-                        record.getResourceId(),
-                        record.getOrganizationId(),
-                        record.getOwnerId()
-                ));
+                .fetch(Project::fromDAO);
     }
 
     @Override

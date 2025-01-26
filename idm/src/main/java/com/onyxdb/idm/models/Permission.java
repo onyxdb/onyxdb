@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import com.onyxdb.idm.generated.jooq.tables.records.PermissionTableRecord;
 import com.onyxdb.idm.generated.openapi.models.PermissionDTO;
 
 public record Permission(
@@ -32,6 +33,17 @@ public record Permission(
                 permissionDTO.getResourceFields(),
                 permissionDTO.getCreatedAt(),
                 permissionDTO.getUpdatedAt()
+        );
+    }
+
+    public static Permission fromDAO(PermissionTableRecord permissionDAO) {
+        return new Permission(
+                permissionDAO.getId(),
+                permissionDAO.getActionType(),
+                permissionDAO.getResourceType(),
+                List.of(permissionDAO.getResourceFields()),
+                permissionDAO.getCreatedAt(),
+                permissionDAO.getUpdatedAt()
         );
     }
 }

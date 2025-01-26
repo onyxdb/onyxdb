@@ -4,6 +4,7 @@ import com.onyxdb.idm.controllers.v1.ResourceNotFoundException;
 import com.onyxdb.idm.models.BusinessRole;
 import com.onyxdb.idm.models.Role;
 import com.onyxdb.idm.repositories.BusinessRoleRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +19,9 @@ public class BusinessRoleService {
     private final BusinessRoleRepository businessRoleRepository;
 
     public BusinessRole findById(UUID id) {
-        Optional<BusinessRole> businessRole = businessRoleRepository.findById(id);
-        return businessRole.orElseThrow(() -> new ResourceNotFoundException("BusinessRole not found"));
+        return businessRoleRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("BusinessRole not found"));
     }
 
     public List<BusinessRole> findAll() {

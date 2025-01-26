@@ -3,6 +3,7 @@ package com.onyxdb.idm.models;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.onyxdb.idm.generated.jooq.tables.records.BusinessRoleTableRecord;
 import com.onyxdb.idm.generated.openapi.models.BusinessRoleDTO;
 
 public record BusinessRole(
@@ -31,6 +32,17 @@ public record BusinessRole(
                 businessRoleDTO.getParentId(),
                 businessRoleDTO.getCreatedAt(),
                 businessRoleDTO.getUpdatedAt()
+        );
+    }
+
+    public static BusinessRole fromDAO(BusinessRoleTableRecord businessRoleDAO) {
+        return new BusinessRole(
+                businessRoleDAO.getId(),
+                businessRoleDAO.getName(),
+                businessRoleDAO.getDescription(),
+                businessRoleDAO.getParentId(),
+                businessRoleDAO.getCreatedAt(),
+                businessRoleDAO.getUpdatedAt()
         );
     }
 }

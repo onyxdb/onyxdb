@@ -21,8 +21,9 @@ public class OrganizationService {
     private final OrganizationRepository organizationRepository;
 
     public Organization findById(UUID id) {
-        Optional<Organization> project = organizationRepository.findById(id);
-        return project.orElseThrow(() -> new ResourceNotFoundException("Organization not found"));
+        return organizationRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Organization not found"));
     }
 
     public List<Organization> findAll() {

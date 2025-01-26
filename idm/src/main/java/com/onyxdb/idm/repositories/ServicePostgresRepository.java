@@ -23,50 +23,20 @@ public class ServicePostgresRepository implements ServiceRepository {
     public Optional<Service> findById(UUID id) {
         return dslContext.selectFrom(serviceTable)
                 .where(serviceTable.ID.eq(id))
-                .fetchOptional(record -> new Service(
-                        record.getId(),
-                        record.getName(),
-                        record.getType(),
-                        record.getDescription(),
-                        record.getCreatedAt(),
-                        record.getUpdatedAt(),
-                        record.getResourceId(),
-                        record.getProjectId(),
-                        record.getOwnerId()
-                ));
+                .fetchOptional(Service::fromDAO);
     }
 
     @Override
     public List<Service> findAll() {
         return dslContext.selectFrom(serviceTable)
-                .fetch(record -> new Service(
-                        record.getId(),
-                        record.getName(),
-                        record.getType(),
-                        record.getDescription(),
-                        record.getCreatedAt(),
-                        record.getUpdatedAt(),
-                        record.getResourceId(),
-                        record.getProjectId(),
-                        record.getOwnerId()
-                ));
+                .fetch(Service::fromDAO);
     }
 
     @Override
     public List<Service> findByProjectId(UUID projectId) {
         return dslContext.selectFrom(serviceTable)
                 .where(serviceTable.PROJECT_ID.eq(projectId))
-                .fetch(record ->  new Service(
-                        record.getId(),
-                        record.getName(),
-                        record.getType(),
-                        record.getDescription(),
-                        record.getCreatedAt(),
-                        record.getUpdatedAt(),
-                        record.getResourceId(),
-                        record.getProjectId(),
-                        record.getOwnerId()
-                ));
+                .fetch(Service::fromDAO);
     }
 
     @Override

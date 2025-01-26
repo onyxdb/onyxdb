@@ -15,7 +15,6 @@ import java.util.UUID;
 @Repository
 @RequiredArgsConstructor
 public class ResourcePostgresRepository implements ResourceRepository {
-
     private final DSLContext dslContext;
     private final ResourceTable resourceTable = Tables.RESOURCE_TABLE;
 
@@ -23,23 +22,13 @@ public class ResourcePostgresRepository implements ResourceRepository {
     public Optional<Resource> findById(UUID id) {
         return dslContext.selectFrom(resourceTable)
                 .where(resourceTable.ID.eq(id))
-                .fetchOptional(record -> new Resource(
-                        record.getId(),
-                        record.getResourceType(),
-                        record.getCreatedAt(),
-                        record.getUpdatedAt()
-                ));
+                .fetchOptional(Resource::fromDAO);
     }
 
     @Override
     public List<Resource> findAll() {
         return dslContext.selectFrom(resourceTable)
-                .fetch(record -> new Resource(
-                        record.getId(),
-                        record.getResourceType(),
-                        record.getCreatedAt(),
-                        record.getUpdatedAt()
-                ));
+                .fetch(Resource::fromDAO);
     }
 
     @Override

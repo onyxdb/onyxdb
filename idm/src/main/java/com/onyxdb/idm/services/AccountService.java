@@ -24,9 +24,9 @@ public class AccountService {
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public Account findById(UUID id) {
-        Optional<Account> account = accountRepository.findById(id);
-        account.orElseThrow(() -> new ResourceNotFoundException("Account not found"));
-        return account.get();
+        return accountRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
     }
 
     public List<Account> findAll() {
@@ -68,7 +68,6 @@ public class AccountService {
     private String encodePassword(String password) {
         return passwordEncoder.encode(password);
     }
-
 
     public void addBusinessRole(UUID accountId, UUID businessRoleId) {
         accountRepository.addBusinessRole(accountId, businessRoleId);

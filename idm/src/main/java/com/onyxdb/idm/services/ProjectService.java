@@ -24,8 +24,9 @@ public class ProjectService {
     private final ServiceRepository serviceRepository;
 
     public Project findById(UUID id) {
-        Optional<Project> project = projectRepository.findById(id);
-        return project.orElseThrow(() -> new ResourceNotFoundException("Project not found"));
+        return projectRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Project not found"));
     }
 
     public List<Project> findAll() {

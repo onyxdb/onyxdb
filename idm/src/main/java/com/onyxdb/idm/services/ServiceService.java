@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @org.springframework.stereotype.Service
@@ -19,8 +18,9 @@ public class ServiceService {
     private final ResourceRepository resourceRepository;
 
     public Service findById(UUID id) {
-        Optional<Service> service = serviceRepository.findById(id);
-        return service.orElseThrow(() -> new ResourceNotFoundException("Service not found"));
+        return serviceRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Service not found"));
     }
 
     public List<Service> findAll() {

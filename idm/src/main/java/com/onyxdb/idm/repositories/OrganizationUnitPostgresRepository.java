@@ -28,44 +28,20 @@ public class OrganizationUnitPostgresRepository implements OrganizationUnitRepos
     public Optional<OrganizationUnit> findById(UUID id) {
         return dslContext.selectFrom(organizationUnitTable)
                 .where(organizationUnitTable.ID.eq(id))
-                .fetchOptional(record -> new OrganizationUnit(
-                        record.getId(),
-                        record.getName(),
-                        record.getDescription(),
-                        record.getDomainComponentId(),
-                        record.getParentId(),
-                        record.getCreatedAt(),
-                        record.getUpdatedAt()
-                ));
+                .fetchOptional(OrganizationUnit::fromDAO);
     }
 
     @Override
     public List<OrganizationUnit> findAll() {
         return dslContext.selectFrom(organizationUnitTable)
-                .fetch(record -> new OrganizationUnit(
-                        record.getId(),
-                        record.getName(),
-                        record.getDescription(),
-                        record.getDomainComponentId(),
-                        record.getParentId(),
-                        record.getCreatedAt(),
-                        record.getUpdatedAt()
-                ));
+                .fetch(OrganizationUnit::fromDAO);
     }
 
     @Override
     public List<OrganizationUnit> findByDomainComponentId(UUID domainComponentId) {
         return dslContext.selectFrom(organizationUnitTable)
                 .where(organizationUnitTable.DOMAIN_COMPONENT_ID.eq(domainComponentId))
-                .fetch(record -> new OrganizationUnit(
-                        record.getId(),
-                        record.getName(),
-                        record.getDescription(),
-                        record.getDomainComponentId(),
-                        record.getParentId(),
-                        record.getCreatedAt(),
-                        record.getUpdatedAt()
-                ));
+                .fetch(OrganizationUnit::fromDAO);
     }
 
     @Override
@@ -134,16 +110,7 @@ public class OrganizationUnitPostgresRepository implements OrganizationUnitRepos
                 .where(organizationUnitAccountTable.OU_ID.eq(ouId))
                 .fetch(link -> dslContext.selectFrom(accountTable)
                         .where(accountTable.ID.eq(link.getAccountId()))
-                        .fetchOne(item -> new Account(
-                                item.getId(),
-                                item.getUsername(),
-                                item.getPassword(),
-                                item.getEmail(),
-                                item.getFirstName(),
-                                item.getLastName(),
-                                item.getCreatedAt(),
-                                item.getUpdatedAt()
-                        ))
+                        .fetchOne(Account::fromDAO)
                 );
     }
 }

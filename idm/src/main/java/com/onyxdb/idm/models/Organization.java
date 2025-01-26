@@ -3,6 +3,7 @@ package com.onyxdb.idm.models;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.onyxdb.idm.generated.jooq.tables.records.OrganizationTableRecord;
 import com.onyxdb.idm.generated.openapi.models.OrganizationDTO;
 
 public record Organization(
@@ -34,6 +35,18 @@ public record Organization(
                 organizationDTO.getUpdatedAt(),
                 organizationDTO.getResourceId(),
                 organizationDTO.getOwnerId()
+        );
+    }
+
+    public static Organization fromDAO(OrganizationTableRecord organizationDAO) {
+        return new Organization(
+                organizationDAO.getId(),
+                organizationDAO.getName(),
+                organizationDAO.getDescription(),
+                organizationDAO.getCreatedAt(),
+                organizationDAO.getUpdatedAt(),
+                organizationDAO.getResourceId(),
+                organizationDAO.getOwnerId()
         );
     }
 }

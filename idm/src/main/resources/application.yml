@@ -20,12 +20,8 @@ spring:
   flyway:
     enabled: true
 
-#logging:
-#  level:
-#    root: INFO
-#
-#server:
-#  port: ${ONYXDB_IDM_API_HTTP_PORT:9002}
+server:
+  port: ${ONYXDB_IDM_API_HTTP_PORT:9002}
 
 springdoc:
   api-docs:

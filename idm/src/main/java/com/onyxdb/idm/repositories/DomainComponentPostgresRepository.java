@@ -22,25 +22,13 @@ public class DomainComponentPostgresRepository implements DomainComponentReposit
     public Optional<DomainComponent> findById(UUID id) {
         return dslContext.selectFrom(domainComponentTable)
                 .where(domainComponentTable.ID.eq(id))
-                .fetchOptional(record -> new DomainComponent(
-                        record.getId(),
-                        record.getName(),
-                        record.getDescription(),
-                        record.getCreatedAt(),
-                        record.getUpdatedAt()
-                ));
+                .fetchOptional(DomainComponent::fromDAO);
     }
 
     @Override
     public List<DomainComponent> findAll() {
         return dslContext.selectFrom(domainComponentTable)
-                .fetch(record -> new DomainComponent(
-                        record.getId(),
-                        record.getName(),
-                        record.getDescription(),
-                        record.getCreatedAt(),
-                        record.getUpdatedAt()
-                ));
+                .fetch(DomainComponent::fromDAO);
     }
 
     @Override

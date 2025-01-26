@@ -29,27 +29,13 @@ public class BusinessRolePostgresRepository implements BusinessRoleRepository {
     public Optional<BusinessRole> findById(UUID id) {
         return dslContext.selectFrom(businessRoleTable)
                 .where(businessRoleTable.ID.eq(id))
-                .fetchOptional(record -> new BusinessRole(
-                        record.getId(),
-                        record.getName(),
-                        record.getDescription(),
-                        record.getParentId(),
-                        record.getCreatedAt(),
-                        record.getUpdatedAt()
-                ));
+                .fetchOptional(BusinessRole::fromDAO);
     }
 
     @Override
     public List<BusinessRole> findAll() {
         return dslContext.selectFrom(businessRoleTable)
-                .fetch(record -> new BusinessRole(
-                        record.getId(),
-                        record.getName(),
-                        record.getDescription(),
-                        record.getParentId(),
-                        record.getCreatedAt(),
-                        record.getUpdatedAt()
-                ));
+                .fetch(BusinessRole::fromDAO);
     }
 
 
@@ -57,14 +43,7 @@ public class BusinessRolePostgresRepository implements BusinessRoleRepository {
     public List<BusinessRole> findByParentId(UUID parentId) {
         return dslContext.selectFrom(businessRoleTable)
                 .where(businessRoleTable.PARENT_ID.eq(parentId))
-                .fetch(record -> new BusinessRole(
-                        record.getId(),
-                        record.getName(),
-                        record.getDescription(),
-                        record.getParentId(),
-                        record.getCreatedAt(),
-                        record.getUpdatedAt()
-                ));
+                .fetch(BusinessRole::fromDAO);
     }
 
     @Override
@@ -131,14 +110,7 @@ public class BusinessRolePostgresRepository implements BusinessRoleRepository {
                 .where(businessRoleToRoleTable.BUSINESS_ROLE_ID.eq(businessRoleId))
                 .fetch(link -> dslContext.selectFrom(roleTable)
                         .where(roleTable.ID.eq(link.getRoleId()))
-                        .fetchOne(item -> new Role(
-                                item.getId(),
-                                item.getName(),
-                                item.getDescription(),
-                                item.getResourceId(),
-                                item.getCreatedAt(),
-                                item.getUpdatedAt()
-                        ))
+                        .fetchOne(Role::fromDAO)
                 );
     }
 }

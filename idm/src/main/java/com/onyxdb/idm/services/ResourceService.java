@@ -17,8 +17,9 @@ public class ResourceService {
     private final ResourceRepository resourceRepository;
 
     public Resource findById(UUID id) {
-        Optional<Resource> resource = resourceRepository.findById(id);
-        return resource.orElseThrow(() -> new ResourceNotFoundException("Resource not found"));
+        return resourceRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Resource not found"));
     }
 
     public List<Resource> findAll() {

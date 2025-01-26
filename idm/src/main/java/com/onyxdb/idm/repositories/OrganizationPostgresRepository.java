@@ -23,29 +23,13 @@ public class OrganizationPostgresRepository implements OrganizationRepository {
     public Optional<Organization> findById(UUID id) {
         return dslContext.selectFrom(organizationTable)
                 .where(organizationTable.ID.eq(id))
-                .fetchOptional(record -> new Organization(
-                        record.getId(),
-                        record.getName(),
-                        record.getDescription(),
-                        record.getCreatedAt(),
-                        record.getUpdatedAt(),
-                        record.getResourceId(),
-                        record.getOwnerId()
-                ));
+                .fetchOptional(Organization::fromDAO);
     }
 
     @Override
     public List<Organization> findAll() {
         return dslContext.selectFrom(organizationTable)
-                .fetch(record -> new Organization(
-                        record.getId(),
-                        record.getName(),
-                        record.getDescription(),
-                        record.getCreatedAt(),
-                        record.getUpdatedAt(),
-                        record.getResourceId(),
-                        record.getOwnerId()
-                ));
+                .fetch(Organization::fromDAO);
     }
 
     @Override

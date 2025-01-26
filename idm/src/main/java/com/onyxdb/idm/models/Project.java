@@ -3,6 +3,7 @@ package com.onyxdb.idm.models;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.onyxdb.idm.generated.jooq.tables.records.ProjectTableRecord;
 import com.onyxdb.idm.generated.openapi.models.ProjectDTO;
 
 public record Project(
@@ -37,6 +38,19 @@ public record Project(
                 projectDTO.getResourceId(),
                 projectDTO.getOrganizationId(),
                 projectDTO.getOwnerId()
+        );
+    }
+
+    public static Project fromDAO(ProjectTableRecord projectDAO) {
+        return new Project(
+                projectDAO.getId(),
+                projectDAO.getName(),
+                projectDAO.getDescription(),
+                projectDAO.getCreatedAt(),
+                projectDAO.getUpdatedAt(),
+                projectDAO.getResourceId(),
+                projectDAO.getOrganizationId(),
+                projectDAO.getOwnerId()
         );
     }
 }

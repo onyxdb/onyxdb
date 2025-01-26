@@ -3,6 +3,7 @@ package com.onyxdb.idm.models;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.onyxdb.idm.generated.jooq.tables.records.AccountTableRecord;
 import com.onyxdb.idm.generated.openapi.models.AccountDTO;
 
 public record Account(
@@ -37,6 +38,19 @@ public record Account(
                 accountDTO.getLastName(),
                 accountDTO.getCreatedAt(),
                 accountDTO.getUpdatedAt()
+        );
+    }
+
+    public static Account fromDAO(AccountTableRecord accountDAO) {
+        return new Account(
+                accountDAO.getId(),
+                accountDAO.getUsername(),
+                accountDAO.getPassword(),
+                accountDAO.getEmail(),
+                accountDAO.getFirstName(),
+                accountDAO.getLastName(),
+                accountDAO.getCreatedAt(),
+                accountDAO.getUpdatedAt()
         );
     }
 }

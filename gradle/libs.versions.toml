@@ -1,5 +1,6 @@
 [versions]
 springBoot = "3.3.5"
+springSecurity = "6.4.2"
 openapiGenerator = "7.5.0"
 swaggerCoreV3-swaggerAnnotations = "2.2.20"
 javaxAnnotation-annotionApi = "1.3.2"
@@ -16,19 +17,20 @@ postgresql-postgresql = "42.7.2"
 apacheCommons-commonsLang3 = "3.17.0"
 springDoc-springdocOpenapiStarterWebmvcUi = "2.6.0"
 # GraphQL:
-netflixDgsVersion = "10.0.1"
-netflixDgsCodegenVersion = "7.0.3"
+netflix-dgs-version = "10.0.1"
+netflix-dgs-codegen-version = "7.0.3"
 
 [plugins]
 onyxdb-javaAppConventions = { id = "onyxdb-java-app-conventions" }
 onyxdb-javaLibraryConventions = { id = "onyxdb-java-library-conventions" }
 onyxdb-javaSpringAppConventions = { id = "onyxdb-java-spring-app-conventions" }
 onyxdb-jooqManualConventions = { id = "onyxdb-jooq-manual-conventions" }
+spring-dependencyManagement = { id = "io.spring.dependency-management" }
 
 springBoot = { id = "org.springframework.boot" }
 openapiGenerator = { id = "org.openapi.generator", version.ref = "openapiGenerator" }
 lombok = { id = "io.freefair.lombok", version.ref = "lombok-gradlePlugin" }
-netflixDGSCodegen  = { id = "com.netflix.dgs.codegen", version.ref = "netflixDgsCodegenVersion" }
+netflixDGSCodegen  = { id = "com.netflix.dgs.codegen", version.ref = "netflix-dgs-codegen-version" }
 
 [libraries]
 springBoot-gradlePlugin = { group = "org.springframework.boot", name = "spring-boot-gradle-plugin", version.ref = "springBoot" }
@@ -38,6 +40,7 @@ springBoot-starterLog4j2 = { group = "org.springframework.boot", name = "spring-
 springBoot-starterTest = { group = "org.springframework.boot", name = "spring-boot-starter-test", version.ref = "springBoot" }
 springBoot-starterJdbc = { group = "org.springframework.boot", name = "spring-boot-starter-jdbc", version.ref = "springBoot" }
 springBoot-starterValidation = { group = "org.springframework.boot", name = "spring-boot-starter-validation", version.ref = "springBoot" }
+springSecurity-crypto = { group = "org.springframework.security", name = "spring-security-crypto", version.ref = "springSecurity"}
 swaggerCoreV3-swaggerAnnotations = { group = "io.swagger.core.v3", name = "swagger-annotations", version.ref = "swaggerCoreV3-swaggerAnnotations" }
 javaxAnnotation-annotionApi = { group = "javax.annotation", name = "javax.annotation-api", version.ref = "javaxAnnotation-annotionApi" }
 javaxValidation-validationApi = { group = "javax.validation", name = "validation-api", version.ref = "javaxValidation-validationApi" }

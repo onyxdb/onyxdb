@@ -32,32 +32,30 @@ public class AccountPostgresRepository implements AccountRepository {
     public Optional<Account> findById(UUID id) {
         return dslContext.selectFrom(accountTable)
                 .where(accountTable.ID.eq(id))
-                .fetchOptional(record -> new Account(
-                        record.getId(),
-                        record.getUsername(),
-                        record.getPassword(),
-                        record.getEmail(),
-                        record.getFirstName(),
-                        record.getLastName(),
-                        record.getCreatedAt(),
-                        record.getUpdatedAt()
-                ));
+                .fetchOptional(Account::fromDAO);
     }
 
     @Override
     public List<Account> findAll() {
         return dslContext.selectFrom(accountTable)
-                .fetch(record -> new Account(
-                        record.getId(),
-                        record.getUsername(),
-                        record.getPassword(),
-                        record.getEmail(),
-                        record.getFirstName(),
-                        record.getLastName(),
-                        record.getCreatedAt(),
-                        record.getUpdatedAt()
-                ));
+                .fetch(Account::fromDAO);
     }
+
+//    @Override
+//    public void create(Account account) {
+//        dslContext.insertInto(
+//                        accountTable,
+//                        accountTable.ID,
+//                        accountTable.USERNAME,
+//                        accountTable.PASSWORD,
+//                        accountTable.EMAIL,
+//                        accountTable.FIRST_NAME,
+//                        accountTable.LAST_NAME,
+//                        accountTable.CREATED_AT,
+//                        accountTable.UPDATED_AT
+//                ).valuesOfRecords(account)
+//                .execute();
+//    }
 
     @Override
     public void create(Account account) {
@@ -127,15 +125,7 @@ public class AccountPostgresRepository implements AccountRepository {
                 .where(accountBusinessRoleTable.ACCOUNT_ID.eq(accountId))
                 .fetch(link -> dslContext.selectFrom(businessRoleTable)
                         .where(businessRoleTable.ID.eq(link.getBusinessRoleId()))
-                        .fetchOne(item -> new BusinessRole(
-                                item.getId(),
-                                item.getName(),
-                                item.getDescription(),
-                                item.getParentId(),
-                                item.getCreatedAt(),
-                                item.getUpdatedAt()
-                        ))
-                );
+                        .fetchOne(BusinessRole::fromDAO));
     }
 
     /**
@@ -172,14 +162,7 @@ public class AccountPostgresRepository implements AccountRepository {
                 .where(accountRoleTable.ACCOUNT_ID.eq(accountId))
                 .fetch(link -> dslContext.selectFrom(roleTable)
                         .where(roleTable.ID.eq(link.getRoleId()))
-                        .fetchOne(item -> new Role(
-                                item.getId(),
-                                item.getName(),
-                                item.getDescription(),
-                                item.getResourceId(),
-                                item.getCreatedAt(),
-                                item.getUpdatedAt()
-                        ))
+                        .fetchOne(Role::fromDAO)
                 );
     }
 }

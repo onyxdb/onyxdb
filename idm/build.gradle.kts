@@ -5,7 +5,7 @@ plugins {
     alias(libs.plugins.openapiGenerator)
     alias(libs.plugins.netflixDGSCodegen)
 
-    id("io.spring.dependency-management")
+    alias(libs.plugins.spring.dependencyManagement)
 }
 
 
@@ -13,8 +13,8 @@ configurations.all {
     exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
 }
 
-//extra["netflixDgsVersion"] = libs.versions.netflixDgsVersion
-extra["netflixDgsVersion"] = "10.0.1"
+//extra["netflixDgsVersion"] = libs.versions.netflix.dgs.version
+extra["netflixDgsVersion"] = "10.0.1" // Без этого не работает ниже dependencyManagement
 
 dependencies {
     implementation(project(":common:postgres"))
@@ -81,6 +81,15 @@ sourceSets {
         }
     }
 }
+
+buildscript {
+    dependencies {
+        classpath("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml") {
+            version { strictly("2.14.2") }
+        }
+    }
+}
+
 
 tasks.generateJava {
     schemaPaths.add("${projectDir}/src/main/resources/schema")

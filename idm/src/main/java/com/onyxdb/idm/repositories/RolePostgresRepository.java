@@ -28,27 +28,13 @@ public class RolePostgresRepository implements RoleRepository {
     public Optional<Role> findById(UUID id) {
         return dslContext.selectFrom(roleTable)
                 .where(roleTable.ID.eq(id))
-                .fetchOptional(record -> new Role(
-                        record.getId(),
-                        record.getName(),
-                        record.getDescription(),
-                        record.getResourceId(),
-                        record.getCreatedAt(),
-                        record.getUpdatedAt()
-                ));
+                .fetchOptional(Role::fromDAO);
     }
 
     @Override
     public List<Role> findAll() {
         return dslContext.selectFrom(roleTable)
-                .fetch(record -> new Role(
-                        record.getId(),
-                        record.getName(),
-                        record.getDescription(),
-                        record.getResourceId(),
-                        record.getCreatedAt(),
-                        record.getUpdatedAt()
-                ));
+                .fetch(Role::fromDAO);
     }
 
     @Override
@@ -102,14 +88,7 @@ public class RolePostgresRepository implements RoleRepository {
                 .where(roleToPermissionTable.ROLE_ID.eq(roleId))
                 .fetch(link -> dslContext.selectFrom(permissionTable)
                         .where(permissionTable.ID.eq(link.getPermissionId()))
-                        .fetchOne(permission -> new Permission(
-                                permission.getId(),
-                                permission.getActionType(),
-                                permission.getResourceType(),
-                                List.of(permission.getResourceFields()),
-                                permission.getCreatedAt(),
-                                permission.getUpdatedAt()
-                        ))
+                        .fetchOne(Permission::fromDAO)
                 );
     }
 }

@@ -3,6 +3,7 @@ package com.onyxdb.idm.models;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.onyxdb.idm.generated.jooq.tables.records.RoleTableRecord;
 import com.onyxdb.idm.generated.openapi.models.RoleDTO;
 
 public record Role(
@@ -31,6 +32,17 @@ public record Role(
                 roleDTO.getResourceId(),
                 roleDTO.getCreatedAt(),
                 roleDTO.getUpdatedAt()
+        );
+    }
+
+    public static Role fromDAO(RoleTableRecord roleDAO) {
+        return new Role(
+                roleDAO.getId(),
+                roleDAO.getName(),
+                roleDAO.getDescription(),
+                roleDAO.getResourceId(),
+                roleDAO.getCreatedAt(),
+                roleDAO.getUpdatedAt()
         );
     }
 }

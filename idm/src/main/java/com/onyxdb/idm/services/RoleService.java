@@ -18,8 +18,9 @@ public class RoleService {
     private final RoleRepository roleRepository;
 
     public Role findById(UUID id) {
-        Optional<Role> role = roleRepository.findById(id);
-        return role.orElseThrow(() -> new ResourceNotFoundException("Role not found"));
+        return roleRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
     }
 
     public List<Role> findAll() {

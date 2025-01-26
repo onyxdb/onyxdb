@@ -3,6 +3,7 @@ package com.onyxdb.idm.models;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.onyxdb.idm.generated.jooq.tables.records.ServiceTableRecord;
 import com.onyxdb.idm.generated.openapi.models.ServiceDTO;
 
 public record Service(
@@ -40,6 +41,20 @@ public record Service(
                 serviceDTO.getResourceId(),
                 serviceDTO.getProjectId(),
                 serviceDTO.getOwnerId()
+        );
+    }
+
+    public static Service fromDAO(ServiceTableRecord serviceDAO) {
+        return new Service(
+                serviceDAO.getId(),
+                serviceDAO.getName(),
+                serviceDAO.getType(),
+                serviceDAO.getDescription(),
+                serviceDAO.getCreatedAt(),
+                serviceDAO.getUpdatedAt(),
+                serviceDAO.getResourceId(),
+                serviceDAO.getProjectId(),
+                serviceDAO.getOwnerId()
         );
     }
 }

@@ -3,6 +3,7 @@ package com.onyxdb.idm.models;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.onyxdb.idm.generated.jooq.tables.records.ResourceTableRecord;
 import com.onyxdb.idm.generated.openapi.models.ResourceDTO;
 
 public record Resource(
@@ -25,6 +26,15 @@ public record Resource(
                 resourceDTO.getResourceType(),
                 resourceDTO.getCreatedAt(),
                 resourceDTO.getUpdatedAt()
+        );
+    }
+
+    public static Resource fromDAO(ResourceTableRecord resourceDAO) {
+        return new Resource(
+                resourceDAO.getId(),
+                resourceDAO.getResourceType(),
+                resourceDAO.getCreatedAt(),
+                resourceDAO.getUpdatedAt()
         );
     }
 }

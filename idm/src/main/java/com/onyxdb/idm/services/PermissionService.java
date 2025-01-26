@@ -17,8 +17,9 @@ public class PermissionService {
     private final PermissionRepository permissionRepository;
 
     public Permission findById(UUID id) {
-        Optional<Permission> permission = permissionRepository.findById(id);
-        return permission.orElseThrow(() -> new ResourceNotFoundException("Permission not found"));
+        return permissionRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Permission not found"));
     }
 
     public List<Permission> findAll() {

@@ -23,27 +23,13 @@ public class PermissionPostgresRepository implements PermissionRepository {
     public Optional<Permission> findById(UUID id) {
         return dslContext.selectFrom(permissionTable)
                 .where(permissionTable.ID.eq(id))
-                .fetchOptional(record -> new Permission(
-                        record.getId(),
-                        record.getActionType(),
-                        record.getResourceType(),
-                        List.of(record.getResourceFields()),
-                        record.getCreatedAt(),
-                        record.getUpdatedAt()
-                ));
+                .fetchOptional(Permission::fromDAO);
     }
 
     @Override
     public List<Permission> findAll() {
         return dslContext.selectFrom(permissionTable)
-                .fetch(record -> new Permission(
-                        record.getId(),
-                        record.getActionType(),
-                        record.getResourceType(),
-                        List.of(record.getResourceFields()),
-                        record.getCreatedAt(),
-                        record.getUpdatedAt()
-                ));
+                .fetch(Permission::fromDAO);
     }
 
     @Override

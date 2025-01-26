@@ -20,8 +20,9 @@ public class DomainComponentService {
     private final OrganizationUnitRepository organizationUnitRepository;
 
     public DomainComponent findById(UUID id) {
-        Optional<DomainComponent> domainComponent = domainComponentRepository.findById(id);
-        return domainComponent.orElseThrow(() -> new ResourceNotFoundException("DomainComponent not found"));
+        return domainComponentRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("DomainComponent not found"));
     }
 
     public List<OrganizationUnit> findChildrenOrganizationUnits(UUID id) {
