@@ -8,5 +8,5 @@ import com.onyxdb.mdb.models.ClusterOperation;
  * @author foxleren
  */
 public interface ClusterOperationRepository {
-    void createBulk(List<ClusterOperation> clusterOperations);
+    void create(ClusterOperation operation);
 }

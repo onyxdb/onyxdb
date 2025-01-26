@@ -4,9 +4,9 @@
 package com.onyxdb.mdb.generated.jooq;
 
 
-import com.onyxdb.mdb.generated.jooq.tables.Cluster;
-import com.onyxdb.mdb.generated.jooq.tables.ClusterOperation;
-import com.onyxdb.mdb.generated.jooq.tables.ClusterOperationQueue;
+import com.onyxdb.mdb.generated.jooq.tables.ClusterOperations;
+import com.onyxdb.mdb.generated.jooq.tables.ClusterTasks;
+import com.onyxdb.mdb.generated.jooq.tables.Clusters;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,19 +30,19 @@ public class Public extends SchemaImpl {
     public static final Public PUBLIC = new Public();
 
     /**
-     * The table <code>public.cluster</code>.
+     * The table <code>public.cluster_operations</code>.
      */
-    public final Cluster CLUSTER = Cluster.CLUSTER;
+    public final ClusterOperations CLUSTER_OPERATIONS = ClusterOperations.CLUSTER_OPERATIONS;
 
     /**
-     * The table <code>public.cluster_operation</code>.
+     * The table <code>public.cluster_tasks</code>.
      */
-    public final ClusterOperation CLUSTER_OPERATION = ClusterOperation.CLUSTER_OPERATION;
+    public final ClusterTasks CLUSTER_TASKS = ClusterTasks.CLUSTER_TASKS;
 
     /**
-     * The table <code>public.cluster_operation_queue</code>.
+     * The table <code>public.clusters</code>.
      */
-    public final ClusterOperationQueue CLUSTER_OPERATION_QUEUE = ClusterOperationQueue.CLUSTER_OPERATION_QUEUE;
+    public final Clusters CLUSTERS = Clusters.CLUSTERS;
 
     /**
      * No further instances allowed
@@ -60,9 +60,9 @@ public class Public extends SchemaImpl {
     @Override
     public final List<Table<?>> getTables() {
         return Arrays.asList(
-            Cluster.CLUSTER,
-            ClusterOperation.CLUSTER_OPERATION,
-            ClusterOperationQueue.CLUSTER_OPERATION_QUEUE
+            ClusterOperations.CLUSTER_OPERATIONS,
+            ClusterTasks.CLUSTER_TASKS,
+            Clusters.CLUSTERS
         );
     }
 }

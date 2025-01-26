@@ -5,13 +5,15 @@ import com.fasterxml.jackson.annotation.JsonValue;
 /**
  * @author foxleren
  */
-public enum ClusterOperationType {
-    CREATE_CLUSTER("create_cluster"),
+public enum ClusterOperationStatus {
+    IN_PROGRESS("in_progress"),
+    ERROR("error"),
+    SUCCESS("success"),
     ;
 
     private final String value;
 
-    ClusterOperationType(final String value) {
+    ClusterOperationStatus(final String value) {
         this.value = value;
     }
 

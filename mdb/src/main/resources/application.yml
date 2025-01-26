@@ -3,9 +3,12 @@ spring:
     name: onyxdb-mdb
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${ONYXDB_MDB_PSQL_URL:jdbc:postgresql://localhost:5432/dev}
+    url: ${ONYXDB_MDB_PSQL_URL:jdbc:postgresql://localhost:5432/onyxdb}
     username: ${ONYXDB_MDB_PSQL_USERNAME:postgres}
-    password: ${ONYXDB_MDB_PSQL_PASSWORD:qwerty}
+    password: ${ONYXDB_MDB_PSQL_PASSWORD:password}
+#    hikari:
+#      auto-commit: true
+#      transaction-isolation: TRANSACTION_READ_COMMITTED
   jooq:
     sql-dialect: Postgres
   flyway:
@@ -23,5 +26,5 @@ onyxdb-app:
   workers:
     process-cluster-tasks:
       min-threads: 1
-      max-threads: 5
+      max-threads: 100
       polling-interval-seconds: 5

@@ -1,5 +1,8 @@
 package com.onyxdb.mdb;
 
+import javax.annotation.PreDestroy;
+
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -21,7 +24,7 @@ public abstract class PostgresTest {
 
     static class DataSourceInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
         @Override
-        public void initialize(ConfigurableApplicationContext applicationContext) {
+        public void initialize(@NotNull ConfigurableApplicationContext applicationContext) {
             TestPropertySourceUtils.addInlinedPropertiesToEnvironment(
                     applicationContext,
                     "spring.datasource.url=" + postgresContainer.getJdbcUrl(),
@@ -29,5 +32,10 @@ public abstract class PostgresTest {
                     "spring.datasource.password=" + postgresContainer.getPassword()
             );
         }
+    }
+
+    @PreDestroy
+    public void cleanup() {
+        postgresContainer.stop();
     }
 }

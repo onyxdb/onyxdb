@@ -4,9 +4,9 @@
 package com.onyxdb.mdb.generated.jooq;
 
 
-import com.onyxdb.mdb.generated.jooq.tables.Cluster;
-import com.onyxdb.mdb.generated.jooq.tables.ClusterOperation;
-import com.onyxdb.mdb.generated.jooq.tables.ClusterOperationQueue;
+import com.onyxdb.mdb.generated.jooq.tables.ClusterOperations;
+import com.onyxdb.mdb.generated.jooq.tables.ClusterTasks;
+import com.onyxdb.mdb.generated.jooq.tables.Clusters;
 
 
 /**
@@ -16,17 +16,17 @@ import com.onyxdb.mdb.generated.jooq.tables.ClusterOperationQueue;
 public class Tables {
 
     /**
-     * The table <code>public.cluster</code>.
+     * The table <code>public.cluster_operations</code>.
      */
-    public static final Cluster CLUSTER = Cluster.CLUSTER;
+    public static final ClusterOperations CLUSTER_OPERATIONS = ClusterOperations.CLUSTER_OPERATIONS;
 
     /**
-     * The table <code>public.cluster_operation</code>.
+     * The table <code>public.cluster_tasks</code>.
      */
-    public static final ClusterOperation CLUSTER_OPERATION = ClusterOperation.CLUSTER_OPERATION;
+    public static final ClusterTasks CLUSTER_TASKS = ClusterTasks.CLUSTER_TASKS;
 
     /**
-     * The table <code>public.cluster_operation_queue</code>.
+     * The table <code>public.clusters</code>.
      */
-    public static final ClusterOperationQueue CLUSTER_OPERATION_QUEUE = ClusterOperationQueue.CLUSTER_OPERATION_QUEUE;
+    public static final Clusters CLUSTERS = Clusters.CLUSTERS;
 }

@@ -21,9 +21,9 @@ public enum ClusterTaskStatus implements EnumType {
 
     in_progress("in_progress"),
 
-    success("success"),
+    failed("failed"),
 
-    error("error");
+    done("done");
 
     private final String literal;
 
@@ -43,7 +43,7 @@ public enum ClusterTaskStatus implements EnumType {
 
     @Override
     public String getName() {
-        return "cluster_operation_status";
+        return "cluster_task_status";
     }
 
     @Override

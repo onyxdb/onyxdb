@@ -4,81 +4,108 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import com.onyxdb.mdb.generated.jooq.tables.records.ClusterTasksRecord;
+
 /**
  * @author foxleren
  */
 public record ClusterTask(
         UUID id,
-        ClusterTaskType type,
         UUID clusterId,
+        UUID operationId,
         ClusterType clusterType,
+        ClusterTaskType type,
         ClusterTaskStatus status,
         LocalDateTime createdAt,
-        LocalDateTime executeAt,
-        int retries,
-        int maxRetries,
-        List<UUID> dependsOnTasks,
+        LocalDateTime updatedAt,
+        LocalDateTime scheduledAt,
+        int retriesLeft,
+        List<UUID> dependsOnTaskIds,
         boolean isLast)
 {
-    public static ClusterTask create(
-            ClusterTaskType type,
+//    public ClusterTasksRecord toJooqClusterTasksRecord() {
+//        return new ClusterTasksRecord(
+//                id,
+//                clusterId,
+//                operationId,
+//                com.onyxdb.mdb.generated.jooq.enums.ClusterType.valueOf(clusterType.toString()),
+//                com.onyxdb.mdb.generated.jooq.enums.ClusterTaskType.valueOf(type.toString()),
+//                com.onyxdb.mdb.generated.jooq.enums.ClusterTaskStatus.valueOf(status.toString()),
+//                createdAt,
+//                updatedAt,
+//                scheduledAt,
+//                retriesLeft,
+//                dependsOnTaskIds,
+//                isLast
+//        );
+//    }
+
+    public static ClusterTask scheduled(
             UUID clusterId,
+            UUID operationId,
             ClusterType clusterType,
-            LocalDateTime executeAt,
-            int maxRetries,
-            List<UUID> dependsOnTasks,
+            ClusterTaskType type,
+            LocalDateTime scheduledAt,
+            int retriesLeft,
+            List<UUID> dependsOnTaskIds,
             boolean isLast)
     {
         return new ClusterTask(
                 UUID.randomUUID(),
-                type,
                 clusterId,
+                operationId,
                 clusterType,
+                type,
                 ClusterTaskStatus.SCHEDULED,
                 LocalDateTime.now(),
-                executeAt,
-                0,
-                maxRetries,
-                dependsOnTasks,
+                LocalDateTime.now(),
+                scheduledAt,
+                retriesLeft,
+                dependsOnTaskIds,
                 isLast
         );
     }
 
-    public static ClusterTask createNotLast(
-            ClusterTaskType type,
+    public static ClusterTask scheduledNotLast(
             UUID clusterId,
+            UUID operationId,
             ClusterType clusterType,
-            LocalDateTime executeAt,
-            int maxRetries,
-            List<UUID> dependsOnTasks)
+            ClusterTaskType type,
+            LocalDateTime scheduledAt,
+            int retriesLeft,
+            List<UUID> dependsOnTaskIds)
     {
-        return create(
-                type,
+        return scheduled(
                 clusterId,
+                operationId,
                 clusterType,
-                executeAt,
-                maxRetries,
-                dependsOnTasks,
+                type,
+                scheduledAt,
+                retriesLeft,
+                dependsOnTaskIds,
                 false
         );
     }
 
-    public static ClusterTask createLast(
-            ClusterTaskType type,
+    public static ClusterTask scheduledLast(
             UUID clusterId,
+            UUID operationId,
             ClusterType clusterType,
-            LocalDateTime executeAt,
-            int maxRetries,
-            List<UUID> dependsOnTasks)
+            ClusterTaskType type,
+            LocalDateTime scheduledAt,
+            int retriesLeft,
+            List<UUID> dependsOnTaskIds)
     {
-        return create(
-                type,
+        return scheduled(
                 clusterId,
+                operationId,
                 clusterType,
-                executeAt,
-                maxRetries,
-                dependsOnTasks,
+                type,
+                scheduledAt,
+                retriesLeft,
+                dependsOnTaskIds,
                 true
         );
     }
+
 }

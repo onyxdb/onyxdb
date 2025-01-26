@@ -1,9 +1,12 @@
 package com.onyxdb.mdb.context;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 import com.onyxdb.mdb.generators.ClusterTasksGenerator;
 import com.onyxdb.mdb.generators.CompositeClusterTasksGenerator;
@@ -16,6 +19,7 @@ import com.onyxdb.mdb.processors.MongoClusterOperationProcessor;
  * @author foxleren
  */
 @Configuration
+@EnableAsync
 public class MdbContextConfiguration {
     @Bean
     public CompositeClusterTasksGenerator compositeClusterTasksGenerator(
@@ -35,5 +39,10 @@ public class MdbContextConfiguration {
                 mongoClusterOperationProcessor
         );
         return new CompositeClusterTasksProcessor(processors);
+    }
+
+    @Bean(name = "processClusterTasksWorkerExecutor")
+    public ExecutorService processClusterTasksWorkerExecutor() {
+        return Executors.newSingleThreadExecutor();
     }
 }

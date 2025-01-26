@@ -4,12 +4,12 @@
 package com.onyxdb.mdb.generated.jooq;
 
 
-import com.onyxdb.mdb.generated.jooq.tables.Cluster;
-import com.onyxdb.mdb.generated.jooq.tables.ClusterOperation;
-import com.onyxdb.mdb.generated.jooq.tables.ClusterOperationQueue;
-import com.onyxdb.mdb.generated.jooq.tables.records.ClusterOperationQueueRecord;
-import com.onyxdb.mdb.generated.jooq.tables.records.ClusterOperationRecord;
-import com.onyxdb.mdb.generated.jooq.tables.records.ClusterRecord;
+import com.onyxdb.mdb.generated.jooq.tables.ClusterOperations;
+import com.onyxdb.mdb.generated.jooq.tables.ClusterTasks;
+import com.onyxdb.mdb.generated.jooq.tables.Clusters;
+import com.onyxdb.mdb.generated.jooq.tables.records.ClusterOperationsRecord;
+import com.onyxdb.mdb.generated.jooq.tables.records.ClusterTasksRecord;
+import com.onyxdb.mdb.generated.jooq.tables.records.ClustersRecord;
 
 import org.jooq.ForeignKey;
 import org.jooq.TableField;
@@ -29,13 +29,15 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final UniqueKey<ClusterRecord> CLUSTER_PKEY = Internal.createUniqueKey(Cluster.CLUSTER, DSL.name("cluster_pkey"), new TableField[] { Cluster.CLUSTER.ID }, true);
-    public static final UniqueKey<ClusterOperationRecord> CLUSTER_OPERATION_PKEY = Internal.createUniqueKey(ClusterOperation.CLUSTER_OPERATION, DSL.name("cluster_operation_pkey"), new TableField[] { ClusterOperation.CLUSTER_OPERATION.ID }, true);
+    public static final UniqueKey<ClusterOperationsRecord> CLUSTER_OPERATIONS_PKEY = Internal.createUniqueKey(ClusterOperations.CLUSTER_OPERATIONS, DSL.name("cluster_operations_pkey"), new TableField[] { ClusterOperations.CLUSTER_OPERATIONS.ID }, true);
+    public static final UniqueKey<ClusterTasksRecord> CLUSTER_TASKS_PKEY = Internal.createUniqueKey(ClusterTasks.CLUSTER_TASKS, DSL.name("cluster_tasks_pkey"), new TableField[] { ClusterTasks.CLUSTER_TASKS.ID }, true);
+    public static final UniqueKey<ClustersRecord> CLUSTERS_PKEY = Internal.createUniqueKey(Clusters.CLUSTERS, DSL.name("clusters_pkey"), new TableField[] { Clusters.CLUSTERS.ID }, true);
 
     // -------------------------------------------------------------------------
     // FOREIGN KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final ForeignKey<ClusterOperationRecord, ClusterRecord> CLUSTER_OPERATION__CLUSTER_OPERATION_CLUSTER_ID_FKEY = Internal.createForeignKey(ClusterOperation.CLUSTER_OPERATION, DSL.name("cluster_operation_cluster_id_fkey"), new TableField[] { ClusterOperation.CLUSTER_OPERATION.CLUSTER_ID }, Keys.CLUSTER_PKEY, new TableField[] { Cluster.CLUSTER.ID }, true);
-    public static final ForeignKey<ClusterOperationQueueRecord, ClusterOperationRecord> CLUSTER_OPERATION_QUEUE__CLUSTER_OPERATION_QUEUE_ID_FKEY = Internal.createForeignKey(ClusterOperationQueue.CLUSTER_OPERATION_QUEUE, DSL.name("cluster_operation_queue_id_fkey"), new TableField[] { ClusterOperationQueue.CLUSTER_OPERATION_QUEUE.ID }, Keys.CLUSTER_OPERATION_PKEY, new TableField[] { ClusterOperation.CLUSTER_OPERATION.ID }, true);
+    public static final ForeignKey<ClusterOperationsRecord, ClustersRecord> CLUSTER_OPERATIONS__CLUSTER_OPERATIONS_CLUSTER_ID_FKEY = Internal.createForeignKey(ClusterOperations.CLUSTER_OPERATIONS, DSL.name("cluster_operations_cluster_id_fkey"), new TableField[] { ClusterOperations.CLUSTER_OPERATIONS.CLUSTER_ID }, Keys.CLUSTERS_PKEY, new TableField[] { Clusters.CLUSTERS.ID }, true);
+    public static final ForeignKey<ClusterTasksRecord, ClustersRecord> CLUSTER_TASKS__CLUSTER_TASKS_CLUSTER_ID_FKEY = Internal.createForeignKey(ClusterTasks.CLUSTER_TASKS, DSL.name("cluster_tasks_cluster_id_fkey"), new TableField[] { ClusterTasks.CLUSTER_TASKS.CLUSTER_ID }, Keys.CLUSTERS_PKEY, new TableField[] { Clusters.CLUSTERS.ID }, true);
+    public static final ForeignKey<ClusterTasksRecord, ClusterOperationsRecord> CLUSTER_TASKS__CLUSTER_TASKS_OPERATION_ID_FKEY = Internal.createForeignKey(ClusterTasks.CLUSTER_TASKS, DSL.name("cluster_tasks_operation_id_fkey"), new TableField[] { ClusterTasks.CLUSTER_TASKS.OPERATION_ID }, Keys.CLUSTER_OPERATIONS_PKEY, new TableField[] { ClusterOperations.CLUSTER_OPERATIONS.ID }, true);
 }

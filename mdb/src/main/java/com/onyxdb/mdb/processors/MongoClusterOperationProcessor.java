@@ -18,7 +18,7 @@ public class MongoClusterOperationProcessor implements ClusterOperationProcessor
 
     @Override
     public void process(ClusterOperation clusterOperation) {
-        ClusterTaskType clusterTaskType = clusterOperation.type();
+//        ClusterTaskType clusterTaskType = clusterOperation.type();
 //        switch (clusterTaskType) {
 //            case M -> System.out.println("MongoDB Create Cluster");
 //            case MONGODB_DELETE_CLUSTER_INIT -> System.out.println("MongoDB Delete Cluster");

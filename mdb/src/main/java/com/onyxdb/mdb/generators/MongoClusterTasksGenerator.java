@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.onyxdb.mdb.exceptions.InternalServerErrorException;
@@ -17,24 +16,19 @@ import com.onyxdb.mdb.models.ClusterType;
  * @author foxleren
  */
 @Service
-public class MongoClusterTasksGenerator extends ClusterTasksGenerator {
-    private static final int DEFAULT_MAX_RETRIES = 3;
-
+public class MongoClusterTasksGenerator implements ClusterTasksGenerator {
     private static final ClusterType CLUSTER_TYPE = ClusterType.MONGODB;
 
     @Override
     public ClusterType getClusterType() {
-        return ClusterType.MONGODB;
+        return CLUSTER_TYPE;
     }
 
     @Override
-    public List<ClusterTask> generateTasks(UUID clusterId, ClusterOperationType operationType) {
+    public List<ClusterTask> generateTasks(UUID clusterId, UUID operationId, ClusterOperationType operationType) {
         switch (operationType) {
-            case MONGODB_CREATE_CLUSTER -> {
-                return getTasksForMongoCreateCluster(clusterId);
-            }
-            case MONGODB_DELETE_CLUSTER -> {
-                return getTasksForMongoDeleteCluster();
+            case CREATE_CLUSTER -> {
+                return getTasksForMongoCreateCluster(clusterId, operationId);
             }
             default -> throw new InternalServerErrorException(String.format(
                     "Can't generate tasks for operation type %s", operationType
@@ -43,30 +37,33 @@ public class MongoClusterTasksGenerator extends ClusterTasksGenerator {
     }
 
 
-    private static List<ClusterTask> getTasksForMongoCreateCluster(UUID clusterId) {
+    private static List<ClusterTask> getTasksForMongoCreateCluster(UUID clusterId, UUID operationId) {
         LocalDateTime now = LocalDateTime.now();
-        var applyManifestTask = ClusterTask.createNotLast(
-                ClusterTaskType.MONGODB_CREATE_CLUSTER_APPLY_CLUSTER_MANIFEST,
+        var applyManifestTask = ClusterTask.scheduledNotLast(
                 clusterId,
+                operationId,
                 CLUSTER_TYPE,
+                ClusterTaskType.MONGODB_CREATE_CLUSTER_APPLY_CLUSTER_MANIFEST,
                 now,
-                DEFAULT_MAX_RETRIES,
+                DEFAULT_RETRIES_LEFT,
                 List.of()
         );
-        var waitReadinessTask = ClusterTask.createNotLast(
-                ClusterTaskType.MONGODB_CREATE_CLUSTER_CHECK_CLUSTER_READINESS,
+        var waitReadinessTask = ClusterTask.scheduledNotLast(
                 clusterId,
+                operationId,
                 CLUSTER_TYPE,
-                now.plusSeconds(300),
-                DEFAULT_MAX_RETRIES,
+                ClusterTaskType.MONGODB_CREATE_CLUSTER_CHECK_CLUSTER_READINESS,
+                now,
+                DEFAULT_RETRIES_LEFT,
                 List.of(applyManifestTask.id())
         );
-        var generateDashboardTask = ClusterTask.createLast(
-                ClusterTaskType.MONGODB_CREATE_CLUSTER_GENERATE_GRAFANA_DASHBOARD,
+        var generateDashboardTask = ClusterTask.scheduledLast(
                 clusterId,
+                operationId,
                 CLUSTER_TYPE,
-                now.plusSeconds(300),
-                DEFAULT_MAX_RETRIES,
+                ClusterTaskType.MONGODB_CREATE_CLUSTER_GENERATE_GRAFANA_DASHBOARD,
+                now,
+                DEFAULT_RETRIES_LEFT,
                 List.of(applyManifestTask.id(), waitReadinessTask.id())
         );
         return List.of(
@@ -74,9 +71,5 @@ public class MongoClusterTasksGenerator extends ClusterTasksGenerator {
                 waitReadinessTask,
                 generateDashboardTask
         );
-    }
-
-    private static List<ClusterTask> getTasksForMongoDeleteCluster() {
-        return List.of();
     }
 }

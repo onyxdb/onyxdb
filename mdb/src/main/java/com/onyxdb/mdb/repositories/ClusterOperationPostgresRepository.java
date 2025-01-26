@@ -1,12 +1,9 @@
 package com.onyxdb.mdb.repositories;
 
-import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
-import com.onyxdb.mdb.generated.jooq.tables.records.ClusterOperationRecord;
 import com.onyxdb.mdb.models.ClusterOperation;
 
 /**
@@ -18,24 +15,19 @@ public class ClusterOperationPostgresRepository implements ClusterOperationRepos
     private final DSLContext dslContext;
 
     @Override
-    public void createBulk(List<ClusterOperation> clusterOperations) {
-        var clusterOperationTable = com.onyxdb.mdb.generated.jooq.tables.ClusterOperation.CLUSTER_OPERATION;
-
-        List<ClusterOperationRecord> records = clusterOperations.stream()
-                .map(ClusterOperation::toJooqClusterOperationRecord)
-                .toList();
-
+    public void create(ClusterOperation operation) {
+        var t = com.onyxdb.mdb.generated.jooq.tables.ClusterOperations.CLUSTER_OPERATIONS;
         dslContext.insertInto(
-                        clusterOperationTable,
-                        clusterOperationTable.ID,
-                        clusterOperationTable.CLUSTER_ID,
-                        clusterOperationTable.TYPE,
-                        clusterOperationTable.STATUS,
-                        clusterOperationTable.CREATED_AT,
-                        clusterOperationTable.RETRIES,
-                        clusterOperationTable.EXECUTE_AT
+                        t,
+                        t.ID,
+                        t.CLUSTER_ID,
+                        t.TYPE,
+                        t.STATUS,
+                        t.CREATED_AT,
+                        t.CREATED_BY,
+                        t.UPDATED_AT
                 )
-                .valuesOfRecords(records)
+                .valuesOfRecords(operation.toJooqClusterOperationsRecord())
                 .execute();
     }
 }

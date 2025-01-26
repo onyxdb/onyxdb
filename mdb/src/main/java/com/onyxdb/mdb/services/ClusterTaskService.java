@@ -12,7 +12,7 @@ import com.onyxdb.mdb.models.ClusterTask;
 @Service
 public class ClusterTaskService implements BaseClusterTaskService {
     @Override
-    public List<ClusterTask> getClusterTasksToProcess(int limit) {
+    public List<ClusterTask> getTasksToProcess(int limit) {
         return List.of();
     }
 }

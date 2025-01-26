@@ -8,5 +8,5 @@ import com.onyxdb.mdb.models.ClusterTask;
  * @author foxleren
  */
 public interface BaseClusterTaskService {
-    List<ClusterTask> getClusterTasksToProcess(int limit);
+    List<ClusterTask> getTasksToProcess(int limit);
 }

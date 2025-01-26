@@ -10,6 +10,9 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import com.onyxdb.mdb.models.ClusterTask;
@@ -20,31 +23,38 @@ import com.onyxdb.mdb.services.BaseClusterTaskService;
  * @author foxleren
  */
 @Component
-public class ProcessClusterTasksWorker implements Runnable {
+@Profile("!test")
+public class ProcessClusterTasksWorker implements CommandLineRunner {
     private static final Logger logger = LoggerFactory.getLogger(ProcessClusterTasksWorker.class);
 
-    @Value("${onyxdb-app.workers.process-cluster-tasks.min-threads}")
-    private int minThreads;
-    @Value("${onyxdb-app.workers.process-cluster-tasks.max-threads}")
-    private int maxThreads;
-    @Value("${onyxdb-app.workers.process-cluster-tasks.polling-interval-seconds}")
-    private int pollingIntervalSeconds;
-
-    private final CompositeClusterTasksProcessor processor;
-    private final BaseClusterTaskService taskService;
+    private final int minThreads;
+    private final int maxThreads;
+    private final int pollingIntervalSeconds;
+    private final CompositeClusterTasksProcessor clusterTasksProcessor;
+    private final BaseClusterTaskService clusterTaskService;
     private final BlockingQueue<Runnable> taskQueue;
 
     public ProcessClusterTasksWorker(
-            CompositeClusterTasksProcessor processor,
-            BaseClusterTaskService taskService)
+            @Value("${onyxdb-app.workers.process-cluster-tasks.min-threads}")
+            int minThreads,
+            @Value("${onyxdb-app.workers.process-cluster-tasks.max-threads}")
+            int maxThreads,
+            @Value("${onyxdb-app.workers.process-cluster-tasks.polling-interval-seconds}")
+            int pollingIntervalSeconds,
+            CompositeClusterTasksProcessor clusterTasksProcessor,
+            BaseClusterTaskService clusterTaskService)
     {
-        this.processor = processor;
-        this.taskService = taskService;
+        this.minThreads = minThreads;
+        this.maxThreads = maxThreads;
+        this.pollingIntervalSeconds = pollingIntervalSeconds;
+        this.clusterTasksProcessor = clusterTasksProcessor;
+        this.clusterTaskService = clusterTaskService;
         this.taskQueue = new LinkedBlockingQueue<>(maxThreads);
     }
 
     @Override
-    public void run() {
+    @Async("processClusterTasksWorkerExecutor")
+    public void run(String... args) {
         try {
             logger.info("Starting processing cluster tasks");
             internalRun();
@@ -70,18 +80,17 @@ public class ProcessClusterTasksWorker implements Runnable {
         }
     }
 
-
     @SuppressWarnings({"BusyWait", "InfiniteLoopStatement"})
     private void processTasks(ThreadPoolExecutor executor) throws InterruptedException {
-        int pollingSize = maxThreads;
         while (true) {
-            if (taskQueue.size() == pollingSize) {
+            int freeThreads = maxThreads - taskQueue.size();
+            if (freeThreads == 0) {
                 continue;
             }
 
-            List<ClusterTask> clusterTasks = taskService.getClusterTasksToProcess(pollingSize);
+            List<ClusterTask> clusterTasks = clusterTaskService.getTasksToProcess(freeThreads);
             for (var clusterTask : clusterTasks) {
-                executor.execute(() -> processor.processTask(clusterTask));
+                executor.execute(() -> clusterTasksProcessor.processTask(clusterTask));
             }
 
             Thread.sleep(pollingIntervalSeconds * 1000L);

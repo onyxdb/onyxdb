@@ -21,7 +21,12 @@ public class CompositeClusterTasksGenerator {
         this.clusterTypeToGenerator = prepareGeneratorsMap(generators);
     }
 
-    public List<ClusterTask> generateTasks(UUID clusterId, ClusterType clusterType, ClusterOperationType clusterOperationType) {
+    public List<ClusterTask> generateTasks(
+            UUID clusterId,
+            ClusterType clusterType,
+            UUID operationId,
+            ClusterOperationType clusterOperationType)
+    {
         if (!clusterTypeToGenerator.containsKey(clusterType)) {
             throw new InternalServerErrorException(String.format(
                     "Can't find tasks generator for cluster type '%s'", clusterType
@@ -29,10 +34,12 @@ public class CompositeClusterTasksGenerator {
         }
 
         ClusterTasksGenerator generator = clusterTypeToGenerator.get(clusterType);
-        return generator.generateTasks(clusterId, clusterOperationType);
+        return generator.generateTasks(clusterId, operationId, clusterOperationType);
     }
 
-    private static Map<ClusterType, ClusterTasksGenerator> prepareGeneratorsMap(List<ClusterTasksGenerator> generators) {
+    private static Map<ClusterType, ClusterTasksGenerator> prepareGeneratorsMap(
+            List<ClusterTasksGenerator> generators)
+    {
         return generators
                 .stream()
                 .collect(Collectors.toMap(ClusterTasksGenerator::getClusterType, Function.identity()));

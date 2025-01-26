@@ -58,53 +58,53 @@ components:
           minLength: 1
           maxLength: 256
           example: Cluster description
-        resources:
-          type: object
-          required:
-            - storage
-          properties:
-            storage:
-              type: object
-              required:
-                - diskSizeBytes
-                - storageClass
-              properties:
-                diskSizeBytes:
-                  type: integer
-                  format: int64
-                  minimum: 1073741824 # 1Gb
-                  maximum: 10737418240 # 10 Gb
-                  example: 1073741824
-                storageClass:
-                  type: string
-                  enum:
-                    - standard
-                  example: standard
-        spec:
-          type: object
-          required:
-            - type
-          properties:
-            type:
-              type: string
-              enum:
-                - mongodb
-              example: mongodb
-            mongodb:
-              type: object
-              required:
-                - version
-              properties:
-                version:
-                  type: string
-                  enum:
-                    - '6.0'
-                    - '5.0'
-                  example: '6.0'
-                mongodbV6x0:
-                  type: object
-                  additionalProperties:
-                    type: string
+#        resources:
+#          type: object
+#          required:
+#            - storage
+#          properties:
+#            storage:
+#              type: object
+#              required:
+#                - diskSizeBytes
+#                - storageClass
+#              properties:
+#                diskSizeBytes:
+#                  type: integer
+#                  format: int64
+#                  minimum: 1073741824 # 1Gb
+#                  maximum: 10737418240 # 10 Gb
+#                  example: 1073741824
+#                storageClass:
+#                  type: string
+#                  enum:
+#                    - standard
+#                  example: standard
+#        spec:
+#          type: object
+#          required:
+#            - type
+#          properties:
+#            type:
+#              type: string
+#              enum:
+#                - mongodb
+#              example: mongodb
+#            mongodb:
+#              type: object
+#              required:
+#                - version
+#              properties:
+#                version:
+#                  type: string
+#                  enum:
+#                    - '6.0'
+#                    - '5.0'
+#                  example: '6.0'
+#                mongodbV6x0:
+#                  type: object
+#                  additionalProperties:
+#                    type: string
     V1CreateClusterResponse:
       type: object
       required:
