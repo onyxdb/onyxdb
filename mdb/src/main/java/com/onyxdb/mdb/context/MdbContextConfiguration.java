@@ -9,7 +9,7 @@ import com.onyxdb.mdb.generators.ClusterTasksGenerator;
 import com.onyxdb.mdb.generators.CompositeClusterTasksGenerator;
 import com.onyxdb.mdb.generators.MongoClusterTasksGenerator;
 import com.onyxdb.mdb.processors.ClusterOperationProcessor;
-import com.onyxdb.mdb.processors.CompositeClusterOperationProcessor;
+import com.onyxdb.mdb.processors.CompositeClusterTasksProcessor;
 import com.onyxdb.mdb.processors.MongoClusterOperationProcessor;
 
 /**
@@ -28,12 +28,12 @@ public class MdbContextConfiguration {
     }
 
     @Bean
-    public CompositeClusterOperationProcessor compositeClusterOperationProcessor(
+    public CompositeClusterTasksProcessor compositeClusterTasksProcessor(
             MongoClusterOperationProcessor mongoClusterOperationProcessor)
     {
         List<ClusterOperationProcessor> processors = List.of(
                 mongoClusterOperationProcessor
         );
-        return new CompositeClusterOperationProcessor(processors);
+        return new CompositeClusterTasksProcessor(processors);
     }
 }

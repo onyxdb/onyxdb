@@ -10,13 +10,6 @@ spring:
     sql-dialect: Postgres
   flyway:
     enabled: true
-  task:
-    scheduling:
-      pool:
-        size: 2
-#    execution:
-#      pool:
-#        core-size: 5
 server:
   port: ${ONYXDB_MDB_HTTP_PORT:9001}
 
@@ -27,11 +20,8 @@ springdoc:
     path: /internal/swagger-ui
 
 onyxdb-app:
-  tasks:
-    process-cluster-operations:
-#      executor:
-#        core-pool-size: 1
-#        max-pool-size: 3
-#        queue-capacity: 0
-      initial-delay-string: PT0S
-      fixed-rate-string: PT01S
+  workers:
+    process-cluster-tasks:
+      min-threads: 1
+      max-threads: 5
+      polling-interval-seconds: 5
