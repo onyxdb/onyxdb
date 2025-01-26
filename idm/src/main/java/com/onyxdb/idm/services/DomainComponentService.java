@@ -2,6 +2,7 @@ package com.onyxdb.idm.services;
 
 import com.onyxdb.idm.controllers.v1.ResourceNotFoundException;
 import com.onyxdb.idm.models.DomainComponent;
+import com.onyxdb.idm.models.OrganizationUnit;
 import com.onyxdb.idm.repositories.DomainComponentRepository;
 import com.onyxdb.idm.repositories.OrganizationUnitRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,10 @@ public class DomainComponentService {
     public DomainComponent findById(UUID id) {
         Optional<DomainComponent> domainComponent = domainComponentRepository.findById(id);
         return domainComponent.orElseThrow(() -> new ResourceNotFoundException("DomainComponent not found"));
+    }
+
+    public List<OrganizationUnit> findChildrenOrganizationUnits(UUID id) {
+        return organizationUnitRepository.findByDomainComponentId(id);
     }
 
     public List<DomainComponent> findAll() {

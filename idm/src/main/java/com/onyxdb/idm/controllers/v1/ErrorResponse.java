@@ -4,11 +4,13 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Setter;
 
 
 /**
  * @author ArtemFed
  */
+@Setter
 @Schema(name = "ErrorResponse")
 public class ErrorResponse {
     private String message;
@@ -31,10 +33,6 @@ public class ErrorResponse {
         return message;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -54,11 +52,9 @@ public class ErrorResponse {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class ErrorResponse {\n");
-        sb.append(" message: ").append(toIndentedString(message)).append("\n");
-        sb.append("}");
-        return sb.toString();
+        return "class ErrorResponse {\n" +
+                " message: " + toIndentedString(message) + "\n" +
+                "}";
     }
 
     private String toIndentedString(Object o) {

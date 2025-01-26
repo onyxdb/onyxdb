@@ -1,76 +1,92 @@
-//package com.onyxdb.idm.controllers.v1;
-//
-//import com.onyxdb.idm.generated.openapi.apis.OrganizationsApi;
-//import com.onyxdb.idm.generated.openapi.models.OrganizationDTO;
-//import com.onyxdb.idm.generated.openapi.models.BadRequestResponse;
-//import com.onyxdb.idm.generated.openapi.models.NotFoundResponse;
-//import com.onyxdb.idm.models.Organization;
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.http.HttpStatus;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.web.bind.annotation.RestController;
-//
-//import javax.validation.Valid;
-//import java.util.List;
-//import java.util.Optional;
-//import java.util.UUID;
-//
-//@RestController
-//@RequiredArgsConstructor
-//public class OrganizationsController implements OrganizationsApi {
-//
-//    private final OrganizationService organizationService;
-//
-//    @Override
-//    public ResponseEntity<OrganizationDTO> createOrganization(@Valid OrganizationDTO organizationDTO) {
-//        Organization organization = Organization.fromDTO(organizationDTO);
-//        organizationService.create(organization);
-//        return new ResponseEntity<>(organization.toDTO(), HttpStatus.CREATED);
-//    }
-//
-//    @Override
-//    public ResponseEntity<Void> deleteOrganization(UUID organizationId) {
-//        Optional<Organization> organization = organizationService.findById(organizationId);
-//        if (organization.isPresent()) {
-//            organizationService.delete(organizationId);
-//            return ResponseEntity.noContent().build();
-//        } else {
-//            NotFoundResponse notFoundResponse = new NotFoundResponse();
-//            notFoundResponse.setMessage("Organization not found");
-//            return new ResponseEntity<>(notFoundResponse, HttpStatus.NOT_FOUND);
-//        }
-//    }
-//
-//    @Override
-//    public ResponseEntity<OrganizationDTO> getOrganizationById(UUID organizationId) {
-//        Optional<Organization> organization = organizationService.findById(organizationId);
-//        if (organization.isPresent()) {
-//            return ResponseEntity.ok(organization.get().toDTO());
-//        } else {
-//            NotFoundResponse notFoundResponse = new NotFoundResponse();
-//            notFoundResponse.setMessage("Organization not found");
-//            return new ResponseEntity<>(notFoundResponse, HttpStatus.NOT_FOUND);
-//        }
-//    }
-//
-//    @Override
-//    public ResponseEntity<List<OrganizationDTO>> getAllOrganizations() {
-//        List<Organization> organizations = organizationService.findAll();
-//        List<OrganizationDTO> organizationDTOs = organizations.stream().map(Organization::toDTO).toList();
-//        return ResponseEntity.ok(organizationDTOs);
-//    }
-//
-//    @Override
-//    public ResponseEntity<OrganizationDTO> updateOrganization(UUID organizationId, @Valid OrganizationDTO organizationDTO) {
-//        Optional<Organization> existingOrganization = organizationService.findById(organizationId);
-//        if (existingOrganization.isPresent()) {
-//            Organization organization = Organization.fromDTO(organizationDTO);
-//            organizationService.update(organization);
-//            return ResponseEntity.ok(organization.toDTO());
-//        } else {
-//            NotFoundResponse notFoundResponse = new NotFoundResponse();
-//            notFoundResponse.setMessage("Organization not found");
-//            return new ResponseEntity<>(notFoundResponse, HttpStatus.NOT_FOUND);
-//        }
-//    }
-//}
+package com.onyxdb.idm.controllers.v1;
+
+import com.onyxdb.idm.generated.openapi.apis.OrganizationsApi;
+import com.onyxdb.idm.generated.openapi.models.OrganizationDTO;
+import com.onyxdb.idm.models.Organization;
+import com.onyxdb.idm.services.OrganizationService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.UUID;
+
+@RestController
+@RequiredArgsConstructor
+public class OrganizationsController implements OrganizationsApi {
+    private final OrganizationService organizationService;
+
+
+    /**
+     * POST /api/v1/organizations : Create a new organization
+     *
+     * @param organizationDTO (required)
+     * @return Created (status code 201)
+     * or Bad Request (status code 400)
+     */
+    @Override
+    public ResponseEntity<OrganizationDTO> createOrganization(OrganizationDTO organizationDTO) {
+        Organization organization = Organization.fromDTO(organizationDTO);
+        Organization createdOrganization = organizationService.create(organization);
+        return new ResponseEntity<>(createdOrganization.toDTO(), HttpStatus.CREATED);
+    }
+
+    /**
+     * DELETE /api/v1/organizations/{organizationId} : Delete an organization by ID
+     *
+     * @param organizationId (required)
+     * @return No Content (status code 204)
+     * or Not Found (status code 404)
+     * or Bad Request (status code 400)
+     */
+    @Override
+    public ResponseEntity<Void> deleteOrganization(UUID organizationId) {
+        organizationService.delete(organizationId);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * GET /api/v1/organizations : Get all organizations
+     *
+     * @return OK (status code 200)
+     * or Bad Request (status code 400)
+     */
+    @Override
+    public ResponseEntity<List<OrganizationDTO>> getAllOrganizations() {
+        List<Organization> organizations = organizationService.findAll();
+        List<OrganizationDTO> organizationDTOs = organizations.stream().map(Organization::toDTO).toList();
+        return ResponseEntity.ok(organizationDTOs);
+    }
+
+    /**
+     * GET /api/v1/organizations/{organizationId} : Get an organization by ID
+     *
+     * @param organizationId (required)
+     * @return OK (status code 200)
+     * or Not Found (status code 404)
+     * or Bad Request (status code 400)
+     */
+    @Override
+    public ResponseEntity<OrganizationDTO> getOrganizationById(UUID organizationId) {
+        Organization organization = organizationService.findById(organizationId);
+        return ResponseEntity.ok(organization.toDTO());
+    }
+
+    /**
+     * PUT /api/v1/organizations/{organizationId} : Update an organization by ID
+     *
+     * @param organizationId  (required)
+     * @param organizationDTO (required)
+     * @return OK (status code 200)
+     * or Not Found (status code 404)
+     * or Bad Request (status code 400)
+     */
+    @Override
+    public ResponseEntity<OrganizationDTO> updateOrganization(UUID organizationId, OrganizationDTO organizationDTO) {
+        organizationDTO.setId(organizationId);
+        Organization organization = Organization.fromDTO(organizationDTO);
+        Organization updatedOrganization = organizationService.update(organization);
+        return ResponseEntity.ok(updatedOrganization.toDTO());
+    }
+}

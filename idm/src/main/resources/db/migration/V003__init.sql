@@ -6,7 +6,7 @@ CREATE TABLE organization_table (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     resource_id UUID NOT NULL UNIQUE,
-    owner_id UUID NOT NULL,
+    owner_id UUID,
     FOREIGN KEY (resource_id) REFERENCES resource_table(id),
     FOREIGN KEY (owner_id) REFERENCES account_table(id)
 );
@@ -20,7 +20,7 @@ CREATE TABLE project_table (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     resource_id UUID NOT NULL UNIQUE,
     organization_id UUID NOT NULL UNIQUE,
-    owner_id UUID NOT NULL,
+    owner_id UUID,
     FOREIGN KEY (resource_id) REFERENCES resource_table(id),
     FOREIGN KEY (organization_id) REFERENCES organization_table(id),
     FOREIGN KEY (owner_id) REFERENCES account_table(id)
@@ -36,7 +36,7 @@ CREATE TABLE service_table (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     resource_id UUID NOT NULL UNIQUE,
     project_id UUID NOT NULL UNIQUE,
-    owner_id UUID NOT NULL,
+    owner_id UUID,
     FOREIGN KEY (resource_id) REFERENCES resource_table(id),
     FOREIGN KEY (project_id) REFERENCES project_table(id),
     FOREIGN KEY (owner_id) REFERENCES account_table(id)

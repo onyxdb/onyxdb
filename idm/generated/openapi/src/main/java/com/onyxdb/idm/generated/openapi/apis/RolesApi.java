@@ -7,6 +7,7 @@ package com.onyxdb.idm.generated.openapi.apis;
 
 import com.onyxdb.idm.generated.openapi.models.BadRequestResponse;
 import com.onyxdb.idm.generated.openapi.models.NotFoundResponse;
+import com.onyxdb.idm.generated.openapi.models.PermissionDTO;
 import com.onyxdb.idm.generated.openapi.models.RoleDTO;
 import java.util.UUID;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
@@ -39,6 +40,37 @@ import jakarta.annotation.Generated;
 @Validated
 @Tag(name = "Roles", description = "the Roles API")
 public interface RolesApi {
+
+    /**
+     * POST /api/v1/roles/{roleId}/permissions/{permissionId} : Add permission to role link
+     *
+     * @param roleId  (required)
+     * @param permissionId  (required)
+     * @return OK (status code 200)
+     *         or Not Found (status code 404)
+     */
+    @Operation(
+        operationId = "addPermissionToRole",
+        summary = "Add permission to role link",
+        tags = { "Roles" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.POST,
+        value = "/api/v1/roles/{roleId}/permissions/{permissionId}",
+        produces = { "application/json" }
+    )
+    
+    ResponseEntity<Void> addPermissionToRole(
+        @Parameter(name = "roleId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("roleId") UUID roleId,
+        @Parameter(name = "permissionId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("permissionId") UUID permissionId
+    );
+
 
     /**
      * POST /api/v1/roles : Create a new role
@@ -136,6 +168,37 @@ public interface RolesApi {
 
 
     /**
+     * GET /api/v1/roles/{roleId}/permissions : Get role permission
+     *
+     * @param roleId  (required)
+     * @return OK (status code 200)
+     *         or Not Found (status code 404)
+     */
+    @Operation(
+        operationId = "getPermissionsByRoleId",
+        summary = "Get role permission",
+        tags = { "Roles" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "OK", content = {
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PermissionDTO.class)))
+            }),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/api/v1/roles/{roleId}/permissions",
+        produces = { "application/json" }
+    )
+    
+    ResponseEntity<List<PermissionDTO>> getPermissionsByRoleId(
+        @Parameter(name = "roleId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("roleId") UUID roleId
+    );
+
+
+    /**
      * GET /api/v1/roles/{roleId} : Get a role by ID
      *
      * @param roleId  (required)
@@ -167,6 +230,37 @@ public interface RolesApi {
     
     ResponseEntity<RoleDTO> getRoleById(
         @Parameter(name = "roleId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("roleId") UUID roleId
+    );
+
+
+    /**
+     * DELETE /api/v1/roles/{roleId}/permissions/{permissionId} : Delete permission to role link
+     *
+     * @param roleId  (required)
+     * @param permissionId  (required)
+     * @return No Content (status code 204)
+     *         or Not Found (status code 404)
+     */
+    @Operation(
+        operationId = "removePermissionFromRole",
+        summary = "Delete permission to role link",
+        tags = { "Roles" },
+        responses = {
+            @ApiResponse(responseCode = "204", description = "No Content"),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.DELETE,
+        value = "/api/v1/roles/{roleId}/permissions/{permissionId}",
+        produces = { "application/json" }
+    )
+    
+    ResponseEntity<Void> removePermissionFromRole(
+        @Parameter(name = "roleId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("roleId") UUID roleId,
+        @Parameter(name = "permissionId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("permissionId") UUID permissionId
     );
 
 

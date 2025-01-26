@@ -16,7 +16,6 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 public class AccountsController implements AccountsApi {
-
     private final AccountService accountService;
 
 
@@ -86,6 +85,7 @@ public class AccountsController implements AccountsApi {
      */
     @Override
     public ResponseEntity<AccountDTO> updateAccount(UUID accountId, AccountDTO accountDTO) {
+        accountDTO.setId(accountId);
         Account account = Account.fromDTO(accountDTO);
         accountService.update(account);
         return ResponseEntity.ok(account.toDTO());

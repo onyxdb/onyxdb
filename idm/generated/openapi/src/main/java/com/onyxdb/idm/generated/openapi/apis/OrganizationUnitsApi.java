@@ -5,6 +5,7 @@
  */
 package com.onyxdb.idm.generated.openapi.apis;
 
+import com.onyxdb.idm.generated.openapi.models.AccountDTO;
 import com.onyxdb.idm.generated.openapi.models.BadRequestResponse;
 import com.onyxdb.idm.generated.openapi.models.NotFoundResponse;
 import com.onyxdb.idm.generated.openapi.models.OrganizationUnitDTO;
@@ -39,6 +40,37 @@ import jakarta.annotation.Generated;
 @Validated
 @Tag(name = "Organization Units", description = "the Organization Units API")
 public interface OrganizationUnitsApi {
+
+    /**
+     * POST /api/v1/organization-units/{organizationUnitId}/accounts/{accountId} : Add account to org. unit link
+     *
+     * @param organizationUnitId  (required)
+     * @param accountId  (required)
+     * @return OK (status code 200)
+     *         or Not Found (status code 404)
+     */
+    @Operation(
+        operationId = "addAccountToOrganizationUnit",
+        summary = "Add account to org. unit link",
+        tags = { "Organization Units" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.POST,
+        value = "/api/v1/organization-units/{organizationUnitId}/accounts/{accountId}",
+        produces = { "application/json" }
+    )
+    
+    ResponseEntity<Void> addAccountToOrganizationUnit(
+        @Parameter(name = "organizationUnitId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("organizationUnitId") UUID organizationUnitId,
+        @Parameter(name = "accountId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("accountId") UUID accountId
+    );
+
 
     /**
      * POST /api/v1/organization-units : Create a new organization unit
@@ -106,6 +138,37 @@ public interface OrganizationUnitsApi {
 
 
     /**
+     * GET /api/v1/organization-units/{organizationUnitId}/accounts : Get all organization unit accounts
+     *
+     * @param organizationUnitId  (required)
+     * @return OK (status code 200)
+     *         or Bad Request (status code 400)
+     */
+    @Operation(
+        operationId = "getAccountsByOrganizationUnitId",
+        summary = "Get all organization unit accounts",
+        tags = { "Organization Units" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "OK", content = {
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AccountDTO.class)))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/api/v1/organization-units/{organizationUnitId}/accounts",
+        produces = { "application/json" }
+    )
+    
+    ResponseEntity<List<AccountDTO>> getAccountsByOrganizationUnitId(
+        @Parameter(name = "organizationUnitId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("organizationUnitId") UUID organizationUnitId
+    );
+
+
+    /**
      * GET /api/v1/organization-units : Get all organization units
      *
      * @return OK (status code 200)
@@ -167,6 +230,37 @@ public interface OrganizationUnitsApi {
     
     ResponseEntity<OrganizationUnitDTO> getOrganizationUnitById(
         @Parameter(name = "organizationUnitId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("organizationUnitId") UUID organizationUnitId
+    );
+
+
+    /**
+     * DELETE /api/v1/organization-units/{organizationUnitId}/accounts/{accountId} : Delete account to org. unit link
+     *
+     * @param organizationUnitId  (required)
+     * @param accountId  (required)
+     * @return No Content (status code 204)
+     *         or Not Found (status code 404)
+     */
+    @Operation(
+        operationId = "removeAccountFromOrganizationUnit",
+        summary = "Delete account to org. unit link",
+        tags = { "Organization Units" },
+        responses = {
+            @ApiResponse(responseCode = "204", description = "No Content"),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.DELETE,
+        value = "/api/v1/organization-units/{organizationUnitId}/accounts/{accountId}",
+        produces = { "application/json" }
+    )
+    
+    ResponseEntity<Void> removeAccountFromOrganizationUnit(
+        @Parameter(name = "organizationUnitId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("organizationUnitId") UUID organizationUnitId,
+        @Parameter(name = "accountId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("accountId") UUID accountId
     );
 
 

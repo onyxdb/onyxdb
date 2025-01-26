@@ -42,6 +42,37 @@ import jakarta.annotation.Generated;
 public interface BusinessRolesApi {
 
     /**
+     * POST /api/v1/business-roles/{businessRoleId}/roles/{roleId} : Add role to the business role link
+     *
+     * @param businessRoleId  (required)
+     * @param roleId  (required)
+     * @return OK (status code 200)
+     *         or Not Found (status code 404)
+     */
+    @Operation(
+        operationId = "addRoleToBusinessRole",
+        summary = "Add role to the business role link",
+        tags = { "Business Roles" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.POST,
+        value = "/api/v1/business-roles/{businessRoleId}/roles/{roleId}",
+        produces = { "application/json" }
+    )
+    
+    ResponseEntity<Void> addRoleToBusinessRole(
+        @Parameter(name = "businessRoleId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("businessRoleId") UUID businessRoleId,
+        @Parameter(name = "roleId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("roleId") UUID roleId
+    );
+
+
+    /**
      * POST /api/v1/business-roles : Create a new business role
      *
      * @param businessRoleDTO  (required)
@@ -172,7 +203,7 @@ public interface BusinessRolesApi {
 
 
     /**
-     * GET /api/v1/business-roles/{businessRoleId}/roles : Get roles by business role ID
+     * GET /api/v1/business-roles/{businessRoleId}/roles : Get business role roles
      *
      * @param businessRoleId  (required)
      * @return OK (status code 200)
@@ -181,7 +212,7 @@ public interface BusinessRolesApi {
      */
     @Operation(
         operationId = "getRolesByBusinessRoleId",
-        summary = "Get roles by business role ID",
+        summary = "Get business role roles",
         tags = { "Business Roles" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
@@ -203,6 +234,37 @@ public interface BusinessRolesApi {
     
     ResponseEntity<List<RoleDTO>> getRolesByBusinessRoleId(
         @Parameter(name = "businessRoleId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("businessRoleId") UUID businessRoleId
+    );
+
+
+    /**
+     * DELETE /api/v1/business-roles/{businessRoleId}/roles/{roleId} : Delete role to the business role link
+     *
+     * @param businessRoleId  (required)
+     * @param roleId  (required)
+     * @return No Content (status code 204)
+     *         or Not Found (status code 404)
+     */
+    @Operation(
+        operationId = "removeRoleFromBusinessRole",
+        summary = "Delete role to the business role link",
+        tags = { "Business Roles" },
+        responses = {
+            @ApiResponse(responseCode = "204", description = "No Content"),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.DELETE,
+        value = "/api/v1/business-roles/{businessRoleId}/roles/{roleId}",
+        produces = { "application/json" }
+    )
+    
+    ResponseEntity<Void> removeRoleFromBusinessRole(
+        @Parameter(name = "businessRoleId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("businessRoleId") UUID businessRoleId,
+        @Parameter(name = "roleId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("roleId") UUID roleId
     );
 
 

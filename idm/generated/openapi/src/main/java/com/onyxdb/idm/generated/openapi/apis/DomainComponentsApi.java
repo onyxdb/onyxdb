@@ -8,6 +8,7 @@ package com.onyxdb.idm.generated.openapi.apis;
 import com.onyxdb.idm.generated.openapi.models.BadRequestResponse;
 import com.onyxdb.idm.generated.openapi.models.DomainComponentDTO;
 import com.onyxdb.idm.generated.openapi.models.NotFoundResponse;
+import com.onyxdb.idm.generated.openapi.models.OrganizationUnitDTO;
 import java.util.UUID;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
@@ -166,6 +167,37 @@ public interface DomainComponentsApi {
     )
     
     ResponseEntity<DomainComponentDTO> getDomainComponentById(
+        @Parameter(name = "domainComponentId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("domainComponentId") UUID domainComponentId
+    );
+
+
+    /**
+     * GET /api/v1/domain-components/{domainComponentId}/org-units : Get Domain component organization units
+     *
+     * @param domainComponentId  (required)
+     * @return OK (status code 200)
+     *         or Not Found (status code 404)
+     */
+    @Operation(
+        operationId = "getOrganizationUnitsByDomainComponentId",
+        summary = "Get Domain component organization units",
+        tags = { "Domain Components" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "OK", content = {
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = OrganizationUnitDTO.class)))
+            }),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/api/v1/domain-components/{domainComponentId}/org-units",
+        produces = { "application/json" }
+    )
+    
+    ResponseEntity<List<OrganizationUnitDTO>> getOrganizationUnitsByDomainComponentId(
         @Parameter(name = "domainComponentId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("domainComponentId") UUID domainComponentId
     );
 
