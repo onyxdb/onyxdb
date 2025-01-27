@@ -1,0 +1,23 @@
+type Query {
+    account(id: ID!): Account
+    accounts: [Account]
+
+    service(id: ID!): Service
+    services: [Service]
+    projectServices(projectId: ID!): [Service]
+
+    project(id: ID!): Project
+    projects: [Project]
+    organizationProjects(organizationId: ID!): [Project]
+
+    organization(id: ID!): Organization
+    organizations: [Organization]
+
+    role(id: ID!): Role
+    roles: [Role]
+
+    group(id: ID!): Group
+    groups: [Group]
+
+    hasAccess(subjectId: ID!, resourceId: ID!): Boolean!
+}

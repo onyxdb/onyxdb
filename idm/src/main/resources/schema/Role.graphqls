@@ -1,0 +1,17 @@
+enum RoleType {
+    ADMIN
+    EDITOR
+    VIEWER
+    AUDITOR
+}
+
+type Role {
+    id: ID!
+    name: RoleType!
+    permissions: [String!]!
+}
+
+input RoleInput {
+    name: RoleType!
+    permissions: [String!]!
+}
