@@ -1,11 +1,11 @@
 package com.onyxdb.mdb.models;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.onyxdb.mdb.utils.BaseStringEnum;
 
 /**
  * @author foxleren
  */
-public enum ClusterTaskType {
+public enum ClusterTaskType implements BaseStringEnum {
     // MONGODB_CREATE_CLUSTER
     MONGODB_CREATE_CLUSTER_APPLY_MANIFEST("mongodb_create_cluster_apply_manifest"),
     MONGODB_CREATE_CLUSTER_SAVE_HOSTS("mongodb_create_cluster_save_hosts"),
@@ -19,8 +19,7 @@ public enum ClusterTaskType {
     }
 
     @Override
-    @JsonValue
-    public String toString() {
+    public String getValue() {
         return value;
     }
 }

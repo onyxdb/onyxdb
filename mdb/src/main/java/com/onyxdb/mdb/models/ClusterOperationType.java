@@ -1,11 +1,11 @@
 package com.onyxdb.mdb.models;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.onyxdb.mdb.utils.BaseStringEnum;
 
 /**
  * @author foxleren
  */
-public enum ClusterOperationType {
+public enum ClusterOperationType implements BaseStringEnum {
     CREATE_CLUSTER("create_cluster"),
     ;
 
@@ -16,8 +16,7 @@ public enum ClusterOperationType {
     }
 
     @Override
-    @JsonValue
-    public String toString() {
+    public String getValue() {
         return value;
     }
 }

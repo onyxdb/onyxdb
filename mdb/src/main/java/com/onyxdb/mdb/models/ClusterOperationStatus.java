@@ -1,11 +1,11 @@
 package com.onyxdb.mdb.models;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.onyxdb.mdb.utils.BaseStringEnum;
 
 /**
  * @author foxleren
  */
-public enum ClusterOperationStatus {
+public enum ClusterOperationStatus implements BaseStringEnum {
     IN_PROGRESS("in_progress"),
     ERROR("error"),
     SUCCESS("success"),
@@ -18,8 +18,7 @@ public enum ClusterOperationStatus {
     }
 
     @Override
-    @JsonValue
-    public String toString() {
+    public String getValue() {
         return value;
     }
 }

@@ -37,8 +37,8 @@ public record ClusterOperation(
         return new ClusterOperationsRecord(
                 id,
                 clusterId,
-                com.onyxdb.mdb.generated.jooq.enums.ClusterOperationType.valueOf(type.toString()),
-                com.onyxdb.mdb.generated.jooq.enums.ClusterOperationStatus.valueOf(status.toString()),
+                com.onyxdb.mdb.generated.jooq.enums.ClusterOperationType.valueOf(type.getValue()),
+                com.onyxdb.mdb.generated.jooq.enums.ClusterOperationStatus.valueOf(status.getValue()),
                 createdAt,
                 createdBy,
                 updatedAt
