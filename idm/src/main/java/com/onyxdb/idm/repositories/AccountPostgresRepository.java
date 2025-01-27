@@ -24,12 +24,12 @@ import java.util.UUID;
 @Repository
 @RequiredArgsConstructor
 public class AccountPostgresRepository implements AccountRepository {
-    private final DSLContext dslContext;
-    private final AccountTable accountTable = Tables.ACCOUNT_TABLE;
-    private final AccountBusinessRoleTable accountBusinessRoleTable = Tables.ACCOUNT_BUSINESS_ROLE_TABLE;
-    private final BusinessRoleTable businessRoleTable = Tables.BUSINESS_ROLE_TABLE;
-    private final AccountRoleTable accountRoleTable = Tables.ACCOUNT_ROLE_TABLE;
-    private final RoleTable roleTable = Tables.ROLE_TABLE;
+    private static DSLContext dslContext;
+    private final static AccountTable accountTable = Tables.ACCOUNT_TABLE;
+    private final static AccountBusinessRoleTable accountBusinessRoleTable = Tables.ACCOUNT_BUSINESS_ROLE_TABLE;
+    private final static BusinessRoleTable businessRoleTable = Tables.BUSINESS_ROLE_TABLE;
+    private final static AccountRoleTable accountRoleTable = Tables.ACCOUNT_ROLE_TABLE;
+    private final static RoleTable roleTable = Tables.ROLE_TABLE;
 
     @Override
     public Optional<Account> findById(UUID id) {

@@ -18,9 +18,8 @@ import java.util.UUID;
 @Repository
 @RequiredArgsConstructor
 public class OrganizationPostgresRepository implements OrganizationRepository {
-
     private final DSLContext dslContext;
-    private final OrganizationTable organizationTable = Tables.ORGANIZATION_TABLE;
+    private final static OrganizationTable organizationTable = Tables.ORGANIZATION_TABLE;
 
     @Override
     public Optional<Organization> findById(UUID id) {

@@ -19,7 +19,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ResourcePostgresRepository implements ResourceRepository {
     private final DSLContext dslContext;
-    private final ResourceTable resourceTable = Tables.RESOURCE_TABLE;
+    private final static ResourceTable resourceTable = Tables.RESOURCE_TABLE;
 
     @Override
     public Optional<Resource> findById(UUID id) {

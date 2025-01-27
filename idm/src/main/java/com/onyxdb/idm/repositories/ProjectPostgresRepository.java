@@ -18,9 +18,8 @@ import java.util.UUID;
 @Repository
 @RequiredArgsConstructor
 public class ProjectPostgresRepository implements ProjectRepository {
-
     private final DSLContext dslContext;
-    private final ProjectTable projectTable = Tables.PROJECT_TABLE;
+    private final static ProjectTable projectTable = Tables.PROJECT_TABLE;
 
     @Override
     public Optional<Project> findById(UUID id) {

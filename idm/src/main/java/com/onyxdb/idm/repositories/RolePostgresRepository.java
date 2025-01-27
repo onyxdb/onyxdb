@@ -21,11 +21,10 @@ import java.util.UUID;
 @Repository
 @RequiredArgsConstructor
 public class RolePostgresRepository implements RoleRepository {
-
     private final DSLContext dslContext;
-    private final RoleTable roleTable = Tables.ROLE_TABLE;
-    private final RolePermissionTable roleToPermissionTable = Tables.ROLE_PERMISSION_TABLE;
-    private final PermissionTable permissionTable = Tables.PERMISSION_TABLE;
+    private final static RoleTable roleTable = Tables.ROLE_TABLE;
+    private final static RolePermissionTable roleToPermissionTable = Tables.ROLE_PERMISSION_TABLE;
+    private final static PermissionTable permissionTable = Tables.PERMISSION_TABLE;
 
     @Override
     public Optional<Role> findById(UUID id) {

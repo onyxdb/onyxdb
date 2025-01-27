@@ -18,9 +18,8 @@ import java.util.UUID;
 @Repository
 @RequiredArgsConstructor
 public class PermissionPostgresRepository implements PermissionRepository {
-
     private final DSLContext dslContext;
-    private final PermissionTable permissionTable = Tables.PERMISSION_TABLE;
+    private final static PermissionTable permissionTable = Tables.PERMISSION_TABLE;
 
     @Override
     public Optional<Permission> findById(UUID id) {

@@ -21,11 +21,10 @@ import java.util.UUID;
 @Repository
 @RequiredArgsConstructor
 public class OrganizationUnitPostgresRepository implements OrganizationUnitRepository {
-
     private final DSLContext dslContext;
-    private final OrganizationUnitTable organizationUnitTable = Tables.ORGANIZATION_UNIT_TABLE;
-    private final AccountOuTable organizationUnitAccountTable = Tables.ACCOUNT_OU_TABLE;
-    private final AccountTable accountTable = Tables.ACCOUNT_TABLE;
+    private final static OrganizationUnitTable organizationUnitTable = Tables.ORGANIZATION_UNIT_TABLE;
+    private final static AccountOuTable organizationUnitAccountTable = Tables.ACCOUNT_OU_TABLE;
+    private final static AccountTable accountTable = Tables.ACCOUNT_TABLE;
 
     @Override
     public Optional<OrganizationUnit> findById(UUID id) {

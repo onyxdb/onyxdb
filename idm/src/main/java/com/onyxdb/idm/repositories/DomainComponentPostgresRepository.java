@@ -17,9 +17,8 @@ import java.util.UUID;
 @Repository
 @RequiredArgsConstructor
 public class DomainComponentPostgresRepository implements DomainComponentRepository {
-
     private final DSLContext dslContext;
-    private final DomainComponentTable domainComponentTable = Tables.DOMAIN_COMPONENT_TABLE;
+    private final static DomainComponentTable domainComponentTable = Tables.DOMAIN_COMPONENT_TABLE;
 
     @Override
     public Optional<DomainComponent> findById(UUID id) {

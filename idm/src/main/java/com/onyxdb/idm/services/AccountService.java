@@ -23,7 +23,7 @@ public class AccountService {
 //    TODO: Добавить смену пароля
 
     private final AccountRepository accountRepository;
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public Account findById(UUID id) {
         return accountRepository

@@ -18,9 +18,8 @@ import java.util.UUID;
 @Repository
 @RequiredArgsConstructor
 public class ServicePostgresRepository implements ServiceRepository {
-
     private final DSLContext dslContext;
-    private final ServiceTable serviceTable = Tables.SERVICE_TABLE;
+    private final static ServiceTable serviceTable = Tables.SERVICE_TABLE;
 
     @Override
     public Optional<Service> findById(UUID id) {

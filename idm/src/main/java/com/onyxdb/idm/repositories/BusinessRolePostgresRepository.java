@@ -22,11 +22,10 @@ import java.util.UUID;
 @Repository
 @RequiredArgsConstructor
 public class BusinessRolePostgresRepository implements BusinessRoleRepository {
-
     private final DSLContext dslContext;
-    private final BusinessRoleTable businessRoleTable = Tables.BUSINESS_ROLE_TABLE;
-    private final BusinessRoleRoleTable businessRoleToRoleTable = Tables.BUSINESS_ROLE_ROLE_TABLE;
-    private final RoleTable roleTable = Tables.ROLE_TABLE;
+    private final static BusinessRoleTable businessRoleTable = Tables.BUSINESS_ROLE_TABLE;
+    private final static BusinessRoleRoleTable businessRoleToRoleTable = Tables.BUSINESS_ROLE_ROLE_TABLE;
+    private final static RoleTable roleTable = Tables.ROLE_TABLE;
 
     @Override
     public Optional<BusinessRole> findById(UUID id) {
