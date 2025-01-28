@@ -11,7 +11,7 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
-import com.onyxdb.mdb.common.TransactionTemplateProvider;
+import com.onyxdb.mdb.common.MemoriousTransactionTemplate;
 import com.onyxdb.mdb.models.ClusterTask;
 
 /**
@@ -21,7 +21,7 @@ import com.onyxdb.mdb.models.ClusterTask;
 @RequiredArgsConstructor
 public class ClusterTaskPostgresRepository implements ClusterTaskRepository {
     private final DSLContext dslContext;
-    private final TransactionTemplateProvider transactionTemplateProvider;
+    private final MemoriousTransactionTemplate memoriousTransactionTemplate;
 
     @Override
     public void createBulk(List<ClusterTask> clusterTasks) {
@@ -29,7 +29,7 @@ public class ClusterTaskPostgresRepository implements ClusterTaskRepository {
                 .map(ClusterTask::toJooqClusterTasksRecord)
                 .toList();
 
-        transactionTemplateProvider.execute(
+        memoriousTransactionTemplate.execute(
                 new TransactionCallbackWithoutResult() {
                     @Override
                     protected void doInTransactionWithoutResult(@NonNull TransactionStatus status) {
