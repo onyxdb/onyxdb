@@ -25,15 +25,7 @@ public class ClusterPostgresRepository implements ClusterRepository {
 
     @Override
     public void create(Cluster cluster) {
-        dslContext.insertInto(
-                        CLUSTERS_TABLE,
-                        CLUSTERS_TABLE.ID,
-                        CLUSTERS_TABLE.NAME,
-                        CLUSTERS_TABLE.DESCRIPTION,
-                        CLUSTERS_TABLE.TYPE
-                )
-                .valuesOfRecords(cluster.toJooqClustersRecord())
-                .execute();
+        dslContext.executeInsert(cluster.toJooqClustersRecord());
     }
 
     @Override

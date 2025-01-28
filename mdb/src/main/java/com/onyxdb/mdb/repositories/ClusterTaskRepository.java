@@ -1,6 +1,7 @@
 package com.onyxdb.mdb.repositories;
 
 import java.util.List;
+import java.util.UUID;
 
 import com.onyxdb.mdb.models.ClusterTask;
 
@@ -9,4 +10,6 @@ import com.onyxdb.mdb.models.ClusterTask;
  */
 public interface ClusterTaskRepository {
     void createBulk(List<ClusterTask> clusterTasks);
+
+    List<ClusterTask> getTasksToProcess(int limit);
 }
