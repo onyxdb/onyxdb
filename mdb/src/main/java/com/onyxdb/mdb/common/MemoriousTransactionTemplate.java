@@ -10,7 +10,8 @@ import org.springframework.transaction.support.TransactionTemplate;
  * TransactionTemplate is a thread-safe class, but it contains settings entire life.
  * MemoriousTransactionTemplate helps to change settings temporarily for one execution
  * and then restore them to the previous state.
- * Docs: <a href="https://docs.spring.io/spring-framework/reference/data-access/transaction/programmatic.html#tx-prog-template-settings">...</a>
+ * <p/>
+ * <a href="https://docs.spring.io/spring-framework/reference/data-access/transaction/programmatic.html#tx-prog-template-settings">Docs</a>
  *
  * @author foxleren
  */
