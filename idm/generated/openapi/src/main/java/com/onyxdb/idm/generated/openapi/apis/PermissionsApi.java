@@ -7,7 +7,7 @@ package com.onyxdb.idm.generated.openapi.apis;
 
 import com.onyxdb.idm.generated.openapi.models.BadRequestResponse;
 import com.onyxdb.idm.generated.openapi.models.NotFoundResponse;
-import com.onyxdb.idm.generated.openapi.models.OrganizationDTO;
+import com.onyxdb.idm.generated.openapi.models.PermissionDTO;
 import java.util.UUID;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,23 +37,23 @@ import jakarta.annotation.Generated;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.5.0")
 @Validated
-@Tag(name = "Organizations", description = "the Organizations API")
-public interface OrganizationsApi {
+@Tag(name = "Permissions", description = "the Permissions API")
+public interface PermissionsApi {
 
     /**
-     * POST /api/v1/organizations : Create a new organization
+     * POST /api/v1/permissions : Create a new permission
      *
-     * @param organizationDTO  (required)
+     * @param permissionDTO  (required)
      * @return Created (status code 201)
      *         or Bad Request (status code 400)
      */
     @Operation(
-        operationId = "createOrganization",
-        summary = "Create a new organization",
-        tags = { "Organizations" },
+        operationId = "createPermission",
+        summary = "Create a new permission",
+        tags = { "Permissions" },
         responses = {
             @ApiResponse(responseCode = "201", description = "Created", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = OrganizationDTO.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = PermissionDTO.class))
             }),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
@@ -62,28 +62,28 @@ public interface OrganizationsApi {
     )
     @RequestMapping(
         method = RequestMethod.POST,
-        value = "/api/v1/organizations",
+        value = "/api/v1/permissions",
         produces = { "application/json" },
         consumes = { "application/json" }
     )
     
-    ResponseEntity<OrganizationDTO> createOrganization(
-        @Parameter(name = "OrganizationDTO", description = "", required = true) @Valid @RequestBody OrganizationDTO organizationDTO
+    ResponseEntity<PermissionDTO> createPermission(
+        @Parameter(name = "PermissionDTO", description = "", required = true) @Valid @RequestBody PermissionDTO permissionDTO
     );
 
 
     /**
-     * DELETE /api/v1/organizations/{organizationId} : Delete an organization by ID
+     * DELETE /api/v1/permissions/{permissionId} : Delete a permission by ID
      *
-     * @param organizationId  (required)
+     * @param permissionId  (required)
      * @return No Content (status code 204)
      *         or Not Found (status code 404)
      *         or Bad Request (status code 400)
      */
     @Operation(
-        operationId = "deleteOrganization",
-        summary = "Delete an organization by ID",
-        tags = { "Organizations" },
+        operationId = "deletePermission",
+        summary = "Delete a permission by ID",
+        tags = { "Permissions" },
         responses = {
             @ApiResponse(responseCode = "204", description = "No Content"),
             @ApiResponse(responseCode = "404", description = "Not Found", content = {
@@ -96,28 +96,28 @@ public interface OrganizationsApi {
     )
     @RequestMapping(
         method = RequestMethod.DELETE,
-        value = "/api/v1/organizations/{organizationId}",
+        value = "/api/v1/permissions/{permissionId}",
         produces = { "application/json" }
     )
     
-    ResponseEntity<Void> deleteOrganization(
-        @Parameter(name = "organizationId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("organizationId") UUID organizationId
+    ResponseEntity<Void> deletePermission(
+        @Parameter(name = "permissionId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("permissionId") UUID permissionId
     );
 
 
     /**
-     * GET /api/v1/organizations : Get all organizations
+     * GET /api/v1/permissions : Get all permissions
      *
      * @return OK (status code 200)
      *         or Bad Request (status code 400)
      */
     @Operation(
-        operationId = "getAllOrganizations",
-        summary = "Get all organizations",
-        tags = { "Organizations" },
+        operationId = "getAllPermissions",
+        summary = "Get all permissions",
+        tags = { "Permissions" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = OrganizationDTO.class)))
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PermissionDTO.class)))
             }),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
@@ -126,30 +126,30 @@ public interface OrganizationsApi {
     )
     @RequestMapping(
         method = RequestMethod.GET,
-        value = "/api/v1/organizations",
+        value = "/api/v1/permissions",
         produces = { "application/json" }
     )
     
-    ResponseEntity<List<OrganizationDTO>> getAllOrganizations(
+    ResponseEntity<List<PermissionDTO>> getAllPermissions(
         
     );
 
 
     /**
-     * GET /api/v1/organizations/{organizationId} : Get an organization by ID
+     * GET /api/v1/permissions/{permissionId} : Get a permission by ID
      *
-     * @param organizationId  (required)
+     * @param permissionId  (required)
      * @return OK (status code 200)
      *         or Not Found (status code 404)
      *         or Bad Request (status code 400)
      */
     @Operation(
-        operationId = "getOrganizationById",
-        summary = "Get an organization by ID",
-        tags = { "Organizations" },
+        operationId = "getPermissionById",
+        summary = "Get a permission by ID",
+        tags = { "Permissions" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = OrganizationDTO.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = PermissionDTO.class))
             }),
             @ApiResponse(responseCode = "404", description = "Not Found", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
@@ -161,31 +161,31 @@ public interface OrganizationsApi {
     )
     @RequestMapping(
         method = RequestMethod.GET,
-        value = "/api/v1/organizations/{organizationId}",
+        value = "/api/v1/permissions/{permissionId}",
         produces = { "application/json" }
     )
     
-    ResponseEntity<OrganizationDTO> getOrganizationById(
-        @Parameter(name = "organizationId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("organizationId") UUID organizationId
+    ResponseEntity<PermissionDTO> getPermissionById(
+        @Parameter(name = "permissionId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("permissionId") UUID permissionId
     );
 
 
     /**
-     * PUT /api/v1/organizations/{organizationId} : Update an organization by ID
+     * PUT /api/v1/permissions/{permissionId} : Update a permission by ID
      *
-     * @param organizationId  (required)
-     * @param organizationDTO  (required)
+     * @param permissionId  (required)
+     * @param permissionDTO  (required)
      * @return OK (status code 200)
      *         or Not Found (status code 404)
      *         or Bad Request (status code 400)
      */
     @Operation(
-        operationId = "updateOrganization",
-        summary = "Update an organization by ID",
-        tags = { "Organizations" },
+        operationId = "updatePermission",
+        summary = "Update a permission by ID",
+        tags = { "Permissions" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = OrganizationDTO.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = PermissionDTO.class))
             }),
             @ApiResponse(responseCode = "404", description = "Not Found", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
@@ -197,14 +197,14 @@ public interface OrganizationsApi {
     )
     @RequestMapping(
         method = RequestMethod.PUT,
-        value = "/api/v1/organizations/{organizationId}",
+        value = "/api/v1/permissions/{permissionId}",
         produces = { "application/json" },
         consumes = { "application/json" }
     )
     
-    ResponseEntity<OrganizationDTO> updateOrganization(
-        @Parameter(name = "organizationId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("organizationId") UUID organizationId,
-        @Parameter(name = "OrganizationDTO", description = "", required = true) @Valid @RequestBody OrganizationDTO organizationDTO
+    ResponseEntity<PermissionDTO> updatePermission(
+        @Parameter(name = "permissionId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("permissionId") UUID permissionId,
+        @Parameter(name = "PermissionDTO", description = "", required = true) @Valid @RequestBody PermissionDTO permissionDTO
     );
 
 }

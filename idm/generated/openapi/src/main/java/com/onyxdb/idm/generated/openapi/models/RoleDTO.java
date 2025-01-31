@@ -33,7 +33,7 @@ public class RoleDTO {
 
   private String description;
 
-  private UUID resourceId;
+  private UUID projectId;
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private LocalDateTime createdAt;
@@ -71,8 +71,8 @@ public class RoleDTO {
    * @return roleType
   */
   
-  @Schema(name = "roleType", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("roleType")
+  @Schema(name = "role_type", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("role_type")
   public String getRoleType() {
     return roleType;
   }
@@ -111,8 +111,8 @@ public class RoleDTO {
    * @return shopName
   */
   
-  @Schema(name = "shopName", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("shopName")
+  @Schema(name = "shop_name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("shop_name")
   public String getShopName() {
     return shopName;
   }
@@ -141,24 +141,24 @@ public class RoleDTO {
     this.description = description;
   }
 
-  public RoleDTO resourceId(UUID resourceId) {
-    this.resourceId = resourceId;
+  public RoleDTO projectId(UUID projectId) {
+    this.projectId = projectId;
     return this;
   }
 
   /**
-   * Get resourceId
-   * @return resourceId
+   * Get projectId
+   * @return projectId
   */
   @Valid 
-  @Schema(name = "resourceId", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("resourceId")
-  public UUID getResourceId() {
-    return resourceId;
+  @Schema(name = "projectId", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("projectId")
+  public UUID getProjectId() {
+    return projectId;
   }
 
-  public void setResourceId(UUID resourceId) {
-    this.resourceId = resourceId;
+  public void setProjectId(UUID projectId) {
+    this.projectId = projectId;
   }
 
   public RoleDTO createdAt(LocalDateTime createdAt) {
@@ -215,14 +215,14 @@ public class RoleDTO {
         Objects.equals(this.name, roleDTO.name) &&
         Objects.equals(this.shopName, roleDTO.shopName) &&
         Objects.equals(this.description, roleDTO.description) &&
-        Objects.equals(this.resourceId, roleDTO.resourceId) &&
+        Objects.equals(this.projectId, roleDTO.projectId) &&
         Objects.equals(this.createdAt, roleDTO.createdAt) &&
         Objects.equals(this.updatedAt, roleDTO.updatedAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, roleType, name, shopName, description, resourceId, createdAt, updatedAt);
+    return Objects.hash(id, roleType, name, shopName, description, projectId, createdAt, updatedAt);
   }
 
   @Override
@@ -234,7 +234,7 @@ public class RoleDTO {
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    shopName: ").append(toIndentedString(shopName)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
-    sb.append("    resourceId: ").append(toIndentedString(resourceId)).append("\n");
+    sb.append("    projectId: ").append(toIndentedString(projectId)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("}");

@@ -20,21 +20,20 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * ActionPermissionDTO
+ * PermissionDTO
  */
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.5.0")
-public class ActionPermissionDTO {
+public class PermissionDTO {
 
   private UUID id;
 
   private String actionType;
 
-  @Valid
-  private List<String> resourceFields = new ArrayList<>();
+  private String resourceType;
 
   @Valid
-  private List<String> labels = new ArrayList<>();
+  private List<String> resourceFields = new ArrayList<>();
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private LocalDateTime createdAt;
@@ -42,7 +41,7 @@ public class ActionPermissionDTO {
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private LocalDateTime updatedAt;
 
-  public ActionPermissionDTO id(UUID id) {
+  public PermissionDTO id(UUID id) {
     this.id = id;
     return this;
   }
@@ -62,7 +61,7 @@ public class ActionPermissionDTO {
     this.id = id;
   }
 
-  public ActionPermissionDTO actionType(String actionType) {
+  public PermissionDTO actionType(String actionType) {
     this.actionType = actionType;
     return this;
   }
@@ -82,12 +81,32 @@ public class ActionPermissionDTO {
     this.actionType = actionType;
   }
 
-  public ActionPermissionDTO resourceFields(List<String> resourceFields) {
+  public PermissionDTO resourceType(String resourceType) {
+    this.resourceType = resourceType;
+    return this;
+  }
+
+  /**
+   * Get resourceType
+   * @return resourceType
+  */
+  
+  @Schema(name = "resourceType", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("resourceType")
+  public String getResourceType() {
+    return resourceType;
+  }
+
+  public void setResourceType(String resourceType) {
+    this.resourceType = resourceType;
+  }
+
+  public PermissionDTO resourceFields(List<String> resourceFields) {
     this.resourceFields = resourceFields;
     return this;
   }
 
-  public ActionPermissionDTO addResourceFieldsItem(String resourceFieldsItem) {
+  public PermissionDTO addResourceFieldsItem(String resourceFieldsItem) {
     if (this.resourceFields == null) {
       this.resourceFields = new ArrayList<>();
     }
@@ -110,35 +129,7 @@ public class ActionPermissionDTO {
     this.resourceFields = resourceFields;
   }
 
-  public ActionPermissionDTO labels(List<String> labels) {
-    this.labels = labels;
-    return this;
-  }
-
-  public ActionPermissionDTO addLabelsItem(String labelsItem) {
-    if (this.labels == null) {
-      this.labels = new ArrayList<>();
-    }
-    this.labels.add(labelsItem);
-    return this;
-  }
-
-  /**
-   * Get labels
-   * @return labels
-  */
-  
-  @Schema(name = "labels", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("labels")
-  public List<String> getLabels() {
-    return labels;
-  }
-
-  public void setLabels(List<String> labels) {
-    this.labels = labels;
-  }
-
-  public ActionPermissionDTO createdAt(LocalDateTime createdAt) {
+  public PermissionDTO createdAt(LocalDateTime createdAt) {
     this.createdAt = createdAt;
     return this;
   }
@@ -158,7 +149,7 @@ public class ActionPermissionDTO {
     this.createdAt = createdAt;
   }
 
-  public ActionPermissionDTO updatedAt(LocalDateTime updatedAt) {
+  public PermissionDTO updatedAt(LocalDateTime updatedAt) {
     this.updatedAt = updatedAt;
     return this;
   }
@@ -186,28 +177,28 @@ public class ActionPermissionDTO {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ActionPermissionDTO actionPermissionDTO = (ActionPermissionDTO) o;
-    return Objects.equals(this.id, actionPermissionDTO.id) &&
-        Objects.equals(this.actionType, actionPermissionDTO.actionType) &&
-        Objects.equals(this.resourceFields, actionPermissionDTO.resourceFields) &&
-        Objects.equals(this.labels, actionPermissionDTO.labels) &&
-        Objects.equals(this.createdAt, actionPermissionDTO.createdAt) &&
-        Objects.equals(this.updatedAt, actionPermissionDTO.updatedAt);
+    PermissionDTO permissionDTO = (PermissionDTO) o;
+    return Objects.equals(this.id, permissionDTO.id) &&
+        Objects.equals(this.actionType, permissionDTO.actionType) &&
+        Objects.equals(this.resourceType, permissionDTO.resourceType) &&
+        Objects.equals(this.resourceFields, permissionDTO.resourceFields) &&
+        Objects.equals(this.createdAt, permissionDTO.createdAt) &&
+        Objects.equals(this.updatedAt, permissionDTO.updatedAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, actionType, resourceFields, labels, createdAt, updatedAt);
+    return Objects.hash(id, actionType, resourceType, resourceFields, createdAt, updatedAt);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ActionPermissionDTO {\n");
+    sb.append("class PermissionDTO {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    actionType: ").append(toIndentedString(actionType)).append("\n");
+    sb.append("    resourceType: ").append(toIndentedString(resourceType)).append("\n");
     sb.append("    resourceFields: ").append(toIndentedString(resourceFields)).append("\n");
-    sb.append("    labels: ").append(toIndentedString(labels)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("}");
