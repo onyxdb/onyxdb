@@ -71,8 +71,8 @@ public class RoleDTO {
    * @return roleType
   */
   
-  @Schema(name = "roleType", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("roleType")
+  @Schema(name = "role_type", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("role_type")
   public String getRoleType() {
     return roleType;
   }
@@ -111,8 +111,8 @@ public class RoleDTO {
    * @return shopName
   */
   
-  @Schema(name = "shopName", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("shopName")
+  @Schema(name = "shop_name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("shop_name")
   public String getShopName() {
     return shopName;
   }
