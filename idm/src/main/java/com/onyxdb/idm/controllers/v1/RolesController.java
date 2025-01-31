@@ -1,11 +1,9 @@
 package com.onyxdb.idm.controllers.v1;
 
 import com.onyxdb.idm.generated.openapi.apis.RolesApi;
-import com.onyxdb.idm.generated.openapi.models.ActionPermissionDTO;
-import com.onyxdb.idm.generated.openapi.models.ApiPermissionDTO;
+import com.onyxdb.idm.generated.openapi.models.PermissionDTO;
 import com.onyxdb.idm.generated.openapi.models.RoleDTO;
-import com.onyxdb.idm.models.ActionPermission;
-import com.onyxdb.idm.models.ApiPermission;
+import com.onyxdb.idm.models.Permission;
 import com.onyxdb.idm.models.Role;
 import com.onyxdb.idm.services.RoleService;
 import lombok.RequiredArgsConstructor;
@@ -60,40 +58,21 @@ public class RolesController implements RolesApi {
     }
 
     @Override
-    public ResponseEntity<Void> addActionPermissionToRole(UUID roleId, UUID permissionId) {
-        roleService.addActionPermission(roleId, permissionId);
+    public ResponseEntity<Void> addPermissionToRole(UUID roleId, UUID permissionId) {
+        roleService.addPermission(roleId, permissionId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @Override
-    public ResponseEntity<Void> removeActionPermissionFromRole(UUID roleId, UUID permissionId) {
-        roleService.removeActionPermission(roleId, permissionId);
+    public ResponseEntity<Void> removePermissionFromRole(UUID roleId, UUID permissionId) {
+        roleService.removePermission(roleId, permissionId);
         return ResponseEntity.noContent().build();
     }
 
     @Override
-    public ResponseEntity<List<ActionPermissionDTO>> getActionPermissionsByRoleId(UUID roleId) {
-        List<ActionPermission> permissions = roleService.getActionPermissionsByRoleId(roleId);
-        List<ActionPermissionDTO> permissionDTOs = permissions.stream().map(ActionPermission::toDTO).toList();
-        return ResponseEntity.ok(permissionDTOs);
-    }
-
-    @Override
-    public ResponseEntity<Void> addApiPermissionToRole(UUID roleId, UUID permissionId) {
-        roleService.addApiPermission(roleId, permissionId);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
-    @Override
-    public ResponseEntity<Void> removeApiPermissionFromRole(UUID roleId, UUID permissionId) {
-        roleService.removeApiPermission(roleId, permissionId);
-        return ResponseEntity.noContent().build();
-    }
-
-    @Override
-    public ResponseEntity<List<ApiPermissionDTO>> getApiPermissionsByRoleId(UUID roleId) {
-        List<ApiPermission> permissions = roleService.getApiPermissionsByRoleId(roleId);
-        List<ApiPermissionDTO> permissionDTOs = permissions.stream().map(ApiPermission::toDTO).toList();
+    public ResponseEntity<List<PermissionDTO>> getPermissionsByRoleId(UUID roleId) {
+        List<Permission> permissions = roleService.getPermissionsByRoleId(roleId);
+        List<PermissionDTO> permissionDTOs = permissions.stream().map(Permission::toDTO).toList();
         return ResponseEntity.ok(permissionDTOs);
     }
 }

@@ -5,6 +5,7 @@ import com.onyxdb.idm.generated.jooq.tables.BusinessRoleRoleTable;
 import com.onyxdb.idm.generated.jooq.tables.BusinessRoleTable;
 import com.onyxdb.idm.generated.jooq.tables.RoleTable;
 import com.onyxdb.idm.models.BusinessRole;
+import com.onyxdb.idm.models.Permission;
 import com.onyxdb.idm.models.Role;
 
 import lombok.RequiredArgsConstructor;

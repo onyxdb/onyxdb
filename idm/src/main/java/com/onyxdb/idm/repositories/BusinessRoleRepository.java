@@ -1,6 +1,7 @@
 package com.onyxdb.idm.repositories;
 
 import com.onyxdb.idm.models.BusinessRole;
+import com.onyxdb.idm.models.Permission;
 import com.onyxdb.idm.models.Role;
 
 import java.util.List;
