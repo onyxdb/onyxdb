@@ -8,13 +8,11 @@ import com.onyxdb.idm.generated.jooq.Keys;
 import com.onyxdb.idm.generated.jooq.Public;
 import com.onyxdb.idm.generated.jooq.tables.AccountRoleTable.AccountRoleTablePath;
 import com.onyxdb.idm.generated.jooq.tables.AccountTable.AccountTablePath;
-import com.onyxdb.idm.generated.jooq.tables.ActionPermissionTable.ActionPermissionTablePath;
-import com.onyxdb.idm.generated.jooq.tables.ApiPermissionTable.ApiPermissionTablePath;
 import com.onyxdb.idm.generated.jooq.tables.BusinessRoleRoleTable.BusinessRoleRoleTablePath;
 import com.onyxdb.idm.generated.jooq.tables.BusinessRoleTable.BusinessRoleTablePath;
-import com.onyxdb.idm.generated.jooq.tables.ResourceTable.ResourceTablePath;
-import com.onyxdb.idm.generated.jooq.tables.RoleActionPermissionTable.RoleActionPermissionTablePath;
-import com.onyxdb.idm.generated.jooq.tables.RoleApiPermissionTable.RoleApiPermissionTablePath;
+import com.onyxdb.idm.generated.jooq.tables.PermissionTable.PermissionTablePath;
+import com.onyxdb.idm.generated.jooq.tables.ProjectTable.ProjectTablePath;
+import com.onyxdb.idm.generated.jooq.tables.RolePermissionTable.RolePermissionTablePath;
 import com.onyxdb.idm.generated.jooq.tables.records.RoleTableRecord;
 
 import java.time.LocalDateTime;
@@ -97,9 +95,9 @@ public class RoleTable extends TableImpl<RoleTableRecord> {
     public final TableField<RoleTableRecord, String> DESCRIPTION = createField(DSL.name("description"), SQLDataType.CLOB, this, "");
 
     /**
-     * The column <code>public.role_table.resource_id</code>.
+     * The column <code>public.role_table.project_id</code>.
      */
-    public final TableField<RoleTableRecord, UUID> RESOURCE_ID = createField(DSL.name("resource_id"), SQLDataType.UUID, this, "");
+    public final TableField<RoleTableRecord, UUID> PROJECT_ID = createField(DSL.name("project_id"), SQLDataType.UUID, this, "");
 
     /**
      * The column <code>public.role_table.created_at</code>.
@@ -190,20 +188,20 @@ public class RoleTable extends TableImpl<RoleTableRecord> {
 
     @Override
     public List<ForeignKey<RoleTableRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.ROLE_TABLE__ROLE_TABLE_RESOURCE_ID_FKEY);
+        return Arrays.asList(Keys.ROLE_TABLE__ROLE_TABLE_PROJECT_ID_FKEY);
     }
 
-    private transient ResourceTablePath _resourceTable;
+    private transient ProjectTablePath _projectTable;
 
     /**
-     * Get the implicit join path to the <code>public.resource_table</code>
+     * Get the implicit join path to the <code>public.project_table</code>
      * table.
      */
-    public ResourceTablePath resourceTable() {
-        if (_resourceTable == null)
-            _resourceTable = new ResourceTablePath(this, Keys.ROLE_TABLE__ROLE_TABLE_RESOURCE_ID_FKEY, null);
+    public ProjectTablePath projectTable() {
+        if (_projectTable == null)
+            _projectTable = new ProjectTablePath(this, Keys.ROLE_TABLE__ROLE_TABLE_PROJECT_ID_FKEY, null);
 
-        return _resourceTable;
+        return _projectTable;
     }
 
     private transient AccountRoleTablePath _accountRoleTable;
@@ -232,30 +230,17 @@ public class RoleTable extends TableImpl<RoleTableRecord> {
         return _businessRoleRoleTable;
     }
 
-    private transient RoleActionPermissionTablePath _roleActionPermissionTable;
+    private transient RolePermissionTablePath _rolePermissionTable;
 
     /**
      * Get the implicit to-many join path to the
-     * <code>public.role_action_permission_table</code> table
+     * <code>public.role_permission_table</code> table
      */
-    public RoleActionPermissionTablePath roleActionPermissionTable() {
-        if (_roleActionPermissionTable == null)
-            _roleActionPermissionTable = new RoleActionPermissionTablePath(this, null, Keys.ROLE_ACTION_PERMISSION_TABLE__ROLE_ACTION_PERMISSION_TABLE_ROLE_ID_FKEY.getInverseKey());
+    public RolePermissionTablePath rolePermissionTable() {
+        if (_rolePermissionTable == null)
+            _rolePermissionTable = new RolePermissionTablePath(this, null, Keys.ROLE_PERMISSION_TABLE__ROLE_PERMISSION_TABLE_ROLE_ID_FKEY.getInverseKey());
 
-        return _roleActionPermissionTable;
-    }
-
-    private transient RoleApiPermissionTablePath _roleApiPermissionTable;
-
-    /**
-     * Get the implicit to-many join path to the
-     * <code>public.role_api_permission_table</code> table
-     */
-    public RoleApiPermissionTablePath roleApiPermissionTable() {
-        if (_roleApiPermissionTable == null)
-            _roleApiPermissionTable = new RoleApiPermissionTablePath(this, null, Keys.ROLE_API_PERMISSION_TABLE__ROLE_API_PERMISSION_TABLE_ROLE_ID_FKEY.getInverseKey());
-
-        return _roleApiPermissionTable;
+        return _rolePermissionTable;
     }
 
     /**
@@ -276,18 +261,10 @@ public class RoleTable extends TableImpl<RoleTableRecord> {
 
     /**
      * Get the implicit many-to-many join path to the
-     * <code>public.action_permission_table</code> table
+     * <code>public.permission_table</code> table
      */
-    public ActionPermissionTablePath actionPermissionTable() {
-        return roleActionPermissionTable().actionPermissionTable();
-    }
-
-    /**
-     * Get the implicit many-to-many join path to the
-     * <code>public.api_permission_table</code> table
-     */
-    public ApiPermissionTablePath apiPermissionTable() {
-        return roleApiPermissionTable().apiPermissionTable();
+    public PermissionTablePath permissionTable() {
+        return rolePermissionTable().permissionTable();
     }
 
     @Override

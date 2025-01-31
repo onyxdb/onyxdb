@@ -64,7 +64,7 @@ public class AccountPostgresRepository implements AccountRepository {
     public void create(Account account) {
         dslContext.insertInto(accountTable)
                 .set(accountTable.ID, account.id())
-                .set(accountTable.USERNAME, account.username())
+                .set(accountTable.LOGIN, account.login())
                 .set(accountTable.PASSWORD, account.password())
                 .set(accountTable.EMAIL, account.email())
                 .set(accountTable.FIRST_NAME, account.firstName())
@@ -77,7 +77,7 @@ public class AccountPostgresRepository implements AccountRepository {
     @Override
     public void update(Account account) {
         dslContext.update(accountTable)
-                .set(accountTable.USERNAME, account.username())
+                .set(accountTable.LOGIN, account.login())
                 .set(accountTable.PASSWORD, account.password())
                 .set(accountTable.EMAIL, account.email())
                 .set(accountTable.FIRST_NAME, account.firstName())

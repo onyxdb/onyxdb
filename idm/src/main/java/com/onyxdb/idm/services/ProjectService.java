@@ -3,11 +3,9 @@ package com.onyxdb.idm.services;
 import com.onyxdb.idm.controllers.v1.ResourceNotFoundException;
 import com.onyxdb.idm.models.Resource;
 import com.onyxdb.idm.models.Project;
-import com.onyxdb.idm.models.Service;
 import com.onyxdb.idm.repositories.OrganizationRepository;
 import com.onyxdb.idm.repositories.ProjectRepository;
 import com.onyxdb.idm.repositories.ResourceRepository;
-import com.onyxdb.idm.repositories.ServiceRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -23,7 +21,6 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final ResourceRepository resourceRepository;
     private final OrganizationRepository organizationRepository;
-    private final ServiceRepository serviceRepository;
 
     public Project findById(UUID id) {
         return projectRepository
@@ -89,7 +86,7 @@ public class ProjectService {
         projectRepository.delete(id);
     }
 
-    public List<Service> getServicesByProjectId(UUID projectId) {
-        return serviceRepository.findByProjectId(projectId);
-    }
+//    public List<Service> getServicesByProjectId(UUID projectId) {
+//        return serviceRepository.findByProjectId(projectId);
+//    }
 }

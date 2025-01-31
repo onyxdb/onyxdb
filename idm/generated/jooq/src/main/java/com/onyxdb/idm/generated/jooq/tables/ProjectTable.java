@@ -7,9 +7,8 @@ package com.onyxdb.idm.generated.jooq.tables;
 import com.onyxdb.idm.generated.jooq.Keys;
 import com.onyxdb.idm.generated.jooq.Public;
 import com.onyxdb.idm.generated.jooq.tables.AccountTable.AccountTablePath;
-import com.onyxdb.idm.generated.jooq.tables.OrganizationTable.OrganizationTablePath;
-import com.onyxdb.idm.generated.jooq.tables.ResourceTable.ResourceTablePath;
-import com.onyxdb.idm.generated.jooq.tables.ServiceTable.ServiceTablePath;
+import com.onyxdb.idm.generated.jooq.tables.ProjectTable.ProjectTablePath;
+import com.onyxdb.idm.generated.jooq.tables.RoleTable.RoleTablePath;
 import com.onyxdb.idm.generated.jooq.tables.records.ProjectTableRecord;
 
 import java.time.LocalDateTime;
@@ -22,7 +21,7 @@ import java.util.function.Function;
 import org.jooq.Condition;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function8;
+import org.jooq.Function7;
 import org.jooq.InverseForeignKey;
 import org.jooq.Name;
 import org.jooq.Path;
@@ -30,7 +29,7 @@ import org.jooq.PlainSQL;
 import org.jooq.QueryPart;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row8;
+import org.jooq.Row7;
 import org.jooq.SQL;
 import org.jooq.Schema;
 import org.jooq.Select;
@@ -92,14 +91,9 @@ public class ProjectTable extends TableImpl<ProjectTableRecord> {
     public final TableField<ProjectTableRecord, LocalDateTime> UPDATED_AT = createField(DSL.name("updated_at"), SQLDataType.LOCALDATETIME(6).defaultValue(DSL.field(DSL.raw("CURRENT_TIMESTAMP"), SQLDataType.LOCALDATETIME)), this, "");
 
     /**
-     * The column <code>public.project_table.resource_id</code>.
+     * The column <code>public.project_table.parent_id</code>.
      */
-    public final TableField<ProjectTableRecord, UUID> RESOURCE_ID = createField(DSL.name("resource_id"), SQLDataType.UUID.nullable(false), this, "");
-
-    /**
-     * The column <code>public.project_table.organization_id</code>.
-     */
-    public final TableField<ProjectTableRecord, UUID> ORGANIZATION_ID = createField(DSL.name("organization_id"), SQLDataType.UUID.nullable(false), this, "");
+    public final TableField<ProjectTableRecord, UUID> PARENT_ID = createField(DSL.name("parent_id"), SQLDataType.UUID.nullable(false), this, "");
 
     /**
      * The column <code>public.project_table.owner_id</code>.
@@ -179,26 +173,8 @@ public class ProjectTable extends TableImpl<ProjectTableRecord> {
     }
 
     @Override
-    public List<UniqueKey<ProjectTableRecord>> getUniqueKeys() {
-        return Arrays.asList(Keys.PROJECT_TABLE_ORGANIZATION_ID_KEY, Keys.PROJECT_TABLE_RESOURCE_ID_KEY);
-    }
-
-    @Override
     public List<ForeignKey<ProjectTableRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.PROJECT_TABLE__PROJECT_TABLE_ORGANIZATION_ID_FKEY, Keys.PROJECT_TABLE__PROJECT_TABLE_OWNER_ID_FKEY, Keys.PROJECT_TABLE__PROJECT_TABLE_RESOURCE_ID_FKEY);
-    }
-
-    private transient OrganizationTablePath _organizationTable;
-
-    /**
-     * Get the implicit join path to the <code>public.organization_table</code>
-     * table.
-     */
-    public OrganizationTablePath organizationTable() {
-        if (_organizationTable == null)
-            _organizationTable = new OrganizationTablePath(this, Keys.PROJECT_TABLE__PROJECT_TABLE_ORGANIZATION_ID_FKEY, null);
-
-        return _organizationTable;
+        return Arrays.asList(Keys.PROJECT_TABLE__PROJECT_TABLE_OWNER_ID_FKEY, Keys.PROJECT_TABLE__PROJECT_TABLE_PARENT_ID_FKEY);
     }
 
     private transient AccountTablePath _accountTable;
@@ -214,30 +190,30 @@ public class ProjectTable extends TableImpl<ProjectTableRecord> {
         return _accountTable;
     }
 
-    private transient ResourceTablePath _resourceTable;
+    private transient ProjectTablePath _projectTable;
 
     /**
-     * Get the implicit join path to the <code>public.resource_table</code>
+     * Get the implicit join path to the <code>public.project_table</code>
      * table.
      */
-    public ResourceTablePath resourceTable() {
-        if (_resourceTable == null)
-            _resourceTable = new ResourceTablePath(this, Keys.PROJECT_TABLE__PROJECT_TABLE_RESOURCE_ID_FKEY, null);
+    public ProjectTablePath projectTable() {
+        if (_projectTable == null)
+            _projectTable = new ProjectTablePath(this, Keys.PROJECT_TABLE__PROJECT_TABLE_PARENT_ID_FKEY, null);
 
-        return _resourceTable;
+        return _projectTable;
     }
 
-    private transient ServiceTablePath _serviceTable;
+    private transient RoleTablePath _roleTable;
 
     /**
-     * Get the implicit to-many join path to the
-     * <code>public.service_table</code> table
+     * Get the implicit to-many join path to the <code>public.role_table</code>
+     * table
      */
-    public ServiceTablePath serviceTable() {
-        if (_serviceTable == null)
-            _serviceTable = new ServiceTablePath(this, null, Keys.SERVICE_TABLE__SERVICE_TABLE_PROJECT_ID_FKEY.getInverseKey());
+    public RoleTablePath roleTable() {
+        if (_roleTable == null)
+            _roleTable = new RoleTablePath(this, null, Keys.ROLE_TABLE__ROLE_TABLE_PROJECT_ID_FKEY.getInverseKey());
 
-        return _serviceTable;
+        return _roleTable;
     }
 
     @Override
@@ -364,18 +340,18 @@ public class ProjectTable extends TableImpl<ProjectTableRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row8 type methods
+    // Row7 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row8<UUID, String, String, LocalDateTime, LocalDateTime, UUID, UUID, UUID> fieldsRow() {
-        return (Row8) super.fieldsRow();
+    public Row7<UUID, String, String, LocalDateTime, LocalDateTime, UUID, UUID> fieldsRow() {
+        return (Row7) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function8<? super UUID, ? super String, ? super String, ? super LocalDateTime, ? super LocalDateTime, ? super UUID, ? super UUID, ? super UUID, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function7<? super UUID, ? super String, ? super String, ? super LocalDateTime, ? super LocalDateTime, ? super UUID, ? super UUID, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -383,7 +359,7 @@ public class ProjectTable extends TableImpl<ProjectTableRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function8<? super UUID, ? super String, ? super String, ? super LocalDateTime, ? super LocalDateTime, ? super UUID, ? super UUID, ? super UUID, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function7<? super UUID, ? super String, ? super String, ? super LocalDateTime, ? super LocalDateTime, ? super UUID, ? super UUID, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

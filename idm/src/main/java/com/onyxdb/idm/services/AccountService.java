@@ -38,7 +38,7 @@ public class AccountService {
     public void create(Account account) {
         Account forCreate = new Account(
                 UUID.randomUUID(),
-                account.username(),
+                account.login(),
                 account.password(),
                 account.email(),
                 account.firstName(),
@@ -52,7 +52,7 @@ public class AccountService {
     public void update(Account account) {
         Account forUpdate = new Account(
                 account.id(),
-                account.username(),
+                account.login(),
                 account.password(),
                 account.email(),
                 account.firstName(),
