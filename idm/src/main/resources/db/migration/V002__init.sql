@@ -3,10 +3,10 @@ CREATE TABLE project_table (
     id UUID PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     parent_id UUID NOT NULL,
     owner_id UUID,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (parent_id) REFERENCES project_table(id),
     FOREIGN KEY (owner_id) REFERENCES account_table(id)
 );
@@ -28,7 +28,7 @@ CREATE TABLE role_table (
 CREATE TABLE permission_table (
     id UUID PRIMARY KEY,
     action_type VARCHAR(255) NOT NULL, -- Например: CREATE, READ, UPDATE, DELETE or any custom
-    custom JSONB NOT NULL,
+    data JSONB NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

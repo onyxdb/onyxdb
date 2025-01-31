@@ -54,16 +54,16 @@ public class PermissionTableRecord extends UpdatableRecordImpl<PermissionTableRe
     }
 
     /**
-     * Setter for <code>public.permission_table.custom</code>.
+     * Setter for <code>public.permission_table.data</code>.
      */
-    public void setCustom(JSONB value) {
+    public void setData(JSONB value) {
         set(2, value);
     }
 
     /**
-     * Getter for <code>public.permission_table.custom</code>.
+     * Getter for <code>public.permission_table.data</code>.
      */
-    public JSONB getCustom() {
+    public JSONB getData() {
         return (JSONB) get(2);
     }
 
@@ -130,7 +130,7 @@ public class PermissionTableRecord extends UpdatableRecordImpl<PermissionTableRe
 
     @Override
     public Field<JSONB> field3() {
-        return PermissionTable.PERMISSION_TABLE.CUSTOM;
+        return PermissionTable.PERMISSION_TABLE.DATA;
     }
 
     @Override
@@ -155,7 +155,7 @@ public class PermissionTableRecord extends UpdatableRecordImpl<PermissionTableRe
 
     @Override
     public JSONB component3() {
-        return getCustom();
+        return getData();
     }
 
     @Override
@@ -180,7 +180,7 @@ public class PermissionTableRecord extends UpdatableRecordImpl<PermissionTableRe
 
     @Override
     public JSONB value3() {
-        return getCustom();
+        return getData();
     }
 
     @Override
@@ -207,7 +207,7 @@ public class PermissionTableRecord extends UpdatableRecordImpl<PermissionTableRe
 
     @Override
     public PermissionTableRecord value3(JSONB value) {
-        setCustom(value);
+        setData(value);
         return this;
     }
 
@@ -247,12 +247,12 @@ public class PermissionTableRecord extends UpdatableRecordImpl<PermissionTableRe
     /**
      * Create a detached, initialised PermissionTableRecord
      */
-    public PermissionTableRecord(UUID id, String actionType, JSONB custom, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public PermissionTableRecord(UUID id, String actionType, JSONB data, LocalDateTime createdAt, LocalDateTime updatedAt) {
         super(PermissionTable.PERMISSION_TABLE);
 
         setId(id);
         setActionType(actionType);
-        setCustom(custom);
+        setData(data);
         setCreatedAt(createdAt);
         setUpdatedAt(updatedAt);
         resetChangedOnNotNull();

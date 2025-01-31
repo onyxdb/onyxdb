@@ -35,24 +35,8 @@ public class ProjectPostgresRepository implements ProjectRepository {
     }
 
     @Override
-    public List<Project> findByOrganizationId(UUID organizationId) {
-        return dslContext.selectFrom(projectTable)
-                .where(projectTable.ORGANIZATION_ID.eq(organizationId))
-                .fetch(Project::fromDAO);
-    }
-
-    @Override
     public void create(Project project) {
-        dslContext.insertInto(projectTable)
-                .set(projectTable.ID, project.id())
-                .set(projectTable.NAME, project.name())
-                .set(projectTable.DESCRIPTION, project.description())
-                .set(projectTable.CREATED_AT, project.createdAt())
-                .set(projectTable.UPDATED_AT, project.updatedAt())
-                .set(projectTable.RESOURCE_ID, project.resourceId())
-                .set(projectTable.ORGANIZATION_ID, project.organizationId())
-                .set(projectTable.OWNER_ID, project.ownerId())
-                .execute();
+        dslContext.executeInsert(project.toDAO());
     }
 
     @Override
@@ -61,8 +45,7 @@ public class ProjectPostgresRepository implements ProjectRepository {
                 .set(projectTable.NAME, project.name())
                 .set(projectTable.DESCRIPTION, project.description())
                 .set(projectTable.UPDATED_AT, project.updatedAt())
-                .set(projectTable.RESOURCE_ID, project.resourceId())
-                .set(projectTable.ORGANIZATION_ID, project.organizationId())
+                .set(projectTable.PARENT_ID, project.parent_id())
                 .set(projectTable.OWNER_ID, project.ownerId())
                 .where(projectTable.ID.eq(project.id()))
                 .execute();

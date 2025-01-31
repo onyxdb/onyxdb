@@ -11,18 +11,22 @@ import com.onyxdb.idm.generated.openapi.models.RoleDTO;
  */
 public record Role(
         UUID id,
+        String role_type,
         String name,
+        String shop_name,
         String description,
-        UUID resourceId,
+        UUID projectId,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
     public RoleDTO toDTO() {
         return new RoleDTO()
                 .id(id)
+                .roleType(role_type)
                 .name(name)
+                .shopName(shop_name)
                 .description(description)
-                .resourceId(resourceId)
+                .projectId(projectId)
                 .createdAt(createdAt)
                 .updatedAt(updatedAt);
     }
@@ -30,9 +34,11 @@ public record Role(
     public static Role fromDTO(RoleDTO roleDTO) {
         return new Role(
                 roleDTO.getId(),
+                roleDTO.getRoleType(),
                 roleDTO.getName(),
+                roleDTO.getShopName(),
                 roleDTO.getDescription(),
-                roleDTO.getResourceId(),
+                roleDTO.getProjectId(),
                 roleDTO.getCreatedAt(),
                 roleDTO.getUpdatedAt()
         );
@@ -41,9 +47,11 @@ public record Role(
     public static Role fromDAO(RoleTableRecord roleDAO) {
         return new Role(
                 roleDAO.getId(),
+                roleDAO.getRoleType(),
                 roleDAO.getName(),
+                roleDAO.getShopName(),
                 roleDAO.getDescription(),
-                roleDAO.getResourceId(),
+                roleDAO.getProjectId(),
                 roleDAO.getCreatedAt(),
                 roleDAO.getUpdatedAt()
         );

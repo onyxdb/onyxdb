@@ -81,16 +81,6 @@ public class ProjectTable extends TableImpl<ProjectTableRecord> {
     public final TableField<ProjectTableRecord, String> DESCRIPTION = createField(DSL.name("description"), SQLDataType.CLOB, this, "");
 
     /**
-     * The column <code>public.project_table.created_at</code>.
-     */
-    public final TableField<ProjectTableRecord, LocalDateTime> CREATED_AT = createField(DSL.name("created_at"), SQLDataType.LOCALDATETIME(6).defaultValue(DSL.field(DSL.raw("CURRENT_TIMESTAMP"), SQLDataType.LOCALDATETIME)), this, "");
-
-    /**
-     * The column <code>public.project_table.updated_at</code>.
-     */
-    public final TableField<ProjectTableRecord, LocalDateTime> UPDATED_AT = createField(DSL.name("updated_at"), SQLDataType.LOCALDATETIME(6).defaultValue(DSL.field(DSL.raw("CURRENT_TIMESTAMP"), SQLDataType.LOCALDATETIME)), this, "");
-
-    /**
      * The column <code>public.project_table.parent_id</code>.
      */
     public final TableField<ProjectTableRecord, UUID> PARENT_ID = createField(DSL.name("parent_id"), SQLDataType.UUID.nullable(false), this, "");
@@ -99,6 +89,16 @@ public class ProjectTable extends TableImpl<ProjectTableRecord> {
      * The column <code>public.project_table.owner_id</code>.
      */
     public final TableField<ProjectTableRecord, UUID> OWNER_ID = createField(DSL.name("owner_id"), SQLDataType.UUID, this, "");
+
+    /**
+     * The column <code>public.project_table.created_at</code>.
+     */
+    public final TableField<ProjectTableRecord, LocalDateTime> CREATED_AT = createField(DSL.name("created_at"), SQLDataType.LOCALDATETIME(6).defaultValue(DSL.field(DSL.raw("CURRENT_TIMESTAMP"), SQLDataType.LOCALDATETIME)), this, "");
+
+    /**
+     * The column <code>public.project_table.updated_at</code>.
+     */
+    public final TableField<ProjectTableRecord, LocalDateTime> UPDATED_AT = createField(DSL.name("updated_at"), SQLDataType.LOCALDATETIME(6).defaultValue(DSL.field(DSL.raw("CURRENT_TIMESTAMP"), SQLDataType.LOCALDATETIME)), this, "");
 
     private ProjectTable(Name alias, Table<ProjectTableRecord> aliased) {
         this(alias, aliased, (Field<?>[]) null, null);
@@ -344,14 +344,14 @@ public class ProjectTable extends TableImpl<ProjectTableRecord> {
     // -------------------------------------------------------------------------
 
     @Override
-    public Row7<UUID, String, String, LocalDateTime, LocalDateTime, UUID, UUID> fieldsRow() {
+    public Row7<UUID, String, String, UUID, UUID, LocalDateTime, LocalDateTime> fieldsRow() {
         return (Row7) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function7<? super UUID, ? super String, ? super String, ? super LocalDateTime, ? super LocalDateTime, ? super UUID, ? super UUID, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function7<? super UUID, ? super String, ? super String, ? super UUID, ? super UUID, ? super LocalDateTime, ? super LocalDateTime, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -359,7 +359,7 @@ public class ProjectTable extends TableImpl<ProjectTableRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function7<? super UUID, ? super String, ? super String, ? super LocalDateTime, ? super LocalDateTime, ? super UUID, ? super UUID, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function7<? super UUID, ? super String, ? super String, ? super UUID, ? super UUID, ? super LocalDateTime, ? super LocalDateTime, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

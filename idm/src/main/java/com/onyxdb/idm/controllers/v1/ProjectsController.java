@@ -2,7 +2,6 @@ package com.onyxdb.idm.controllers.v1;
 
 import com.onyxdb.idm.generated.openapi.apis.ProjectsApi;
 import com.onyxdb.idm.generated.openapi.models.ProjectDTO;
-import com.onyxdb.idm.generated.openapi.models.ServiceDTO;
 import com.onyxdb.idm.models.Project;
 import com.onyxdb.idm.services.ProjectService;
 import lombok.RequiredArgsConstructor;

@@ -13,22 +13,32 @@ public record Project(
         UUID id,
         String name,
         String description,
+        UUID parent_id,
+        UUID ownerId,
         LocalDateTime createdAt,
-        LocalDateTime updatedAt,
-        UUID resourceId,
-        UUID organizationId,
-        UUID ownerId
+        LocalDateTime updatedAt
 ) {
     public ProjectDTO toDTO() {
         return new ProjectDTO()
                 .id(id)
                 .name(name)
                 .description(description)
+                .parentId(parent_id)
+                .ownerId(ownerId)
                 .createdAt(createdAt)
-                .updatedAt(updatedAt)
-                .resourceId(resourceId)
-                .organizationId(organizationId)
-                .ownerId(ownerId);
+                .updatedAt(updatedAt);
+    }
+
+    public ProjectTableRecord toDAO() {
+        return new ProjectTableRecord(
+                id,
+                name,
+                description,
+                parent_id,
+                ownerId,
+                createdAt,
+                updatedAt
+        );
     }
 
     public static Project fromDTO(ProjectDTO projectDTO) {
@@ -36,11 +46,10 @@ public record Project(
                 projectDTO.getId(),
                 projectDTO.getName(),
                 projectDTO.getDescription(),
+                projectDTO.getParentId(),
+                projectDTO.getOwnerId(),
                 projectDTO.getCreatedAt(),
-                projectDTO.getUpdatedAt(),
-                projectDTO.getResourceId(),
-                projectDTO.getOrganizationId(),
-                projectDTO.getOwnerId()
+                projectDTO.getUpdatedAt()
         );
     }
 
@@ -49,11 +58,10 @@ public record Project(
                 projectDAO.getId(),
                 projectDAO.getName(),
                 projectDAO.getDescription(),
+                projectDAO.getParentId(),
+                projectDAO.getOwnerId(),
                 projectDAO.getCreatedAt(),
-                projectDAO.getUpdatedAt(),
-                projectDAO.getResourceId(),
-                projectDAO.getOrganizationId(),
-                projectDAO.getOwnerId()
+                projectDAO.getUpdatedAt()
         );
     }
 }

@@ -39,8 +39,7 @@ public class PermissionPostgresRepository implements PermissionRepository {
         dslContext.insertInto(permissionTable)
                 .set(permissionTable.ID, permission.id())
                 .set(permissionTable.ACTION_TYPE, permission.actionType())
-                .set(permissionTable.RESOURCE_TYPE, permission.resourceType())
-                .set(permissionTable.RESOURCE_FIELDS, permission.resourceFields().toArray(String[]::new))
+                .set(permissionTable.DATA, permission.getDataAsJsonb())
                 .set(permissionTable.CREATED_AT, permission.createdAt())
                 .set(permissionTable.UPDATED_AT, permission.updatedAt())
                 .execute();
@@ -50,8 +49,7 @@ public class PermissionPostgresRepository implements PermissionRepository {
     public void update(Permission permission) {
         dslContext.update(permissionTable)
                 .set(permissionTable.ACTION_TYPE, permission.actionType())
-                .set(permissionTable.RESOURCE_TYPE, permission.resourceType())
-                .set(permissionTable.RESOURCE_FIELDS, permission.resourceFields().toArray(String[]::new))
+                .set(permissionTable.DATA, permission.getDataAsJsonb())
                 .set(permissionTable.UPDATED_AT, permission.updatedAt())
                 .where(permissionTable.ID.eq(permission.id()))
                 .execute();

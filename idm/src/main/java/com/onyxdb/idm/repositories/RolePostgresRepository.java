@@ -45,7 +45,7 @@ public class RolePostgresRepository implements RoleRepository {
                 .set(roleTable.ID, role.id())
                 .set(roleTable.NAME, role.name())
                 .set(roleTable.DESCRIPTION, role.description())
-                .set(roleTable.RESOURCE_ID, role.resourceId())
+                .set(roleTable.PROJECT_ID, role.projectId())
                 .set(roleTable.CREATED_AT, role.createdAt())
                 .set(roleTable.UPDATED_AT, role.updatedAt())
                 .execute();

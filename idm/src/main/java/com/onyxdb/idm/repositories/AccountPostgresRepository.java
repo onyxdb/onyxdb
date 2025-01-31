@@ -94,10 +94,6 @@ public class AccountPostgresRepository implements AccountRepository {
                 .execute();
     }
 
-    /**
-     * @param accountId
-     * @param businessRoleId
-     */
     @Override
     public void addBusinessRole(UUID accountId, UUID businessRoleId) {
         dslContext.insertInto(accountBusinessRoleTable)
@@ -106,10 +102,6 @@ public class AccountPostgresRepository implements AccountRepository {
                 .execute();
     }
 
-    /**
-     * @param accountId
-     * @param businessRoleId
-     */
     @Override
     public void removeBusinessRole(UUID accountId, UUID businessRoleId) {
         dslContext.deleteFrom(accountBusinessRoleTable)
@@ -118,10 +110,6 @@ public class AccountPostgresRepository implements AccountRepository {
                 .execute();
     }
 
-    /**
-     * @param accountId
-     * @return
-     */
     @Override
     public List<BusinessRole> getAccountBusinessRoles(UUID accountId) {
         return dslContext.selectFrom(accountBusinessRoleTable)
@@ -131,10 +119,6 @@ public class AccountPostgresRepository implements AccountRepository {
                         .fetchOne(BusinessRole::fromDAO));
     }
 
-    /**
-     * @param accountId
-     * @param roleId
-     */
     @Override
     public void addRole(UUID accountId, UUID roleId) {
         dslContext.insertInto(accountRoleTable)
@@ -143,10 +127,6 @@ public class AccountPostgresRepository implements AccountRepository {
                 .execute();
     }
 
-    /**
-     * @param accountId
-     * @param roleId
-     */
     @Override
     public void removeRole(UUID accountId, UUID roleId) {
         dslContext.deleteFrom(accountRoleTable)
@@ -155,10 +135,6 @@ public class AccountPostgresRepository implements AccountRepository {
                 .execute();
     }
 
-    /**
-     * @param accountId
-     * @return
-     */
     @Override
     public List<Role> getRoleByBusinessRoleId(UUID accountId) {
         return dslContext.selectFrom(accountRoleTable)

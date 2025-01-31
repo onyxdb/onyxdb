@@ -74,9 +74,9 @@ public class PermissionTable extends TableImpl<PermissionTableRecord> {
     public final TableField<PermissionTableRecord, String> ACTION_TYPE = createField(DSL.name("action_type"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     /**
-     * The column <code>public.permission_table.custom</code>.
+     * The column <code>public.permission_table.data</code>.
      */
-    public final TableField<PermissionTableRecord, JSONB> CUSTOM = createField(DSL.name("custom"), SQLDataType.JSONB.nullable(false), this, "");
+    public final TableField<PermissionTableRecord, JSONB> DATA = createField(DSL.name("data"), SQLDataType.JSONB.nullable(false), this, "");
 
     /**
      * The column <code>public.permission_table.created_at</code>.

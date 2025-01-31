@@ -32,8 +32,7 @@ public class PermissionService {
         Permission forCreate = new Permission(
                 UUID.randomUUID(),
                 permission.actionType(),
-                permission.resourceType(),
-                permission.resourceFields(),
+                permission.data(),
                 LocalDateTime.now(),
                 LocalDateTime.now()
         );
@@ -45,8 +44,7 @@ public class PermissionService {
         Permission forUpdate = new Permission(
                 permission.id(),
                 permission.actionType(),
-                permission.resourceType(),
-                permission.resourceFields(),
+                permission.data(),
                 permission.createdAt(),
                 LocalDateTime.now()
         );
