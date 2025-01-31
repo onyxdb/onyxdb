@@ -8,30 +8,34 @@ import com.onyxdb.idm.generated.jooq.tables.AccountBusinessRoleTable;
 import com.onyxdb.idm.generated.jooq.tables.AccountOuTable;
 import com.onyxdb.idm.generated.jooq.tables.AccountRoleTable;
 import com.onyxdb.idm.generated.jooq.tables.AccountTable;
+import com.onyxdb.idm.generated.jooq.tables.ActionPermissionTable;
+import com.onyxdb.idm.generated.jooq.tables.ApiPermissionTable;
 import com.onyxdb.idm.generated.jooq.tables.BusinessRoleRoleTable;
 import com.onyxdb.idm.generated.jooq.tables.BusinessRoleTable;
 import com.onyxdb.idm.generated.jooq.tables.DomainComponentTable;
 import com.onyxdb.idm.generated.jooq.tables.OrganizationTable;
 import com.onyxdb.idm.generated.jooq.tables.OrganizationUnitTable;
-import com.onyxdb.idm.generated.jooq.tables.PermissionTable;
 import com.onyxdb.idm.generated.jooq.tables.ProjectTable;
 import com.onyxdb.idm.generated.jooq.tables.ResourceTable;
-import com.onyxdb.idm.generated.jooq.tables.RolePermissionTable;
+import com.onyxdb.idm.generated.jooq.tables.RoleActionPermissionTable;
+import com.onyxdb.idm.generated.jooq.tables.RoleApiPermissionTable;
 import com.onyxdb.idm.generated.jooq.tables.RoleTable;
 import com.onyxdb.idm.generated.jooq.tables.ServiceTable;
 import com.onyxdb.idm.generated.jooq.tables.records.AccountBusinessRoleTableRecord;
 import com.onyxdb.idm.generated.jooq.tables.records.AccountOuTableRecord;
 import com.onyxdb.idm.generated.jooq.tables.records.AccountRoleTableRecord;
 import com.onyxdb.idm.generated.jooq.tables.records.AccountTableRecord;
+import com.onyxdb.idm.generated.jooq.tables.records.ActionPermissionTableRecord;
+import com.onyxdb.idm.generated.jooq.tables.records.ApiPermissionTableRecord;
 import com.onyxdb.idm.generated.jooq.tables.records.BusinessRoleRoleTableRecord;
 import com.onyxdb.idm.generated.jooq.tables.records.BusinessRoleTableRecord;
 import com.onyxdb.idm.generated.jooq.tables.records.DomainComponentTableRecord;
 import com.onyxdb.idm.generated.jooq.tables.records.OrganizationTableRecord;
 import com.onyxdb.idm.generated.jooq.tables.records.OrganizationUnitTableRecord;
-import com.onyxdb.idm.generated.jooq.tables.records.PermissionTableRecord;
 import com.onyxdb.idm.generated.jooq.tables.records.ProjectTableRecord;
 import com.onyxdb.idm.generated.jooq.tables.records.ResourceTableRecord;
-import com.onyxdb.idm.generated.jooq.tables.records.RolePermissionTableRecord;
+import com.onyxdb.idm.generated.jooq.tables.records.RoleActionPermissionTableRecord;
+import com.onyxdb.idm.generated.jooq.tables.records.RoleApiPermissionTableRecord;
 import com.onyxdb.idm.generated.jooq.tables.records.RoleTableRecord;
 import com.onyxdb.idm.generated.jooq.tables.records.ServiceTableRecord;
 
@@ -46,7 +50,7 @@ import org.jooq.impl.Internal;
  * A class modelling foreign key relationships and constraints of tables in
  * public.
  */
-@SuppressWarnings({ "all", "unchecked", "rawtypes" })
+@SuppressWarnings({ "all", "unchecked", "rawtypes", "this-escape" })
 public class Keys {
 
     // -------------------------------------------------------------------------
@@ -59,6 +63,8 @@ public class Keys {
     public static final UniqueKey<AccountTableRecord> ACCOUNT_TABLE_EMAIL_KEY = Internal.createUniqueKey(AccountTable.ACCOUNT_TABLE, DSL.name("account_table_email_key"), new TableField[] { AccountTable.ACCOUNT_TABLE.EMAIL }, true);
     public static final UniqueKey<AccountTableRecord> ACCOUNT_TABLE_PKEY = Internal.createUniqueKey(AccountTable.ACCOUNT_TABLE, DSL.name("account_table_pkey"), new TableField[] { AccountTable.ACCOUNT_TABLE.ID }, true);
     public static final UniqueKey<AccountTableRecord> ACCOUNT_TABLE_USERNAME_KEY = Internal.createUniqueKey(AccountTable.ACCOUNT_TABLE, DSL.name("account_table_username_key"), new TableField[] { AccountTable.ACCOUNT_TABLE.USERNAME }, true);
+    public static final UniqueKey<ActionPermissionTableRecord> ACTION_PERMISSION_TABLE_PKEY = Internal.createUniqueKey(ActionPermissionTable.ACTION_PERMISSION_TABLE, DSL.name("action_permission_table_pkey"), new TableField[] { ActionPermissionTable.ACTION_PERMISSION_TABLE.ID }, true);
+    public static final UniqueKey<ApiPermissionTableRecord> API_PERMISSION_TABLE_PKEY = Internal.createUniqueKey(ApiPermissionTable.API_PERMISSION_TABLE, DSL.name("api_permission_table_pkey"), new TableField[] { ApiPermissionTable.API_PERMISSION_TABLE.ID }, true);
     public static final UniqueKey<BusinessRoleRoleTableRecord> BUSINESS_ROLE_ROLE_TABLE_PKEY = Internal.createUniqueKey(BusinessRoleRoleTable.BUSINESS_ROLE_ROLE_TABLE, DSL.name("business_role_role_table_pkey"), new TableField[] { BusinessRoleRoleTable.BUSINESS_ROLE_ROLE_TABLE.BUSINESS_ROLE_ID, BusinessRoleRoleTable.BUSINESS_ROLE_ROLE_TABLE.ROLE_ID }, true);
     public static final UniqueKey<BusinessRoleTableRecord> BUSINESS_ROLE_TABLE_NAME_KEY = Internal.createUniqueKey(BusinessRoleTable.BUSINESS_ROLE_TABLE, DSL.name("business_role_table_name_key"), new TableField[] { BusinessRoleTable.BUSINESS_ROLE_TABLE.NAME }, true);
     public static final UniqueKey<BusinessRoleTableRecord> BUSINESS_ROLE_TABLE_PKEY = Internal.createUniqueKey(BusinessRoleTable.BUSINESS_ROLE_TABLE, DSL.name("business_role_table_pkey"), new TableField[] { BusinessRoleTable.BUSINESS_ROLE_TABLE.ID }, true);
@@ -67,12 +73,12 @@ public class Keys {
     public static final UniqueKey<OrganizationTableRecord> ORGANIZATION_TABLE_PKEY = Internal.createUniqueKey(OrganizationTable.ORGANIZATION_TABLE, DSL.name("organization_table_pkey"), new TableField[] { OrganizationTable.ORGANIZATION_TABLE.ID }, true);
     public static final UniqueKey<OrganizationTableRecord> ORGANIZATION_TABLE_RESOURCE_ID_KEY = Internal.createUniqueKey(OrganizationTable.ORGANIZATION_TABLE, DSL.name("organization_table_resource_id_key"), new TableField[] { OrganizationTable.ORGANIZATION_TABLE.RESOURCE_ID }, true);
     public static final UniqueKey<OrganizationUnitTableRecord> ORGANIZATION_UNIT_TABLE_PKEY = Internal.createUniqueKey(OrganizationUnitTable.ORGANIZATION_UNIT_TABLE, DSL.name("organization_unit_table_pkey"), new TableField[] { OrganizationUnitTable.ORGANIZATION_UNIT_TABLE.ID }, true);
-    public static final UniqueKey<PermissionTableRecord> PERMISSION_TABLE_PKEY = Internal.createUniqueKey(PermissionTable.PERMISSION_TABLE, DSL.name("permission_table_pkey"), new TableField[] { PermissionTable.PERMISSION_TABLE.ID }, true);
     public static final UniqueKey<ProjectTableRecord> PROJECT_TABLE_ORGANIZATION_ID_KEY = Internal.createUniqueKey(ProjectTable.PROJECT_TABLE, DSL.name("project_table_organization_id_key"), new TableField[] { ProjectTable.PROJECT_TABLE.ORGANIZATION_ID }, true);
     public static final UniqueKey<ProjectTableRecord> PROJECT_TABLE_PKEY = Internal.createUniqueKey(ProjectTable.PROJECT_TABLE, DSL.name("project_table_pkey"), new TableField[] { ProjectTable.PROJECT_TABLE.ID }, true);
     public static final UniqueKey<ProjectTableRecord> PROJECT_TABLE_RESOURCE_ID_KEY = Internal.createUniqueKey(ProjectTable.PROJECT_TABLE, DSL.name("project_table_resource_id_key"), new TableField[] { ProjectTable.PROJECT_TABLE.RESOURCE_ID }, true);
     public static final UniqueKey<ResourceTableRecord> RESOURCE_TABLE_PKEY = Internal.createUniqueKey(ResourceTable.RESOURCE_TABLE, DSL.name("resource_table_pkey"), new TableField[] { ResourceTable.RESOURCE_TABLE.ID }, true);
-    public static final UniqueKey<RolePermissionTableRecord> ROLE_PERMISSION_TABLE_PKEY = Internal.createUniqueKey(RolePermissionTable.ROLE_PERMISSION_TABLE, DSL.name("role_permission_table_pkey"), new TableField[] { RolePermissionTable.ROLE_PERMISSION_TABLE.ROLE_ID, RolePermissionTable.ROLE_PERMISSION_TABLE.PERMISSION_ID }, true);
+    public static final UniqueKey<RoleActionPermissionTableRecord> ROLE_ACTION_PERMISSION_TABLE_PKEY = Internal.createUniqueKey(RoleActionPermissionTable.ROLE_ACTION_PERMISSION_TABLE, DSL.name("role_action_permission_table_pkey"), new TableField[] { RoleActionPermissionTable.ROLE_ACTION_PERMISSION_TABLE.ROLE_ID, RoleActionPermissionTable.ROLE_ACTION_PERMISSION_TABLE.ACTION_PERMISSION_ID }, true);
+    public static final UniqueKey<RoleApiPermissionTableRecord> ROLE_API_PERMISSION_TABLE_PKEY = Internal.createUniqueKey(RoleApiPermissionTable.ROLE_API_PERMISSION_TABLE, DSL.name("role_api_permission_table_pkey"), new TableField[] { RoleApiPermissionTable.ROLE_API_PERMISSION_TABLE.ROLE_ID, RoleApiPermissionTable.ROLE_API_PERMISSION_TABLE.API_PERMISSION_ID }, true);
     public static final UniqueKey<RoleTableRecord> ROLE_TABLE_NAME_KEY = Internal.createUniqueKey(RoleTable.ROLE_TABLE, DSL.name("role_table_name_key"), new TableField[] { RoleTable.ROLE_TABLE.NAME }, true);
     public static final UniqueKey<RoleTableRecord> ROLE_TABLE_PKEY = Internal.createUniqueKey(RoleTable.ROLE_TABLE, DSL.name("role_table_pkey"), new TableField[] { RoleTable.ROLE_TABLE.ID }, true);
     public static final UniqueKey<ServiceTableRecord> SERVICE_TABLE_PKEY = Internal.createUniqueKey(ServiceTable.SERVICE_TABLE, DSL.name("service_table_pkey"), new TableField[] { ServiceTable.SERVICE_TABLE.ID }, true);
@@ -99,8 +105,10 @@ public class Keys {
     public static final ForeignKey<ProjectTableRecord, OrganizationTableRecord> PROJECT_TABLE__PROJECT_TABLE_ORGANIZATION_ID_FKEY = Internal.createForeignKey(ProjectTable.PROJECT_TABLE, DSL.name("project_table_organization_id_fkey"), new TableField[] { ProjectTable.PROJECT_TABLE.ORGANIZATION_ID }, Keys.ORGANIZATION_TABLE_PKEY, new TableField[] { OrganizationTable.ORGANIZATION_TABLE.ID }, true);
     public static final ForeignKey<ProjectTableRecord, AccountTableRecord> PROJECT_TABLE__PROJECT_TABLE_OWNER_ID_FKEY = Internal.createForeignKey(ProjectTable.PROJECT_TABLE, DSL.name("project_table_owner_id_fkey"), new TableField[] { ProjectTable.PROJECT_TABLE.OWNER_ID }, Keys.ACCOUNT_TABLE_PKEY, new TableField[] { AccountTable.ACCOUNT_TABLE.ID }, true);
     public static final ForeignKey<ProjectTableRecord, ResourceTableRecord> PROJECT_TABLE__PROJECT_TABLE_RESOURCE_ID_FKEY = Internal.createForeignKey(ProjectTable.PROJECT_TABLE, DSL.name("project_table_resource_id_fkey"), new TableField[] { ProjectTable.PROJECT_TABLE.RESOURCE_ID }, Keys.RESOURCE_TABLE_PKEY, new TableField[] { ResourceTable.RESOURCE_TABLE.ID }, true);
-    public static final ForeignKey<RolePermissionTableRecord, PermissionTableRecord> ROLE_PERMISSION_TABLE__ROLE_PERMISSION_TABLE_PERMISSION_ID_FKEY = Internal.createForeignKey(RolePermissionTable.ROLE_PERMISSION_TABLE, DSL.name("role_permission_table_permission_id_fkey"), new TableField[] { RolePermissionTable.ROLE_PERMISSION_TABLE.PERMISSION_ID }, Keys.PERMISSION_TABLE_PKEY, new TableField[] { PermissionTable.PERMISSION_TABLE.ID }, true);
-    public static final ForeignKey<RolePermissionTableRecord, RoleTableRecord> ROLE_PERMISSION_TABLE__ROLE_PERMISSION_TABLE_ROLE_ID_FKEY = Internal.createForeignKey(RolePermissionTable.ROLE_PERMISSION_TABLE, DSL.name("role_permission_table_role_id_fkey"), new TableField[] { RolePermissionTable.ROLE_PERMISSION_TABLE.ROLE_ID }, Keys.ROLE_TABLE_PKEY, new TableField[] { RoleTable.ROLE_TABLE.ID }, true);
+    public static final ForeignKey<RoleActionPermissionTableRecord, ActionPermissionTableRecord> ROLE_ACTION_PERMISSION_TABLE__ROLE_ACTION_PERMISSION_TABLE_ACTION_PERMISSION_ID_FKEY = Internal.createForeignKey(RoleActionPermissionTable.ROLE_ACTION_PERMISSION_TABLE, DSL.name("role_action_permission_table_action_permission_id_fkey"), new TableField[] { RoleActionPermissionTable.ROLE_ACTION_PERMISSION_TABLE.ACTION_PERMISSION_ID }, Keys.ACTION_PERMISSION_TABLE_PKEY, new TableField[] { ActionPermissionTable.ACTION_PERMISSION_TABLE.ID }, true);
+    public static final ForeignKey<RoleActionPermissionTableRecord, RoleTableRecord> ROLE_ACTION_PERMISSION_TABLE__ROLE_ACTION_PERMISSION_TABLE_ROLE_ID_FKEY = Internal.createForeignKey(RoleActionPermissionTable.ROLE_ACTION_PERMISSION_TABLE, DSL.name("role_action_permission_table_role_id_fkey"), new TableField[] { RoleActionPermissionTable.ROLE_ACTION_PERMISSION_TABLE.ROLE_ID }, Keys.ROLE_TABLE_PKEY, new TableField[] { RoleTable.ROLE_TABLE.ID }, true);
+    public static final ForeignKey<RoleApiPermissionTableRecord, ApiPermissionTableRecord> ROLE_API_PERMISSION_TABLE__ROLE_API_PERMISSION_TABLE_API_PERMISSION_ID_FKEY = Internal.createForeignKey(RoleApiPermissionTable.ROLE_API_PERMISSION_TABLE, DSL.name("role_api_permission_table_api_permission_id_fkey"), new TableField[] { RoleApiPermissionTable.ROLE_API_PERMISSION_TABLE.API_PERMISSION_ID }, Keys.API_PERMISSION_TABLE_PKEY, new TableField[] { ApiPermissionTable.API_PERMISSION_TABLE.ID }, true);
+    public static final ForeignKey<RoleApiPermissionTableRecord, RoleTableRecord> ROLE_API_PERMISSION_TABLE__ROLE_API_PERMISSION_TABLE_ROLE_ID_FKEY = Internal.createForeignKey(RoleApiPermissionTable.ROLE_API_PERMISSION_TABLE, DSL.name("role_api_permission_table_role_id_fkey"), new TableField[] { RoleApiPermissionTable.ROLE_API_PERMISSION_TABLE.ROLE_ID }, Keys.ROLE_TABLE_PKEY, new TableField[] { RoleTable.ROLE_TABLE.ID }, true);
     public static final ForeignKey<RoleTableRecord, ResourceTableRecord> ROLE_TABLE__ROLE_TABLE_RESOURCE_ID_FKEY = Internal.createForeignKey(RoleTable.ROLE_TABLE, DSL.name("role_table_resource_id_fkey"), new TableField[] { RoleTable.ROLE_TABLE.RESOURCE_ID }, Keys.RESOURCE_TABLE_PKEY, new TableField[] { ResourceTable.RESOURCE_TABLE.ID }, true);
     public static final ForeignKey<ServiceTableRecord, AccountTableRecord> SERVICE_TABLE__SERVICE_TABLE_OWNER_ID_FKEY = Internal.createForeignKey(ServiceTable.SERVICE_TABLE, DSL.name("service_table_owner_id_fkey"), new TableField[] { ServiceTable.SERVICE_TABLE.OWNER_ID }, Keys.ACCOUNT_TABLE_PKEY, new TableField[] { AccountTable.ACCOUNT_TABLE.ID }, true);
     public static final ForeignKey<ServiceTableRecord, ProjectTableRecord> SERVICE_TABLE__SERVICE_TABLE_PROJECT_ID_FKEY = Internal.createForeignKey(ServiceTable.SERVICE_TABLE, DSL.name("service_table_project_id_fkey"), new TableField[] { ServiceTable.SERVICE_TABLE.PROJECT_ID }, Keys.PROJECT_TABLE_PKEY, new TableField[] { ProjectTable.PROJECT_TABLE.ID }, true);
