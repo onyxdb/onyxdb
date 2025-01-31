@@ -8,19 +8,14 @@ import com.onyxdb.idm.generated.jooq.tables.AccountBusinessRoleTable;
 import com.onyxdb.idm.generated.jooq.tables.AccountOuTable;
 import com.onyxdb.idm.generated.jooq.tables.AccountRoleTable;
 import com.onyxdb.idm.generated.jooq.tables.AccountTable;
-import com.onyxdb.idm.generated.jooq.tables.ActionPermissionTable;
-import com.onyxdb.idm.generated.jooq.tables.ApiPermissionTable;
 import com.onyxdb.idm.generated.jooq.tables.BusinessRoleRoleTable;
 import com.onyxdb.idm.generated.jooq.tables.BusinessRoleTable;
 import com.onyxdb.idm.generated.jooq.tables.DomainComponentTable;
-import com.onyxdb.idm.generated.jooq.tables.OrganizationTable;
 import com.onyxdb.idm.generated.jooq.tables.OrganizationUnitTable;
+import com.onyxdb.idm.generated.jooq.tables.PermissionTable;
 import com.onyxdb.idm.generated.jooq.tables.ProjectTable;
-import com.onyxdb.idm.generated.jooq.tables.ResourceTable;
-import com.onyxdb.idm.generated.jooq.tables.RoleActionPermissionTable;
-import com.onyxdb.idm.generated.jooq.tables.RoleApiPermissionTable;
+import com.onyxdb.idm.generated.jooq.tables.RolePermissionTable;
 import com.onyxdb.idm.generated.jooq.tables.RoleTable;
-import com.onyxdb.idm.generated.jooq.tables.ServiceTable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -64,16 +59,6 @@ public class Public extends SchemaImpl {
     public final AccountTable ACCOUNT_TABLE = AccountTable.ACCOUNT_TABLE;
 
     /**
-     * The table <code>public.action_permission_table</code>.
-     */
-    public final ActionPermissionTable ACTION_PERMISSION_TABLE = ActionPermissionTable.ACTION_PERMISSION_TABLE;
-
-    /**
-     * The table <code>public.api_permission_table</code>.
-     */
-    public final ApiPermissionTable API_PERMISSION_TABLE = ApiPermissionTable.API_PERMISSION_TABLE;
-
-    /**
      * The table <code>public.business_role_role_table</code>.
      */
     public final BusinessRoleRoleTable BUSINESS_ROLE_ROLE_TABLE = BusinessRoleRoleTable.BUSINESS_ROLE_ROLE_TABLE;
@@ -89,14 +74,14 @@ public class Public extends SchemaImpl {
     public final DomainComponentTable DOMAIN_COMPONENT_TABLE = DomainComponentTable.DOMAIN_COMPONENT_TABLE;
 
     /**
-     * The table <code>public.organization_table</code>.
-     */
-    public final OrganizationTable ORGANIZATION_TABLE = OrganizationTable.ORGANIZATION_TABLE;
-
-    /**
      * The table <code>public.organization_unit_table</code>.
      */
     public final OrganizationUnitTable ORGANIZATION_UNIT_TABLE = OrganizationUnitTable.ORGANIZATION_UNIT_TABLE;
+
+    /**
+     * The table <code>public.permission_table</code>.
+     */
+    public final PermissionTable PERMISSION_TABLE = PermissionTable.PERMISSION_TABLE;
 
     /**
      * The table <code>public.project_table</code>.
@@ -104,29 +89,14 @@ public class Public extends SchemaImpl {
     public final ProjectTable PROJECT_TABLE = ProjectTable.PROJECT_TABLE;
 
     /**
-     * The table <code>public.resource_table</code>.
+     * The table <code>public.role_permission_table</code>.
      */
-    public final ResourceTable RESOURCE_TABLE = ResourceTable.RESOURCE_TABLE;
-
-    /**
-     * The table <code>public.role_action_permission_table</code>.
-     */
-    public final RoleActionPermissionTable ROLE_ACTION_PERMISSION_TABLE = RoleActionPermissionTable.ROLE_ACTION_PERMISSION_TABLE;
-
-    /**
-     * The table <code>public.role_api_permission_table</code>.
-     */
-    public final RoleApiPermissionTable ROLE_API_PERMISSION_TABLE = RoleApiPermissionTable.ROLE_API_PERMISSION_TABLE;
+    public final RolePermissionTable ROLE_PERMISSION_TABLE = RolePermissionTable.ROLE_PERMISSION_TABLE;
 
     /**
      * The table <code>public.role_table</code>.
      */
     public final RoleTable ROLE_TABLE = RoleTable.ROLE_TABLE;
-
-    /**
-     * The table <code>public.service_table</code>.
-     */
-    public final ServiceTable SERVICE_TABLE = ServiceTable.SERVICE_TABLE;
 
     /**
      * No further instances allowed
@@ -148,19 +118,14 @@ public class Public extends SchemaImpl {
             AccountOuTable.ACCOUNT_OU_TABLE,
             AccountRoleTable.ACCOUNT_ROLE_TABLE,
             AccountTable.ACCOUNT_TABLE,
-            ActionPermissionTable.ACTION_PERMISSION_TABLE,
-            ApiPermissionTable.API_PERMISSION_TABLE,
             BusinessRoleRoleTable.BUSINESS_ROLE_ROLE_TABLE,
             BusinessRoleTable.BUSINESS_ROLE_TABLE,
             DomainComponentTable.DOMAIN_COMPONENT_TABLE,
-            OrganizationTable.ORGANIZATION_TABLE,
             OrganizationUnitTable.ORGANIZATION_UNIT_TABLE,
+            PermissionTable.PERMISSION_TABLE,
             ProjectTable.PROJECT_TABLE,
-            ResourceTable.RESOURCE_TABLE,
-            RoleActionPermissionTable.ROLE_ACTION_PERMISSION_TABLE,
-            RoleApiPermissionTable.ROLE_API_PERMISSION_TABLE,
-            RoleTable.ROLE_TABLE,
-            ServiceTable.SERVICE_TABLE
+            RolePermissionTable.ROLE_PERMISSION_TABLE,
+            RoleTable.ROLE_TABLE
         );
     }
 }

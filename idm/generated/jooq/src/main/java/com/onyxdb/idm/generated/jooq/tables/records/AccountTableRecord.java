@@ -39,16 +39,16 @@ public class AccountTableRecord extends UpdatableRecordImpl<AccountTableRecord> 
     }
 
     /**
-     * Setter for <code>public.account_table.username</code>.
+     * Setter for <code>public.account_table.login</code>.
      */
-    public void setUsername(String value) {
+    public void setLogin(String value) {
         set(1, value);
     }
 
     /**
-     * Getter for <code>public.account_table.username</code>.
+     * Getter for <code>public.account_table.login</code>.
      */
-    public String getUsername() {
+    public String getLogin() {
         return (String) get(1);
     }
 
@@ -166,7 +166,7 @@ public class AccountTableRecord extends UpdatableRecordImpl<AccountTableRecord> 
 
     @Override
     public Field<String> field2() {
-        return AccountTable.ACCOUNT_TABLE.USERNAME;
+        return AccountTable.ACCOUNT_TABLE.LOGIN;
     }
 
     @Override
@@ -206,7 +206,7 @@ public class AccountTableRecord extends UpdatableRecordImpl<AccountTableRecord> 
 
     @Override
     public String component2() {
-        return getUsername();
+        return getLogin();
     }
 
     @Override
@@ -246,7 +246,7 @@ public class AccountTableRecord extends UpdatableRecordImpl<AccountTableRecord> 
 
     @Override
     public String value2() {
-        return getUsername();
+        return getLogin();
     }
 
     @Override
@@ -287,7 +287,7 @@ public class AccountTableRecord extends UpdatableRecordImpl<AccountTableRecord> 
 
     @Override
     public AccountTableRecord value2(String value) {
-        setUsername(value);
+        setLogin(value);
         return this;
     }
 
@@ -354,11 +354,11 @@ public class AccountTableRecord extends UpdatableRecordImpl<AccountTableRecord> 
     /**
      * Create a detached, initialised AccountTableRecord
      */
-    public AccountTableRecord(UUID id, String username, String password, String email, String firstName, String lastName, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public AccountTableRecord(UUID id, String login, String password, String email, String firstName, String lastName, LocalDateTime createdAt, LocalDateTime updatedAt) {
         super(AccountTable.ACCOUNT_TABLE);
 
         setId(id);
-        setUsername(username);
+        setLogin(login);
         setPassword(password);
         setEmail(email);
         setFirstName(firstName);

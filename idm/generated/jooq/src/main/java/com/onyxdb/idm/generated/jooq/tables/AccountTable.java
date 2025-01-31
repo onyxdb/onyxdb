@@ -10,11 +10,9 @@ import com.onyxdb.idm.generated.jooq.tables.AccountBusinessRoleTable.AccountBusi
 import com.onyxdb.idm.generated.jooq.tables.AccountOuTable.AccountOuTablePath;
 import com.onyxdb.idm.generated.jooq.tables.AccountRoleTable.AccountRoleTablePath;
 import com.onyxdb.idm.generated.jooq.tables.BusinessRoleTable.BusinessRoleTablePath;
-import com.onyxdb.idm.generated.jooq.tables.OrganizationTable.OrganizationTablePath;
 import com.onyxdb.idm.generated.jooq.tables.OrganizationUnitTable.OrganizationUnitTablePath;
 import com.onyxdb.idm.generated.jooq.tables.ProjectTable.ProjectTablePath;
 import com.onyxdb.idm.generated.jooq.tables.RoleTable.RoleTablePath;
-import com.onyxdb.idm.generated.jooq.tables.ServiceTable.ServiceTablePath;
 import com.onyxdb.idm.generated.jooq.tables.records.AccountTableRecord;
 
 import java.time.LocalDateTime;
@@ -77,9 +75,9 @@ public class AccountTable extends TableImpl<AccountTableRecord> {
     public final TableField<AccountTableRecord, UUID> ID = createField(DSL.name("id"), SQLDataType.UUID.nullable(false), this, "");
 
     /**
-     * The column <code>public.account_table.username</code>.
+     * The column <code>public.account_table.login</code>.
      */
-    public final TableField<AccountTableRecord, String> USERNAME = createField(DSL.name("username"), SQLDataType.VARCHAR(255).nullable(false), this, "");
+    public final TableField<AccountTableRecord, String> LOGIN = createField(DSL.name("login"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     /**
      * The column <code>public.account_table.password</code>.
@@ -185,7 +183,7 @@ public class AccountTable extends TableImpl<AccountTableRecord> {
 
     @Override
     public List<UniqueKey<AccountTableRecord>> getUniqueKeys() {
-        return Arrays.asList(Keys.ACCOUNT_TABLE_EMAIL_KEY, Keys.ACCOUNT_TABLE_USERNAME_KEY);
+        return Arrays.asList(Keys.ACCOUNT_TABLE_EMAIL_KEY, Keys.ACCOUNT_TABLE_LOGIN_KEY);
     }
 
     private transient AccountBusinessRoleTablePath _accountBusinessRoleTable;
@@ -227,19 +225,6 @@ public class AccountTable extends TableImpl<AccountTableRecord> {
         return _accountRoleTable;
     }
 
-    private transient OrganizationTablePath _organizationTable;
-
-    /**
-     * Get the implicit to-many join path to the
-     * <code>public.organization_table</code> table
-     */
-    public OrganizationTablePath organizationTable() {
-        if (_organizationTable == null)
-            _organizationTable = new OrganizationTablePath(this, null, Keys.ORGANIZATION_TABLE__ORGANIZATION_TABLE_OWNER_ID_FKEY.getInverseKey());
-
-        return _organizationTable;
-    }
-
     private transient ProjectTablePath _projectTable;
 
     /**
@@ -251,19 +236,6 @@ public class AccountTable extends TableImpl<AccountTableRecord> {
             _projectTable = new ProjectTablePath(this, null, Keys.PROJECT_TABLE__PROJECT_TABLE_OWNER_ID_FKEY.getInverseKey());
 
         return _projectTable;
-    }
-
-    private transient ServiceTablePath _serviceTable;
-
-    /**
-     * Get the implicit to-many join path to the
-     * <code>public.service_table</code> table
-     */
-    public ServiceTablePath serviceTable() {
-        if (_serviceTable == null)
-            _serviceTable = new ServiceTablePath(this, null, Keys.SERVICE_TABLE__SERVICE_TABLE_OWNER_ID_FKEY.getInverseKey());
-
-        return _serviceTable;
     }
 
     /**

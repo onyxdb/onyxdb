@@ -2,9 +2,7 @@ package com.onyxdb.idm.controllers.v1;
 
 import com.onyxdb.idm.generated.openapi.apis.ProjectsApi;
 import com.onyxdb.idm.generated.openapi.models.ProjectDTO;
-import com.onyxdb.idm.generated.openapi.models.ServiceDTO;
 import com.onyxdb.idm.models.Project;
-import com.onyxdb.idm.models.Service;
 import com.onyxdb.idm.services.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -47,13 +45,6 @@ public class ProjectsController implements ProjectsApi {
         List<Project> projects = projectService.findAll();
         List<ProjectDTO> projectDTOs = projects.stream().map(Project::toDTO).toList();
         return ResponseEntity.ok(projectDTOs);
-    }
-
-    @Override
-    public ResponseEntity<List<ServiceDTO>> getServicesByProjectId(UUID projectId) {
-        List<Service> services = projectService.getServicesByProjectId(projectId);
-        List<ServiceDTO> serviceDTOs = services.stream().map(Service::toDTO).toList();
-        return ResponseEntity.ok(serviceDTOs);
     }
 
     @Override

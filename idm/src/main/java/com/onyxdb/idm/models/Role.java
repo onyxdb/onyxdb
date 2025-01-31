@@ -15,16 +15,18 @@ public record Role(
         String name,
         String shop_name,
         String description,
-        UUID resourceId,
+        UUID projectId,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
     public RoleDTO toDTO() {
         return new RoleDTO()
                 .id(id)
+                .roleType(role_type)
                 .name(name)
+                .shopName(shop_name)
                 .description(description)
-                .resourceId(resourceId)
+                .projectId(projectId)
                 .createdAt(createdAt)
                 .updatedAt(updatedAt);
     }
@@ -36,7 +38,7 @@ public record Role(
                 roleDTO.getName(),
                 roleDTO.getShopName(),
                 roleDTO.getDescription(),
-                roleDTO.getResourceId(),
+                roleDTO.getProjectId(),
                 roleDTO.getCreatedAt(),
                 roleDTO.getUpdatedAt()
         );
@@ -49,7 +51,7 @@ public record Role(
                 roleDAO.getName(),
                 roleDAO.getShopName(),
                 roleDAO.getDescription(),
-                roleDAO.getResourceId(),
+                roleDAO.getProjectId(),
                 roleDAO.getCreatedAt(),
                 roleDAO.getUpdatedAt()
         );

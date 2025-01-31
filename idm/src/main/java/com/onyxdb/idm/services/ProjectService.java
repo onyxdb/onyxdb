@@ -1,13 +1,9 @@
 package com.onyxdb.idm.services;
 
 import com.onyxdb.idm.controllers.v1.ResourceNotFoundException;
-import com.onyxdb.idm.models.Resource;
 import com.onyxdb.idm.models.Project;
-import com.onyxdb.idm.models.Service;
-import com.onyxdb.idm.repositories.OrganizationRepository;
 import com.onyxdb.idm.repositories.ProjectRepository;
-import com.onyxdb.idm.repositories.ResourceRepository;
-import com.onyxdb.idm.repositories.ServiceRepository;
+
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -21,9 +17,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProjectService {
     private final ProjectRepository projectRepository;
-    private final ResourceRepository resourceRepository;
-    private final OrganizationRepository organizationRepository;
-    private final ServiceRepository serviceRepository;
 
     public Project findById(UUID id) {
         return projectRepository
@@ -35,51 +28,29 @@ public class ProjectService {
         return projectRepository.findAll();
     }
 
-    public List<Project> findByOrganizationId(UUID organizationId) {
-        return projectRepository.findByOrganizationId(organizationId);
-    }
-
     public Project create(Project project) {
-        Resource resource = new Resource(
-                UUID.randomUUID(),
-                "project",
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
-        resourceRepository.create(resource);
-
         Project forCreate = new Project(
                 UUID.randomUUID(),
                 project.name(),
                 project.description(),
+                project.parent_id(),
+                project.ownerId(),
                 LocalDateTime.now(),
-                LocalDateTime.now(),
-                resource.id(),
-                project.organizationId(),
-                project.ownerId()
+                LocalDateTime.now()
         );
         projectRepository.create(forCreate);
         return forCreate;
     }
 
     public Project update(Project project) {
-        Resource resource = new Resource(
-                project.resourceId(),
-                "project",
-                project.createdAt(),
-                LocalDateTime.now()
-        );
-        resourceRepository.update(resource);
-
         Project forUpdate = new Project(
                 project.id(),
                 project.name(),
                 project.description(),
+                project.parent_id(),
+                project.ownerId(),
                 project.createdAt(),
-                LocalDateTime.now(),
-                project.resourceId(),
-                project.organizationId(),
-                project.ownerId()
+                LocalDateTime.now()
         );
         projectRepository.update(forUpdate);
         return forUpdate;
@@ -87,9 +58,5 @@ public class ProjectService {
 
     public void delete(UUID id) {
         projectRepository.delete(id);
-    }
-
-    public List<Service> getServicesByProjectId(UUID projectId) {
-        return serviceRepository.findByProjectId(projectId);
     }
 }

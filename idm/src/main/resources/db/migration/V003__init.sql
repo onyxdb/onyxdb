@@ -1,43 +1,46 @@
--- Создание таблицы для Organization
-CREATE TABLE organization_table (
+-- Создание таблицы для Business Role
+CREATE TABLE business_role_table (
     id UUID PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL UNIQUE,
     description TEXT,
+    parent_id UUID,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    resource_id UUID NOT NULL UNIQUE,
-    owner_id UUID,
-    FOREIGN KEY (resource_id) REFERENCES resource_table(id),
-    FOREIGN KEY (owner_id) REFERENCES account_table(id)
+    FOREIGN KEY (parent_id) REFERENCES business_role_table(id)
 );
 
--- Создание таблицы для Project
-CREATE TABLE project_table (
-    id UUID PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    description TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    resource_id UUID NOT NULL UNIQUE,
-    organization_id UUID NOT NULL UNIQUE,
-    owner_id UUID,
-    FOREIGN KEY (resource_id) REFERENCES resource_table(id),
-    FOREIGN KEY (organization_id) REFERENCES organization_table(id),
-    FOREIGN KEY (owner_id) REFERENCES account_table(id)
+-- Создание таблицы для связи Business Role и Role
+CREATE TABLE business_role_role_table (
+    business_role_id UUID NOT NULL,
+    role_id UUID NOT NULL,
+    PRIMARY KEY (business_role_id, role_id),
+    FOREIGN KEY (business_role_id) REFERENCES business_role_table(id),
+    FOREIGN KEY (role_id) REFERENCES role_table(id)
 );
 
--- Создание таблицы для Service
-CREATE TABLE service_table (
-    id UUID PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    type VARCHAR(255) NOT NULL, -- Например: ManagedMongoDB, ManagedPostgreSQL
-    description TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    resource_id UUID NOT NULL UNIQUE,
-    project_id UUID NOT NULL UNIQUE,
-    owner_id UUID,
-    FOREIGN KEY (resource_id) REFERENCES resource_table(id),
-    FOREIGN KEY (project_id) REFERENCES project_table(id),
-    FOREIGN KEY (owner_id) REFERENCES account_table(id)
+-- Создание таблицы для связи Account и Business Role
+CREATE TABLE account_business_role_table (
+    account_id UUID NOT NULL,
+    business_role_id UUID NOT NULL,
+    PRIMARY KEY (account_id, business_role_id),
+    FOREIGN KEY (account_id) REFERENCES account_table(id),
+    FOREIGN KEY (business_role_id) REFERENCES business_role_table(id)
+);
+
+-- Создание таблицы для связи Account и Role
+CREATE TABLE account_role_table (
+    account_id UUID NOT NULL,
+    role_id UUID NOT NULL,
+    PRIMARY KEY (account_id, role_id),
+    FOREIGN KEY (account_id) REFERENCES account_table(id),
+    FOREIGN KEY (role_id) REFERENCES role_table(id)
+);
+
+-- Создание таблицы для связи Account и Organization Unit
+CREATE TABLE account_ou_table (
+    account_id UUID NOT NULL,
+    ou_id UUID NOT NULL,
+    PRIMARY KEY (account_id, ou_id),
+    FOREIGN KEY (account_id) REFERENCES account_table(id),
+    FOREIGN KEY (ou_id) REFERENCES organization_unit_table(id)
 );

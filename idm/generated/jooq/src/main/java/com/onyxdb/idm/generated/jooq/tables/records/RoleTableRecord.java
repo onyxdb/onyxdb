@@ -95,16 +95,16 @@ public class RoleTableRecord extends UpdatableRecordImpl<RoleTableRecord> implem
     }
 
     /**
-     * Setter for <code>public.role_table.resource_id</code>.
+     * Setter for <code>public.role_table.project_id</code>.
      */
-    public void setResourceId(UUID value) {
+    public void setProjectId(UUID value) {
         set(5, value);
     }
 
     /**
-     * Getter for <code>public.role_table.resource_id</code>.
+     * Getter for <code>public.role_table.project_id</code>.
      */
-    public UUID getResourceId() {
+    public UUID getProjectId() {
         return (UUID) get(5);
     }
 
@@ -186,7 +186,7 @@ public class RoleTableRecord extends UpdatableRecordImpl<RoleTableRecord> implem
 
     @Override
     public Field<UUID> field6() {
-        return RoleTable.ROLE_TABLE.RESOURCE_ID;
+        return RoleTable.ROLE_TABLE.PROJECT_ID;
     }
 
     @Override
@@ -226,7 +226,7 @@ public class RoleTableRecord extends UpdatableRecordImpl<RoleTableRecord> implem
 
     @Override
     public UUID component6() {
-        return getResourceId();
+        return getProjectId();
     }
 
     @Override
@@ -266,7 +266,7 @@ public class RoleTableRecord extends UpdatableRecordImpl<RoleTableRecord> implem
 
     @Override
     public UUID value6() {
-        return getResourceId();
+        return getProjectId();
     }
 
     @Override
@@ -311,7 +311,7 @@ public class RoleTableRecord extends UpdatableRecordImpl<RoleTableRecord> implem
 
     @Override
     public RoleTableRecord value6(UUID value) {
-        setResourceId(value);
+        setProjectId(value);
         return this;
     }
 
@@ -354,7 +354,7 @@ public class RoleTableRecord extends UpdatableRecordImpl<RoleTableRecord> implem
     /**
      * Create a detached, initialised RoleTableRecord
      */
-    public RoleTableRecord(UUID id, String roleType, String name, String shopName, String description, UUID resourceId, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public RoleTableRecord(UUID id, String roleType, String name, String shopName, String description, UUID projectId, LocalDateTime createdAt, LocalDateTime updatedAt) {
         super(RoleTable.ROLE_TABLE);
 
         setId(id);
@@ -362,7 +362,7 @@ public class RoleTableRecord extends UpdatableRecordImpl<RoleTableRecord> implem
         setName(name);
         setShopName(shopName);
         setDescription(description);
-        setResourceId(resourceId);
+        setProjectId(projectId);
         setCreatedAt(createdAt);
         setUpdatedAt(updatedAt);
         resetChangedOnNotNull();
