@@ -9,31 +9,51 @@ CREATE TABLE resource_table (
 -- Создание таблицы для Role
 CREATE TABLE role_table (
     id UUID PRIMARY KEY,
+    role_type VARCHAR(255) NOT NULL,    -- Auditor | Developer | Owner | Admin
     name VARCHAR(255) NOT NULL UNIQUE,
+    shop_name VARCHAR(255) NOT NULL UNIQUE,
     description TEXT,
-    resource_id UUID NOT NULL,
+    resource_id UUID,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (resource_id) REFERENCES resource_table(id)
 );
 
 -- Создание таблицы для Permission
-CREATE TABLE permission_table (
+CREATE TABLE action_permission_table (
     id UUID PRIMARY KEY,
-    action_type VARCHAR(255) NOT NULL, -- Например: CREATE, READ, UPDATE, DELETE, READ_LOGS
-    resource_type VARCHAR(255) NOT NULL, -- Например: PROJECT, SERVICE, ORGANIZATION
+    action_type VARCHAR(255) NOT NULL, -- Например: CREATE, READ, UPDATE, DELETE or any custom
     resource_fields VARCHAR(255)[], -- Массив полей ресурса, к которым применимо действие
+    labels VARCHAR(255)[], -- Массив custom значений
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Создание таблицы для связи Role и Permission
-CREATE TABLE role_permission_table (
+-- Создание таблицы для Api Permission
+CREATE TABLE api_permission_table (
+    id UUID PRIMARY KEY,
+    api_path_regexp VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Создание таблицы для связи Role и Action Permission
+CREATE TABLE role_action_permission_table (
     role_id UUID NOT NULL,
-    permission_id UUID NOT NULL,
-    PRIMARY KEY (role_id, permission_id),
+    action_permission_id UUID NOT NULL,
+    PRIMARY KEY (role_id, action_permission_id),
     FOREIGN KEY (role_id) REFERENCES role_table(id),
-    FOREIGN KEY (permission_id) REFERENCES permission_table(id)
+    FOREIGN KEY (action_permission_id) REFERENCES action_permission_table(id)
+);
+
+
+-- Создание таблицы для связи Role и Api Permission
+CREATE TABLE role_api_permission_table (
+    role_id UUID NOT NULL,
+    api_permission_id UUID NOT NULL,
+    PRIMARY KEY (role_id, api_permission_id),
+    FOREIGN KEY (role_id) REFERENCES role_table(id),
+    FOREIGN KEY (api_permission_id) REFERENCES api_permission_table(id)
 );
 
 -- Создание таблицы для Business Role

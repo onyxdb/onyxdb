@@ -1,8 +1,8 @@
 package com.onyxdb.idm.services;
 
 import com.onyxdb.idm.controllers.v1.ResourceNotFoundException;
-import com.onyxdb.idm.models.Permission;
-import com.onyxdb.idm.repositories.PermissionRepository;
+import com.onyxdb.idm.models.ActionPermission;
+import com.onyxdb.idm.repositories.ActionPermissionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,25 +15,25 @@ import java.util.UUID;
  */
 @Service
 @RequiredArgsConstructor
-public class PermissionService {
-    private final PermissionRepository permissionRepository;
+public class ActionPermissionService {
+    private final ActionPermissionRepository permissionRepository;
 
-    public Permission findById(UUID id) {
+    public ActionPermission findById(UUID id) {
         return permissionRepository
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Permission not found"));
     }
 
-    public List<Permission> findAll() {
+    public List<ActionPermission> findAll() {
         return permissionRepository.findAll();
     }
 
-    public Permission create(Permission permission) {
-        Permission forCreate = new Permission(
+    public ActionPermission create(ActionPermission permission) {
+        ActionPermission forCreate = new ActionPermission(
                 UUID.randomUUID(),
                 permission.actionType(),
-                permission.resourceType(),
                 permission.resourceFields(),
+                permission.labels(),
                 LocalDateTime.now(),
                 LocalDateTime.now()
         );
@@ -41,12 +41,12 @@ public class PermissionService {
         return forCreate;
     }
 
-    public Permission update(Permission permission) {
-        Permission forUpdate = new Permission(
+    public ActionPermission update(ActionPermission permission) {
+        ActionPermission forUpdate = new ActionPermission(
                 permission.id(),
                 permission.actionType(),
-                permission.resourceType(),
                 permission.resourceFields(),
+                permission.labels(),
                 permission.createdAt(),
                 LocalDateTime.now()
         );

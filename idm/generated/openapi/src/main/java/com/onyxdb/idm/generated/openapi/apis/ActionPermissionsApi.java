@@ -5,9 +5,9 @@
  */
 package com.onyxdb.idm.generated.openapi.apis;
 
+import com.onyxdb.idm.generated.openapi.models.ActionPermissionDTO;
 import com.onyxdb.idm.generated.openapi.models.BadRequestResponse;
 import com.onyxdb.idm.generated.openapi.models.NotFoundResponse;
-import com.onyxdb.idm.generated.openapi.models.ResourceDTO;
 import java.util.UUID;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,23 +37,23 @@ import jakarta.annotation.Generated;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.5.0")
 @Validated
-@Tag(name = "Resources", description = "the Resources API")
-public interface ResourcesApi {
+@Tag(name = "ActionPermissions", description = "the ActionPermissions API")
+public interface ActionPermissionsApi {
 
     /**
-     * POST /api/v1/resources : Create a new resource
+     * POST /api/v1/action-permissions : Create a new Action permission
      *
-     * @param resourceDTO  (required)
+     * @param actionPermissionDTO  (required)
      * @return Created (status code 201)
      *         or Bad Request (status code 400)
      */
     @Operation(
-        operationId = "createResource",
-        summary = "Create a new resource",
-        tags = { "Resources" },
+        operationId = "createActionPermission",
+        summary = "Create a new Action permission",
+        tags = { "ActionPermissions" },
         responses = {
             @ApiResponse(responseCode = "201", description = "Created", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ResourceDTO.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ActionPermissionDTO.class))
             }),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
@@ -62,28 +62,28 @@ public interface ResourcesApi {
     )
     @RequestMapping(
         method = RequestMethod.POST,
-        value = "/api/v1/resources",
+        value = "/api/v1/action-permissions",
         produces = { "application/json" },
         consumes = { "application/json" }
     )
     
-    ResponseEntity<ResourceDTO> createResource(
-        @Parameter(name = "ResourceDTO", description = "", required = true) @Valid @RequestBody ResourceDTO resourceDTO
+    ResponseEntity<ActionPermissionDTO> createActionPermission(
+        @Parameter(name = "ActionPermissionDTO", description = "", required = true) @Valid @RequestBody ActionPermissionDTO actionPermissionDTO
     );
 
 
     /**
-     * DELETE /api/v1/resources/{resourceId} : Delete a resource by ID
+     * DELETE /api/v1/action-permissions/{permissionId} : Delete an Action permission by ID
      *
-     * @param resourceId  (required)
+     * @param permissionId  (required)
      * @return No Content (status code 204)
      *         or Not Found (status code 404)
      *         or Bad Request (status code 400)
      */
     @Operation(
-        operationId = "deleteResource",
-        summary = "Delete a resource by ID",
-        tags = { "Resources" },
+        operationId = "deleteActionPermission",
+        summary = "Delete an Action permission by ID",
+        tags = { "ActionPermissions" },
         responses = {
             @ApiResponse(responseCode = "204", description = "No Content"),
             @ApiResponse(responseCode = "404", description = "Not Found", content = {
@@ -96,60 +96,30 @@ public interface ResourcesApi {
     )
     @RequestMapping(
         method = RequestMethod.DELETE,
-        value = "/api/v1/resources/{resourceId}",
+        value = "/api/v1/action-permissions/{permissionId}",
         produces = { "application/json" }
     )
     
-    ResponseEntity<Void> deleteResource(
-        @Parameter(name = "resourceId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("resourceId") UUID resourceId
+    ResponseEntity<Void> deleteActionPermission(
+        @Parameter(name = "permissionId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("permissionId") UUID permissionId
     );
 
 
     /**
-     * GET /api/v1/resources : Get all resources
+     * GET /api/v1/action-permissions/{permissionId} : Get an Action permission by ID
      *
-     * @return OK (status code 200)
-     *         or Bad Request (status code 400)
-     */
-    @Operation(
-        operationId = "getAllResources",
-        summary = "Get all resources",
-        tags = { "Resources" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ResourceDTO.class)))
-            }),
-            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
-            })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.GET,
-        value = "/api/v1/resources",
-        produces = { "application/json" }
-    )
-    
-    ResponseEntity<List<ResourceDTO>> getAllResources(
-        
-    );
-
-
-    /**
-     * GET /api/v1/resources/{resourceId} : Get a resource by ID
-     *
-     * @param resourceId  (required)
+     * @param permissionId  (required)
      * @return OK (status code 200)
      *         or Not Found (status code 404)
      *         or Bad Request (status code 400)
      */
     @Operation(
-        operationId = "getResourceById",
-        summary = "Get a resource by ID",
-        tags = { "Resources" },
+        operationId = "getActionPermissionById",
+        summary = "Get an Action permission by ID",
+        tags = { "ActionPermissions" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ResourceDTO.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ActionPermissionDTO.class))
             }),
             @ApiResponse(responseCode = "404", description = "Not Found", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
@@ -161,31 +131,61 @@ public interface ResourcesApi {
     )
     @RequestMapping(
         method = RequestMethod.GET,
-        value = "/api/v1/resources/{resourceId}",
+        value = "/api/v1/action-permissions/{permissionId}",
         produces = { "application/json" }
     )
     
-    ResponseEntity<ResourceDTO> getResourceById(
-        @Parameter(name = "resourceId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("resourceId") UUID resourceId
+    ResponseEntity<ActionPermissionDTO> getActionPermissionById(
+        @Parameter(name = "permissionId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("permissionId") UUID permissionId
     );
 
 
     /**
-     * PUT /api/v1/resources/{resourceId} : Update a resource by ID
+     * GET /api/v1/action-permissions : Get all Action permissions
      *
-     * @param resourceId  (required)
-     * @param resourceDTO  (required)
+     * @return OK (status code 200)
+     *         or Bad Request (status code 400)
+     */
+    @Operation(
+        operationId = "getAllActionsPermissions",
+        summary = "Get all Action permissions",
+        tags = { "ActionPermissions" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "OK", content = {
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ActionPermissionDTO.class)))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/api/v1/action-permissions",
+        produces = { "application/json" }
+    )
+    
+    ResponseEntity<List<ActionPermissionDTO>> getAllActionsPermissions(
+        
+    );
+
+
+    /**
+     * PUT /api/v1/action-permissions/{permissionId} : Update an Action permission by ID
+     *
+     * @param permissionId  (required)
+     * @param actionPermissionDTO  (required)
      * @return OK (status code 200)
      *         or Not Found (status code 404)
      *         or Bad Request (status code 400)
      */
     @Operation(
-        operationId = "updateResource",
-        summary = "Update a resource by ID",
-        tags = { "Resources" },
+        operationId = "updateActionPermission",
+        summary = "Update an Action permission by ID",
+        tags = { "ActionPermissions" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = ResourceDTO.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ActionPermissionDTO.class))
             }),
             @ApiResponse(responseCode = "404", description = "Not Found", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
@@ -197,14 +197,14 @@ public interface ResourcesApi {
     )
     @RequestMapping(
         method = RequestMethod.PUT,
-        value = "/api/v1/resources/{resourceId}",
+        value = "/api/v1/action-permissions/{permissionId}",
         produces = { "application/json" },
         consumes = { "application/json" }
     )
     
-    ResponseEntity<ResourceDTO> updateResource(
-        @Parameter(name = "resourceId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("resourceId") UUID resourceId,
-        @Parameter(name = "ResourceDTO", description = "", required = true) @Valid @RequestBody ResourceDTO resourceDTO
+    ResponseEntity<ActionPermissionDTO> updateActionPermission(
+        @Parameter(name = "permissionId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("permissionId") UUID permissionId,
+        @Parameter(name = "ActionPermissionDTO", description = "", required = true) @Valid @RequestBody ActionPermissionDTO actionPermissionDTO
     );
 
 }

@@ -5,9 +5,9 @@
  */
 package com.onyxdb.idm.generated.openapi.apis;
 
+import com.onyxdb.idm.generated.openapi.models.ApiPermissionDTO;
 import com.onyxdb.idm.generated.openapi.models.BadRequestResponse;
 import com.onyxdb.idm.generated.openapi.models.NotFoundResponse;
-import com.onyxdb.idm.generated.openapi.models.PermissionDTO;
 import java.util.UUID;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,23 +37,23 @@ import jakarta.annotation.Generated;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.5.0")
 @Validated
-@Tag(name = "Permissions", description = "the Permissions API")
-public interface PermissionsApi {
+@Tag(name = "ApiPermissions", description = "the ApiPermissions API")
+public interface ApiPermissionsApi {
 
     /**
-     * POST /api/v1/permissions : Create a new permission
+     * POST /api/v1/api-permissions : Create an Api new permission
      *
-     * @param permissionDTO  (required)
+     * @param apiPermissionDTO  (required)
      * @return Created (status code 201)
      *         or Bad Request (status code 400)
      */
     @Operation(
-        operationId = "createPermission",
-        summary = "Create a new permission",
-        tags = { "Permissions" },
+        operationId = "createApiPermission",
+        summary = "Create an Api new permission",
+        tags = { "ApiPermissions" },
         responses = {
             @ApiResponse(responseCode = "201", description = "Created", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = PermissionDTO.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ApiPermissionDTO.class))
             }),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
@@ -62,18 +62,18 @@ public interface PermissionsApi {
     )
     @RequestMapping(
         method = RequestMethod.POST,
-        value = "/api/v1/permissions",
+        value = "/api/v1/api-permissions",
         produces = { "application/json" },
         consumes = { "application/json" }
     )
     
-    ResponseEntity<PermissionDTO> createPermission(
-        @Parameter(name = "PermissionDTO", description = "", required = true) @Valid @RequestBody PermissionDTO permissionDTO
+    ResponseEntity<ApiPermissionDTO> createApiPermission(
+        @Parameter(name = "ApiPermissionDTO", description = "", required = true) @Valid @RequestBody ApiPermissionDTO apiPermissionDTO
     );
 
 
     /**
-     * DELETE /api/v1/permissions/{permissionId} : Delete a permission by ID
+     * DELETE /api/v1/api-permissions/{permissionId} : Delete an Api permission by ID
      *
      * @param permissionId  (required)
      * @return No Content (status code 204)
@@ -81,9 +81,9 @@ public interface PermissionsApi {
      *         or Bad Request (status code 400)
      */
     @Operation(
-        operationId = "deletePermission",
-        summary = "Delete a permission by ID",
-        tags = { "Permissions" },
+        operationId = "deleteApiPermission",
+        summary = "Delete an Api permission by ID",
+        tags = { "ApiPermissions" },
         responses = {
             @ApiResponse(responseCode = "204", description = "No Content"),
             @ApiResponse(responseCode = "404", description = "Not Found", content = {
@@ -96,28 +96,28 @@ public interface PermissionsApi {
     )
     @RequestMapping(
         method = RequestMethod.DELETE,
-        value = "/api/v1/permissions/{permissionId}",
+        value = "/api/v1/api-permissions/{permissionId}",
         produces = { "application/json" }
     )
     
-    ResponseEntity<Void> deletePermission(
+    ResponseEntity<Void> deleteApiPermission(
         @Parameter(name = "permissionId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("permissionId") UUID permissionId
     );
 
 
     /**
-     * GET /api/v1/permissions : Get all permissions
+     * GET /api/v1/api-permissions : Get all Api permissions
      *
      * @return OK (status code 200)
      *         or Bad Request (status code 400)
      */
     @Operation(
-        operationId = "getAllPermissions",
-        summary = "Get all permissions",
-        tags = { "Permissions" },
+        operationId = "getAllApiPermissions",
+        summary = "Get all Api permissions",
+        tags = { "ApiPermissions" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PermissionDTO.class)))
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ApiPermissionDTO.class)))
             }),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = BadRequestResponse.class))
@@ -126,17 +126,17 @@ public interface PermissionsApi {
     )
     @RequestMapping(
         method = RequestMethod.GET,
-        value = "/api/v1/permissions",
+        value = "/api/v1/api-permissions",
         produces = { "application/json" }
     )
     
-    ResponseEntity<List<PermissionDTO>> getAllPermissions(
+    ResponseEntity<List<ApiPermissionDTO>> getAllApiPermissions(
         
     );
 
 
     /**
-     * GET /api/v1/permissions/{permissionId} : Get a permission by ID
+     * GET /api/v1/api-permissions/{permissionId} : Get an Api permission by ID
      *
      * @param permissionId  (required)
      * @return OK (status code 200)
@@ -144,12 +144,12 @@ public interface PermissionsApi {
      *         or Bad Request (status code 400)
      */
     @Operation(
-        operationId = "getPermissionById",
-        summary = "Get a permission by ID",
-        tags = { "Permissions" },
+        operationId = "getApiPermissionById",
+        summary = "Get an Api permission by ID",
+        tags = { "ApiPermissions" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = PermissionDTO.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ApiPermissionDTO.class))
             }),
             @ApiResponse(responseCode = "404", description = "Not Found", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
@@ -161,31 +161,31 @@ public interface PermissionsApi {
     )
     @RequestMapping(
         method = RequestMethod.GET,
-        value = "/api/v1/permissions/{permissionId}",
+        value = "/api/v1/api-permissions/{permissionId}",
         produces = { "application/json" }
     )
     
-    ResponseEntity<PermissionDTO> getPermissionById(
+    ResponseEntity<ApiPermissionDTO> getApiPermissionById(
         @Parameter(name = "permissionId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("permissionId") UUID permissionId
     );
 
 
     /**
-     * PUT /api/v1/permissions/{permissionId} : Update a permission by ID
+     * PUT /api/v1/api-permissions/{permissionId} : Update an Api permission by ID
      *
      * @param permissionId  (required)
-     * @param permissionDTO  (required)
+     * @param apiPermissionDTO  (required)
      * @return OK (status code 200)
      *         or Not Found (status code 404)
      *         or Bad Request (status code 400)
      */
     @Operation(
-        operationId = "updatePermission",
-        summary = "Update a permission by ID",
-        tags = { "Permissions" },
+        operationId = "updateApiPermission",
+        summary = "Update an Api permission by ID",
+        tags = { "ApiPermissions" },
         responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = PermissionDTO.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ApiPermissionDTO.class))
             }),
             @ApiResponse(responseCode = "404", description = "Not Found", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
@@ -197,14 +197,14 @@ public interface PermissionsApi {
     )
     @RequestMapping(
         method = RequestMethod.PUT,
-        value = "/api/v1/permissions/{permissionId}",
+        value = "/api/v1/api-permissions/{permissionId}",
         produces = { "application/json" },
         consumes = { "application/json" }
     )
     
-    ResponseEntity<PermissionDTO> updatePermission(
+    ResponseEntity<ApiPermissionDTO> updateApiPermission(
         @Parameter(name = "permissionId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("permissionId") UUID permissionId,
-        @Parameter(name = "PermissionDTO", description = "", required = true) @Valid @RequestBody PermissionDTO permissionDTO
+        @Parameter(name = "ApiPermissionDTO", description = "", required = true) @Valid @RequestBody ApiPermissionDTO apiPermissionDTO
     );
 
 }
