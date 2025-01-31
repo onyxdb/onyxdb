@@ -17,19 +17,15 @@ import java.util.*;
 import jakarta.annotation.Generated;
 
 /**
- * BusinessRole
+ * ApiPermissionDTO
  */
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", comments = "Generator version: 7.5.0")
-public class BusinessRole {
+public class ApiPermissionDTO {
 
   private UUID id;
 
-  private String name;
-
-  private String description;
-
-  private UUID parentId;
+  private String apiPathRegexp;
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private LocalDateTime createdAt;
@@ -37,7 +33,7 @@ public class BusinessRole {
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private LocalDateTime updatedAt;
 
-  public BusinessRole id(UUID id) {
+  public ApiPermissionDTO id(UUID id) {
     this.id = id;
     return this;
   }
@@ -57,67 +53,27 @@ public class BusinessRole {
     this.id = id;
   }
 
-  public BusinessRole name(String name) {
-    this.name = name;
+  public ApiPermissionDTO apiPathRegexp(String apiPathRegexp) {
+    this.apiPathRegexp = apiPathRegexp;
     return this;
   }
 
   /**
-   * Get name
-   * @return name
+   * Get apiPathRegexp
+   * @return apiPathRegexp
   */
   
-  @Schema(name = "name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("name")
-  public String getName() {
-    return name;
+  @Schema(name = "apiPathRegexp", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("apiPathRegexp")
+  public String getApiPathRegexp() {
+    return apiPathRegexp;
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public void setApiPathRegexp(String apiPathRegexp) {
+    this.apiPathRegexp = apiPathRegexp;
   }
 
-  public BusinessRole description(String description) {
-    this.description = description;
-    return this;
-  }
-
-  /**
-   * Get description
-   * @return description
-  */
-  
-  @Schema(name = "description", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("description")
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
-  public BusinessRole parentId(UUID parentId) {
-    this.parentId = parentId;
-    return this;
-  }
-
-  /**
-   * Get parentId
-   * @return parentId
-  */
-  @Valid 
-  @Schema(name = "parentId", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("parentId")
-  public UUID getParentId() {
-    return parentId;
-  }
-
-  public void setParentId(UUID parentId) {
-    this.parentId = parentId;
-  }
-
-  public BusinessRole createdAt(LocalDateTime createdAt) {
+  public ApiPermissionDTO createdAt(LocalDateTime createdAt) {
     this.createdAt = createdAt;
     return this;
   }
@@ -137,7 +93,7 @@ public class BusinessRole {
     this.createdAt = createdAt;
   }
 
-  public BusinessRole updatedAt(LocalDateTime updatedAt) {
+  public ApiPermissionDTO updatedAt(LocalDateTime updatedAt) {
     this.updatedAt = updatedAt;
     return this;
   }
@@ -165,28 +121,24 @@ public class BusinessRole {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    BusinessRole businessRole = (BusinessRole) o;
-    return Objects.equals(this.id, businessRole.id) &&
-        Objects.equals(this.name, businessRole.name) &&
-        Objects.equals(this.description, businessRole.description) &&
-        Objects.equals(this.parentId, businessRole.parentId) &&
-        Objects.equals(this.createdAt, businessRole.createdAt) &&
-        Objects.equals(this.updatedAt, businessRole.updatedAt);
+    ApiPermissionDTO apiPermissionDTO = (ApiPermissionDTO) o;
+    return Objects.equals(this.id, apiPermissionDTO.id) &&
+        Objects.equals(this.apiPathRegexp, apiPermissionDTO.apiPathRegexp) &&
+        Objects.equals(this.createdAt, apiPermissionDTO.createdAt) &&
+        Objects.equals(this.updatedAt, apiPermissionDTO.updatedAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, description, parentId, createdAt, updatedAt);
+    return Objects.hash(id, apiPathRegexp, createdAt, updatedAt);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class BusinessRole {\n");
+    sb.append("class ApiPermissionDTO {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    description: ").append(toIndentedString(description)).append("\n");
-    sb.append("    parentId: ").append(toIndentedString(parentId)).append("\n");
+    sb.append("    apiPathRegexp: ").append(toIndentedString(apiPathRegexp)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("}");

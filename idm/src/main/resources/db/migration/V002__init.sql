@@ -9,9 +9,11 @@ CREATE TABLE resource_table (
 -- Создание таблицы для Role
 CREATE TABLE role_table (
     id UUID PRIMARY KEY,
+    role_type VARCHAR(255) NOT NULL,    -- Auditor | Developer | Owner | Admin
     name VARCHAR(255) NOT NULL UNIQUE,
+    shop_name VARCHAR(255) NOT NULL UNIQUE,
     description TEXT,
-    resource_id UUID NOT NULL,
+    resource_id UUID,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (resource_id) REFERENCES resource_table(id)
@@ -20,8 +22,9 @@ CREATE TABLE role_table (
 -- Создание таблицы для Permission
 CREATE TABLE action_permission_table (
     id UUID PRIMARY KEY,
-    action_type VARCHAR(255) NOT NULL, -- Например: CREATE, READ, UPDATE, DELETE
+    action_type VARCHAR(255) NOT NULL, -- Например: CREATE, READ, UPDATE, DELETE or any custom
     resource_fields VARCHAR(255)[], -- Массив полей ресурса, к которым применимо действие
+    labels VARCHAR(255)[], -- Массив custom значений
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

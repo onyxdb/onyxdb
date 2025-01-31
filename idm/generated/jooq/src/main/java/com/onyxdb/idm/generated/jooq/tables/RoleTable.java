@@ -27,7 +27,7 @@ import java.util.function.Function;
 import org.jooq.Condition;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function6;
+import org.jooq.Function8;
 import org.jooq.InverseForeignKey;
 import org.jooq.Name;
 import org.jooq.Path;
@@ -35,7 +35,7 @@ import org.jooq.PlainSQL;
 import org.jooq.QueryPart;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row6;
+import org.jooq.Row8;
 import org.jooq.SQL;
 import org.jooq.Schema;
 import org.jooq.Select;
@@ -77,9 +77,19 @@ public class RoleTable extends TableImpl<RoleTableRecord> {
     public final TableField<RoleTableRecord, UUID> ID = createField(DSL.name("id"), SQLDataType.UUID.nullable(false), this, "");
 
     /**
+     * The column <code>public.role_table.role_type</code>.
+     */
+    public final TableField<RoleTableRecord, String> ROLE_TYPE = createField(DSL.name("role_type"), SQLDataType.VARCHAR(255).nullable(false), this, "");
+
+    /**
      * The column <code>public.role_table.name</code>.
      */
     public final TableField<RoleTableRecord, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(255).nullable(false), this, "");
+
+    /**
+     * The column <code>public.role_table.shop_name</code>.
+     */
+    public final TableField<RoleTableRecord, String> SHOP_NAME = createField(DSL.name("shop_name"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     /**
      * The column <code>public.role_table.description</code>.
@@ -89,7 +99,7 @@ public class RoleTable extends TableImpl<RoleTableRecord> {
     /**
      * The column <code>public.role_table.resource_id</code>.
      */
-    public final TableField<RoleTableRecord, UUID> RESOURCE_ID = createField(DSL.name("resource_id"), SQLDataType.UUID.nullable(false), this, "");
+    public final TableField<RoleTableRecord, UUID> RESOURCE_ID = createField(DSL.name("resource_id"), SQLDataType.UUID, this, "");
 
     /**
      * The column <code>public.role_table.created_at</code>.
@@ -175,7 +185,7 @@ public class RoleTable extends TableImpl<RoleTableRecord> {
 
     @Override
     public List<UniqueKey<RoleTableRecord>> getUniqueKeys() {
-        return Arrays.asList(Keys.ROLE_TABLE_NAME_KEY);
+        return Arrays.asList(Keys.ROLE_TABLE_NAME_KEY, Keys.ROLE_TABLE_SHOP_NAME_KEY);
     }
 
     @Override
@@ -404,18 +414,18 @@ public class RoleTable extends TableImpl<RoleTableRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row6 type methods
+    // Row8 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row6<UUID, String, String, UUID, LocalDateTime, LocalDateTime> fieldsRow() {
-        return (Row6) super.fieldsRow();
+    public Row8<UUID, String, String, String, String, UUID, LocalDateTime, LocalDateTime> fieldsRow() {
+        return (Row8) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function6<? super UUID, ? super String, ? super String, ? super UUID, ? super LocalDateTime, ? super LocalDateTime, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function8<? super UUID, ? super String, ? super String, ? super String, ? super String, ? super UUID, ? super LocalDateTime, ? super LocalDateTime, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -423,7 +433,7 @@ public class RoleTable extends TableImpl<RoleTableRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function6<? super UUID, ? super String, ? super String, ? super UUID, ? super LocalDateTime, ? super LocalDateTime, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function8<? super UUID, ? super String, ? super String, ? super String, ? super String, ? super UUID, ? super LocalDateTime, ? super LocalDateTime, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

@@ -465,10 +465,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
 
-  /api/v1/roles/{roleId}/permissions:
+  /api/v1/roles/{roleId}/action-permissions:
     get:
-      summary: Get role permission
-      operationId: getPermissionsByRoleId
+      summary: Get role action permission
+      operationId: getActionPermissionsByRoleId
       tags:
         - Roles
       parameters:
@@ -486,7 +486,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/PermissionDTO'
+                  $ref: '#/components/schemas/ActionPermissionDTO'
         '404':
           description: Not Found
           content:
@@ -494,10 +494,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/NotFoundResponse'
 
-  /api/v1/roles/{roleId}/permissions/{permissionId}:
+  /api/v1/roles/{roleId}/action-permissions/{permissionId}:
     post:
-      summary: Add permission to role link
-      operationId: addPermissionToRole
+      summary: Add action permission to role link
+      operationId: addActionPermissionToRole
       tags:
         - Roles
       parameters:
@@ -523,8 +523,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/NotFoundResponse'
     delete:
-      summary: Delete permission to role link
-      operationId: removePermissionFromRole
+      summary: Delete Action permission to role link
+      operationId: removeActionPermissionFromRole
       tags:
         - Roles
       parameters:
@@ -550,12 +550,19 @@ paths:
               schema:
                 $ref: '#/components/schemas/NotFoundResponse'
 
-  /api/v1/permissions:
+  /api/v1/roles/{roleId}/api-permissions:
     get:
-      summary: Get all permissions
-      operationId: getAllPermissions
+      summary: Get role Api permission
+      operationId: getApiPermissionsByRoleId
       tags:
-        - Permissions
+        - Roles
+      parameters:
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
       responses:
         '200':
           description: OK
@@ -564,7 +571,85 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/PermissionDTO'
+                  $ref: '#/components/schemas/ApiPermissionDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+
+  /api/v1/roles/{roleId}/api-permissions/{permissionId}:
+    post:
+      summary: Add Api permission to role link
+      operationId: addApiPermissionToRole
+      tags:
+        - Roles
+      parameters:
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: permissionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+    delete:
+      summary: Delete Api permission to role link
+      operationId: removeApiPermissionFromRole
+      tags:
+        - Roles
+      parameters:
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: permissionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+
+  /api/v1/action-permissions:
+    get:
+      summary: Get all Action permissions
+      operationId: getAllActionsPermissions
+      tags:
+        - ActionPermissions
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ActionPermissionDTO'
         '400':
           description: Bad Request
           content:
@@ -572,23 +657,23 @@ paths:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
     post:
-      summary: Create a new permission
-      operationId: createPermission
+      summary: Create a new Action permission
+      operationId: createActionPermission
       tags:
-        - Permissions
+        - ActionPermissions
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PermissionDTO'
+              $ref: '#/components/schemas/ActionPermissionDTO'
       responses:
         '201':
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PermissionDTO'
+                $ref: '#/components/schemas/ActionPermissionDTO'
         '400':
           description: Bad Request
           content:
@@ -596,12 +681,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
 
-  /api/v1/permissions/{permissionId}:
+  /api/v1/action-permissions/{permissionId}:
     get:
-      summary: Get a permission by ID
-      operationId: getPermissionById
+      summary: Get an Action permission by ID
+      operationId: getActionPermissionById
       tags:
-        - Permissions
+        - ActionPermissions
       parameters:
         - name: permissionId
           in: path
@@ -615,7 +700,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PermissionDTO'
+                $ref: '#/components/schemas/ActionPermissionDTO'
         '404':
           description: Not Found
           content:
@@ -629,10 +714,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
     put:
-      summary: Update a permission by ID
-      operationId: updatePermission
+      summary: Update an Action permission by ID
+      operationId: updateActionPermission
       tags:
-        - Permissions
+        - ActionPermissions
       parameters:
         - name: permissionId
           in: path
@@ -645,14 +730,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PermissionDTO'
+              $ref: '#/components/schemas/ActionPermissionDTO'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PermissionDTO'
+                $ref: '#/components/schemas/ActionPermissionDTO'
         '404':
           description: Not Found
           content:
@@ -666,10 +751,154 @@ paths:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
     delete:
-      summary: Delete a permission by ID
-      operationId: deletePermission
+      summary: Delete an Action permission by ID
+      operationId: deleteActionPermission
       tags:
-        - Permissions
+        - ActionPermissions
+      parameters:
+        - name: permissionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+
+
+  /api/v1/api-permissions:
+    get:
+      summary: Get all Api permissions
+      operationId: getAllApiPermissions
+      tags:
+        - ApiPermissions
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiPermissionDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+    post:
+      summary: Create an Api new permission
+      operationId: createApiPermission
+      tags:
+        - ApiPermissions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiPermissionDTO'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiPermissionDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+
+  /api/v1/api-permissions/{permissionId}:
+    get:
+      summary: Get an Api permission by ID
+      operationId: getApiPermissionById
+      tags:
+        - ApiPermissions
+      parameters:
+        - name: permissionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiPermissionDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+    put:
+      summary: Update an Api permission by ID
+      operationId: updateApiPermission
+      tags:
+        - ApiPermissions
+      parameters:
+        - name: permissionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiPermissionDTO'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiPermissionDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+    delete:
+      summary: Delete an Api permission by ID
+      operationId: deleteApiPermission
+      tags:
+        - ApiPermissions
       parameters:
         - name: permissionId
           in: path
@@ -1787,7 +2016,11 @@ components:
         id:
           type: string
           format: uuid
+        roleType:
+          type: string
         name:
+          type: string
+        shopName:
           type: string
         description:
           type: string
@@ -1818,7 +2051,7 @@ components:
           type: string
           format: date-time
 
-    PermissionDTO:
+    ActionPermissionDTO:
       type: object
       properties:
         id:
@@ -1826,12 +2059,29 @@ components:
           format: uuid
         actionType:
           type: string
-        resourceType:
-          type: string
         resourceFields:
           type: array
           items:
             type: string
+        labels:
+          type: array
+          items:
+            type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    ApiPermissionDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        apiPathRegexp:
+          type: string
         createdAt:
           type: string
           format: date-time

@@ -25,7 +25,11 @@ public class RoleDTO {
 
   private UUID id;
 
+  private String roleType;
+
   private String name;
+
+  private String shopName;
 
   private String description;
 
@@ -57,6 +61,26 @@ public class RoleDTO {
     this.id = id;
   }
 
+  public RoleDTO roleType(String roleType) {
+    this.roleType = roleType;
+    return this;
+  }
+
+  /**
+   * Get roleType
+   * @return roleType
+  */
+  
+  @Schema(name = "roleType", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("roleType")
+  public String getRoleType() {
+    return roleType;
+  }
+
+  public void setRoleType(String roleType) {
+    this.roleType = roleType;
+  }
+
   public RoleDTO name(String name) {
     this.name = name;
     return this;
@@ -75,6 +99,26 @@ public class RoleDTO {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public RoleDTO shopName(String shopName) {
+    this.shopName = shopName;
+    return this;
+  }
+
+  /**
+   * Get shopName
+   * @return shopName
+  */
+  
+  @Schema(name = "shopName", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("shopName")
+  public String getShopName() {
+    return shopName;
+  }
+
+  public void setShopName(String shopName) {
+    this.shopName = shopName;
   }
 
   public RoleDTO description(String description) {
@@ -167,7 +211,9 @@ public class RoleDTO {
     }
     RoleDTO roleDTO = (RoleDTO) o;
     return Objects.equals(this.id, roleDTO.id) &&
+        Objects.equals(this.roleType, roleDTO.roleType) &&
         Objects.equals(this.name, roleDTO.name) &&
+        Objects.equals(this.shopName, roleDTO.shopName) &&
         Objects.equals(this.description, roleDTO.description) &&
         Objects.equals(this.resourceId, roleDTO.resourceId) &&
         Objects.equals(this.createdAt, roleDTO.createdAt) &&
@@ -176,7 +222,7 @@ public class RoleDTO {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, description, resourceId, createdAt, updatedAt);
+    return Objects.hash(id, roleType, name, shopName, description, resourceId, createdAt, updatedAt);
   }
 
   @Override
@@ -184,7 +230,9 @@ public class RoleDTO {
     StringBuilder sb = new StringBuilder();
     sb.append("class RoleDTO {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    roleType: ").append(toIndentedString(roleType)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    shopName: ").append(toIndentedString(shopName)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    resourceId: ").append(toIndentedString(resourceId)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
