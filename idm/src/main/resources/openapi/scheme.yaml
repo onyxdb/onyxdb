@@ -465,10 +465,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
 
-  /api/v1/roles/{roleId}/action-permissions:
+  /api/v1/roles/{roleId}/permissions:
     get:
-      summary: Get role action permission
-      operationId: getActionPermissionsByRoleId
+      summary: Get role permission
+      operationId: getPermissionsByRoleId
       tags:
         - Roles
       parameters:
@@ -486,7 +486,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ActionPermissionDTO'
+                  $ref: '#/components/schemas/PermissionDTO'
         '404':
           description: Not Found
           content:
@@ -494,10 +494,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/NotFoundResponse'
 
-  /api/v1/roles/{roleId}/action-permissions/{permissionId}:
+  /api/v1/roles/{roleId}/permissions/{permissionId}:
     post:
-      summary: Add action permission to role link
-      operationId: addActionPermissionToRole
+      summary: Add permission to role link
+      operationId: addPermissionToRole
       tags:
         - Roles
       parameters:
@@ -523,8 +523,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/NotFoundResponse'
     delete:
-      summary: Delete Action permission to role link
-      operationId: removeActionPermissionFromRole
+      summary: Delete permission to role link
+      operationId: removePermissionFromRole
       tags:
         - Roles
       parameters:
@@ -550,19 +550,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/NotFoundResponse'
 
-  /api/v1/roles/{roleId}/api-permissions:
+  /api/v1/permissions:
     get:
-      summary: Get role Api permission
-      operationId: getApiPermissionsByRoleId
+      summary: Get all permissions
+      operationId: getAllPermissions
       tags:
-        - Roles
-      parameters:
-        - name: roleId
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
+        - Permissions
       responses:
         '200':
           description: OK
@@ -571,85 +564,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ApiPermissionDTO'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundResponse'
-
-  /api/v1/roles/{roleId}/api-permissions/{permissionId}:
-    post:
-      summary: Add Api permission to role link
-      operationId: addApiPermissionToRole
-      tags:
-        - Roles
-      parameters:
-        - name: roleId
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-        - name: permissionId
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '200':
-          description: OK
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundResponse'
-    delete:
-      summary: Delete Api permission to role link
-      operationId: removeApiPermissionFromRole
-      tags:
-        - Roles
-      parameters:
-        - name: roleId
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-        - name: permissionId
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '204':
-          description: No Content
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundResponse'
-
-  /api/v1/action-permissions:
-    get:
-      summary: Get all Action permissions
-      operationId: getAllActionsPermissions
-      tags:
-        - ActionPermissions
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ActionPermissionDTO'
+                  $ref: '#/components/schemas/PermissionDTO'
         '400':
           description: Bad Request
           content:
@@ -657,23 +572,23 @@ paths:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
     post:
-      summary: Create a new Action permission
-      operationId: createActionPermission
+      summary: Create a new permission
+      operationId: createPermission
       tags:
-        - ActionPermissions
+        - Permissions
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ActionPermissionDTO'
+              $ref: '#/components/schemas/PermissionDTO'
       responses:
         '201':
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionPermissionDTO'
+                $ref: '#/components/schemas/PermissionDTO'
         '400':
           description: Bad Request
           content:
@@ -681,12 +596,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
 
-  /api/v1/action-permissions/{permissionId}:
+  /api/v1/permissions/{permissionId}:
     get:
-      summary: Get an Action permission by ID
-      operationId: getActionPermissionById
+      summary: Get a permission by ID
+      operationId: getPermissionById
       tags:
-        - ActionPermissions
+        - Permissions
       parameters:
         - name: permissionId
           in: path
@@ -700,7 +615,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionPermissionDTO'
+                $ref: '#/components/schemas/PermissionDTO'
         '404':
           description: Not Found
           content:
@@ -714,10 +629,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
     put:
-      summary: Update an Action permission by ID
-      operationId: updateActionPermission
+      summary: Update a permission by ID
+      operationId: updatePermission
       tags:
-        - ActionPermissions
+        - Permissions
       parameters:
         - name: permissionId
           in: path
@@ -730,14 +645,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ActionPermissionDTO'
+              $ref: '#/components/schemas/PermissionDTO'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ActionPermissionDTO'
+                $ref: '#/components/schemas/PermissionDTO'
         '404':
           description: Not Found
           content:
@@ -751,154 +666,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
     delete:
-      summary: Delete an Action permission by ID
-      operationId: deleteActionPermission
+      summary: Delete a permission by ID
+      operationId: deletePermission
       tags:
-        - ActionPermissions
-      parameters:
-        - name: permissionId
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '204':
-          description: No Content
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
-
-
-  /api/v1/api-permissions:
-    get:
-      summary: Get all Api permissions
-      operationId: getAllApiPermissions
-      tags:
-        - ApiPermissions
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ApiPermissionDTO'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
-    post:
-      summary: Create an Api new permission
-      operationId: createApiPermission
-      tags:
-        - ApiPermissions
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ApiPermissionDTO'
-      responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiPermissionDTO'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
-
-  /api/v1/api-permissions/{permissionId}:
-    get:
-      summary: Get an Api permission by ID
-      operationId: getApiPermissionById
-      tags:
-        - ApiPermissions
-      parameters:
-        - name: permissionId
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiPermissionDTO'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
-    put:
-      summary: Update an Api permission by ID
-      operationId: updateApiPermission
-      tags:
-        - ApiPermissions
-      parameters:
-        - name: permissionId
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ApiPermissionDTO'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiPermissionDTO'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
-    delete:
-      summary: Delete an Api permission by ID
-      operationId: deleteApiPermission
-      tags:
-        - ApiPermissions
+        - Permissions
       parameters:
         - name: permissionId
           in: path
@@ -1384,149 +1155,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/NotFoundResponse'
 
-#  /api/v1/resources:
-#    get:
-#      summary: Get all resources
-#      operationId: getAllResources
-#      tags:
-#        - Resources
-#      responses:
-#        '200':
-#          description: OK
-#          content:
-#            application/json:
-#              schema:
-#                type: array
-#                items:
-#                  $ref: '#/components/schemas/ResourceDTO'
-#        '400':
-#          description: Bad Request
-#          content:
-#            application/json:
-#              schema:
-#                $ref: '#/components/schemas/BadRequestResponse'
-#    post:
-#      summary: Create a new resource
-#      operationId: createResource
-#      tags:
-#        - Resources
-#      requestBody:
-#        required: true
-#        content:
-#          application/json:
-#            schema:
-#              $ref: '#/components/schemas/ResourceDTO'
-#      responses:
-#        '201':
-#          description: Created
-#          content:
-#            application/json:
-#              schema:
-#                $ref: '#/components/schemas/ResourceDTO'
-#        '400':
-#          description: Bad Request
-#          content:
-#            application/json:
-#              schema:
-#                $ref: '#/components/schemas/BadRequestResponse'
-
-#  /api/v1/resources/{resourceId}:
-#    get:
-#      summary: Get a resource by ID
-#      operationId: getResourceById
-#      tags:
-#        - Resources
-#      parameters:
-#        - name: resourceId
-#          in: path
-#          required: true
-#          schema:
-#            type: string
-#            format: uuid
-#      responses:
-#        '200':
-#          description: OK
-#          content:
-#            application/json:
-#              schema:
-#                $ref: '#/components/schemas/ResourceDTO'
-#        '404':
-#          description: Not Found
-#          content:
-#            application/json:
-#              schema:
-#                $ref: '#/components/schemas/NotFoundResponse'
-#        '400':
-#          description: Bad Request
-#          content:
-#            application/json:
-#              schema:
-#                $ref: '#/components/schemas/BadRequestResponse'
-#    put:
-#      summary: Update a resource by ID
-#      operationId: updateResource
-#      tags:
-#        - Resources
-#      parameters:
-#        - name: resourceId
-#          in: path
-#          required: true
-#          schema:
-#            type: string
-#            format: uuid
-#      requestBody:
-#        required: true
-#        content:
-#          application/json:
-#            schema:
-#              $ref: '#/components/schemas/ResourceDTO'
-#      responses:
-#        '200':
-#          description: OK
-#          content:
-#            application/json:
-#              schema:
-#                $ref: '#/components/schemas/ResourceDTO'
-#        '404':
-#          description: Not Found
-#          content:
-#            application/json:
-#              schema:
-#                $ref: '#/components/schemas/NotFoundResponse'
-#        '400':
-#          description: Bad Request
-#          content:
-#            application/json:
-#              schema:
-#                $ref: '#/components/schemas/BadRequestResponse'
-#    delete:
-#      summary: Delete a resource by ID
-#      operationId: deleteResource
-#      tags:
-#        - Resources
-#      parameters:
-#        - name: resourceId
-#          in: path
-#          required: true
-#          schema:
-#            type: string
-#            format: uuid
-#      responses:
-#        '204':
-#          description: No Content
-#        '404':
-#          description: Not Found
-#          content:
-#            application/json:
-#              schema:
-#                $ref: '#/components/schemas/NotFoundResponse'
-#        '400':
-#          description: Bad Request
-#          content:
-#            application/json:
-#              schema:
-#                $ref: '#/components/schemas/BadRequestResponse'
-
   /api/v1/projects:
     get:
       summary: Get all projects
@@ -1670,321 +1298,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
 
-  /api/v1/projects/{projectId}/services:
-    get:
-      summary: Get project services
-      operationId: getServicesByProjectId
-      tags:
-        - Projects
-      parameters:
-        - name: projectId
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ServiceDTO'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundResponse'
-
-  /api/v1/services:
-    get:
-      summary: Get all services
-      operationId: getAllServices
-      tags:
-        - Services
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ServiceDTO'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
-    post:
-      summary: Create a new service
-      operationId: createService
-      tags:
-        - Services
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ServiceDTO'
-      responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ServiceDTO'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
-
-  /api/v1/services/{serviceId}:
-    get:
-      summary: Get a service by ID
-      operationId: getServiceById
-      tags:
-        - Services
-      parameters:
-        - name: serviceId
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ServiceDTO'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
-    put:
-      summary: Update a service by ID
-      operationId: updateService
-      tags:
-        - Services
-      parameters:
-        - name: serviceId
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ServiceDTO'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ServiceDTO'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
-    delete:
-      summary: Delete a service by ID
-      operationId: deleteService
-      tags:
-        - Services
-      parameters:
-        - name: serviceId
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '204':
-          description: No Content
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
-
-  /api/v1/organizations:
-    get:
-      summary: Get all organizations
-      operationId: getAllOrganizations
-      tags:
-        - Organizations
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/OrganizationDTO'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
-    post:
-      summary: Create a new organization
-      operationId: createOrganization
-      tags:
-        - Organizations
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/OrganizationDTO'
-      responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/OrganizationDTO'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
-
-  /api/v1/organizations/{organizationId}:
-    get:
-      summary: Get an organization by ID
-      operationId: getOrganizationById
-      tags:
-        - Organizations
-      parameters:
-        - name: organizationId
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/OrganizationDTO'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
-    put:
-      summary: Update an organization by ID
-      operationId: updateOrganization
-      tags:
-        - Organizations
-      parameters:
-        - name: organizationId
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/OrganizationDTO'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/OrganizationDTO'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
-    delete:
-      summary: Delete an organization by ID
-      operationId: deleteOrganization
-      tags:
-        - Organizations
-      parameters:
-        - name: organizationId
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '204':
-          description: No Content
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
-
 components:
   schemas:
     AccountDTO:
@@ -2024,7 +1337,7 @@ components:
           type: string
         description:
           type: string
-        resourceId:
+        projectId:
           type: string
           format: uuid
         createdAt:
@@ -2051,7 +1364,7 @@ components:
           type: string
           format: date-time
 
-    ActionPermissionDTO:
+    PermissionDTO:
       type: object
       properties:
         id:
@@ -2059,29 +1372,9 @@ components:
           format: uuid
         actionType:
           type: string
-        resourceFields:
-          type: array
-          items:
-            type: string
-        labels:
-          type: array
-          items:
-            type: string
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-
-    ApiPermissionDTO:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        apiPathRegexp:
-          type: string
+        data:
+          type: object
+          additionalProperties: true
         createdAt:
           type: string
           format: date-time
@@ -2135,21 +1428,6 @@ components:
           type: string
           format: uuid
 
-    ResourceDTO:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        resourceType:
-          type: string
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-
     ProjectDTO:
       type: object
       properties:
@@ -2166,64 +1444,7 @@ components:
         updatedAt:
           type: string
           format: date-time
-        resourceId:
-          type: string
-          format: uuid
-        organizationId:
-          type: string
-          format: uuid
-        ownerId:
-          type: string
-          format: uuid
-
-    ServiceDTO:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        name:
-          type: string
-        type:
-          type: string
-        description:
-          type: string
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-        resourceId:
-          type: string
-          format: uuid
-        projectId:
-          type: string
-          format: uuid
-        ownerId:
-          type: string
-          format: uuid
-
-    OrganizationDTO:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        name:
-          type: string
-        description:
-          type: string
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-        resourceId:
-          type: string
-          format: uuid
-        accountId:
+        parentId:
           type: string
           format: uuid
         ownerId:

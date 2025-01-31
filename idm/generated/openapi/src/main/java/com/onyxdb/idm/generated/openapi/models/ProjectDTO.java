@@ -35,9 +35,7 @@ public class ProjectDTO {
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private LocalDateTime updatedAt;
 
-  private UUID resourceId;
-
-  private UUID organizationId;
+  private UUID parentId;
 
   private UUID ownerId;
 
@@ -141,44 +139,24 @@ public class ProjectDTO {
     this.updatedAt = updatedAt;
   }
 
-  public ProjectDTO resourceId(UUID resourceId) {
-    this.resourceId = resourceId;
+  public ProjectDTO parentId(UUID parentId) {
+    this.parentId = parentId;
     return this;
   }
 
   /**
-   * Get resourceId
-   * @return resourceId
+   * Get parentId
+   * @return parentId
   */
   @Valid 
-  @Schema(name = "resourceId", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("resourceId")
-  public UUID getResourceId() {
-    return resourceId;
+  @Schema(name = "parentId", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("parentId")
+  public UUID getParentId() {
+    return parentId;
   }
 
-  public void setResourceId(UUID resourceId) {
-    this.resourceId = resourceId;
-  }
-
-  public ProjectDTO organizationId(UUID organizationId) {
-    this.organizationId = organizationId;
-    return this;
-  }
-
-  /**
-   * Get organizationId
-   * @return organizationId
-  */
-  @Valid 
-  @Schema(name = "organizationId", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("organizationId")
-  public UUID getOrganizationId() {
-    return organizationId;
-  }
-
-  public void setOrganizationId(UUID organizationId) {
-    this.organizationId = organizationId;
+  public void setParentId(UUID parentId) {
+    this.parentId = parentId;
   }
 
   public ProjectDTO ownerId(UUID ownerId) {
@@ -215,14 +193,13 @@ public class ProjectDTO {
         Objects.equals(this.description, projectDTO.description) &&
         Objects.equals(this.createdAt, projectDTO.createdAt) &&
         Objects.equals(this.updatedAt, projectDTO.updatedAt) &&
-        Objects.equals(this.resourceId, projectDTO.resourceId) &&
-        Objects.equals(this.organizationId, projectDTO.organizationId) &&
+        Objects.equals(this.parentId, projectDTO.parentId) &&
         Objects.equals(this.ownerId, projectDTO.ownerId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, description, createdAt, updatedAt, resourceId, organizationId, ownerId);
+    return Objects.hash(id, name, description, createdAt, updatedAt, parentId, ownerId);
   }
 
   @Override
@@ -234,8 +211,7 @@ public class ProjectDTO {
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
-    sb.append("    resourceId: ").append(toIndentedString(resourceId)).append("\n");
-    sb.append("    organizationId: ").append(toIndentedString(organizationId)).append("\n");
+    sb.append("    parentId: ").append(toIndentedString(parentId)).append("\n");
     sb.append("    ownerId: ").append(toIndentedString(ownerId)).append("\n");
     sb.append("}");
     return sb.toString();

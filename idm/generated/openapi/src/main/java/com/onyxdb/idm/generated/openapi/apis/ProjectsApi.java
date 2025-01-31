@@ -8,7 +8,6 @@ package com.onyxdb.idm.generated.openapi.apis;
 import com.onyxdb.idm.generated.openapi.models.BadRequestResponse;
 import com.onyxdb.idm.generated.openapi.models.NotFoundResponse;
 import com.onyxdb.idm.generated.openapi.models.ProjectDTO;
-import com.onyxdb.idm.generated.openapi.models.ServiceDTO;
 import java.util.UUID;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
@@ -167,37 +166,6 @@ public interface ProjectsApi {
     )
     
     ResponseEntity<ProjectDTO> getProjectById(
-        @Parameter(name = "projectId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("projectId") UUID projectId
-    );
-
-
-    /**
-     * GET /api/v1/projects/{projectId}/services : Get project services
-     *
-     * @param projectId  (required)
-     * @return OK (status code 200)
-     *         or Not Found (status code 404)
-     */
-    @Operation(
-        operationId = "getServicesByProjectId",
-        summary = "Get project services",
-        tags = { "Projects" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ServiceDTO.class)))
-            }),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = NotFoundResponse.class))
-            })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.GET,
-        value = "/api/v1/projects/{projectId}/services",
-        produces = { "application/json" }
-    )
-    
-    ResponseEntity<List<ServiceDTO>> getServicesByProjectId(
         @Parameter(name = "projectId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("projectId") UUID projectId
     );
 

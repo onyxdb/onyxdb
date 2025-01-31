@@ -11,7 +11,7 @@ import com.onyxdb.idm.generated.openapi.models.AccountDTO;
  */
 public record Account(
         UUID id,
-        String username,
+        String login,
         String password,
         String email,
         String firstName,
@@ -22,7 +22,7 @@ public record Account(
     public AccountDTO toDTO() {
         return new AccountDTO()
                 .id(id)
-                .username(username)
+                .username(login)
                 .password(password)
                 .email(email)
                 .firstName(firstName)
@@ -47,7 +47,7 @@ public record Account(
     public static Account fromDAO(AccountTableRecord accountDAO) {
         return new Account(
                 accountDAO.getId(),
-                accountDAO.getUsername(),
+                accountDAO.getLogin(),
                 accountDAO.getPassword(),
                 accountDAO.getEmail(),
                 accountDAO.getFirstName(),

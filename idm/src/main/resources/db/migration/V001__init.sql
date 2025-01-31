@@ -23,7 +23,7 @@ CREATE TABLE organization_unit_table (
 -- Создание таблицы для Account
 CREATE TABLE account_table (
     id UUID PRIMARY KEY,
-    username VARCHAR(255) NOT NULL UNIQUE,
+    login VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL, -- Хранится зашифрованным
     email VARCHAR(255) UNIQUE,
     first_name VARCHAR(255),
