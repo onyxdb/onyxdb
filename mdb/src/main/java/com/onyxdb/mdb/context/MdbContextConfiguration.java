@@ -40,7 +40,7 @@ public class MdbContextConfiguration {
         List<ClusterTaskProcessor> processors = List.of(
                 mongoClusterOperationProcessor
         );
-        return new CompositeClusterTasksProcessor(clusterService, processors);
+        return new CompositeClusterTasksProcessor(processors, clusterService);
     }
 
     @Bean(name = "processClusterTasksWorkerExecutor")
