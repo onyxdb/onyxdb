@@ -1,0 +1,38 @@
+union Resource = Organization | Project | Service
+
+type Organization {
+    id: ID!
+    name: String!
+    projects: [Project]
+}
+
+input OrganizationInput {
+    name: String!
+}
+
+type Project {
+    id: ID!
+    name: String!
+    organizationId: ID!
+    organization: Organization!
+    services: [Service]
+}
+
+input ProjectInput {
+    name: String!
+    organizationId: ID!
+}
+
+type Service {
+    id: ID!
+    name: String!
+    type: String!
+    projectId: ID!
+    project: Project!
+}
+
+input ServiceInput {
+    name: String!
+    type: String!
+    projectId: ID!
+}
