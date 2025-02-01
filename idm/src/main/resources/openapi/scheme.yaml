@@ -1329,11 +1329,11 @@ components:
         id:
           type: string
           format: uuid
-        role_type:
+        roleType:
           type: string
         name:
           type: string
-        shop_name:
+        shopName:
           type: string
         description:
           type: string
