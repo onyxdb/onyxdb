@@ -1,6 +1,6 @@
 package com.onyxdb.mdb.models;
 
-import com.onyxdb.mdb.utils.BaseStringEnum;
+import com.onyxdb.mdb.common.BaseStringEnum;
 
 /**
  * @author foxleren
@@ -19,7 +19,11 @@ public enum ClusterTaskType implements BaseStringEnum {
     }
 
     @Override
-    public String getValue() {
+    public String value() {
         return value;
+    }
+
+    public static ClusterTaskType fromValue(String value) {
+        return BaseStringEnum.fromValue(ClusterTaskType.class, value);
     }
 }

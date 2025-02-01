@@ -1,7 +1,6 @@
 package com.onyxdb.mdb.models;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 import com.onyxdb.mdb.generated.jooq.tables.records.ClusterTasksRecord;
@@ -19,24 +18,41 @@ public record ClusterTask(
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
         LocalDateTime scheduledAt,
-        int retriesLeft,
-        List<UUID> dependsOnTaskIds,
-        boolean isLast)
-{
+        int attemptsLeft,
+        boolean isFirst,
+        boolean isLast
+) {
     public ClusterTasksRecord toJooqClusterTasksRecord() {
         return new ClusterTasksRecord(
                 id,
                 clusterId,
                 operationId,
-                com.onyxdb.mdb.generated.jooq.enums.ClusterType.valueOf(clusterType.getValue()),
-                com.onyxdb.mdb.generated.jooq.enums.ClusterTaskType.valueOf(type.getValue()),
-                com.onyxdb.mdb.generated.jooq.enums.ClusterTaskStatus.valueOf(status.getValue()),
+                com.onyxdb.mdb.generated.jooq.enums.ClusterType.valueOf(clusterType.value()),
+                com.onyxdb.mdb.generated.jooq.enums.ClusterTaskType.valueOf(type.value()),
+                com.onyxdb.mdb.generated.jooq.enums.ClusterTaskStatus.valueOf(status.value()),
                 createdAt,
                 updatedAt,
                 scheduledAt,
-                retriesLeft,
-                dependsOnTaskIds.toArray(UUID[]::new),
+                attemptsLeft,
+                isFirst,
                 isLast
+        );
+    }
+
+    public static ClusterTask fromJooqClusterTasksRecord(ClusterTasksRecord r) {
+        return new ClusterTask(
+                r.getId(),
+                r.getClusterId(),
+                r.getOperationId(),
+                ClusterType.fromValue(r.getClusterType().getLiteral()),
+                ClusterTaskType.fromValue(r.getType().getLiteral()),
+                ClusterTaskStatus.fromValue(r.getStatus().getLiteral()),
+                r.getCreatedAt(),
+                r.getUpdatedAt(),
+                r.getScheduledAt(),
+                r.getAttemptsLeft(),
+                r.getIsFirst(),
+                r.getIsLast()
         );
     }
 
@@ -46,10 +62,10 @@ public record ClusterTask(
             ClusterType clusterType,
             ClusterTaskType type,
             LocalDateTime scheduledAt,
-            int retriesLeft,
-            List<UUID> dependsOnTaskIds,
-            boolean isLast)
-    {
+            int attemptsLeft,
+            boolean isFirst,
+            boolean isLast
+    ) {
         return new ClusterTask(
                 UUID.randomUUID(),
                 clusterId,
@@ -60,29 +76,28 @@ public record ClusterTask(
                 LocalDateTime.now(),
                 LocalDateTime.now(),
                 scheduledAt,
-                retriesLeft,
-                dependsOnTaskIds,
+                attemptsLeft,
+                isFirst,
                 isLast
         );
     }
 
-    public static ClusterTask scheduledNotLast(
+    public static ClusterTask scheduledFirst(
             UUID clusterId,
             UUID operationId,
             ClusterType clusterType,
             ClusterTaskType type,
             LocalDateTime scheduledAt,
-            int retriesLeft,
-            List<UUID> dependsOnTaskIds)
-    {
+            int attemptsLeft
+    ) {
         return scheduled(
                 clusterId,
                 operationId,
                 clusterType,
                 type,
                 scheduledAt,
-                retriesLeft,
-                dependsOnTaskIds,
+                attemptsLeft,
+                true,
                 false
         );
     }
@@ -93,19 +108,37 @@ public record ClusterTask(
             ClusterType clusterType,
             ClusterTaskType type,
             LocalDateTime scheduledAt,
-            int retriesLeft,
-            List<UUID> dependsOnTaskIds)
-    {
+            int attemptsLeft
+    ) {
         return scheduled(
                 clusterId,
                 operationId,
                 clusterType,
                 type,
                 scheduledAt,
-                retriesLeft,
-                dependsOnTaskIds,
+                attemptsLeft,
+                false,
                 true
         );
     }
 
+    public static ClusterTask scheduledMiddle(
+            UUID clusterId,
+            UUID operationId,
+            ClusterType clusterType,
+            ClusterTaskType type,
+            LocalDateTime scheduledAt,
+            int attemptsLeft
+    ) {
+        return scheduled(
+                clusterId,
+                operationId,
+                clusterType,
+                type,
+                scheduledAt,
+                attemptsLeft,
+                false,
+                false
+        );
+    }
 }

@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 import com.onyxdb.mdb.models.ClusterTask;
 import com.onyxdb.mdb.processors.CompositeClusterTasksProcessor;
-import com.onyxdb.mdb.services.BaseClusterTaskService;
+import com.onyxdb.mdb.services.BaseClusterService;
 
 /**
  * @author foxleren
@@ -30,9 +30,9 @@ public class ProcessClusterTasksWorker implements CommandLineRunner {
     private final int minThreads;
     private final int maxThreads;
     private final int pollingIntervalSeconds;
-    private final CompositeClusterTasksProcessor clusterTasksProcessor;
-    private final BaseClusterTaskService clusterTaskService;
     private final BlockingQueue<Runnable> taskQueue;
+    private final CompositeClusterTasksProcessor clusterTasksProcessor;
+    private final BaseClusterService clusterService;
 
     public ProcessClusterTasksWorker(
             @Value("${onyxdb-app.workers.process-cluster-tasks.min-threads}")
@@ -42,14 +42,14 @@ public class ProcessClusterTasksWorker implements CommandLineRunner {
             @Value("${onyxdb-app.workers.process-cluster-tasks.polling-interval-seconds}")
             int pollingIntervalSeconds,
             CompositeClusterTasksProcessor clusterTasksProcessor,
-            BaseClusterTaskService clusterTaskService)
-    {
+            BaseClusterService clusterService
+    ) {
         this.minThreads = minThreads;
         this.maxThreads = maxThreads;
         this.pollingIntervalSeconds = pollingIntervalSeconds;
-        this.clusterTasksProcessor = clusterTasksProcessor;
-        this.clusterTaskService = clusterTaskService;
         this.taskQueue = new LinkedBlockingQueue<>(maxThreads);
+        this.clusterTasksProcessor = clusterTasksProcessor;
+        this.clusterService = clusterService;
     }
 
     @Override
@@ -82,18 +82,33 @@ public class ProcessClusterTasksWorker implements CommandLineRunner {
 
     @SuppressWarnings({"BusyWait", "InfiniteLoopStatement"})
     private void processTasks(ThreadPoolExecutor executor) throws InterruptedException {
+        var isFirstIteration = true;
         while (true) {
+            if (isFirstIteration) {
+                isFirstIteration = false;
+            } else {
+                Thread.sleep(pollingIntervalSeconds * 1000L);
+            }
+
             int freeThreads = maxThreads - taskQueue.size();
             if (freeThreads == 0) {
+                logger.info("There is no free thread for processing, waiting next iteration");
                 continue;
             }
 
-            List<ClusterTask> clusterTasks = clusterTaskService.getTasksToProcess(freeThreads);
+            List<ClusterTask> clusterTasks = clusterService.getTasksToProcess(freeThreads);
+            if (clusterTasks.isEmpty()) {
+                logger.info("There are no tasks to process, waiting next iteration");
+                continue;
+            }
+
+            logger.info("Loaded {} tasks to process, adding them to executor", clusterTasks.size());
+
             for (var clusterTask : clusterTasks) {
                 executor.execute(() -> clusterTasksProcessor.processTask(clusterTask));
             }
 
-            Thread.sleep(pollingIntervalSeconds * 1000L);
+            logger.info("Finished iteration");
         }
     }
 }

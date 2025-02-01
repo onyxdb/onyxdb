@@ -11,9 +11,10 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import com.onyxdb.mdb.generators.ClusterTasksGenerator;
 import com.onyxdb.mdb.generators.CompositeClusterTasksGenerator;
 import com.onyxdb.mdb.generators.MongoClusterTasksGenerator;
-import com.onyxdb.mdb.processors.ClusterOperationProcessor;
+import com.onyxdb.mdb.processors.ClusterTaskProcessor;
 import com.onyxdb.mdb.processors.CompositeClusterTasksProcessor;
-import com.onyxdb.mdb.processors.MongoClusterOperationProcessor;
+import com.onyxdb.mdb.processors.MongoClusterTaskProcessor;
+import com.onyxdb.mdb.services.BaseClusterService;
 
 /**
  * @author foxleren
@@ -23,8 +24,8 @@ import com.onyxdb.mdb.processors.MongoClusterOperationProcessor;
 public class MdbContextConfiguration {
     @Bean
     public CompositeClusterTasksGenerator compositeClusterTasksGenerator(
-            MongoClusterTasksGenerator mongoClusterTasksGenerator)
-    {
+            MongoClusterTasksGenerator mongoClusterTasksGenerator
+    ) {
         List<ClusterTasksGenerator> generators = List.of(
                 mongoClusterTasksGenerator
         );
@@ -33,12 +34,13 @@ public class MdbContextConfiguration {
 
     @Bean
     public CompositeClusterTasksProcessor compositeClusterTasksProcessor(
-            MongoClusterOperationProcessor mongoClusterOperationProcessor)
-    {
-        List<ClusterOperationProcessor> processors = List.of(
+            BaseClusterService clusterService,
+            MongoClusterTaskProcessor mongoClusterOperationProcessor
+    ) {
+        List<ClusterTaskProcessor> processors = List.of(
                 mongoClusterOperationProcessor
         );
-        return new CompositeClusterTasksProcessor(processors);
+        return new CompositeClusterTasksProcessor(clusterService, processors);
     }
 
     @Bean(name = "processClusterTasksWorkerExecutor")

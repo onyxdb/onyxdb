@@ -36,8 +36,8 @@ public class RepositoryContextConfiguration {
 
     @Bean
     public SpringTransactionProvider springTransactionProvider(
-            DataSourceTransactionManager dataSourceTransactionManager)
-    {
+            DataSourceTransactionManager dataSourceTransactionManager
+    ) {
         return new SpringTransactionProvider(dataSourceTransactionManager);
     }
 
@@ -47,8 +47,8 @@ public class RepositoryContextConfiguration {
             SpringTransactionProvider springTransactionProvider,
             @Value("${spring.datasource.url}") String url,
             @Value("${spring.datasource.username}") String username,
-            @Value("${spring.datasource.password}") String password) throws SQLException
-    {
+            @Value("${spring.datasource.password}") String password
+    ) throws SQLException {
         org.jooq.Configuration defaultConfiguration = new DefaultConfiguration()
                 .derive(DriverManager.getConnection(url, username, password))
                 .derive(dataSourceConnectionProvider)

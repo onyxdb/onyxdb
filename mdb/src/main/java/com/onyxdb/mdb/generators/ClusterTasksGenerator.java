@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.onyxdb.mdb.models.ClusterOperationType;
-import com.onyxdb.mdb.models.ClusterTask;
+import com.onyxdb.mdb.models.ClusterTaskWithBlockers;
 import com.onyxdb.mdb.models.ClusterType;
 
 /**
@@ -15,5 +15,5 @@ public interface ClusterTasksGenerator {
 
     ClusterType getClusterType();
 
-    List<ClusterTask> generateTasks(UUID clusterId, UUID operationId, ClusterOperationType operationType);
+    List<ClusterTaskWithBlockers> generateTasks(UUID clusterId, UUID operationId, ClusterOperationType operationType);
 }

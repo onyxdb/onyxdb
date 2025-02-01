@@ -1,6 +1,6 @@
 package com.onyxdb.mdb.models;
 
-import com.onyxdb.mdb.utils.BaseStringEnum;
+import com.onyxdb.mdb.common.BaseStringEnum;
 
 
 /**
@@ -17,7 +17,7 @@ public enum ClusterType implements BaseStringEnum {
     }
 
     @Override
-    public String getValue() {
+    public String value() {
         return value;
     }
 

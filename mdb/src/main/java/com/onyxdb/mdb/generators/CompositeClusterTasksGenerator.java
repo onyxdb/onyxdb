@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 import com.onyxdb.mdb.exceptions.InternalServerErrorException;
 import com.onyxdb.mdb.models.ClusterOperationType;
-import com.onyxdb.mdb.models.ClusterTask;
+import com.onyxdb.mdb.models.ClusterTaskWithBlockers;
 import com.onyxdb.mdb.models.ClusterType;
 
 /**
@@ -21,12 +21,12 @@ public class CompositeClusterTasksGenerator {
         this.clusterTypeToGenerator = prepareGeneratorsMap(generators);
     }
 
-    public List<ClusterTask> generateTasks(
+    public List<ClusterTaskWithBlockers> generateTasks(
             UUID clusterId,
             ClusterType clusterType,
             UUID operationId,
-            ClusterOperationType clusterOperationType)
-    {
+            ClusterOperationType clusterOperationType
+    ) {
         if (!clusterTypeToGenerator.containsKey(clusterType)) {
             throw new InternalServerErrorException(String.format(
                     "Can't find tasks generator for cluster type '%s'", clusterType
@@ -38,8 +38,8 @@ public class CompositeClusterTasksGenerator {
     }
 
     private static Map<ClusterType, ClusterTasksGenerator> prepareGeneratorsMap(
-            List<ClusterTasksGenerator> generators)
-    {
+            List<ClusterTasksGenerator> generators
+    ) {
         return generators
                 .stream()
                 .collect(Collectors.toMap(ClusterTasksGenerator::getClusterType, Function.identity()));

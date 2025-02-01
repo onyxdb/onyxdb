@@ -26,7 +26,7 @@ public class V1ClusterController implements V1ClustersApi {
 
     @Override
     public ResponseEntity<V1CreateClusterResponse> v1ClustersCreateCluster(V1CreateClusterRequest rq) {
-        UUID clusterId = clusterService.create(ClusterToCreate.fromV1CreateClusterRequest(rq));
+        UUID clusterId = clusterService.create(UUID.randomUUID(), ClusterToCreate.fromV1CreateClusterRequest(rq));
         var response = new V1CreateClusterResponse(clusterId);
         return ResponseEntity.ok(response);
     }

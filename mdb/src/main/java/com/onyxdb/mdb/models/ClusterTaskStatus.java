@@ -1,6 +1,6 @@
 package com.onyxdb.mdb.models;
 
-import com.onyxdb.mdb.utils.BaseStringEnum;
+import com.onyxdb.mdb.common.BaseStringEnum;
 
 /**
  * @author foxleren
@@ -8,8 +8,8 @@ import com.onyxdb.mdb.utils.BaseStringEnum;
 public enum ClusterTaskStatus implements BaseStringEnum {
     SCHEDULED("scheduled"),
     IN_PROGRESS("in_progress"),
-    SUCCESS("success"),
     ERROR("error"),
+    SUCCESS("success"),
     ;
 
     private final String value;
@@ -19,7 +19,11 @@ public enum ClusterTaskStatus implements BaseStringEnum {
     }
 
     @Override
-    public String getValue() {
+    public String value() {
         return value;
+    }
+
+    public static ClusterTaskStatus fromValue(String value) {
+        return BaseStringEnum.fromValue(ClusterTaskStatus.class, value);
     }
 }

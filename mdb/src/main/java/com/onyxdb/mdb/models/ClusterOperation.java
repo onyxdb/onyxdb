@@ -15,18 +15,18 @@ public record ClusterOperation(
         ClusterOperationStatus status,
         LocalDateTime createdAt,
         UUID createdBy,
-        LocalDateTime updatedAt)
-{
+        LocalDateTime updatedAt
+) {
     public static ClusterOperation scheduled(
             UUID clusterId,
             ClusterOperationType type,
-            UUID createdBy)
-    {
+            UUID createdBy
+    ) {
         return new ClusterOperation(
                 UUID.randomUUID(),
                 clusterId,
                 type,
-                ClusterOperationStatus.IN_PROGRESS,
+                ClusterOperationStatus.SCHEDULED,
                 LocalDateTime.now(),
                 createdBy,
                 LocalDateTime.now()
@@ -37,8 +37,8 @@ public record ClusterOperation(
         return new ClusterOperationsRecord(
                 id,
                 clusterId,
-                com.onyxdb.mdb.generated.jooq.enums.ClusterOperationType.valueOf(type.getValue()),
-                com.onyxdb.mdb.generated.jooq.enums.ClusterOperationStatus.valueOf(status.getValue()),
+                com.onyxdb.mdb.generated.jooq.enums.ClusterOperationType.valueOf(type.value()),
+                com.onyxdb.mdb.generated.jooq.enums.ClusterOperationStatus.valueOf(status.value()),
                 createdAt,
                 createdBy,
                 updatedAt

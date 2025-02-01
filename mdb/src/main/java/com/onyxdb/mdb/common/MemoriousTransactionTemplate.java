@@ -1,7 +1,7 @@
 package com.onyxdb.mdb.common;
 
 import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Component;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -15,28 +15,27 @@ import org.springframework.transaction.support.TransactionTemplate;
  *
  * @author foxleren
  */
-@Component
 public class MemoriousTransactionTemplate extends TransactionTemplate {
-    private volatile int previousPropagation;
+    private volatile int previousPropagationBehavior = getPropagationBehavior();
 
-    public MemoriousTransactionTemplate(TransactionTemplate transactionTemplate) {
-        this.previousPropagation = transactionTemplate.getPropagationBehavior();
+    public MemoriousTransactionTemplate(PlatformTransactionManager transactionManager) {
+        super(transactionManager);
     }
 
     @SuppressWarnings("UnusedReturnValue")
-    public <T> T execute(@NonNull TransactionCallback<T> action, int propagation) throws TransactionException {
-        setPropagation(propagation);
+    public <T> T execute(@NonNull TransactionCallback<T> action, int propagationBehavior) throws TransactionException {
+        setPropagation(propagationBehavior);
         var result = execute(action);
         restoreSettings();
         return result;
     }
 
-    private synchronized void setPropagation(int propagation) {
-        previousPropagation = getPropagationBehavior();
-        setPropagationBehavior(propagation);
+    private synchronized void setPropagation(int propagationBehavior) {
+        previousPropagationBehavior = getPropagationBehavior();
+        setPropagationBehavior(propagationBehavior);
     }
 
     private synchronized void restoreSettings() {
-        setPropagationBehavior(previousPropagation);
+        setPropagationBehavior(previousPropagationBehavior);
     }
 }

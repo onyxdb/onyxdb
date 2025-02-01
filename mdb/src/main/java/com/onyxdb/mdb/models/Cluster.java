@@ -12,14 +12,14 @@ public record Cluster(
         UUID id,
         String name,
         String description,
-        ClusterType type)
-{
+        ClusterType type
+) {
     public ClustersRecord toJooqClustersRecord() {
         return new ClustersRecord(
                 id,
                 name,
                 description,
-                com.onyxdb.mdb.generated.jooq.enums.ClusterType.valueOf(type.getValue())
+                com.onyxdb.mdb.generated.jooq.enums.ClusterType.valueOf(type.value())
         );
     }
 
@@ -28,7 +28,7 @@ public record Cluster(
                 id,
                 name,
                 description,
-                V1GetClusterResponse.TypeEnum.fromValue(type.getValue())
+                V1GetClusterResponse.TypeEnum.fromValue(type.value())
         );
     }
 

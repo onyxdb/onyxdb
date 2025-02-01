@@ -10,6 +10,7 @@ import com.onyxdb.mdb.exceptions.InternalServerErrorException;
 import com.onyxdb.mdb.models.ClusterOperationType;
 import com.onyxdb.mdb.models.ClusterTask;
 import com.onyxdb.mdb.models.ClusterTaskType;
+import com.onyxdb.mdb.models.ClusterTaskWithBlockers;
 import com.onyxdb.mdb.models.ClusterType;
 
 /**
@@ -25,7 +26,11 @@ public class MongoClusterTasksGenerator implements ClusterTasksGenerator {
     }
 
     @Override
-    public List<ClusterTask> generateTasks(UUID clusterId, UUID operationId, ClusterOperationType operationType) {
+    public List<ClusterTaskWithBlockers> generateTasks(
+            UUID clusterId,
+            UUID operationId,
+            ClusterOperationType operationType
+    ) {
         switch (operationType) {
             case CREATE_CLUSTER -> {
                 return getTasksForMongoCreateCluster(clusterId, operationId);
@@ -37,25 +42,24 @@ public class MongoClusterTasksGenerator implements ClusterTasksGenerator {
     }
 
 
-    private static List<ClusterTask> getTasksForMongoCreateCluster(UUID clusterId, UUID operationId) {
+    private static List<ClusterTaskWithBlockers> getTasksForMongoCreateCluster(UUID clusterId, UUID operationId) {
         LocalDateTime now = LocalDateTime.now();
-        var applyManifestTask = ClusterTask.scheduledNotLast(
+
+        var applyManifestTask = ClusterTask.scheduledFirst(
                 clusterId,
                 operationId,
                 CLUSTER_TYPE,
                 ClusterTaskType.MONGODB_CREATE_CLUSTER_APPLY_MANIFEST,
                 now,
-                DEFAULT_RETRIES_LEFT,
-                List.of()
+                DEFAULT_RETRIES_LEFT
         );
-        var saveHostsTask = ClusterTask.scheduledNotLast(
+        var saveHostsTask = ClusterTask.scheduledMiddle(
                 clusterId,
                 operationId,
                 CLUSTER_TYPE,
                 ClusterTaskType.MONGODB_CREATE_CLUSTER_SAVE_HOSTS,
                 now,
-                DEFAULT_RETRIES_LEFT,
-                List.of(applyManifestTask.id())
+                DEFAULT_RETRIES_LEFT
         );
         var generateGrafanaDashboardTask = ClusterTask.scheduledLast(
                 clusterId,
@@ -63,13 +67,19 @@ public class MongoClusterTasksGenerator implements ClusterTasksGenerator {
                 CLUSTER_TYPE,
                 ClusterTaskType.MONGODB_CREATE_CLUSTER_GENERATE_GRAFANA_DASHBOARD,
                 now,
-                DEFAULT_RETRIES_LEFT,
-                List.of(applyManifestTask.id(), saveHostsTask.id())
+                DEFAULT_RETRIES_LEFT
         );
+
         return List.of(
-                applyManifestTask,
-                saveHostsTask,
-                generateGrafanaDashboardTask
+                ClusterTaskWithBlockers.withoutBlockers(applyManifestTask),
+                new ClusterTaskWithBlockers(
+                        saveHostsTask,
+                        List.of(applyManifestTask.id())
+                ),
+                new ClusterTaskWithBlockers(
+                        generateGrafanaDashboardTask,
+                        List.of(applyManifestTask.id(), saveHostsTask.id())
+                )
         );
     }
 }

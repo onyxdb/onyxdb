@@ -1,4 +1,4 @@
-package com.onyxdb.mdb.utils;
+package com.onyxdb.mdb.common;
 
 import java.util.Optional;
 
@@ -6,7 +6,7 @@ import java.util.Optional;
  * @author foxleren
  */
 public interface BaseStringEnum {
-    String getValue();
+    String value();
 
     static <E extends Enum<E>> Optional<E> fromValueO(Class<E> enumClass, Object value) {
         for (E enumConstant : enumClass.getEnumConstants()) {
