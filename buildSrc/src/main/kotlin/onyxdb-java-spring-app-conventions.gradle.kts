@@ -9,5 +9,5 @@ tasks.jar {
 }
 
 tasks.bootJar {
-    destinationDirectory.set(file("${layout.buildDirectory}/export"))
+    destinationDirectory.set(file("$buildDir/export"))
 }
