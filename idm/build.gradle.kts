@@ -48,7 +48,7 @@ dependencies {
 openApiGenerate {
     generatorName.set("spring")
     inputSpec.set("$projectDir/src/main/resources/openapi/scheme.yaml")
-    outputDir.set("$projectDir/generated/openapi")
+    outputDir.set("$buildDir/generated/openapi")
     apiPackage.set("${project.group}.idm.generated.openapi.apis")
     modelPackage.set("${project.group}.idm.generated.openapi.models")
     configOptions = mapOf(
@@ -76,7 +76,7 @@ sourceSets {
     main {
         java {
             srcDirs(
-                "$projectDir/generated/openapi/src/main/java"
+                "$buildDir/generated/openapi/src/main/java"
             )
         }
     }
@@ -98,5 +98,9 @@ tasks.generateJava {
 }
 
 tasks.named(CustomTasksConfig.ONYXDB_GENERATE_ALL_CODEGEN).configure {
+    dependsOn(tasks.openApiGenerate)
+}
+
+tasks.compileJava {
     dependsOn(tasks.openApiGenerate)
 }
