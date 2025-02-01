@@ -14,24 +14,19 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Function;
 
 import org.jooq.Condition;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function2;
 import org.jooq.InverseForeignKey;
 import org.jooq.Name;
 import org.jooq.Path;
 import org.jooq.PlainSQL;
 import org.jooq.QueryPart;
 import org.jooq.Record;
-import org.jooq.Records;
-import org.jooq.Row2;
 import org.jooq.SQL;
 import org.jooq.Schema;
 import org.jooq.Select;
-import org.jooq.SelectField;
 import org.jooq.Stringly;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -110,8 +105,6 @@ public class AccountOuTable extends TableImpl<AccountOuTableRecord> {
      * A subtype implementing {@link Path} for simplified path-based joins.
      */
     public static class AccountOuTablePath extends AccountOuTable implements Path<AccountOuTableRecord> {
-
-        private static final long serialVersionUID = 1L;
         public <O extends Record> AccountOuTablePath(Table<O> path, ForeignKey<O, AccountOuTableRecord> childPath, InverseForeignKey<O, AccountOuTableRecord> parentPath) {
             super(path, childPath, parentPath);
         }
@@ -297,29 +290,5 @@ public class AccountOuTable extends TableImpl<AccountOuTableRecord> {
     @Override
     public AccountOuTable whereNotExists(Select<?> select) {
         return where(DSL.notExists(select));
-    }
-
-    // -------------------------------------------------------------------------
-    // Row2 type methods
-    // -------------------------------------------------------------------------
-
-    @Override
-    public Row2<UUID, UUID> fieldsRow() {
-        return (Row2) super.fieldsRow();
-    }
-
-    /**
-     * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
-     */
-    public <U> SelectField<U> mapping(Function2<? super UUID, ? super UUID, ? extends U> from) {
-        return convertFrom(Records.mapping(from));
-    }
-
-    /**
-     * Convenience mapping calling {@link SelectField#convertFrom(Class,
-     * Function)}.
-     */
-    public <U> SelectField<U> mapping(Class<U> toType, Function2<? super UUID, ? super UUID, ? extends U> from) {
-        return convertFrom(toType, Records.mapping(from));
     }
 }
