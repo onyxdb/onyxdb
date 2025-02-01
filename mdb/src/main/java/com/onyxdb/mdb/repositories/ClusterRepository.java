@@ -1,10 +1,15 @@
 package com.onyxdb.mdb.repositories;
 
+import java.util.Optional;
+import java.util.UUID;
+
 import com.onyxdb.mdb.models.Cluster;
 
 /**
  * @author foxleren
  */
 public interface ClusterRepository {
-    void createCluster(Cluster cluster);
+    void create(Cluster cluster);
+
+    Optional<Cluster> getByIdO(UUID id);
 }

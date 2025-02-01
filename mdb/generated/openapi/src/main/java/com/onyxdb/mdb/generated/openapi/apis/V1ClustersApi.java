@@ -5,9 +5,11 @@
  */
 package com.onyxdb.mdb.generated.openapi.apis;
 
+import java.util.UUID;
 import com.onyxdb.mdb.generated.openapi.models.V1BadRequestResponse;
 import com.onyxdb.mdb.generated.openapi.models.V1CreateClusterRequest;
 import com.onyxdb.mdb.generated.openapi.models.V1CreateClusterResponse;
+import com.onyxdb.mdb.generated.openapi.models.V1GetClusterResponse;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -68,6 +70,33 @@ public interface V1ClustersApi {
     
     ResponseEntity<V1CreateClusterResponse> v1ClustersCreateCluster(
         @Parameter(name = "V1CreateClusterRequest", description = "", required = true) @Valid @RequestBody V1CreateClusterRequest v1CreateClusterRequest
+    );
+
+
+    /**
+     * GET /api/v1/clusters/{id} : Get cluster by id.
+     *
+     * @param id  (required)
+     * @return OK (status code 200)
+     */
+    @Operation(
+        operationId = "v1ClustersGetCluster",
+        summary = "Get cluster by id.",
+        tags = { "v1Clusters" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "OK", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = V1GetClusterResponse.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/api/v1/clusters/{id}",
+        produces = { "application/json" }
+    )
+    
+    ResponseEntity<V1GetClusterResponse> v1ClustersGetCluster(
+        @Parameter(name = "id", description = "", required = true, in = ParameterIn.PATH) @PathVariable("id") UUID id
     );
 
 }

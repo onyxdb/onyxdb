@@ -18,24 +18,19 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Function;
 
 import org.jooq.Condition;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function6;
 import org.jooq.InverseForeignKey;
 import org.jooq.Name;
 import org.jooq.Path;
 import org.jooq.PlainSQL;
 import org.jooq.QueryPart;
 import org.jooq.Record;
-import org.jooq.Records;
-import org.jooq.Row6;
 import org.jooq.SQL;
 import org.jooq.Schema;
 import org.jooq.Select;
-import org.jooq.SelectField;
 import org.jooq.Stringly;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -134,8 +129,6 @@ public class BusinessRoleTable extends TableImpl<BusinessRoleTableRecord> {
      * A subtype implementing {@link Path} for simplified path-based joins.
      */
     public static class BusinessRoleTablePath extends BusinessRoleTable implements Path<BusinessRoleTableRecord> {
-
-        private static final long serialVersionUID = 1L;
         public <O extends Record> BusinessRoleTablePath(Table<O> path, ForeignKey<O, BusinessRoleTableRecord> childPath, InverseForeignKey<O, BusinessRoleTableRecord> parentPath) {
             super(path, childPath, parentPath);
         }
@@ -355,29 +348,5 @@ public class BusinessRoleTable extends TableImpl<BusinessRoleTableRecord> {
     @Override
     public BusinessRoleTable whereNotExists(Select<?> select) {
         return where(DSL.notExists(select));
-    }
-
-    // -------------------------------------------------------------------------
-    // Row6 type methods
-    // -------------------------------------------------------------------------
-
-    @Override
-    public Row6<UUID, String, String, UUID, LocalDateTime, LocalDateTime> fieldsRow() {
-        return (Row6) super.fieldsRow();
-    }
-
-    /**
-     * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
-     */
-    public <U> SelectField<U> mapping(Function6<? super UUID, ? super String, ? super String, ? super UUID, ? super LocalDateTime, ? super LocalDateTime, ? extends U> from) {
-        return convertFrom(Records.mapping(from));
-    }
-
-    /**
-     * Convenience mapping calling {@link SelectField#convertFrom(Class,
-     * Function)}.
-     */
-    public <U> SelectField<U> mapping(Class<U> toType, Function6<? super UUID, ? super String, ? super String, ? super UUID, ? super LocalDateTime, ? super LocalDateTime, ? extends U> from) {
-        return convertFrom(toType, Records.mapping(from));
     }
 }

@@ -18,10 +18,12 @@ dependencies {
 	implementation(libs.apacheCommons.commonsLang3)
 	implementation(libs.springDoc.springdocOpenapiStarterWebmvcUi)
 
-	// Deps for openapi generator
+	// openapi generator
 	implementation(libs.swaggerCoreV3.swaggerAnnotations)
 	implementation(libs.javaxAnnotation.annotionApi)
 	implementation(libs.javaxValidation.validationApi)
+
+	implementation(libs.orgJetbrains.annotations)
 
 	testImplementation(libs.springBoot.starterTest)
 	testImplementation(libs.testcontainers.junitJupiter)

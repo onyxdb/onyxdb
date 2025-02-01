@@ -31,7 +31,26 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/V1BadRequestResponse'
-
+  /api/v1/clusters/{id}:
+    get:
+      summary: Get cluster by id.
+      operationId: v1ClustersGetCluster
+      tags:
+        - v1Clusters
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/V1GetClusterResponse'
 components:
   schemas:
     V1BadRequestResponse:
@@ -58,53 +77,6 @@ components:
           minLength: 1
           maxLength: 256
           example: Cluster description
-        resources:
-          type: object
-          required:
-            - storage
-          properties:
-            storage:
-              type: object
-              required:
-                - diskSizeBytes
-                - storageClass
-              properties:
-                diskSizeBytes:
-                  type: integer
-                  format: int64
-                  minimum: 1073741824 # 1Gb
-                  maximum: 10737418240 # 10 Gb
-                  example: 1073741824
-                storageClass:
-                  type: string
-                  enum:
-                    - standard
-                  example: standard
-        spec:
-          type: object
-          required:
-            - type
-          properties:
-            type:
-              type: string
-              enum:
-                - mongodb
-              example: mongodb
-            mongodb:
-              type: object
-              required:
-                - version
-              properties:
-                version:
-                  type: string
-                  enum:
-                    - '6.0'
-                    - '5.0'
-                  example: '6.0'
-                mongodbV6x0:
-                  type: object
-                  additionalProperties:
-                    type: string
     V1CreateClusterResponse:
       type: object
       required:
@@ -113,3 +85,22 @@ components:
         clusterId:
           type: string
           format: uuid
+    V1GetClusterResponse:
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - type
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          type: string
+          enum:
+            - mongodb

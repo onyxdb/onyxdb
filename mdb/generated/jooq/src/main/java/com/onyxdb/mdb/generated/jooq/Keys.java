@@ -4,9 +4,16 @@
 package com.onyxdb.mdb.generated.jooq;
 
 
-import com.onyxdb.mdb.generated.jooq.tables.Cluster;
-import com.onyxdb.mdb.generated.jooq.tables.records.ClusterRecord;
+import com.onyxdb.mdb.generated.jooq.tables.ClusterOperations;
+import com.onyxdb.mdb.generated.jooq.tables.ClusterTasks;
+import com.onyxdb.mdb.generated.jooq.tables.ClusterTasksToBlockerTasks;
+import com.onyxdb.mdb.generated.jooq.tables.Clusters;
+import com.onyxdb.mdb.generated.jooq.tables.records.ClusterOperationsRecord;
+import com.onyxdb.mdb.generated.jooq.tables.records.ClusterTasksRecord;
+import com.onyxdb.mdb.generated.jooq.tables.records.ClusterTasksToBlockerTasksRecord;
+import com.onyxdb.mdb.generated.jooq.tables.records.ClustersRecord;
 
+import org.jooq.ForeignKey;
 import org.jooq.TableField;
 import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
@@ -17,12 +24,25 @@ import org.jooq.impl.Internal;
  * A class modelling foreign key relationships and constraints of tables in
  * public.
  */
-@SuppressWarnings({ "all", "unchecked", "rawtypes" })
+@SuppressWarnings({ "all", "unchecked", "rawtypes", "this-escape" })
 public class Keys {
 
     // -------------------------------------------------------------------------
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final UniqueKey<ClusterRecord> CLUSTER_PKEY = Internal.createUniqueKey(Cluster.CLUSTER, DSL.name("cluster_pkey"), new TableField[] { Cluster.CLUSTER.ID }, true);
+    public static final UniqueKey<ClusterOperationsRecord> CLUSTER_OPERATIONS_PKEY = Internal.createUniqueKey(ClusterOperations.CLUSTER_OPERATIONS, DSL.name("cluster_operations_pkey"), new TableField[] { ClusterOperations.CLUSTER_OPERATIONS.ID }, true);
+    public static final UniqueKey<ClusterTasksRecord> CLUSTER_TASKS_PKEY = Internal.createUniqueKey(ClusterTasks.CLUSTER_TASKS, DSL.name("cluster_tasks_pkey"), new TableField[] { ClusterTasks.CLUSTER_TASKS.ID }, true);
+    public static final UniqueKey<ClusterTasksToBlockerTasksRecord> CLUSTER_TASKS_TO_BLOCKER_TASKS_PKEY = Internal.createUniqueKey(ClusterTasksToBlockerTasks.CLUSTER_TASKS_TO_BLOCKER_TASKS, DSL.name("cluster_tasks_to_blocker_tasks_pkey"), new TableField[] { ClusterTasksToBlockerTasks.CLUSTER_TASKS_TO_BLOCKER_TASKS.TASK_ID, ClusterTasksToBlockerTasks.CLUSTER_TASKS_TO_BLOCKER_TASKS.BLOCKER_TASK_ID }, true);
+    public static final UniqueKey<ClustersRecord> CLUSTERS_PKEY = Internal.createUniqueKey(Clusters.CLUSTERS, DSL.name("clusters_pkey"), new TableField[] { Clusters.CLUSTERS.ID }, true);
+
+    // -------------------------------------------------------------------------
+    // FOREIGN KEY definitions
+    // -------------------------------------------------------------------------
+
+    public static final ForeignKey<ClusterOperationsRecord, ClustersRecord> CLUSTER_OPERATIONS__CLUSTER_OPERATIONS_CLUSTER_ID_FKEY = Internal.createForeignKey(ClusterOperations.CLUSTER_OPERATIONS, DSL.name("cluster_operations_cluster_id_fkey"), new TableField[] { ClusterOperations.CLUSTER_OPERATIONS.CLUSTER_ID }, Keys.CLUSTERS_PKEY, new TableField[] { Clusters.CLUSTERS.ID }, true);
+    public static final ForeignKey<ClusterTasksRecord, ClustersRecord> CLUSTER_TASKS__CLUSTER_TASKS_CLUSTER_ID_FKEY = Internal.createForeignKey(ClusterTasks.CLUSTER_TASKS, DSL.name("cluster_tasks_cluster_id_fkey"), new TableField[] { ClusterTasks.CLUSTER_TASKS.CLUSTER_ID }, Keys.CLUSTERS_PKEY, new TableField[] { Clusters.CLUSTERS.ID }, true);
+    public static final ForeignKey<ClusterTasksRecord, ClusterOperationsRecord> CLUSTER_TASKS__CLUSTER_TASKS_OPERATION_ID_FKEY = Internal.createForeignKey(ClusterTasks.CLUSTER_TASKS, DSL.name("cluster_tasks_operation_id_fkey"), new TableField[] { ClusterTasks.CLUSTER_TASKS.OPERATION_ID }, Keys.CLUSTER_OPERATIONS_PKEY, new TableField[] { ClusterOperations.CLUSTER_OPERATIONS.ID }, true);
+    public static final ForeignKey<ClusterTasksToBlockerTasksRecord, ClusterTasksRecord> CLUSTER_TASKS_TO_BLOCKER_TASKS__CLUSTER_TASKS_TO_BLOCKER_TASKS_BLOCKER_TASK_ID_FKEY = Internal.createForeignKey(ClusterTasksToBlockerTasks.CLUSTER_TASKS_TO_BLOCKER_TASKS, DSL.name("cluster_tasks_to_blocker_tasks_blocker_task_id_fkey"), new TableField[] { ClusterTasksToBlockerTasks.CLUSTER_TASKS_TO_BLOCKER_TASKS.BLOCKER_TASK_ID }, Keys.CLUSTER_TASKS_PKEY, new TableField[] { ClusterTasks.CLUSTER_TASKS.ID }, true);
+    public static final ForeignKey<ClusterTasksToBlockerTasksRecord, ClusterTasksRecord> CLUSTER_TASKS_TO_BLOCKER_TASKS__CLUSTER_TASKS_TO_BLOCKER_TASKS_TASK_ID_FKEY = Internal.createForeignKey(ClusterTasksToBlockerTasks.CLUSTER_TASKS_TO_BLOCKER_TASKS, DSL.name("cluster_tasks_to_blocker_tasks_task_id_fkey"), new TableField[] { ClusterTasksToBlockerTasks.CLUSTER_TASKS_TO_BLOCKER_TASKS.TASK_ID }, Keys.CLUSTER_TASKS_PKEY, new TableField[] { ClusterTasks.CLUSTER_TASKS.ID }, true);
 }

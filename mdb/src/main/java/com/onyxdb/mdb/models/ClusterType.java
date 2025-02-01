@@ -1,12 +1,12 @@
 package com.onyxdb.mdb.models;
 
-import java.util.Arrays;
-import java.util.Optional;
+import com.onyxdb.mdb.common.BaseStringEnum;
+
 
 /**
  * @author foxleren
  */
-public enum ClusterType {
+public enum ClusterType implements BaseStringEnum {
     MONGODB("mongodb"),
     ;
 
@@ -17,13 +17,11 @@ public enum ClusterType {
     }
 
     @Override
-    public String toString() {
+    public String value() {
         return value;
     }
 
-    public static Optional<ClusterType> parseO(String value) {
-        return Arrays.stream(values())
-                .filter(item -> item.toString().equalsIgnoreCase(value))
-                .findFirst();
+    public static ClusterType fromValue(String value) {
+        return BaseStringEnum.fromValue(ClusterType.class, value);
     }
 }
