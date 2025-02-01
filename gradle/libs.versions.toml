@@ -8,13 +8,14 @@ lombok-gradlePlugin = "8.10.2"
 flywaydb-flywayGradlePlugin = "10.15.2"
 flywaydb-flywayDatabasePostgresql = "10.4.1"
 flywaydb-flywayCore = "10.17.1"
-studerJooq-studerJooqGradlePlugin = "8.0"
+studerJooq-studerJooqGradlePlugin = "9.0"
 testcontainers-junitJupiter = "1.20.1"
 testcontainers-postgresql = "1.17.3"
 # Version should be synced with onyxdb-jooq-manual-conventions plugin
 postgresql-postgresql = "42.7.2"
 apacheCommons-commonsLang3 = "3.17.0"
 springDoc-springdocOpenapiStarterWebmvcUi = "2.6.0"
+orgJetbrains-annotations = "24.0.0"
 
 [plugins]
 onyxdb-javaAppConventions = { id = "onyxdb-java-app-conventions" }
@@ -46,3 +47,4 @@ testcontainers-postgresql = { group = "org.testcontainers", name = "postgresql",
 postgresql-postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "postgresql-postgresql" }
 apacheCommons-commonsLang3 = { group = "org.apache.commons", name = "commons-lang3", version.ref = "apacheCommons-commonsLang3" }
 springDoc-springdocOpenapiStarterWebmvcUi = { group = "org.springdoc", name = "springdoc-openapi-starter-webmvc-ui", version.ref = "springDoc-springdocOpenapiStarterWebmvcUi" }
+orgJetbrains-annotations = { group = "org.jetbrains", name = "annotations", version.ref = "orgJetbrains-annotations" }
