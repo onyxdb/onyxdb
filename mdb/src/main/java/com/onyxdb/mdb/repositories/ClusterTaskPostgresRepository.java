@@ -1,18 +1,21 @@
 package com.onyxdb.mdb.repositories;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
+import java.util.UUID;
 
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
+import org.jooq.impl.DSL;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
-import com.onyxdb.mdb.common.MemoriousTransactionTemplate;
+import com.onyxdb.mdb.generated.jooq.tables.records.ClusterTasksRecord;
+import com.onyxdb.mdb.generated.jooq.tables.records.ClusterTasksToBlockerTasksRecord;
 import com.onyxdb.mdb.models.ClusterTask;
+import com.onyxdb.mdb.models.ClusterTaskStatus;
+
+import static com.onyxdb.mdb.generated.jooq.Tables.CLUSTER_TASKS;
+import static com.onyxdb.mdb.generated.jooq.Tables.CLUSTER_TASKS_TO_BLOCKER_TASKS;
 
 /**
  * @author foxleren
@@ -21,84 +24,74 @@ import com.onyxdb.mdb.models.ClusterTask;
 @RequiredArgsConstructor
 public class ClusterTaskPostgresRepository implements ClusterTaskRepository {
     private final DSLContext dslContext;
-    private final MemoriousTransactionTemplate memoriousTransactionTemplate;
 
     @Override
-    public void createBulk(List<ClusterTask> clusterTasks) {
-        var records = clusterTasks.stream()
+    public void createBulk(List<ClusterTask> tasks) {
+        var records = tasks.stream()
                 .map(ClusterTask::toJooqClusterTasksRecord)
                 .toList();
 
-        memoriousTransactionTemplate.execute(
-                new TransactionCallbackWithoutResult() {
-                    @Override
-                    protected void doInTransactionWithoutResult(@NonNull TransactionStatus status) {
-                        dslContext.batchInsert(records).execute();
-                        addBlockingTasks(clusterTasks);
-                    }
-                },
-                TransactionDefinition.PROPAGATION_REQUIRED
-        );
+        dslContext.batchInsert(records).execute();
     }
 
-    private void addBlockingTasks(List<ClusterTask> clusterTasks) {
-        var records = clusterTasks.stream()
-                .map(ClusterTask::toJooqClusterTasksToBlockingTasksRecords)
+    @Override
+    public void createBlockerTasksBulk(Map<UUID, List<UUID>> taskIdToBlockingTaskIds) {
+        var records = taskIdToBlockingTaskIds.entrySet()
+                .stream()
+                .map(entry -> entry.getValue()
+                        .stream()
+                        .map(blockingTaskIds -> new ClusterTasksToBlockerTasksRecord(
+                                entry.getKey(),
+                                blockingTaskIds
+                        ))
+                        .toList()
+                )
                 .flatMap(List::stream)
-                .collect(Collectors.toList());
+                .toList();
 
         dslContext.batchInsert(records).execute();
     }
 
     @Override
     public List<ClusterTask> getTasksToProcess(int limit) {
-//        var r = dslContext.select(CLUSTER_TASKS.fields())
-//                .from(CLUSTER_TASKS
-//                .join(CLUSTER_TASKS_TO_BLOCKING_TASKS).on(CLUSTER_TASKS.ID.eq(CLUSTER_TASKS.ID));
+        var ct = CLUSTER_TASKS.as("ct");
+        var ctt = CLUSTER_TASKS.as("ctt");
+        var cttbt = CLUSTER_TASKS_TO_BLOCKER_TASKS.as("cttbt");
 
-//        var subQuery = selectOne()
-//                .from(unnest(CLUSTER_TASKS).as("dep_id"))
-//                .join(CLUSTER_TASKS_TABLE)
-//                .on(field(name("dep_id")).eq(CLUSTER_TASKS_TABLE.ID))
-//                .where(CLUSTER_TASKS_TABLE.STATUS.notIn(ClusterTaskStatus.failed, ClusterTaskStatus.done));
-//        var r = dslContext
-//                .select(CLUSTER_TASKS_TABLE.fields())
-//                .from(CLUSTER_TASKS_TABLE)
-//                .where(CLUSTER_TASKS_TABLE.STATUS.eq(ClusterTaskStatus.valueOf("scheduled"))
-//                        .and(notExists(subQuery))
-//                )
-//                .orderBy(CLUSTER_TASKS_TABLE.SCHEDULED_AT.asc())
-//                .limit(1)
-//                .forUpdate().skipLocked()
-//                .fetchOne();
-//
-//        if (r != null) {
-//            var rr = r.into(ClusterTasksRecord.class);
-//            System.err.println(rr.getClusterId() + " " + rr.getId());
-//        } else {
-//            System.err.println("{}");
-//        }
+        var noUnfinishedTasksCondition = DSL.notExists(
+                DSL.selectOne().
+                        from(cttbt)
+                        .join(ct).on(ct.ID.eq(cttbt.BLOCKER_TASK_ID))
+                        .where(ct.STATUS.in(
+                                com.onyxdb.mdb.generated.jooq.enums.ClusterTaskStatus.scheduled,
+                                com.onyxdb.mdb.generated.jooq.enums.ClusterTaskStatus.in_progress
+                        ))
+                        .and(ctt.ID.eq(cttbt.TASK_ID))
+        );
 
-//        return dslContext.select(
-//
-//                )
-//                .from(CLUSTER_TASKS_TABLE)
-//                .where(CLUSTER_TASKS_TABLE.STATUS.eq(ClusterTaskStatus.scheduled))
-//                .andNotExists(select()
-//                        .from(unnest(CLUSTER_TASKS_TABLE.DEPENDS_ON_TASK_IDS).as("dep_id"))
-//                        .join(CLUSTER_TASKS_TABLE).on(CLUSTER_TASKS_TABLE.ID).eq)
-        return List.of();
+        return dslContext.select(ctt.fields())
+                .from(ctt)
+                .where(ctt.STATUS.eq(com.onyxdb.mdb.generated.jooq.enums.ClusterTaskStatus.scheduled))
+                .and(noUnfinishedTasksCondition)
+                .limit(limit)
+                .forUpdate()
+                .skipLocked()
+                .fetchMany()
+                .stream()
+                .map(result -> result.into(ClusterTasksRecord.class))
+                .flatMap(List::stream)
+                .map(ClusterTask::fromJooqClusterTasksRecord)
+                .toList();
     }
 
-    // SELECT t.*
-    //FROM cluster_tasks t
-    //WHERE t.status = 'scheduled'
-    //  AND NOT EXISTS (SELECT 1
-    //                  FROM UNNEST(t.depends_on_task_ids) dep_id
-    //                           JOIN cluster_tasks dep_task ON dep_task.id = dep_id
-    //                  WHERE dep_task.status not in ('failed', 'done'))
-    //-- ORDER BY t.created_at
-    //ORDER BY scheduled_at
-    //    FOR UPDATE SKIP LOCKED
-    //LIMIT 1;
+    @Override
+    public void updateStatus(UUID id, ClusterTaskStatus status) {
+        dslContext.update(CLUSTER_TASKS)
+                .set(
+                        CLUSTER_TASKS.STATUS,
+                        com.onyxdb.mdb.generated.jooq.enums.ClusterTaskStatus.valueOf(status.value())
+                )
+                .where(CLUSTER_TASKS.ID.eq(id))
+                .execute();
+    }
 }
