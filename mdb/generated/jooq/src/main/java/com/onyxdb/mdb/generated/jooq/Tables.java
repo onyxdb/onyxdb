@@ -6,13 +6,14 @@ package com.onyxdb.mdb.generated.jooq;
 
 import com.onyxdb.mdb.generated.jooq.tables.ClusterOperations;
 import com.onyxdb.mdb.generated.jooq.tables.ClusterTasks;
+import com.onyxdb.mdb.generated.jooq.tables.ClusterTasksToBlockerTasks;
 import com.onyxdb.mdb.generated.jooq.tables.Clusters;
 
 
 /**
  * Convenience access to all tables in public.
  */
-@SuppressWarnings({ "all", "unchecked", "rawtypes" })
+@SuppressWarnings({ "all", "unchecked", "rawtypes", "this-escape" })
 public class Tables {
 
     /**
@@ -24,6 +25,11 @@ public class Tables {
      * The table <code>public.cluster_tasks</code>.
      */
     public static final ClusterTasks CLUSTER_TASKS = ClusterTasks.CLUSTER_TASKS;
+
+    /**
+     * The table <code>public.cluster_tasks_to_blocker_tasks</code>.
+     */
+    public static final ClusterTasksToBlockerTasks CLUSTER_TASKS_TO_BLOCKER_TASKS = ClusterTasksToBlockerTasks.CLUSTER_TASKS_TO_BLOCKER_TASKS;
 
     /**
      * The table <code>public.clusters</code>.
