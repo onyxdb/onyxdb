@@ -33,8 +33,8 @@ public class RoleService {
         Role forCreate = new Role(
                 UUID.randomUUID(),
                 role.name(),
-                role.role_type(),
-                role.shop_name(),
+                role.roleType(),
+                role.shopName(),
                 role.description(),
                 role.projectId(),
                 LocalDateTime.now(),
@@ -48,8 +48,8 @@ public class RoleService {
         Role forUpdate = new Role(
                 role.id(),
                 role.name(),
-                role.role_type(),
-                role.shop_name(),
+                role.roleType(),
+                role.shopName(),
                 role.description(),
                 role.projectId(),
                 role.createdAt(),

@@ -11,9 +11,9 @@ import com.onyxdb.idm.generated.openapi.models.RoleDTO;
  */
 public record Role(
         UUID id,
-        String role_type,
+        String roleType,
         String name,
-        String shop_name,
+        String shopName,
         String description,
         UUID projectId,
         LocalDateTime createdAt,
@@ -22,9 +22,9 @@ public record Role(
     public RoleDTO toDTO() {
         return new RoleDTO()
                 .id(id)
-                .roleType(role_type)
+                .roleType(roleType)
                 .name(name)
-                .shopName(shop_name)
+                .shopName(shopName)
                 .description(description)
                 .projectId(projectId)
                 .createdAt(createdAt)
