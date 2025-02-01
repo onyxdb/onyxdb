@@ -6,9 +6,9 @@ spring:
     url: ${ONYXDB_MDB_PSQL_URL:jdbc:postgresql://localhost:5432/onyxdb}
     username: ${ONYXDB_MDB_PSQL_USERNAME:postgres}
     password: ${ONYXDB_MDB_PSQL_PASSWORD:password}
-#    hikari:
-#      auto-commit: true
-#      transaction-isolation: TRANSACTION_READ_COMMITTED
+    hikari:
+      auto-commit: true
+      transaction-isolation: TRANSACTION_READ_COMMITTED
   jooq:
     sql-dialect: Postgres
   flyway:
