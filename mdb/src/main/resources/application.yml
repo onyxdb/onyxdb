@@ -22,6 +22,12 @@ springdoc:
   swagger-ui:
     path: /internal/swagger-ui
 
+logging:
+  level:
+    org:
+      jooq:
+        Constants: off
+
 onyxdb-app:
   workers:
     process-cluster-tasks:
