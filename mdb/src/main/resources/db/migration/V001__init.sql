@@ -16,9 +16,10 @@ CREATE TYPE public.cluster_operation_type AS ENUM (
     );
 
 CREATE TYPE public.cluster_operation_status AS ENUM (
+    'scheduled',
     'in_progress',
-    'failed',
-    'done'
+    'error',
+    'success'
     );
 
 CREATE TABLE public.cluster_operations
@@ -37,8 +38,8 @@ CREATE TABLE public.cluster_operations
 CREATE TYPE public.cluster_task_status AS ENUM (
     'scheduled',
     'in_progress',
-    'failed',
-    'done'
+    'error',
+    'success'
     );
 
 CREATE TYPE public.cluster_task_type AS ENUM (
@@ -49,44 +50,28 @@ CREATE TYPE public.cluster_task_type AS ENUM (
 
 CREATE TABLE public.cluster_tasks
 (
-    id                  uuid                       NOT NULL,
-    cluster_id          uuid                       NOT NULL,
-    operation_id        uuid                       NOT NULL,
-    cluster_type        public.cluster_type        NOT NULL,
-    type                public.cluster_task_type   NOT NULL,
-    status              public.cluster_task_status NOT NULL,
-    created_at          timestamp                  NOT NULL,
-    updated_at          timestamp                  NOT NULL,
-    scheduled_at        timestamp                  NOT NULL,
-    retries_left        int                        NOT NULL,
-    depends_on_task_ids uuid[]                     NOT NULL,
-    is_last             boolean                    NOT NULL,
+    id            uuid                       NOT NULL,
+    cluster_id    uuid                       NOT NULL,
+    operation_id  uuid                       NOT NULL,
+    cluster_type  public.cluster_type        NOT NULL,
+    type          public.cluster_task_type   NOT NULL,
+    status        public.cluster_task_status NOT NULL,
+    created_at    timestamp                  NOT NULL,
+    updated_at    timestamp                  NOT NULL,
+    scheduled_at  timestamp                  NOT NULL,
+    attempts_left int                        NOT NULL,
+    is_first      boolean                    NOT NULL,
+    is_last       boolean                    NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (cluster_id) REFERENCES clusters (id),
     FOREIGN KEY (operation_id) REFERENCES cluster_operations (id)
 );
 
--- CREATE TABLE public.cluster_tasks_queue
--- (
---     id uuid NOT NULL,
---     PRIMARY KEY (id)
--- );
-
--- CREATE TABLE public.cluster_operation
--- (
---     id         uuid                            NOT NULL,
---     cluster_id uuid                            NOT NULL,
---     type       cluster_operation_type          NOT NULL,
---     status     public.cluster_operation_status NOT NULL,
---     created_at timestamp                       NOT NULL,
---     retries    int                             NOT NULL,
---     execute_at timestamp                       NOT NULL,
---     PRIMARY KEY (id),
---     FOREIGN KEY (cluster_id) REFERENCES public.cluster (id)
--- );
---
--- CREATE TABLE public.cluster_operation_queue
--- (
---     id uuid NOT NULL,
---     FOREIGN KEY (id) REFERENCES public.cluster_operation (id)
--- );
+CREATE TABLE public.cluster_tasks_to_blocker_tasks
+(
+    task_id         uuid,
+    blocker_task_id uuid,
+    FOREIGN KEY (task_id) REFERENCES public.cluster_tasks (id),
+    FOREIGN KEY (blocker_task_id) REFERENCES public.cluster_tasks (id),
+    PRIMARY KEY (task_id, blocker_task_id)
+);
