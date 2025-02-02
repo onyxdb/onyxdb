@@ -7,12 +7,12 @@ import graphql.schema.DataFetchingEnvironment;
 import java.util.List;
 
 @DgsComponent
-public class ProjectServicesDataFetcher {
+public class ProductServicesDataFetcher {
   @DgsData(
       parentType = "Query",
-      field = "projectServices"
+      field = "productServices"
   )
-  public List<Service> getProjectServices(DataFetchingEnvironment dataFetchingEnvironment) {
+  public List<Service> getProductServices(DataFetchingEnvironment dataFetchingEnvironment) {
     return null;
   }
 }

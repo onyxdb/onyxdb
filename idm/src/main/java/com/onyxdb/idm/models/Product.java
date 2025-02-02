@@ -9,13 +9,13 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jooq.JSONB;
 
-import com.onyxdb.idm.generated.jooq.tables.records.ProjectTableRecord;
-import com.onyxdb.idm.generated.openapi.models.ProjectDTO;
+import com.onyxdb.idm.generated.jooq.tables.records.ProductTableRecord;
+import com.onyxdb.idm.generated.openapi.models.ProductDTO;
 
 /**
  * @author ArtemFed
  */
-public record Project(
+public record Product(
         UUID id,
         String name,
         String description,
@@ -26,20 +26,22 @@ public record Project(
         LocalDateTime updatedAt
 ) {
     private static final ObjectMapper objectMapper = new ObjectMapper();
+    static final TypeReference<Map<String, Object>> typeRef = new TypeReference<>(){};
 
-    public ProjectDTO toDTO() {
-        return new ProjectDTO()
+    public ProductDTO toDTO() {
+        return new ProductDTO()
                 .id(id)
                 .name(name)
                 .description(description)
                 .parentId(parent_id)
                 .ownerId(ownerId)
+                .data(data)
                 .createdAt(createdAt)
                 .updatedAt(updatedAt);
     }
 
-    public ProjectTableRecord toDAO() {
-        return new ProjectTableRecord(
+    public ProductTableRecord toDAO() {
+        return new ProductTableRecord(
                 id,
                 name,
                 description,
@@ -51,38 +53,34 @@ public record Project(
         );
     }
 
-    public static Project fromDTO(ProjectDTO projectDTO) {
-        return new Project(
-                projectDTO.getId(),
-                projectDTO.getName(),
-                projectDTO.getDescription(),
-                projectDTO.getParentId(),
-                projectDTO.getOwnerId(),
-                projectDTO.getData(),
-                projectDTO.getCreatedAt(),
-                projectDTO.getUpdatedAt()
+    public static Product fromDTO(ProductDTO productDTO) {
+        return new Product(
+                productDTO.getId(),
+                productDTO.getName(),
+                productDTO.getDescription(),
+                productDTO.getParentId(),
+                productDTO.getOwnerId(),
+                productDTO.getData(),
+                productDTO.getCreatedAt(),
+                productDTO.getUpdatedAt()
         );
     }
 
-    public static Project fromDAO(ProjectTableRecord projectDAO) {
+    public static Product fromDAO(ProductTableRecord productDAO) {
         Map<String, Object> dataMap = null;
         try {
-            dataMap = objectMapper.readValue(
-                    projectDAO.getData().data(),
-                    new TypeReference<Map<String, Object>>() {
-                    }
-            );
+            dataMap = objectMapper.readValue(productDAO.getData().data(), typeRef);
         } catch (JsonProcessingException ignored) {
         }
-        return new Project(
-                projectDAO.getId(),
-                projectDAO.getName(),
-                projectDAO.getDescription(),
-                projectDAO.getParentId(),
-                projectDAO.getOwnerId(),
+        return new Product(
+                productDAO.getId(),
+                productDAO.getName(),
+                productDAO.getDescription(),
+                productDAO.getParentId(),
+                productDAO.getOwnerId(),
                 dataMap,
-                projectDAO.getCreatedAt(),
-                projectDAO.getUpdatedAt()
+                productDAO.getCreatedAt(),
+                productDAO.getUpdatedAt()
         );
     }
 
