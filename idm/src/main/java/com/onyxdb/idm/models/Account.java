@@ -27,8 +27,6 @@ public record Account(
         LocalDateTime updatedAt
 ) {
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    static final TypeReference<Map<String, Object>> typeRef = new TypeReference<>() {
-    };
 
     public AccountDTO toDTO() {
         return new AccountDTO()
@@ -38,7 +36,6 @@ public record Account(
                 .email(email)
                 .firstName(firstName)
                 .lastName(lastName)
-                .data(data)
                 .createdAt(createdAt)
                 .updatedAt(updatedAt);
     }
@@ -60,7 +57,11 @@ public record Account(
     public static Account fromDAO(AccountTableRecord accountDAO) {
         Map<String, Object> dataMap = null;
         try {
-            dataMap = objectMapper.readValue(accountDAO.getData().data(), typeRef);
+            dataMap = objectMapper.readValue(
+                    accountDAO.getData().data(),
+                    new TypeReference<Map<String, Object>>() {
+                    }
+            );
         } catch (JsonProcessingException ignored) {
         }
         return new Account(

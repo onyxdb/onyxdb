@@ -25,7 +25,6 @@ public record BusinessRole(
         LocalDateTime updatedAt
 ) {
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    static final TypeReference<Map<String, Object>> typeRef = new TypeReference<>(){};
 
     public BusinessRoleDTO toDTO() {
         return new BusinessRoleDTO()
@@ -33,7 +32,6 @@ public record BusinessRole(
                 .name(name)
                 .description(description)
                 .parentId(parentId)
-                .data(data)
                 .createdAt(createdAt)
                 .updatedAt(updatedAt);
     }
@@ -53,7 +51,11 @@ public record BusinessRole(
     public static BusinessRole fromDAO(BusinessRoleTableRecord businessRoleDAO) {
         Map<String, Object> dataMap = null;
         try {
-            dataMap = objectMapper.readValue(businessRoleDAO.getData().data(), typeRef);
+            dataMap = objectMapper.readValue(
+                    businessRoleDAO.getData().data(),
+                    new TypeReference<Map<String, Object>>() {
+                    }
+            );
         } catch (JsonProcessingException ignored) {
         }
         return new BusinessRole(

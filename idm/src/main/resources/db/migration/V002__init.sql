@@ -9,12 +9,12 @@ CREATE TABLE product_table (
     data JSONB NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (parent_id) REFERENCES product_table(id),
+    FOREIGN KEY (parent_id) REFERENCES project_table(id),
     FOREIGN KEY (owner_id) REFERENCES account_table(id)
 );
 
-CREATE INDEX IF NOT EXISTS product_table_parent_id_index ON product_table(parent_id);
-CREATE INDEX IF NOT EXISTS product_table_owner_id_index ON product_table(owner_id);
+CREATE INDEX IF NOT EXISTS project_table_parent_id_index ON project_table(parent_id);
+CREATE INDEX IF NOT EXISTS project_table_owner_id_index ON project_table(owner_id);
 
 -- Создание таблицы для Role
 CREATE TABLE role_table (
@@ -27,11 +27,11 @@ CREATE TABLE role_table (
     is_shop_hidden BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (product_id) REFERENCES product_table(id)
+    FOREIGN KEY (project_id) REFERENCES project_table(id)
 );
 
 CREATE INDEX IF NOT EXISTS role_table_index ON role_table(name, shop_name);
-CREATE INDEX IF NOT EXISTS role_table_product_id_index ON role_table(product_id);
+CREATE INDEX IF NOT EXISTS role_table_project_id_index ON role_table(project_id);
 
 -- Создание таблицы для Permission
 CREATE TABLE permission_table (
