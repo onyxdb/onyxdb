@@ -40,6 +40,7 @@ public class BusinessRoleService {
                 businessRole.name(),
                 businessRole.description(),
                 businessRole.parentId(),
+                businessRole.data(),
                 LocalDateTime.now(),
                 LocalDateTime.now()
         );
@@ -53,6 +54,7 @@ public class BusinessRoleService {
                 businessRole.name(),
                 businessRole.description(),
                 businessRole.parentId(),
+                businessRole.data(),
                 businessRole.createdAt(),
                 LocalDateTime.now()
         );

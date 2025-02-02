@@ -4,11 +4,11 @@ type Query {
 
     service(id: ID!): Service
     services: [Service]
-    projectServices(projectId: ID!): [Service]
+    productServices(productId: ID!): [Service]
 
-    project(id: ID!): Project
-    projects: [Project]
-    organizationProjects(organizationId: ID!): [Project]
+    product(id: ID!): Product
+    products: [Product]
+    organizationProducts(organizationId: ID!): [Product]
 
     organization(id: ID!): Organization
     organizations: [Organization]

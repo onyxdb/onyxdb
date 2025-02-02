@@ -54,6 +54,7 @@ public class BusinessRolePostgresRepository implements BusinessRoleRepository {
                 .set(businessRoleTable.NAME, businessRole.name())
                 .set(businessRoleTable.DESCRIPTION, businessRole.description())
                 .set(businessRoleTable.PARENT_ID, businessRole.parentId())
+                .set(businessRoleTable.DATA, businessRole.getDataAsJsonb())
                 .set(businessRoleTable.CREATED_AT, businessRole.createdAt())
                 .set(businessRoleTable.UPDATED_AT, businessRole.updatedAt())
                 .execute();
@@ -65,6 +66,7 @@ public class BusinessRolePostgresRepository implements BusinessRoleRepository {
                 .set(businessRoleTable.NAME, businessRole.name())
                 .set(businessRoleTable.DESCRIPTION, businessRole.description())
                 .set(businessRoleTable.PARENT_ID, businessRole.parentId())
+                .set(businessRoleTable.DATA, businessRole.getDataAsJsonb())
                 .set(businessRoleTable.UPDATED_AT, businessRole.updatedAt())
                 .where(businessRoleTable.ID.eq(businessRole.id()))
                 .execute();

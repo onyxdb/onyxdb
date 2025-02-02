@@ -23,6 +23,7 @@ public record Permission(
         LocalDateTime updatedAt
 ) {
     private static final ObjectMapper objectMapper = new ObjectMapper();
+    static final TypeReference<Map<String, Object>> typeRef = new TypeReference<>(){};
 
     public PermissionDTO toDTO() {
         return new PermissionDTO()
@@ -46,11 +47,7 @@ public record Permission(
     public static Permission fromDAO(PermissionTableRecord permissionDAO) {
         Map<String, Object> dataMap = null;
         try {
-            dataMap = objectMapper.readValue(
-                    permissionDAO.getData().data(),
-                    new TypeReference<Map<String, Object>>() {
-                    }
-            );
+            dataMap = objectMapper.readValue(permissionDAO.getData().data(), typeRef);
         } catch (JsonProcessingException ignored) {
         }
 

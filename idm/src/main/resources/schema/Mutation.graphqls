@@ -7,9 +7,9 @@ type Mutation {
     updateService(id: ID!, input: ServiceInput!): Service!
     deleteService(id: ID!): Boolean!
 
-    createProject(input: ProjectInput!): Project!
-    updateProject(id: ID!, input: ProjectInput!): Project!
-    deleteProject(id: ID!): Boolean!
+    createProduct(input: ProductInput!): Product!
+    updateProduct(id: ID!, input: ProductInput!): Product!
+    deleteProduct(id: ID!): Boolean!
 
     createOrganization(input: OrganizationInput!): Organization!
     updateOrganization(id: ID!, input: OrganizationInput!): Organization!

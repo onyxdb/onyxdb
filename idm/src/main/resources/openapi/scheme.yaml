@@ -1155,12 +1155,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/NotFoundResponse'
 
-  /api/v1/projects:
+  /api/v1/products:
     get:
-      summary: Get all projects
-      operationId: getAllProjects
+      summary: Get all products
+      operationId: getAllProducts
       tags:
-        - Projects
+        - Products
       responses:
         '200':
           description: OK
@@ -1169,7 +1169,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ProjectDTO'
+                  $ref: '#/components/schemas/ProductDTO'
         '400':
           description: Bad Request
           content:
@@ -1177,23 +1177,23 @@ paths:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
     post:
-      summary: Create a new project
-      operationId: createProject
+      summary: Create a new product
+      operationId: createProduct
       tags:
-        - Projects
+        - Products
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ProjectDTO'
+              $ref: '#/components/schemas/ProductDTO'
       responses:
         '201':
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProjectDTO'
+                $ref: '#/components/schemas/ProductDTO'
         '400':
           description: Bad Request
           content:
@@ -1201,14 +1201,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
 
-  /api/v1/projects/{projectId}:
+  /api/v1/products/{productId}:
     get:
-      summary: Get a project by ID
-      operationId: getProjectById
+      summary: Get a product by ID
+      operationId: getProductById
       tags:
-        - Projects
+        - Products
       parameters:
-        - name: projectId
+        - name: productId
           in: path
           required: true
           schema:
@@ -1220,7 +1220,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProjectDTO'
+                $ref: '#/components/schemas/ProductDTO'
         '404':
           description: Not Found
           content:
@@ -1234,12 +1234,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
     put:
-      summary: Update a project by ID
-      operationId: updateProject
+      summary: Update a product by ID
+      operationId: updateProduct
       tags:
-        - Projects
+        - Products
       parameters:
-        - name: projectId
+        - name: productId
           in: path
           required: true
           schema:
@@ -1250,14 +1250,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ProjectDTO'
+              $ref: '#/components/schemas/ProductDTO'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProjectDTO'
+                $ref: '#/components/schemas/ProductDTO'
         '404':
           description: Not Found
           content:
@@ -1271,12 +1271,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
     delete:
-      summary: Delete a project by ID
-      operationId: deleteProject
+      summary: Delete a product by ID
+      operationId: deleteProduct
       tags:
-        - Projects
+        - Products
       parameters:
-        - name: projectId
+        - name: productId
           in: path
           required: true
           schema:
@@ -1316,6 +1316,9 @@ components:
           type: string
         lastName:
           type: string
+        data:
+          type: object
+          additionalProperties: true
         createdAt:
           type: string
           format: date-time
@@ -1337,7 +1340,7 @@ components:
           type: string
         description:
           type: string
-        projectId:
+        productId:
           type: string
           format: uuid
         createdAt:
@@ -1395,6 +1398,9 @@ components:
         parentId:
           type: string
           format: uuid
+        data:
+          type: object
+          additionalProperties: true
         createdAt:
           type: string
           format: date-time
@@ -1428,7 +1434,7 @@ components:
           type: string
           format: uuid
 
-    ProjectDTO:
+    ProductDTO:
       type: object
       properties:
         id:
@@ -1438,18 +1444,21 @@ components:
           type: string
         description:
           type: string
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
         parentId:
           type: string
           format: uuid
         ownerId:
           type: string
           format: uuid
+        data:
+          type: object
+          additionalProperties: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
 
     BadRequestResponse:
       type: object

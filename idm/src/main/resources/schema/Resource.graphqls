@@ -1,16 +1,16 @@
-union Resource = Organization | Project | Service
+union Resource = Organization | Product | Service
 
 type Organization {
     id: ID!
     name: String!
-    projects: [Project]
+    products: [Product]
 }
 
 input OrganizationInput {
     name: String!
 }
 
-type Project {
+type Product {
     id: ID!
     name: String!
     organizationId: ID!
@@ -18,7 +18,7 @@ type Project {
     services: [Service]
 }
 
-input ProjectInput {
+input ProductInput {
     name: String!
     organizationId: ID!
 }
@@ -27,12 +27,12 @@ type Service {
     id: ID!
     name: String!
     type: String!
-    projectId: ID!
-    project: Project!
+    productId: ID!
+    product: Product!
 }
 
 input ServiceInput {
     name: String!
     type: String!
-    projectId: ID!
+    productId: ID!
 }

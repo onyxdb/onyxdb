@@ -2,17 +2,17 @@ package com.onyxdb.idm.datafetchers;
 
 import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsData;
-import com.onyxdb.idm.codegen.types.Project;
+import com.onyxdb.idm.codegen.types.Product;
 import graphql.schema.DataFetchingEnvironment;
 import java.util.List;
 
 @DgsComponent
-public class ProjectsDataFetcher {
+public class OrganizationProductsDataFetcher {
   @DgsData(
       parentType = "Query",
-      field = "projects"
+      field = "organizationProducts"
   )
-  public List<Project> getProjects(DataFetchingEnvironment dataFetchingEnvironment) {
+  public List<Product> getOrganizationProducts(DataFetchingEnvironment dataFetchingEnvironment) {
     return null;
   }
 }

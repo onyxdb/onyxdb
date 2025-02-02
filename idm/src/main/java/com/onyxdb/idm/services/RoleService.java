@@ -36,7 +36,7 @@ public class RoleService {
                 role.roleType(),
                 role.shopName(),
                 role.description(),
-                role.projectId(),
+                role.productId(),
                 LocalDateTime.now(),
                 LocalDateTime.now()
         );
@@ -51,7 +51,7 @@ public class RoleService {
                 role.roleType(),
                 role.shopName(),
                 role.description(),
-                role.projectId(),
+                role.productId(),
                 role.createdAt(),
                 LocalDateTime.now()
         );

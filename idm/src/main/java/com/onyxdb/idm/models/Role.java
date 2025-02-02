@@ -15,7 +15,7 @@ public record Role(
         String name,
         String shopName,
         String description,
-        UUID projectId,
+        UUID productId,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
@@ -26,7 +26,7 @@ public record Role(
                 .name(name)
                 .shopName(shopName)
                 .description(description)
-                .projectId(projectId)
+                .productId(productId)
                 .createdAt(createdAt)
                 .updatedAt(updatedAt);
     }
@@ -38,7 +38,7 @@ public record Role(
                 roleDTO.getName(),
                 roleDTO.getShopName(),
                 roleDTO.getDescription(),
-                roleDTO.getProjectId(),
+                roleDTO.getProductId(),
                 roleDTO.getCreatedAt(),
                 roleDTO.getUpdatedAt()
         );
@@ -51,7 +51,7 @@ public record Role(
                 roleDAO.getName(),
                 roleDAO.getShopName(),
                 roleDAO.getDescription(),
-                roleDAO.getProjectId(),
+                roleDAO.getProductId(),
                 roleDAO.getCreatedAt(),
                 roleDAO.getUpdatedAt()
         );

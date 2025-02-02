@@ -24,7 +24,7 @@ import java.util.UUID;
 @Repository
 @RequiredArgsConstructor
 public class AccountPostgresRepository implements AccountRepository {
-    private static DSLContext dslContext;
+    private final DSLContext dslContext;
     private final static AccountTable accountTable = Tables.ACCOUNT_TABLE;
     private final static AccountBusinessRoleTable accountBusinessRoleTable = Tables.ACCOUNT_BUSINESS_ROLE_TABLE;
     private final static BusinessRoleTable businessRoleTable = Tables.BUSINESS_ROLE_TABLE;
@@ -69,6 +69,7 @@ public class AccountPostgresRepository implements AccountRepository {
                 .set(accountTable.EMAIL, account.email())
                 .set(accountTable.FIRST_NAME, account.firstName())
                 .set(accountTable.LAST_NAME, account.lastName())
+                .set(accountTable.DATA, account.getDataAsJsonb())
                 .set(accountTable.CREATED_AT, account.createdAt())
                 .set(accountTable.UPDATED_AT, account.updatedAt())
                 .execute();
@@ -82,6 +83,7 @@ public class AccountPostgresRepository implements AccountRepository {
                 .set(accountTable.EMAIL, account.email())
                 .set(accountTable.FIRST_NAME, account.firstName())
                 .set(accountTable.LAST_NAME, account.lastName())
+                .set(accountTable.DATA, account.getDataAsJsonb())
                 .set(accountTable.UPDATED_AT, account.updatedAt())
                 .where(accountTable.ID.eq(account.id()))
                 .execute();
