@@ -1316,6 +1316,9 @@ components:
           type: string
         lastName:
           type: string
+        data:
+          type: object
+          additionalProperties: true
         createdAt:
           type: string
           format: date-time
@@ -1395,6 +1398,9 @@ components:
         parentId:
           type: string
           format: uuid
+        data:
+          type: object
+          additionalProperties: true
         createdAt:
           type: string
           format: date-time
@@ -1438,18 +1444,21 @@ components:
           type: string
         description:
           type: string
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
         parentId:
           type: string
           format: uuid
         ownerId:
           type: string
           format: uuid
+        data:
+          type: object
+          additionalProperties: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
 
     BadRequestResponse:
       type: object

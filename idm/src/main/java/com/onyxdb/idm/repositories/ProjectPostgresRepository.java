@@ -46,6 +46,7 @@ public class ProjectPostgresRepository implements ProjectRepository {
                 .set(projectTable.DESCRIPTION, project.description())
                 .set(projectTable.UPDATED_AT, project.updatedAt())
                 .set(projectTable.PARENT_ID, project.parent_id())
+                .set(projectTable.DATA, project.getDataAsJsonb())
                 .set(projectTable.OWNER_ID, project.ownerId())
                 .where(projectTable.ID.eq(project.id()))
                 .execute();

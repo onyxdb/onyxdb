@@ -43,6 +43,7 @@ public class AccountService {
                 account.email(),
                 account.firstName(),
                 account.lastName(),
+                account.data(),
                 LocalDateTime.now(),
                 LocalDateTime.now()
         );
@@ -57,6 +58,7 @@ public class AccountService {
                 account.email(),
                 account.firstName(),
                 account.lastName(),
+                account.data(),
                 account.createdAt(),
                 LocalDateTime.now()
         );

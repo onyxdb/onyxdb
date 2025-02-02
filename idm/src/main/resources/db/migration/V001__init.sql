@@ -7,6 +7,8 @@ CREATE TABLE domain_component_table (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE INDEX IF NOT EXISTS domain_component_table_index ON domain_component_table(name);
+
 -- Создание таблицы для Organization Unit (OU)
 CREATE TABLE organization_unit_table (
     id UUID PRIMARY KEY,
@@ -20,6 +22,9 @@ CREATE TABLE organization_unit_table (
     FOREIGN KEY (parent_id) REFERENCES organization_unit_table(id)
 );
 
+CREATE INDEX IF NOT EXISTS organization_unit_table_index ON organization_unit_table(name, domain_component_id);
+CREATE INDEX IF NOT EXISTS organization_unit_table_parent_id_index ON organization_unit_table(parent_id);
+
 -- Создание таблицы для Account
 CREATE TABLE account_table (
     id UUID PRIMARY KEY,
@@ -28,6 +33,9 @@ CREATE TABLE account_table (
     email VARCHAR(255) UNIQUE,
     first_name VARCHAR(255),
     last_name VARCHAR(255),
+    data JSONB NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE INDEX IF NOT EXISTS account_table_index ON account_table(login, email, last_name, first_name);

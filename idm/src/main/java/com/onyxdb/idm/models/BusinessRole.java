@@ -1,7 +1,13 @@
 package com.onyxdb.idm.models;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.UUID;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jooq.JSONB;
 
 import com.onyxdb.idm.generated.jooq.tables.records.BusinessRoleTableRecord;
 import com.onyxdb.idm.generated.openapi.models.BusinessRoleDTO;
@@ -14,9 +20,12 @@ public record BusinessRole(
         String name,
         String description,
         UUID parentId,
+        Map<String, Object> data,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+
     public BusinessRoleDTO toDTO() {
         return new BusinessRoleDTO()
                 .id(id)
@@ -33,19 +42,38 @@ public record BusinessRole(
                 businessRoleDTO.getName(),
                 businessRoleDTO.getDescription(),
                 businessRoleDTO.getParentId(),
+                businessRoleDTO.getData(),
                 businessRoleDTO.getCreatedAt(),
                 businessRoleDTO.getUpdatedAt()
         );
     }
 
     public static BusinessRole fromDAO(BusinessRoleTableRecord businessRoleDAO) {
+        Map<String, Object> dataMap = null;
+        try {
+            dataMap = objectMapper.readValue(
+                    businessRoleDAO.getData().data(),
+                    new TypeReference<Map<String, Object>>() {
+                    }
+            );
+        } catch (JsonProcessingException ignored) {
+        }
         return new BusinessRole(
                 businessRoleDAO.getId(),
                 businessRoleDAO.getName(),
                 businessRoleDAO.getDescription(),
                 businessRoleDAO.getParentId(),
+                dataMap,
                 businessRoleDAO.getCreatedAt(),
                 businessRoleDAO.getUpdatedAt()
         );
+    }
+
+    public JSONB getDataAsJsonb() {
+        try {
+            return JSONB.valueOf(objectMapper.writeValueAsString(data));
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to convert Map to JSONB", e);
+        }
     }
 }

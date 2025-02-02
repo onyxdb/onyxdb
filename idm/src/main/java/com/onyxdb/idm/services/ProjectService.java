@@ -35,6 +35,7 @@ public class ProjectService {
                 project.description(),
                 project.parent_id(),
                 project.ownerId(),
+                project.data(),
                 LocalDateTime.now(),
                 LocalDateTime.now()
         );
@@ -49,6 +50,7 @@ public class ProjectService {
                 project.description(),
                 project.parent_id(),
                 project.ownerId(),
+                project.data(),
                 project.createdAt(),
                 LocalDateTime.now()
         );

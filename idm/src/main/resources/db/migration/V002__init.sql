@@ -1,15 +1,20 @@
+
 -- Создание таблицы для Project
 CREATE TABLE project_table (
     id UUID PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    description TEXT,
-    parent_id UUID NOT NULL,
+    description TEXT NOT NULL,
+    parent_id UUID,
     owner_id UUID,
+    data JSONB NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (parent_id) REFERENCES project_table(id),
     FOREIGN KEY (owner_id) REFERENCES account_table(id)
 );
+
+CREATE INDEX IF NOT EXISTS project_table_parent_id_index ON project_table(parent_id);
+CREATE INDEX IF NOT EXISTS project_table_owner_id_index ON project_table(owner_id);
 
 -- Создание таблицы для Role
 CREATE TABLE role_table (
@@ -19,10 +24,14 @@ CREATE TABLE role_table (
     shop_name VARCHAR(255) NOT NULL UNIQUE,
     description TEXT,
     project_id UUID,
+    is_shop_hidden BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (project_id) REFERENCES project_table(id)
 );
+
+CREATE INDEX IF NOT EXISTS role_table_index ON role_table(name, shop_name);
+CREATE INDEX IF NOT EXISTS role_table_project_id_index ON role_table(project_id);
 
 -- Создание таблицы для Permission
 CREATE TABLE permission_table (
@@ -41,3 +50,6 @@ CREATE TABLE role_permission_table (
     FOREIGN KEY (role_id) REFERENCES role_table(id),
     FOREIGN KEY (permission_id) REFERENCES permission_table(id)
 );
+
+CREATE INDEX IF NOT EXISTS role_permission_table_role_id_index ON role_permission_table(role_id);
+CREATE INDEX IF NOT EXISTS role_permission_table_permission_id_index ON role_permission_table(permission_id);
