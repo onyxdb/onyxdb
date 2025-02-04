@@ -12,21 +12,24 @@ dependencies {
     jooqGenerator("org.postgresql:postgresql:42.7.2")
 }
 
-val permittedTasks: List<String> = listOf(
+val permittedTasks: Set<String> = setOf(
     JooqConfig.GENERATE_JOOQ_TASK,
     CustomTasksConfig.ONYXDB_GENERATE_ALL_CODEGEN,
     "build"
 )
 
 fun isTestTask(taskName: String): Boolean {
-    return "test" in taskName.split(":")
+    return taskName in setOf(
+        ":${project.name}:test",
+        ":${project.name}:testClasses"
+    )
 }
 
 val triggeredTaskNames: MutableList<String> = project.gradle.startParameter.taskNames
 
 val psqlContainer: PostgreSQLContainer<Nothing>? =
-    if (permittedTasks.any { it in triggeredTaskNames } or
-        triggeredTaskNames.any { isTestTask(it) }) {
+    if (permittedTasks.any { it in triggeredTaskNames } ||
+        triggeredTaskNames.all { isTestTask(it) }) {
         PostgreSQLContainer<Nothing>(JooqConfig.POSTGRES_DOCKER_IMAGE).apply {
             start()
         }
@@ -73,12 +76,15 @@ jooq {
     }
 }
 
-tasks.named<JooqGenerate>(JooqConfig.GENERATE_JOOQ_TASK) {
-    dependsOn(JooqConfig.FLYWAY_MIGRATE_TASK)
+tasks.register(JooqConfig.STOP_PSQL_CONTAINER) {
+    doLast {
+        psqlContainer?.stop()
+    }
 }
 
-tasks.named(CustomTasksConfig.ONYXDB_GENERATE_ALL_CODEGEN).configure {
-    dependsOn(JooqConfig.GENERATE_JOOQ_TASK)
+tasks.named<JooqGenerate>(JooqConfig.GENERATE_JOOQ_TASK) {
+    dependsOn(JooqConfig.FLYWAY_MIGRATE_TASK)
+    finalizedBy(JooqConfig.STOP_PSQL_CONTAINER)
 }
 
 tasks.compileJava {
@@ -92,6 +98,8 @@ tasks.configureEach {
     }
 }
 
-gradle.buildFinished {
-    psqlContainer?.stop()
+gradle.taskGraph.whenReady {
+    if (!gradle.taskGraph.allTasks.any { it.project.name == project.name && it.name == JooqConfig.GENERATE_JOOQ_TASK }) {
+        psqlContainer?.stop()
+    }
 }

@@ -1,22 +1,26 @@
 package com.onyxdb.mdb;
 
+import java.util.UUID;
+
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.test.context.ActiveProfiles;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
+
+import com.onyxdb.mdb.repositories.ClusterPostgresRepository;
 
 @SpringBootTest
 @ActiveProfiles("test")
-@Testcontainers
-class MdbApplicationTests {
-    @Container
-    @ServiceConnection
-    static PostgreSQLContainer<?> psqlContainer = new PostgreSQLContainer<>("postgres:14.4-alpine");
+class MdbApplicationTests extends PostgresTests {
+    @Autowired
+    private ClusterPostgresRepository clusterPostgresRepository;
 
     @Test
     void contextLoads() {
+    }
+
+    @Test
+    void testJooq() {
+        clusterPostgresRepository.getByIdO(UUID.randomUUID());
     }
 }
