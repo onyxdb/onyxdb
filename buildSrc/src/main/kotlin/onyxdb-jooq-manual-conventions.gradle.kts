@@ -1,3 +1,4 @@
+import nu.studer.gradle.jooq.JooqGenerate
 import org.testcontainers.containers.PostgreSQLContainer
 
 plugins {
@@ -10,19 +11,36 @@ dependencies {
     // Version should be synced with libs.versions.toml
     jooqGenerator("org.postgresql:postgresql:42.7.2")
 }
+println(project.gradle.startParameter.taskNames)
+val permittedTasks: List<String> = listOf(
+    JooqConfig.GENERATE_JOOQ_TASK,
+    CustomTasksConfig.ONYXDB_GENERATE_ALL_CODEGEN,
+    "build"
+)
 
-val postgresContainer: PostgreSQLContainer<Nothing> =
-    PostgreSQLContainer<Nothing>(JooqConfig.POSTGRES_DOCKER_IMAGE).apply {
-        start()
+fun isTestTask(taskName: String): Boolean {
+    return "test" in taskName.split(":")
+}
+
+val triggeredTaskNames: MutableList<String> = project.gradle.startParameter.taskNames
+
+val psqlContainer: PostgreSQLContainer<Nothing>? =
+    if (permittedTasks.any { it in triggeredTaskNames } or
+        triggeredTaskNames.any { isTestTask(it) }) {
+        PostgreSQLContainer<Nothing>(JooqConfig.POSTGRES_DOCKER_IMAGE).apply {
+            start()
+        }
+    } else {
+        null
     }
 
 flyway {
     locations = arrayOf(
         "filesystem:" + projectDir.absolutePath + "/src/main/resources/db/migration"
     )
-    url = postgresContainer.jdbcUrl
-    user = postgresContainer.username
-    password = postgresContainer.password
+    url = psqlContainer?.jdbcUrl
+    user = psqlContainer?.username
+    password = psqlContainer?.password
 }
 
 jooq {
@@ -33,9 +51,9 @@ jooq {
                 logging = org.jooq.meta.jaxb.Logging.ERROR
                 jdbc.apply {
                     driver = "org.postgresql.Driver"
-                    url = postgresContainer.jdbcUrl
-                    user = postgresContainer.username
-                    password = postgresContainer.password
+                    url = psqlContainer?.jdbcUrl
+                    user = psqlContainer?.username
+                    password = psqlContainer?.password
                 }
                 generator.apply {
                     name = "org.jooq.codegen.DefaultGenerator"
@@ -55,11 +73,8 @@ jooq {
     }
 }
 
-tasks.named(JooqConfig.GENERATE_JOOQ_TASK).configure {
-    dependsOn(tasks.named(JooqConfig.FLYWAY_MIGRATE_TASK))
-    doLast {
-        postgresContainer.stop()
-    }
+tasks.named<JooqGenerate>(JooqConfig.GENERATE_JOOQ_TASK) {
+    dependsOn(JooqConfig.FLYWAY_MIGRATE_TASK)
 }
 
 tasks.named(CustomTasksConfig.ONYXDB_GENERATE_ALL_CODEGEN).configure {
@@ -75,4 +90,8 @@ tasks.configureEach {
     if (name == "generateEffectiveLombokConfig") {
         mustRunAfter(JooqConfig.GENERATE_JOOQ_TASK)
     }
+}
+
+gradle.buildFinished {
+    psqlContainer?.stop()
 }
