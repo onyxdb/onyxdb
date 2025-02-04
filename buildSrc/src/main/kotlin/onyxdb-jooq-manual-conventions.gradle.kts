@@ -11,7 +11,7 @@ dependencies {
     // Version should be synced with libs.versions.toml
     jooqGenerator("org.postgresql:postgresql:42.7.2")
 }
-println(project.gradle.startParameter.taskNames)
+
 val permittedTasks: List<String> = listOf(
     JooqConfig.GENERATE_JOOQ_TASK,
     CustomTasksConfig.ONYXDB_GENERATE_ALL_CODEGEN,
