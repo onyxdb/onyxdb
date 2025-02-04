@@ -15,29 +15,21 @@ dependencies {
 val permittedTasks: Set<String> = setOf(
     JooqConfig.GENERATE_JOOQ_TASK,
     CustomTasksConfig.ONYXDB_GENERATE_ALL_CODEGEN,
-    "build"
+    "build",
+    "test",
+    "testClasses"
 )
-
-fun isTestTask(taskName: String): Boolean {
-    return taskName in setOf(
-        "test",
-        "testClasses"
-    )
-}
 
 val triggeredTaskNames: MutableList<String> = project.gradle.startParameter.taskNames
 
-System.err.println(triggeredTaskNames)
 val psqlContainer: PostgreSQLContainer<Nothing>? =
-    if (permittedTasks.any { it in triggeredTaskNames } ||
-        triggeredTaskNames.all { isTestTask(it) }) {
+    if (permittedTasks.any { it in triggeredTaskNames }) {
         PostgreSQLContainer<Nothing>(JooqConfig.POSTGRES_DOCKER_IMAGE).apply {
             start()
         }
     } else {
         null
     }
-System.err.println(psqlContainer)
 
 
 flyway {
