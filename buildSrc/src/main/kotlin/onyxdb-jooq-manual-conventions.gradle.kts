@@ -94,7 +94,6 @@ tasks.configureEach {
 }
 
 gradle.taskGraph.whenReady {
-    System.err.println(gradle.taskGraph.allTasks)
     if (!gradle.taskGraph.allTasks.any { it.project.name == project.name && it.name == JooqConfig.GENERATE_JOOQ_TASK }) {
         psqlContainer?.stop()
     }
