@@ -7,6 +7,7 @@ object JooqConfig {
     const val GENERATE_JOOQ_TASK = "generateJooq"
     const val FLYWAY_MIGRATE_TASK = "flywayMigrate"
     const val POSTGRES_DOCKER_IMAGE = "postgres:14.4-alpine"
+    const val STOP_PSQL_CONTAINER = "stopPsqlContainer"
 }
 
 object CustomTasksConfig {

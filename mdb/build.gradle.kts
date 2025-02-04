@@ -26,6 +26,7 @@ dependencies {
 	implementation(libs.orgJetbrains.annotations)
 
 	testImplementation(libs.springBoot.starterTest)
+	testImplementation(libs.springBoot.starterTestcontainers)
 	testImplementation(libs.testcontainers.junitJupiter)
 	testImplementation(libs.testcontainers.postgresql)
 }

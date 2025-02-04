@@ -1,7 +1,5 @@
 package com.onyxdb.mdb;
 
-import javax.annotation.PreDestroy;
-
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -15,8 +13,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
  * @author foxleren
  */
 @Testcontainers
-@ContextConfiguration(initializers = PostgresTest.DataSourceInitializer.class)
-public abstract class PostgresTest {
+@ContextConfiguration(initializers = PostgresTests.DataSourceInitializer.class)
+public abstract class PostgresTests {
     @Container
     private static final PostgreSQLContainer<?> postgresContainer = new PostgreSQLContainer<>(
             "postgres:14.4-alpine"
@@ -32,10 +30,5 @@ public abstract class PostgresTest {
                     "spring.datasource.password=" + postgresContainer.getPassword()
             );
         }
-    }
-
-    @PreDestroy
-    public void cleanup() {
-        postgresContainer.stop();
     }
 }

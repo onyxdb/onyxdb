@@ -1,3 +1,4 @@
+import nu.studer.gradle.jooq.JooqGenerate
 import org.testcontainers.containers.PostgreSQLContainer
 
 plugins {
@@ -11,18 +12,33 @@ dependencies {
     jooqGenerator("org.postgresql:postgresql:42.7.2")
 }
 
-val postgresContainer: PostgreSQLContainer<Nothing> =
-    PostgreSQLContainer<Nothing>(JooqConfig.POSTGRES_DOCKER_IMAGE).apply {
-        start()
+val permittedTasks: Set<String> = setOf(
+    JooqConfig.GENERATE_JOOQ_TASK,
+    CustomTasksConfig.ONYXDB_GENERATE_ALL_CODEGEN,
+    "build",
+    "test",
+    "testClasses"
+)
+
+val triggeredTaskNames: MutableList<String> = project.gradle.startParameter.taskNames
+
+val psqlContainer: PostgreSQLContainer<Nothing>? =
+    if (permittedTasks.any { it in triggeredTaskNames }) {
+        PostgreSQLContainer<Nothing>(JooqConfig.POSTGRES_DOCKER_IMAGE).apply {
+            start()
+        }
+    } else {
+        null
     }
+
 
 flyway {
     locations = arrayOf(
         "filesystem:" + projectDir.absolutePath + "/src/main/resources/db/migration"
     )
-    url = postgresContainer.jdbcUrl
-    user = postgresContainer.username
-    password = postgresContainer.password
+    url = psqlContainer?.jdbcUrl
+    user = psqlContainer?.username
+    password = psqlContainer?.password
 }
 
 jooq {
@@ -33,9 +49,9 @@ jooq {
                 logging = org.jooq.meta.jaxb.Logging.ERROR
                 jdbc.apply {
                     driver = "org.postgresql.Driver"
-                    url = postgresContainer.jdbcUrl
-                    user = postgresContainer.username
-                    password = postgresContainer.password
+                    url = psqlContainer?.jdbcUrl
+                    user = psqlContainer?.username
+                    password = psqlContainer?.password
                 }
                 generator.apply {
                     name = "org.jooq.codegen.DefaultGenerator"
@@ -55,15 +71,15 @@ jooq {
     }
 }
 
-tasks.named(JooqConfig.GENERATE_JOOQ_TASK).configure {
-    dependsOn(tasks.named(JooqConfig.FLYWAY_MIGRATE_TASK))
+tasks.register(JooqConfig.STOP_PSQL_CONTAINER) {
     doLast {
-        postgresContainer.stop()
+        psqlContainer?.stop()
     }
 }
 
-tasks.named(CustomTasksConfig.ONYXDB_GENERATE_ALL_CODEGEN).configure {
-    dependsOn(JooqConfig.GENERATE_JOOQ_TASK)
+tasks.named<JooqGenerate>(JooqConfig.GENERATE_JOOQ_TASK) {
+    dependsOn(JooqConfig.FLYWAY_MIGRATE_TASK)
+    finalizedBy(JooqConfig.STOP_PSQL_CONTAINER)
 }
 
 tasks.compileJava {
@@ -74,5 +90,11 @@ tasks.configureEach {
     // Fixes error: Task ':generateEffectiveLombokConfig' uses this output of task ':generateJooq' without declaring an explicit or implicit dependency.
     if (name == "generateEffectiveLombokConfig") {
         mustRunAfter(JooqConfig.GENERATE_JOOQ_TASK)
+    }
+}
+
+gradle.taskGraph.whenReady {
+    if (!gradle.taskGraph.allTasks.any { it.project.name == project.name && it.name == JooqConfig.GENERATE_JOOQ_TASK }) {
+        psqlContainer?.stop()
     }
 }
