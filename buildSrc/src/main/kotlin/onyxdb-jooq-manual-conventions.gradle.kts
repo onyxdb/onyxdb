@@ -20,13 +20,14 @@ val permittedTasks: Set<String> = setOf(
 
 fun isTestTask(taskName: String): Boolean {
     return taskName in setOf(
-        ":${project.name}:test",
-        ":${project.name}:testClasses"
+        "test",
+        "testClasses"
     )
 }
 
 val triggeredTaskNames: MutableList<String> = project.gradle.startParameter.taskNames
 
+System.err.println(triggeredTaskNames)
 val psqlContainer: PostgreSQLContainer<Nothing>? =
     if (permittedTasks.any { it in triggeredTaskNames } ||
         triggeredTaskNames.all { isTestTask(it) }) {
@@ -36,6 +37,8 @@ val psqlContainer: PostgreSQLContainer<Nothing>? =
     } else {
         null
     }
+System.err.println(psqlContainer)
+
 
 flyway {
     locations = arrayOf(
@@ -99,6 +102,7 @@ tasks.configureEach {
 }
 
 gradle.taskGraph.whenReady {
+    System.err.println(gradle.taskGraph.allTasks)
     if (!gradle.taskGraph.allTasks.any { it.project.name == project.name && it.name == JooqConfig.GENERATE_JOOQ_TASK }) {
         psqlContainer?.stop()
     }
