@@ -11,25 +11,26 @@ dependencies {
     // Version should be synced with libs.versions.toml
     jooqGenerator("org.postgresql:postgresql:42.7.2")
 }
+//val permittedTasks: Set<String> = setOf(
+//    JooqConfig.GENERATE_JOOQ_TASK,
+//    CustomTasksConfig.ONYXDB_GENERATE_ALL_CODEGEN,
+//    "build",
+//    "test",
+//    "testClasses",
+//    "mdb:classes",
+//)
 
-val permittedTasks: Set<String> = setOf(
-    JooqConfig.GENERATE_JOOQ_TASK,
-    CustomTasksConfig.ONYXDB_GENERATE_ALL_CODEGEN,
-    "build",
-    "test",
-    "testClasses"
-)
 
-val triggeredTaskNames: MutableList<String> = project.gradle.startParameter.taskNames
+//val triggeredTaskNames: MutableList<String> = project.gradle.startParameter.taskNames
 
 val psqlContainer: PostgreSQLContainer<Nothing>? =
-    if (permittedTasks.any { it in triggeredTaskNames }) {
+//    if (permittedTasks.any { it in triggeredTaskNames }) {
         PostgreSQLContainer<Nothing>(JooqConfig.POSTGRES_DOCKER_IMAGE).apply {
             start()
         }
-    } else {
-        null
-    }
+//    } else {
+//        null
+//    }
 
 
 flyway {
