@@ -11,14 +11,14 @@ import com.onyxdb.mdb.generated.openapi.models.V1GetClusterResponse;
 public record Cluster(
         UUID id,
         String name,
-        String description,
+        UUID projectId,
         ClusterType type
 ) {
     public ClustersRecord toJooqClustersRecord() {
         return new ClustersRecord(
                 id,
                 name,
-                description,
+                projectId,
                 com.onyxdb.mdb.generated.jooq.enums.ClusterType.valueOf(type.value())
         );
     }
@@ -27,7 +27,6 @@ public record Cluster(
         return new V1GetClusterResponse(
                 id,
                 name,
-                description,
                 V1GetClusterResponse.TypeEnum.fromValue(type.value())
         );
     }
@@ -36,7 +35,7 @@ public record Cluster(
         return new Cluster(
                 r.getId(),
                 r.getName(),
-                r.getDescription(),
+                r.getProjectId(),
                 ClusterType.fromValue(r.getType().getLiteral())
         );
     }
@@ -45,7 +44,7 @@ public record Cluster(
         return new Cluster(
                 UUID.randomUUID(),
                 c.name(),
-                c.description(),
+                c.projectId(),
                 ClusterType.MONGODB
         );
     }

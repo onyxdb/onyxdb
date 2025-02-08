@@ -1,4 +1,4 @@
-package com.onyxdb.mdb.context;
+package com.onyxdb.mdb.configurations;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
