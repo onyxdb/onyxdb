@@ -12,4 +12,6 @@ public interface ClusterRepository {
     void create(Cluster cluster);
 
     Optional<Cluster> getByIdO(UUID id);
+
+    void updateProject(UUID clusterId, UUID projectId);
 }

@@ -38,4 +38,12 @@ public class ClusterPostgresRepository implements ClusterRepository {
                 .map(r -> r.into(ClustersRecord.class))
                 .map(Cluster::fromJooqClustersRecord);
     }
+
+    @Override
+    public void updateProject(UUID clusterId, UUID projectId) {
+        dslContext.update(CLUSTERS)
+                .set(CLUSTERS.PROJECT_ID, projectId)
+                .where(CLUSTERS.ID.eq(clusterId))
+                .execute();
+    }
 }
