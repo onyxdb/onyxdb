@@ -27,6 +27,7 @@ public record Cluster(
         return new V1GetClusterResponse(
                 id,
                 name,
+                projectId,
                 V1GetClusterResponse.TypeEnum.fromValue(type.value())
         );
     }
