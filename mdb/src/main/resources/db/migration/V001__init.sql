@@ -1,14 +1,26 @@
+CREATE TABLE public.projects
+(
+    id         uuid        NOT NULL,
+    name       varchar(64) NOT NULL,
+    created_at timestamp   NOT NULL,
+    created_by uuid        NOT NULL,
+    owner_id   uuid        NOT NULL,
+    PRIMARY KEY (id),
+    UNIQUE (name)
+);
+
 CREATE TYPE public.cluster_type AS ENUM (
     'mongodb'
     );
 
 CREATE TABLE public.clusters
 (
-    id          uuid                NOT NULL,
-    name        varchar(64)         NOT NULL,
-    description varchar(256)        NOT NULL,
-    type        public.cluster_type NOT NULL,
-    PRIMARY KEY (id)
+    id         uuid                NOT NULL,
+    name       varchar(64)         NOT NULL,
+    project_id uuid                NOT NULL,
+    type       public.cluster_type NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (project_id) REFERENCES projects (id)
 );
 
 CREATE TYPE public.cluster_operation_type AS ENUM (
@@ -75,3 +87,17 @@ CREATE TABLE public.cluster_tasks_to_blocker_tasks
     FOREIGN KEY (blocker_task_id) REFERENCES public.cluster_tasks (id),
     PRIMARY KEY (task_id, blocker_task_id)
 );
+
+INSERT INTO projects
+VALUES ('5cb0ca1c-e6c1-47ab-b832-0074312490a3',
+        'test-project',
+        now(),
+        '66ee0ec9-1e19-4f1b-ba8e-4e817d4fa1f2',
+        '66ee0ec9-1e19-4f1b-ba8e-4e817d4fa1f2');
+
+
+INSERT INTO clusters
+VALUES ('062c4806-0248-4c5d-86da-e1244e172619',
+        'test-cluster',
+        '5cb0ca1c-e6c1-47ab-b832-0074312490a3',
+        'mongodb');

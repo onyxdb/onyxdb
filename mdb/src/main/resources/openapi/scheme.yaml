@@ -6,6 +6,25 @@ servers:
   - url: http://localhost:9001
     description: localhost
 paths:
+  /api/v1/projects:
+    post:
+      summary: Create project
+      operationId: v1ProjectsCreateProject
+      tags:
+        - v1Projects
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/V1CreateProjectRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/V1CreateProjectResponse'
   /api/v1/clusters:
     post:
       summary: Create cluster.
@@ -60,23 +79,42 @@ components:
       properties:
         message:
           type: string
-    V1CreateClusterRequest:
+    V1CreateProjectRequest:
       type: object
       required:
         - name
-        - resources
-        - spec
+        - ownerId
       properties:
         name:
           type: string
           minLength: 1
           maxLength: 64
-          example: Cluster name
-        description:
+          example: test-project
+        ownerId:
+          type: string
+          format: uuid
+    V1CreateProjectResponse:
+      type: object
+      required:
+        - clusterId
+      properties:
+        clusterId:
+          type: string
+          format: uuid
+    V1CreateClusterRequest:
+      type: object
+      required:
+        - name
+        - projectId
+      properties:
+        name:
           type: string
           minLength: 1
-          maxLength: 256
-          example: Cluster description
+          maxLength: 64
+          example: test-cluster
+        projectId:
+          type: string
+          format: uuid
     V1CreateClusterResponse:
       type: object
       required:
@@ -90,7 +128,7 @@ components:
       required:
         - id
         - name
-        - description
+        - projectId
         - type
       properties:
         id:
@@ -98,8 +136,9 @@ components:
           format: uuid
         name:
           type: string
-        description:
+        projectId:
           type: string
+          format: uuid
         type:
           type: string
           enum:

@@ -1,4 +1,4 @@
-package com.onyxdb.mdb.context;
+package com.onyxdb.mdb.configurations;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  */
 @Configuration
 @EnableTransactionManagement
-public class RepositoryContextConfiguration {
+public class DatasourceConfiguration {
     @Bean
     public DataSourceTransactionManager dataSourceTransactionManager(DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);

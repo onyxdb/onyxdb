@@ -30,7 +30,6 @@ public class ClusterPostgresRepository implements ClusterRepository {
         return dslContext.select(
                         CLUSTERS.ID,
                         CLUSTERS.NAME,
-                        CLUSTERS.DESCRIPTION,
                         CLUSTERS.TYPE
                 )
                 .from(CLUSTERS)
