@@ -12,6 +12,7 @@ import com.onyxdb.mdb.generated.openapi.apis.V1ClustersApi;
 import com.onyxdb.mdb.generated.openapi.models.V1CreateClusterRequest;
 import com.onyxdb.mdb.generated.openapi.models.V1CreateClusterResponse;
 import com.onyxdb.mdb.generated.openapi.models.V1GetClusterResponse;
+import com.onyxdb.mdb.generated.openapi.models.V1UpdateClusterProjectRequest;
 import com.onyxdb.mdb.models.Cluster;
 import com.onyxdb.mdb.models.ClusterToCreate;
 import com.onyxdb.mdb.services.BaseClusterService;
@@ -37,5 +38,11 @@ public class V1ClusterController implements V1ClustersApi {
         var cluster = clusterO.orElseThrow(() -> new ClusterNotFoundException(id));
         var response = cluster.toV1GetClusterResponse();
         return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public ResponseEntity<Void> v1ClustersUpdateProject(V1UpdateClusterProjectRequest rq) {
+        clusterService.updateProject(rq.getClusterId(), rq.getProjectId());
+        return ResponseEntity.ok(null);
     }
 }

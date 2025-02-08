@@ -109,4 +109,9 @@ public class ClusterService implements BaseClusterService {
     public List<ClusterTask> getTasksToProcess(int limit) {
         return clusterTaskRepository.getTasksToProcess(limit);
     }
+
+    @Override
+    public void updateProject(UUID clusterId, UUID projectId) {
+        clusterRepository.updateProject(clusterId, projectId);
+    }
 }

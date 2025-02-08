@@ -70,6 +70,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/V1GetClusterResponse'
+  /api/v1/clusters/update-project:
+    put:
+      summary: Update cluster project
+      operationId: v1ClustersUpdateProject
+      tags:
+        - v1Clusters
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/V1UpdateClusterProjectRequest'
+      responses:
+        '200':
+          description: OK
 components:
   schemas:
     V1BadRequestResponse:
@@ -143,3 +158,15 @@ components:
           type: string
           enum:
             - mongodb
+    V1UpdateClusterProjectRequest:
+      type: object
+      required:
+        - clusterId
+        - projectId
+      properties:
+        clusterId:
+          type: string
+          format: uuid
+        projectId:
+          type: string
+          format: uuid

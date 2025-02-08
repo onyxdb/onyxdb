@@ -30,4 +30,6 @@ public interface BaseClusterService {
     );
 
     List<ClusterTask> getTasksToProcess(int limit);
+
+    void updateProject(UUID clusterId, UUID projectId);
 }
