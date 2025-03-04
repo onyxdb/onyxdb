@@ -28,3 +28,8 @@ springdoc:
     path: /internal/api-docs
   swagger-ui:
     path: /internal/swagger-ui
+
+jwt-token:
+  salt-jwt: ${JWT_TOKEN_SALT_JWT:ns9ozm2ani3oc6xo4pozoijxsperv8rpo1bsdijvdlpszq}
+  salt-refresh: ${JWT_TOKEN_SALT_REFRESH:nn9ozm2ani3oc6xo4pozoijxsperv8rpo1bsdijvdlpszq}
+  expiration: ${JWT_TOKEN_EXPIRATION:5 } # minutes

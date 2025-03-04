@@ -12,6 +12,7 @@ flywaydb-flywayCore = "10.17.1"
 studerJooq-studerJooqGradlePlugin = "9.0"
 testcontainers-junitJupiter = "1.20.1"
 testcontainers-postgresql = "1.17.3"
+io-jsonwebtoken = "0.11.2"
 # Version should be synced with onyxdb-jooq-manual-conventions plugin
 postgresql-postgresql = "42.7.2"
 apacheCommons-commonsLang3 = "3.17.0"
@@ -55,6 +56,10 @@ testcontainers-postgresql = { group = "org.testcontainers", name = "postgresql",
 postgresql-postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "postgresql-postgresql" }
 apacheCommons-commonsLang3 = { group = "org.apache.commons", name = "commons-lang3", version.ref = "apacheCommons-commonsLang3" }
 springDoc-springdocOpenapiStarterWebmvcUi = { group = "org.springdoc", name = "springdoc-openapi-starter-webmvc-ui", version.ref = "springDoc-springdocOpenapiStarterWebmvcUi" }
+ioJsonwebtoken-jjwtApi = { group = 'io.jsonwebtoken', name = 'jjwt-api', version.ref = 'io-jsonwebtoken' }
+ioJsonwebtoken-jjwtImpl = { group = 'io.jsonwebtoken', name = 'jjwt-impl', version.ref = 'io-jsonwebtoken' }
+ioJsonwebtoken-jjwtJackson = { group = 'io.jsonwebtoken', name = 'jjwt-jackson', version.ref = 'io-jsonwebtoken' }
+
 # GraphQL:
 netflix-graphql-dgs-codegen = { group = "com.netflix.graphql.dgs", name = "graphql-dgs-spring-graphql-starter" }
 netflix-graphql-dgs-starterTest = { group = "com.netflix.graphql.dgs", name = "graphql-dgs-spring-graphql-starter-test" }

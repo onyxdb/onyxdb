@@ -1778,6 +1778,12 @@ paths:
                 $ref: '#/components/schemas/NotFoundResponse'
 
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
   schemas:
     AccountDTO:
       type: object
@@ -2085,3 +2091,7 @@ components:
       properties:
         message:
           type: string
+
+#  Apply the security globally to all operations
+security:
+  - bearerAuth: []
