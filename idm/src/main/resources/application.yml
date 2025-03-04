@@ -12,9 +12,9 @@ spring:
 
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${ONYXDB_IDM_API_PSQL_URL:jdbc:postgresql://localhost:5432/postgres}
+    url: ${ONYXDB_IDM_API_PSQL_URL:jdbc:postgresql://localhost:5432/ao.fedorov}
     username: ${ONYXDB_IDM_API_PSQL_USERNAME:ao.fedorov}
-    password: ${ONYXDB_IDM_API_PSQL_PASSWORD:root}
+    password: ${ONYXDB_IDM_API_PSQL_PASSWORD:}
   jooq:
     sql-dialect: Postgres
   flyway:
