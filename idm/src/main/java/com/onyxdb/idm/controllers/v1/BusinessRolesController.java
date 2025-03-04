@@ -2,8 +2,10 @@ package com.onyxdb.idm.controllers.v1;
 
 import com.onyxdb.idm.generated.openapi.apis.BusinessRolesApi;
 import com.onyxdb.idm.generated.openapi.models.BusinessRoleDTO;
+import com.onyxdb.idm.generated.openapi.models.PaginatedBusinessRoleResponse;
 import com.onyxdb.idm.generated.openapi.models.RoleDTO;
 import com.onyxdb.idm.models.BusinessRole;
+import com.onyxdb.idm.models.PaginatedResult;
 import com.onyxdb.idm.models.Role;
 import com.onyxdb.idm.services.BusinessRoleService;
 
@@ -39,16 +41,49 @@ public class BusinessRolesController implements BusinessRolesApi {
     }
 
     @Override
+    public ResponseEntity<PaginatedBusinessRoleResponse> getAllBusinessRoles(
+            String search, Integer limit, Integer offset
+    ) {
+        PaginatedResult<BusinessRole> businessRoles = businessRoleService.findAll(search, limit, offset);
+        List<BusinessRoleDTO> businessRoleDTOs = businessRoles.data().stream().map(BusinessRole::toDTO).toList();
+        return ResponseEntity.ok(new PaginatedBusinessRoleResponse()
+                .data(businessRoleDTOs)
+                .totalCount(businessRoles.totalCount())
+                .startPosition(businessRoles.startPosition())
+                .endPosition(businessRoles.endPosition())
+        );
+    }
+
+    @Override
     public ResponseEntity<BusinessRoleDTO> getBusinessRoleById(UUID businessRoleId) {
         BusinessRole businessRole = businessRoleService.findById(businessRoleId);
         return ResponseEntity.ok(businessRole.toDTO());
     }
 
+    /**
+     * GET /api/v1/business-roles/{businessRoleId}/children : Get a business role children business roles
+     *
+     * @param businessRoleId (required)
+     * @return OK (status code 200)
+     * or Not Found (status code 404)
+     * or Bad Request (status code 400)
+     */
     @Override
-    public ResponseEntity<List<BusinessRoleDTO>> getAllBusinessRoles() {
-        List<BusinessRole> businessRoles = businessRoleService.findAll();
-        List<BusinessRoleDTO> businessRoleDTOs = businessRoles.stream().map(BusinessRole::toDTO).toList();
-        return ResponseEntity.ok(businessRoleDTOs);
+    public ResponseEntity<List<BusinessRoleDTO>> getBusinessRoleChildrenBRs(UUID businessRoleId) {
+        return null;
+    }
+
+    /**
+     * GET /api/v1/business-roles/{businessRoleId}/parents : Get a business role parents business roles
+     *
+     * @param businessRoleId (required)
+     * @return OK (status code 200)
+     * or Not Found (status code 404)
+     * or Bad Request (status code 400)
+     */
+    @Override
+    public ResponseEntity<List<BusinessRoleDTO>> getBusinessRoleParentsBRs(UUID businessRoleId) {
+        return null;
     }
 
     @Override

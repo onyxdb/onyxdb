@@ -13,17 +13,17 @@ import java.util.UUID;
 public interface ProductRepository {
     Optional<Product> findById(UUID id);
 
+    List<Product> findAll();
+
     List<Product> findRootProducts();
 
     List<Product> findChildren(UUID productId);
 
     List<ProductTree> findChildrenTree(UUID productId, int depth);
 
-    List<Product> findAll();
+    Product create(Product product);
 
-    void create(Product product);
-
-    void update(Product product);
+    Product update(Product product);
 
     void delete(UUID id);
 }

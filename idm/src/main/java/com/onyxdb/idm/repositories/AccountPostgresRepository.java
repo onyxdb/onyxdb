@@ -8,15 +8,20 @@ import com.onyxdb.idm.generated.jooq.tables.BusinessRoleTable;
 import com.onyxdb.idm.generated.jooq.tables.PermissionTable;
 import com.onyxdb.idm.generated.jooq.tables.RolePermissionTable;
 import com.onyxdb.idm.generated.jooq.tables.RoleTable;
+import com.onyxdb.idm.generated.jooq.tables.records.AccountTableRecord;
 import com.onyxdb.idm.models.Account;
 import com.onyxdb.idm.models.BusinessRole;
+import com.onyxdb.idm.models.PaginatedResult;
 import com.onyxdb.idm.models.Permission;
 import com.onyxdb.idm.models.Role;
 
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
+import org.jooq.Condition;
+import org.jooq.Result;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -52,9 +57,28 @@ public class AccountPostgresRepository implements AccountRepository {
     }
 
     @Override
-    public List<Account> findAll() {
-        return dslContext.selectFrom(accountTable)
-                .fetch(Account::fromDAO);
+    public PaginatedResult<Account> findAll(String query, int limit, int offset) {
+        Condition condition = accountTable.ID.eq(UUID.fromString(query))
+                .or(accountTable.LOGIN.containsIgnoreCase(query))
+                .or(accountTable.EMAIL.containsIgnoreCase(query))
+                .or(accountTable.FIRST_NAME.containsIgnoreCase(query))
+                .or(accountTable.LAST_NAME.containsIgnoreCase(query));
+
+        Result<AccountTableRecord> records = dslContext.selectFrom(accountTable)
+                .where(condition)
+                .limit(limit)
+                .offset(offset)
+                .fetch();
+
+        List<Account> data = records.map(record -> Account.fromDAO(record.into(accountTable)));
+
+        int totalCount = dslContext.fetchCount(accountTable, condition);
+        return new PaginatedResult<>(
+                data,
+                totalCount,
+                offset + 1,
+                Math.min(offset + limit, totalCount)
+        );
     }
 
 //    @Override
@@ -74,32 +98,40 @@ public class AccountPostgresRepository implements AccountRepository {
 //    }
 
     @Override
-    public void create(Account account) {
-        dslContext.insertInto(accountTable)
-                .set(accountTable.ID, account.id())
+    public Account create(Account account) {
+        var record = dslContext.insertInto(accountTable)
+                .set(accountTable.ID, UUID.randomUUID())
                 .set(accountTable.LOGIN, account.login())
                 .set(accountTable.PASSWORD, account.password())
                 .set(accountTable.EMAIL, account.email())
                 .set(accountTable.FIRST_NAME, account.firstName())
                 .set(accountTable.LAST_NAME, account.lastName())
                 .set(accountTable.DATA, account.getDataAsJsonb())
-                .set(accountTable.CREATED_AT, account.createdAt())
-                .set(accountTable.UPDATED_AT, account.updatedAt())
-                .execute();
+                .set(accountTable.CREATED_AT, LocalDateTime.now())
+                .set(accountTable.UPDATED_AT, LocalDateTime.now())
+                .returning()
+                .fetchOne();
+
+        assert record != null;
+        return Account.fromDAO(record);
     }
 
     @Override
-    public void update(Account account) {
-        dslContext.update(accountTable)
+    public Account update(Account account) {
+        var record = dslContext.update(accountTable)
                 .set(accountTable.LOGIN, account.login())
                 .set(accountTable.PASSWORD, account.password())
                 .set(accountTable.EMAIL, account.email())
                 .set(accountTable.FIRST_NAME, account.firstName())
                 .set(accountTable.LAST_NAME, account.lastName())
                 .set(accountTable.DATA, account.getDataAsJsonb())
-                .set(accountTable.UPDATED_AT, account.updatedAt())
+                .set(accountTable.UPDATED_AT, LocalDateTime.now())
                 .where(accountTable.ID.eq(account.id()))
-                .execute();
+                .returning()
+                .fetchOne();
+
+        assert record != null;
+        return Account.fromDAO(record);
     }
 
     @Override
@@ -132,6 +164,15 @@ public class AccountPostgresRepository implements AccountRepository {
                 .fetch(link -> dslContext.selectFrom(businessRoleTable)
                         .where(businessRoleTable.ID.eq(link.getBusinessRoleId()))
                         .fetchOne(BusinessRole::fromDAO));
+    }
+
+    @Override
+    public List<Role> getAccountRoles(UUID accountId) {
+        return dslContext.selectFrom(accountRoleTable)
+                .where(accountRoleTable.ACCOUNT_ID.eq(accountId))
+                .fetch(link -> dslContext.selectFrom(roleTable)
+                        .where(roleTable.ID.eq(link.getRoleId()))
+                        .fetchOne(Role::fromDAO));
     }
 
     @Override

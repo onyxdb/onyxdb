@@ -16,6 +16,7 @@ import org.jooq.Record;
 import org.jooq.Result;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -79,25 +80,37 @@ public class RolePostgresRepository implements RoleRepository {
     }
 
     @Override
-    public void create(Role role) {
-        dslContext.insertInto(roleTable)
-                .set(roleTable.ID, role.id())
+    public Role create(Role role) {
+        var id = UUID.randomUUID();
+        var record = dslContext.insertInto(roleTable)
+                .set(roleTable.ID, UUID.randomUUID())
                 .set(roleTable.NAME, role.name())
+                .set(roleTable.SHOP_NAME, role.name())
                 .set(roleTable.DESCRIPTION, role.description())
+                .set(roleTable.IS_SHOP_HIDDEN, role.isShopHidden())
                 .set(roleTable.PRODUCT_ID, role.productId())
-                .set(roleTable.CREATED_AT, role.createdAt())
-                .set(roleTable.UPDATED_AT, role.updatedAt())
-                .execute();
+                .set(roleTable.CREATED_AT, LocalDateTime.now())
+                .set(roleTable.UPDATED_AT, LocalDateTime.now())
+                .returning()
+                .fetchOne();
+
+        assert record != null;
+        return Role.fromDAO(record);
     }
 
     @Override
-    public void update(Role role) {
-        dslContext.update(roleTable)
+    public Role update(Role role) {
+        var record = dslContext.update(roleTable)
                 .set(roleTable.NAME, role.name())
+                .set(roleTable.SHOP_NAME, role.name())
                 .set(roleTable.DESCRIPTION, role.description())
-                .set(roleTable.UPDATED_AT, role.updatedAt())
+                .set(roleTable.UPDATED_AT, LocalDateTime.now())
                 .where(roleTable.ID.eq(role.id()))
-                .execute();
+                .returning()
+                .fetchOne();
+
+        assert record != null;
+        return Role.fromDAO(record);
     }
 
     @Override

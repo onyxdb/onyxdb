@@ -14,9 +14,9 @@ public interface PermissionRepository {
 
     List<Permission> findAll();
 
-    void create(Permission permission);
+    Permission create(Permission permission);
 
-    void update(Permission permission);
+    Permission update(Permission permission);
 
     void delete(UUID id);
 }

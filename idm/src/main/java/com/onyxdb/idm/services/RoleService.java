@@ -1,14 +1,18 @@
 package com.onyxdb.idm.services;
 
 import com.onyxdb.idm.controllers.v1.ResourceNotFoundException;
+import com.onyxdb.idm.models.PaginatedResult;
 import com.onyxdb.idm.models.Permission;
 import com.onyxdb.idm.models.Role;
+import com.onyxdb.idm.models.RoleWithPermissions;
 import com.onyxdb.idm.repositories.RoleRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -18,6 +22,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class RoleService {
     private final RoleRepository roleRepository;
+    private final PermissionService permissionService;
 
     public Role findById(UUID id) {
         return roleRepository
@@ -25,38 +30,53 @@ public class RoleService {
                 .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
     }
 
-    public List<Role> findAll() {
-        return roleRepository.findAll();
+    public PaginatedResult<Role> findAll(String query, UUID productId, UUID orgUnitId, int limit, int offset) {
+        return roleRepository.findAll(query, productId, orgUnitId, limit, offset);
     }
 
-    public Role create(Role role) {
-        Role forCreate = new Role(
-                UUID.randomUUID(),
-                role.name(),
-                role.roleType(),
-                role.shopName(),
-                role.description(),
-                role.productId(),
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
-        roleRepository.create(forCreate);
-        return forCreate;
+    public RoleWithPermissions create(RoleWithPermissions roleWithPermission) {
+        Role role = roleWithPermission.role();
+        Role newRole = roleRepository.create(role);
+
+        List<Permission> permissions = roleWithPermission.permissions();
+
+        List<Permission> newPermissions = permissions.stream().map(permissionService::create).toList();
+
+        newPermissions.forEach(p -> roleRepository.addPermission(newRole.id(), p.id()));
+
+        return new RoleWithPermissions(role, newPermissions);
     }
 
-    public Role update(Role role) {
-        Role forUpdate = new Role(
-                role.id(),
-                role.name(),
-                role.roleType(),
-                role.shopName(),
-                role.description(),
-                role.productId(),
-                role.createdAt(),
-                LocalDateTime.now()
-        );
-        roleRepository.update(forUpdate);
-        return forUpdate;
+    public RoleWithPermissions update(RoleWithPermissions roleWithPermission) {
+        Role role = roleWithPermission.role();
+        List<Permission> updatedPermissions = roleWithPermission.permissions();
+        roleRepository.update(role);
+
+        List<Permission> existingPermissions = roleRepository.getPermissions(role.id());
+        Map<UUID, Permission> updatedPermIds = new HashMap<>();
+        updatedPermissions.forEach(p -> updatedPermIds.put(p.id(), p));
+
+        Map<UUID, Permission> existingPermIds = new HashMap<>();
+        existingPermissions.forEach(p -> existingPermIds.put(p.id(), p));
+
+        for (Permission p : existingPermissions) {
+            if (updatedPermIds.containsKey(p.id())) {
+                permissionService.update(p);
+            } else {
+                roleRepository.removePermission(role.id(), p.id());
+            }
+        }
+
+        List<Permission> newPermissions = new java.util.ArrayList<>(List.of());
+        for (Permission p : updatedPermissions) {
+            if (p.id() != null && !existingPermIds.containsKey(p.id())) {
+                var newPermission = permissionService.create(p);
+                newPermissions.add(newPermission);
+                roleRepository.addPermission(role.id(), newPermission.id());
+            }
+        }
+
+        return new RoleWithPermissions(role, newPermissions);
     }
 
     public void delete(UUID id) {
@@ -72,6 +92,6 @@ public class RoleService {
     }
 
     public List<Permission> getPermissionsByRoleId(UUID roleId) {
-        return roleRepository.getPermissionsByRoleId(roleId);
+        return roleRepository.getPermissions(roleId);
     }
 }

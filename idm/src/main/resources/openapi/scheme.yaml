@@ -809,14 +809,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RoleDTO'
+              $ref: '#/components/schemas/RoleWithPermissionsDTO'
       responses:
         '201':
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RoleDTO'
+                $ref: '#/components/schemas/RoleWithPermissionsDTO'
         '400':
           description: Bad Request
           content:
@@ -872,14 +872,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RoleDTO'
+              $ref: '#/components/schemas/RoleWithPermissionsDTO'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RoleDTO'
+                $ref: '#/components/schemas/RoleWithPermissionsDTO'
         '404':
           description: Not Found
           content:
@@ -941,61 +941,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/PermissionDTO'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundResponse'
-  /api/v1/roles/{roleId}/permissions/{permissionId}:
-    post:
-      summary: Add permission to role link
-      operationId: addPermissionToRole
-      tags:
-        - Roles
-      parameters:
-        - name: roleId
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-        - name: permissionId
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '200':
-          description: OK
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundResponse'
-    delete:
-      summary: Delete permission to role link
-      operationId: removePermissionFromRole
-      tags:
-        - Roles
-      parameters:
-        - name: roleId
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-        - name: permissionId
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '204':
-          description: No Content
         '404':
           description: Not Found
           content:
@@ -1231,6 +1176,40 @@ paths:
     get:
       summary: Get a business role children business roles
       operationId: getBusinessRoleChildrenBRs
+      tags:
+        - Business Roles
+      parameters:
+        - name: businessRoleId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BusinessRoleDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+  /api/v1/business-roles/{businessRoleId}/parents:
+    get:
+      summary: Get a business role parents business roles
+      operationId: getBusinessRoleParentsBRs
       tags:
         - Business Roles
       parameters:
@@ -1580,7 +1559,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
-  /api/v1/products/id/{productId}:
+  /api/v1/products-roots:
+    get:
+      summary: Получение корневых элементов продуктов
+      operationId: getProductsRoots
+      tags:
+        - Products
+      responses:
+        '200':
+          description: Успешное получение корневых элементов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductDTO'
+        '404':
+          description: Продукт не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+  /api/v1/products/{productId}:
     get:
       summary: Get a product by ID
       operationId: getProductById
@@ -1676,7 +1676,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
-  /api/v1/products/id/{productId}/children:
+  /api/v1/products/{productId}/children:
     get:
       summary: Получение дочерних элементов продукта
       operationId: getProductChildren
@@ -1698,6 +1698,37 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ProductDTO'
+        '404':
+          description: Продукт не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+  /api/v1/products/{productId}/tree:
+    get:
+      summary: Получение дочерних элементов продукта деревом
+      operationId: getProductTree
+      tags:
+        - Products
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: depth
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Успешное получение дочерних элементов
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductTreeDTO'
         '404':
           description: Продукт не найден
           content:
@@ -1753,6 +1784,26 @@ components:
           items:
             $ref: '#/components/schemas/AccountDTO'
 
+    PermissionDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        actionType:
+          type: string
+        resourceType:
+          type: string
+        data:
+          type: object
+          additionalProperties: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
     RoleDTO:
       type: object
       properties:
@@ -1765,6 +1816,8 @@ components:
           type: string
         shopName:
           type: string
+        isShopHidden:
+          type: boolean
         description:
           type: string
         productId:
@@ -1776,11 +1829,17 @@ components:
         updatedAt:
           type: string
           format: date-time
+
+    RoleWithPermissionsDTO:
+      type: object
+      properties:
+        role:
+          type: object
+          $ref: '#/components/schemas/RoleDTO'
         permissions:
           type: array
           items:
-            type: string
-            format: uuid
+            $ref: '#/components/schemas/PermissionDTO'
 
     PaginatedRoleResponse:
       type: object
@@ -1806,24 +1865,6 @@ components:
           type: string
         description:
           type: string
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-
-    PermissionDTO:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        actionType:
-          type: string
-        data:
-          type: object
-          additionalProperties: true
         createdAt:
           type: string
           format: date-time
@@ -1933,6 +1974,17 @@ components:
         updatedAt:
           type: string
           format: date-time
+
+    ProductTreeDTO:
+      type: object
+      properties:
+        product:
+          type: object
+          $ref: '#/components/schemas/ProductDTO'
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductTreeDTO'
 
     PaginatedProductResponse:
       type: object

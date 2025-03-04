@@ -58,13 +58,4 @@ public class DomainComponentsController implements DomainComponentsApi {
         DomainComponent updatedDomainComponent = domainComponentService.update(domainComponent);
         return ResponseEntity.ok(updatedDomainComponent.toDTO());
     }
-
-    @Override
-    public ResponseEntity<List<OrganizationUnitDTO>> getOrganizationUnitsByDomainComponentId(UUID domainComponentId) {
-        List<OrganizationUnit> organizationUnits = domainComponentService
-                .findChildrenOrganizationUnits(domainComponentId);
-        List<OrganizationUnitDTO> organizationUnitDTOs = organizationUnits
-                .stream().map(OrganizationUnit::toDTO).toList();
-        return ResponseEntity.ok(organizationUnitDTOs);
-    }
 }

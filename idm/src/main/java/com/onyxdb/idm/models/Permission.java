@@ -18,6 +18,7 @@ import com.onyxdb.idm.generated.openapi.models.PermissionDTO;
 public record Permission(
         UUID id,
         String actionType,
+        String resourceType,
         Map<String, Object> data,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
@@ -38,6 +39,7 @@ public record Permission(
         return new Permission(
                 permissionDTO.getId(),
                 permissionDTO.getActionType(),
+                permissionDTO.getResourceType(),
                 permissionDTO.getData(),
                 permissionDTO.getCreatedAt(),
                 permissionDTO.getUpdatedAt()
@@ -54,6 +56,7 @@ public record Permission(
         return new Permission(
                 permissionDAO.getId(),
                 permissionDAO.getActionType(),
+                permissionDAO.getResourceType(),
                 dataMap,
                 permissionDAO.getCreatedAt(),
                 permissionDAO.getUpdatedAt()

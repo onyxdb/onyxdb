@@ -16,9 +16,9 @@ public interface RoleRepository {
 
     PaginatedResult<Role> findAll(String query, UUID productId, UUID orgUnitId, int limit, int offset);
 
-    void create(Role role);
+    Role create(Role role);
 
-    void update(Role role);
+    Role update(Role role);
 
     void delete(UUID id);
 

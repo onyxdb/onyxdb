@@ -1,5 +1,6 @@
 package com.onyxdb.idm.repositories;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -99,21 +100,25 @@ public class RoleRequestPostgresRepository implements RoleRequestRepository {
     }
 
     @Override
-    public void create(RoleRequest roleRequest) {
-        dslContext.insertInto(roleRequestTable)
-                .set(roleRequestTable.ID, roleRequest.id())
+    public RoleRequest create(RoleRequest roleRequest) {
+        var record = dslContext.insertInto(roleRequestTable)
+                .set(roleRequestTable.ID, UUID.randomUUID())
                 .set(roleRequestTable.ROLE_ID, roleRequest.roleId())
                 .set(roleRequestTable.ACCOUNT_ID, roleRequest.accountId())
                 .set(roleRequestTable.OWNER_ID, roleRequest.ownerId())
                 .set(roleRequestTable.REASON, roleRequest.reason())
                 .set(roleRequestTable.STATUS, roleRequest.status())
-                .set(roleRequestTable.CREATED_AT, roleRequest.createdAt())
-                .execute();
+                .set(roleRequestTable.CREATED_AT, LocalDateTime.now())
+                .returning()
+                .fetchOne();
+
+        assert record != null;
+        return RoleRequest.fromDAO(record);
     }
 
     @Override
-    public void update(RoleRequest roleRequest) {
-        dslContext.update(roleRequestTable)
+    public RoleRequest update(RoleRequest roleRequest) {
+        var record = dslContext.update(roleRequestTable)
                 .set(roleRequestTable.ROLE_ID, roleRequest.roleId())
                 .set(roleRequestTable.ACCOUNT_ID, roleRequest.accountId())
                 .set(roleRequestTable.OWNER_ID, roleRequest.ownerId())
@@ -121,13 +126,18 @@ public class RoleRequestPostgresRepository implements RoleRequestRepository {
                 .set(roleRequestTable.STATUS, roleRequest.status())
                 .set(roleRequestTable.RESOLVED_AT, roleRequest.resolvedAt())
                 .where(roleRequestTable.ID.eq(roleRequest.id()))
-                .execute();
+                .returning()
+                .fetchOne();
+
+        assert record != null;
+        return RoleRequest.fromDAO(record);
     }
 
     @Override
     public void setStatus(UUID id, String status) {
         dslContext.update(roleRequestTable)
                 .set(roleRequestTable.STATUS, status)
+                .set(roleRequestTable.RESOLVED_AT, LocalDateTime.now())
                 .where(roleRequestTable.ID.eq(id))
                 .execute();
     }

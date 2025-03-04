@@ -16,9 +16,9 @@ public interface RoleRequestRepository {
 
     PaginatedResult<RoleRequest> search(String query, int limit, int offset);
 
-    void create(RoleRequest RoleRequest);
+    RoleRequest create(RoleRequest RoleRequest);
 
-    void update(RoleRequest RoleRequest);
+    RoleRequest update(RoleRequest RoleRequest);
 
     void setStatus(UUID id, String status);
 }

@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -34,24 +35,32 @@ public class DomainComponentPostgresRepository implements DomainComponentReposit
     }
 
     @Override
-    public void create(DomainComponent domainComponent) {
-        dslContext.insertInto(domainComponentTable)
-                .set(domainComponentTable.ID, domainComponent.id())
+    public DomainComponent create(DomainComponent domainComponent) {
+        var record = dslContext.insertInto(domainComponentTable)
+                .set(domainComponentTable.ID, UUID.randomUUID())
                 .set(domainComponentTable.NAME, domainComponent.name())
                 .set(domainComponentTable.DESCRIPTION, domainComponent.description())
-                .set(domainComponentTable.CREATED_AT, domainComponent.createdAt())
-                .set(domainComponentTable.UPDATED_AT, domainComponent.updatedAt())
-                .execute();
+                .set(domainComponentTable.CREATED_AT, LocalDateTime.now())
+                .set(domainComponentTable.UPDATED_AT, LocalDateTime.now())
+                .returning()
+                .fetchOne();
+
+        assert record != null;
+        return DomainComponent.fromDAO(record);
     }
 
     @Override
-    public void update(DomainComponent domainComponent) {
-        dslContext.update(domainComponentTable)
+    public DomainComponent update(DomainComponent domainComponent) {
+        var record = dslContext.update(domainComponentTable)
                 .set(domainComponentTable.NAME, domainComponent.name())
                 .set(domainComponentTable.DESCRIPTION, domainComponent.description())
-                .set(domainComponentTable.UPDATED_AT, domainComponent.updatedAt())
+                .set(domainComponentTable.UPDATED_AT, LocalDateTime.now())
                 .where(domainComponentTable.ID.eq(domainComponent.id()))
-                .execute();
+                .returning()
+                .fetchOne();
+
+        assert record != null;
+        return DomainComponent.fromDAO(record);
     }
 
     @Override

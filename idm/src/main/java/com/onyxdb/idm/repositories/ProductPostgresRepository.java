@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -79,21 +80,36 @@ public class ProductPostgresRepository implements ProductRepository {
     }
 
     @Override
-    public void create(Product product) {
-        dslContext.executeInsert(product.toDAO());
-    }
-
-    @Override
-    public void update(Product product) {
-        dslContext.update(productTable)
+    public Product create(Product product) {
+        var record = dslContext.insertInto(productTable)
                 .set(productTable.NAME, product.name())
                 .set(productTable.DESCRIPTION, product.description())
-                .set(productTable.UPDATED_AT, product.updatedAt())
                 .set(productTable.PARENT_ID, product.parent_id())
                 .set(productTable.DATA, product.getDataAsJsonb())
                 .set(productTable.OWNER_ID, product.ownerId())
+                .set(productTable.UPDATED_AT, LocalDateTime.now())
+                .returning()
+                .fetchOne();
+
+        assert record != null;
+        return Product.fromDAO(record);
+    }
+
+    @Override
+    public Product update(Product product) {
+        var record = dslContext.update(productTable)
+                .set(productTable.NAME, product.name())
+                .set(productTable.DESCRIPTION, product.description())
+                .set(productTable.PARENT_ID, product.parent_id())
+                .set(productTable.DATA, product.getDataAsJsonb())
+                .set(productTable.OWNER_ID, product.ownerId())
+                .set(productTable.UPDATED_AT, LocalDateTime.now())
                 .where(productTable.ID.eq(product.id()))
-                .execute();
+                .returning()
+                .fetchOne();
+
+        assert record != null;
+        return Product.fromDAO(record);
     }
 
     @Override

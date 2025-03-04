@@ -2,7 +2,13 @@ package com.onyxdb.idm.controllers.v1;
 
 import com.onyxdb.idm.generated.openapi.apis.AccountsApi;
 import com.onyxdb.idm.generated.openapi.models.AccountDTO;
+import com.onyxdb.idm.generated.openapi.models.BusinessRoleDTO;
+import com.onyxdb.idm.generated.openapi.models.PaginatedAccountResponse;
+import com.onyxdb.idm.generated.openapi.models.RoleDTO;
 import com.onyxdb.idm.models.Account;
+import com.onyxdb.idm.models.BusinessRole;
+import com.onyxdb.idm.models.PaginatedResult;
+import com.onyxdb.idm.models.Role;
 import com.onyxdb.idm.services.AccountService;
 
 import lombok.RequiredArgsConstructor;
@@ -36,16 +42,35 @@ public class AccountsController implements AccountsApi {
     }
 
     @Override
+    public ResponseEntity<List<BusinessRoleDTO>> getAccountBusinessRoles(UUID accountId) {
+        List<BusinessRole> businessRoles = accountService.getBusinessRoles(accountId);
+        List<BusinessRoleDTO> businessRolesDTOs = businessRoles.stream().map(BusinessRole::toDTO).toList();
+        return ResponseEntity.ok(businessRolesDTOs);
+    }
+
+    @Override
     public ResponseEntity<AccountDTO> getAccountById(UUID accountId) {
         Account account = accountService.findById(accountId);
         return ResponseEntity.ok(account.toDTO());
     }
 
     @Override
-    public ResponseEntity<List<AccountDTO>> getAllAccounts() {
-        List<Account> accounts = accountService.findAll();
-        List<AccountDTO> accountDTOs = accounts.stream().map(Account::toDTO).toList();
-        return ResponseEntity.ok(accountDTOs);
+    public ResponseEntity<List<RoleDTO>> getAccountRoles(UUID accountId) {
+        List<Role> roles = accountService.getRoles(accountId);
+        List<RoleDTO> roleDTOs = roles.stream().map(Role::toDTO).toList();
+        return ResponseEntity.ok(roleDTOs);
+    }
+
+    @Override
+    public ResponseEntity<PaginatedAccountResponse> getAllAccounts(String search, Integer limit, Integer offset) {
+        PaginatedResult<Account> accounts = accountService.findAll(search, limit, offset);
+        List<AccountDTO> accountDTOs = accounts.data().stream().map(Account::toDTO).toList();
+        return ResponseEntity.ok(new PaginatedAccountResponse()
+                .data(accountDTOs)
+                .totalCount(accounts.totalCount())
+                .startPosition(accounts.startPosition())
+                .endPosition(accounts.endPosition())
+        );
     }
 
     @Override

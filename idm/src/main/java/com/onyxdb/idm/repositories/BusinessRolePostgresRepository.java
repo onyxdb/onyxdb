@@ -6,15 +6,19 @@ import com.onyxdb.idm.generated.jooq.tables.BusinessRoleTable;
 import com.onyxdb.idm.generated.jooq.tables.RoleTable;
 import com.onyxdb.idm.generated.jooq.tables.records.BusinessRoleTableRecord;
 import com.onyxdb.idm.models.BusinessRole;
+import com.onyxdb.idm.models.PaginatedResult;
 import com.onyxdb.idm.models.Role;
+import com.onyxdb.idm.models.RoleRequest;
 
 import lombok.RequiredArgsConstructor;
+import org.jooq.Condition;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -43,9 +47,26 @@ public class BusinessRolePostgresRepository implements BusinessRoleRepository {
     }
 
     @Override
-    public List<BusinessRole> findAll() {
-        return dslContext.selectFrom(businessRoleTable)
-                .fetch(BusinessRole::fromDAO);
+    public PaginatedResult<BusinessRole> findAll(String query, Integer limit, Integer offset) {
+        Condition condition = businessRoleTable.ID.eq(UUID.fromString(query))
+                .or(businessRoleTable.NAME.containsIgnoreCase(query))
+                .or(businessRoleTable.DESCRIPTION.containsIgnoreCase(query));
+
+        Result<BusinessRoleTableRecord> records = dslContext.selectFrom(businessRoleTable)
+                .where(condition)
+                .limit(limit)
+                .offset(offset)
+                .fetch();
+
+        List<BusinessRole> data = records.map(record -> BusinessRole.fromDAO(record.into(businessRoleTable)));
+
+        int totalCount = dslContext.fetchCount(businessRoleTable, condition);
+        return new PaginatedResult<>(
+                data,
+                totalCount,
+                offset + 1,
+                Math.min(offset + limit, totalCount)
+        );
     }
 
 
@@ -76,28 +97,36 @@ public class BusinessRolePostgresRepository implements BusinessRoleRepository {
     }
 
     @Override
-    public void create(BusinessRole businessRole) {
-        dslContext.insertInto(businessRoleTable)
-                .set(businessRoleTable.ID, businessRole.id())
+    public BusinessRole create(BusinessRole businessRole) {
+        var record = dslContext.insertInto(businessRoleTable)
+                .set(businessRoleTable.ID, UUID.randomUUID())
                 .set(businessRoleTable.NAME, businessRole.name())
                 .set(businessRoleTable.DESCRIPTION, businessRole.description())
                 .set(businessRoleTable.PARENT_ID, businessRole.parentId())
                 .set(businessRoleTable.DATA, businessRole.getDataAsJsonb())
-                .set(businessRoleTable.CREATED_AT, businessRole.createdAt())
-                .set(businessRoleTable.UPDATED_AT, businessRole.updatedAt())
-                .execute();
+                .set(businessRoleTable.CREATED_AT, LocalDateTime.now())
+                .set(businessRoleTable.UPDATED_AT, LocalDateTime.now())
+                .returning()
+                .fetchOne();
+
+        assert record != null;
+        return BusinessRole.fromDAO(record);
     }
 
     @Override
-    public void update(BusinessRole businessRole) {
-        dslContext.update(businessRoleTable)
+    public BusinessRole update(BusinessRole businessRole) {
+        var record = dslContext.update(businessRoleTable)
                 .set(businessRoleTable.NAME, businessRole.name())
                 .set(businessRoleTable.DESCRIPTION, businessRole.description())
                 .set(businessRoleTable.PARENT_ID, businessRole.parentId())
                 .set(businessRoleTable.DATA, businessRole.getDataAsJsonb())
-                .set(businessRoleTable.UPDATED_AT, businessRole.updatedAt())
+                .set(businessRoleTable.UPDATED_AT, LocalDateTime.now())
                 .where(businessRoleTable.ID.eq(businessRole.id()))
-                .execute();
+                .returning()
+                .fetchOne();
+
+        assert record != null;
+        return BusinessRole.fromDAO(record);
     }
 
     @Override
