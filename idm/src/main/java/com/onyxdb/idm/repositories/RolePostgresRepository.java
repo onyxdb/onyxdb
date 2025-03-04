@@ -2,18 +2,26 @@ package com.onyxdb.idm.repositories;
 
 import com.onyxdb.idm.generated.jooq.Tables;
 import com.onyxdb.idm.generated.jooq.tables.PermissionTable;
+import com.onyxdb.idm.generated.jooq.tables.ProductTable;
 import com.onyxdb.idm.generated.jooq.tables.RolePermissionTable;
 import com.onyxdb.idm.generated.jooq.tables.RoleTable;
+import com.onyxdb.idm.models.PaginatedResult;
 import com.onyxdb.idm.models.Permission;
 import com.onyxdb.idm.models.Role;
 
 import lombok.RequiredArgsConstructor;
+import org.jooq.Condition;
 import org.jooq.DSLContext;
+import org.jooq.Record;
+import org.jooq.Result;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import static org.jooq.impl.DSL.noTable;
+import static org.jooq.impl.DSL.trueCondition;
 
 /**
  * @author ArtemFed
@@ -25,6 +33,7 @@ public class RolePostgresRepository implements RoleRepository {
     private final static RoleTable roleTable = Tables.ROLE_TABLE;
     private final static RolePermissionTable roleToPermissionTable = Tables.ROLE_PERMISSION_TABLE;
     private final static PermissionTable permissionTable = Tables.PERMISSION_TABLE;
+    private final static ProductTable productTable = Tables.PRODUCT_TABLE;
 
     @Override
     public Optional<Role> findById(UUID id) {
@@ -34,9 +43,39 @@ public class RolePostgresRepository implements RoleRepository {
     }
 
     @Override
-    public List<Role> findAll() {
-        return dslContext.selectFrom(roleTable)
-                .fetch(Role::fromDAO);
+    public PaginatedResult<Role> findAll(String query, UUID productId, UUID orgUnitId, int limit, int offset) {
+        Condition condition = trueCondition();
+
+        var table = roleTable.leftJoin(noTable()).on();
+        if (productId != null) {
+            condition = condition.and(roleTable.PRODUCT_ID.eq(productId));
+        }
+        if (orgUnitId != null) {
+            condition = condition.and(roleTable.ORG_UNIT_ID.eq(orgUnitId));
+        }
+        if (query != null && !query.isEmpty()) {
+            table = roleTable.leftJoin(productTable).on(roleTable.PRODUCT_ID.eq(productTable.ID));
+            condition = roleTable.ID.eq(UUID.fromString(query))
+                    .or(roleTable.NAME.containsIgnoreCase(query))
+                    .or(roleTable.SHOP_NAME.containsIgnoreCase(query))
+                    .or(roleTable.DESCRIPTION.containsIgnoreCase(query))
+                    .or(productTable.NAME.containsIgnoreCase(query))
+                    .or(productTable.DESCRIPTION.containsIgnoreCase(query));
+        }
+
+        Result<Record> records = dslContext.selectFrom(table)
+                .where(condition)
+                .limit(limit)
+                .offset(offset)
+                .fetch();
+        List<Role> data = records.map(record -> Role.fromDAO(record.into(roleTable)));
+
+        int totalCount = dslContext.fetchCount(roleTable, condition);
+
+        int startPosition = offset + 1;
+        int endPosition = Math.min(offset + limit, totalCount);
+
+        return new PaginatedResult<>(data, totalCount, startPosition, endPosition);
     }
 
     @Override
@@ -85,7 +124,7 @@ public class RolePostgresRepository implements RoleRepository {
     }
 
     @Override
-    public List<Permission> getPermissionsByRoleId(UUID roleId) {
+    public List<Permission> getPermissions(UUID roleId) {
         return dslContext.selectFrom(roleToPermissionTable)
                 .where(roleToPermissionTable.ROLE_ID.eq(roleId))
                 .fetch(link -> dslContext.selectFrom(permissionTable)

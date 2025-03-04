@@ -1,5 +1,6 @@
 package com.onyxdb.idm.repositories;
 
+import com.onyxdb.idm.models.PaginatedResult;
 import com.onyxdb.idm.models.Permission;
 import com.onyxdb.idm.models.Role;
 
@@ -13,7 +14,7 @@ import java.util.UUID;
 public interface RoleRepository {
     Optional<Role> findById(UUID id);
 
-    List<Role> findAll();
+    PaginatedResult<Role> findAll(String query, UUID productId, UUID orgUnitId, int limit, int offset);
 
     void create(Role role);
 
@@ -21,9 +22,9 @@ public interface RoleRepository {
 
     void delete(UUID id);
 
+    List<Permission> getPermissions(UUID roleId);
+
     void addPermission(UUID roleId, UUID permissionId);
 
     void removePermission(UUID roleId, UUID permissionId);
-
-    List<Permission> getPermissionsByRoleId(UUID roleId);
 }

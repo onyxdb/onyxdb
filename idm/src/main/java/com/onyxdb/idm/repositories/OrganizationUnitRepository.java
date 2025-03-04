@@ -2,6 +2,7 @@ package com.onyxdb.idm.repositories;
 
 import com.onyxdb.idm.models.Account;
 import com.onyxdb.idm.models.OrganizationUnit;
+import com.onyxdb.idm.models.PaginatedResult;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,9 +14,7 @@ import java.util.UUID;
 public interface OrganizationUnitRepository {
     Optional<OrganizationUnit> findById(UUID id);
 
-    List<OrganizationUnit> findAll();
-
-    List<OrganizationUnit> findByDomainComponentId(UUID domainComponentId);
+    PaginatedResult<OrganizationUnit> findAll(UUID dcId, UUID parentOuId, int limit, int offset);
 
     void create(OrganizationUnit organizationUnit);
 
@@ -23,9 +22,9 @@ public interface OrganizationUnitRepository {
 
     void delete(UUID id);
 
+    List<Account> getOUAccounts(UUID ouId);
+
     void addAccount(UUID ouId, UUID accountId);
 
     void removeAccount(UUID ouId, UUID accountId);
-
-    List<Account> getOUAccounts(UUID ouId);
 }

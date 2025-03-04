@@ -3,6 +3,7 @@ package com.onyxdb.idm.repositories;
 import com.onyxdb.idm.generated.jooq.Tables;
 import com.onyxdb.idm.generated.jooq.tables.ProductTable;
 import com.onyxdb.idm.models.Product;
+import com.onyxdb.idm.models.ProductTree;
 
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * @author ArtemFed
@@ -22,10 +24,52 @@ public class ProductPostgresRepository implements ProductRepository {
     private final static ProductTable productTable = Tables.PRODUCT_TABLE;
 
     @Override
+    public List<Product> findChildren(UUID productId) {
+        return fetchChildrenFromDb(productId);
+    }
+
+    @Override
+    public List<Product> findRootProducts() {
+        return dslContext.selectFrom(productTable)
+                .where(productTable.PARENT_ID.isNull()
+                        .or(productTable.PARENT_ID.eq(productTable.ID)))
+                .fetch(Product::fromDAO);
+    }
+
+    @Override
+    public List<ProductTree> findChildrenTree(UUID productId, int depth) {
+        if (depth <= 0) return List.of();
+        List<Product> children = findChildren(productId);
+        return children.stream()
+                .map(child -> new ProductTree(child, findChildrenTree(child.id(), depth - 1)))
+                .collect(Collectors.toList());
+    }
+
+    private List<Product> fetchChildrenFromDb(UUID parentId) {
+        return dslContext.selectFrom(productTable)
+                .where(productTable.PARENT_ID.eq(parentId))
+                .fetchInto(Product.class);
+    }
+
+    @Override
     public Optional<Product> findById(UUID id) {
         return dslContext.selectFrom(productTable)
                 .where(productTable.ID.eq(id))
                 .fetchOptional(Product::fromDAO);
+    }
+
+    private List<Product> fetchProductTree(UUID productId, int depth) {
+        return dslContext.fetch("""
+                    WITH RECURSIVE product_hierarchy AS (
+                        SELECT *, 1 AS level FROM product_table WHERE id = ?
+                        UNION ALL
+                        SELECT p.*, ph.level + 1
+                        FROM product_table p
+                        INNER JOIN product_hierarchy ph ON p.parent_id = ph.id
+                        WHERE ph.level < ?
+                    )
+                    SELECT * FROM product_hierarchy;
+                """, productId, depth).into(Product.class);
     }
 
     @Override

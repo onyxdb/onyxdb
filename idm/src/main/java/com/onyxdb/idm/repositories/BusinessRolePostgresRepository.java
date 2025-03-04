@@ -4,16 +4,25 @@ import com.onyxdb.idm.generated.jooq.Tables;
 import com.onyxdb.idm.generated.jooq.tables.BusinessRoleRoleTable;
 import com.onyxdb.idm.generated.jooq.tables.BusinessRoleTable;
 import com.onyxdb.idm.generated.jooq.tables.RoleTable;
+import com.onyxdb.idm.generated.jooq.tables.records.BusinessRoleTableRecord;
 import com.onyxdb.idm.models.BusinessRole;
 import com.onyxdb.idm.models.Role;
 
 import lombok.RequiredArgsConstructor;
+import org.jooq.Record;
+import org.jooq.Result;
 import org.jooq.DSLContext;
+import org.jooq.impl.DSL;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
+import static org.jooq.impl.DSL.field;
+import static org.jooq.impl.DSL.name;
+import static org.jooq.impl.DSL.select;
 
 /**
  * @author ArtemFed
@@ -41,10 +50,29 @@ public class BusinessRolePostgresRepository implements BusinessRoleRepository {
 
 
     @Override
-    public List<BusinessRole> findByParentId(UUID parentId) {
+    public List<BusinessRole> findChildren(UUID parentId) {
         return dslContext.selectFrom(businessRoleTable)
                 .where(businessRoleTable.PARENT_ID.eq(parentId))
                 .fetch(BusinessRole::fromDAO);
+    }
+
+    @Override
+    public List<BusinessRole> findParents(UUID id) {
+        var cte = name("recursive_cte").as(select(businessRoleTable.fields())
+                .from(businessRoleTable)
+                .where(businessRoleTable.ID.eq(id))
+                .unionAll(select(businessRoleTable.fields())
+                        .from(businessRoleTable.as("parent"))
+                        .join(name("recursive_cte"))
+                        .on(field(name("recursive_cte", "parent_id"))
+                                .eq(businessRoleTable.PARENT_ID))
+                )
+        );
+
+        return dslContext.withRecursive(cte)
+                .selectFrom(cte)
+                .fetch()
+                .map(record -> BusinessRole.fromDAO(record.into(BusinessRoleTableRecord.class)));
     }
 
     @Override
@@ -96,7 +124,7 @@ public class BusinessRolePostgresRepository implements BusinessRoleRepository {
     }
 
     @Override
-    public List<Role> getRoleByBusinessRoleId(UUID businessRoleId) {
+    public List<Role> getRoles(UUID businessRoleId) {
         return dslContext.selectFrom(businessRoleToRoleTable)
                 .where(businessRoleToRoleTable.BUSINESS_ROLE_ID.eq(businessRoleId))
                 .fetch(link -> dslContext.selectFrom(roleTable)

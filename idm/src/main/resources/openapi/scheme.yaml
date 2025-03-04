@@ -483,34 +483,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
-  /api/v1/domain-components/{dcId}/org-units:
-    get:
-      summary: Get Domain component organization units
-      operationId: getOrganizationUnitsBydcId
-      tags:
-        - Domain Components
-      parameters:
-        - name: dcId
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/OrganizationUnitDTO'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundResponse'
 
   /api/v1/organization-units:
     get:
@@ -519,11 +491,6 @@ paths:
       tags:
         - Organization Units
       parameters:
-        - name: search
-          in: query
-          required: false
-          schema:
-            type: string
         - name: limit
           in: query
           required: false
@@ -1036,27 +1003,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/NotFoundResponse'
 
-  /api/v1/permissions:
-    get:
-      summary: Get all permissions
-      operationId: getAllPermissions
-      tags:
-        - Permissions
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/PermissionDTO'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
   /api/v1/permissions/{permissionId}:
     get:
       summary: Get a permission by ID
@@ -1281,10 +1227,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
-  /api/v1/business-roles/{businessRoleId}/parents:
+  /api/v1/business-roles/{businessRoleId}/children:
     get:
-      summary: Get a business role parent roles
-      operationId: getBusinessRoleParentBRs
+      summary: Get a business role children business roles
+      operationId: getBusinessRoleChildrenBRs
       tags:
         - Business Roles
       parameters:
@@ -1595,24 +1541,6 @@ paths:
       operationId: getAllProducts
       tags:
         - Products
-      parameters:
-        - name: search
-          in: query
-          required: false
-          schema:
-            type: string
-        - name: limit
-          in: query
-          required: false
-          schema:
-            type: integer
-            minimum: 0
-        - name: offset
-          in: query
-          required: false
-          schema:
-            type: integer
-            minimum: 0
       responses:
         '200':
           description: OK

@@ -5,9 +5,12 @@ import com.onyxdb.idm.generated.jooq.tables.AccountBusinessRoleTable;
 import com.onyxdb.idm.generated.jooq.tables.AccountRoleTable;
 import com.onyxdb.idm.generated.jooq.tables.AccountTable;
 import com.onyxdb.idm.generated.jooq.tables.BusinessRoleTable;
+import com.onyxdb.idm.generated.jooq.tables.PermissionTable;
+import com.onyxdb.idm.generated.jooq.tables.RolePermissionTable;
 import com.onyxdb.idm.generated.jooq.tables.RoleTable;
 import com.onyxdb.idm.models.Account;
 import com.onyxdb.idm.models.BusinessRole;
+import com.onyxdb.idm.models.Permission;
 import com.onyxdb.idm.models.Role;
 
 import lombok.RequiredArgsConstructor;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * @author ArtemFed
@@ -29,12 +33,21 @@ public class AccountPostgresRepository implements AccountRepository {
     private final static AccountBusinessRoleTable accountBusinessRoleTable = Tables.ACCOUNT_BUSINESS_ROLE_TABLE;
     private final static BusinessRoleTable businessRoleTable = Tables.BUSINESS_ROLE_TABLE;
     private final static AccountRoleTable accountRoleTable = Tables.ACCOUNT_ROLE_TABLE;
+    private final static RolePermissionTable rolePermissionTable = Tables.ROLE_PERMISSION_TABLE;
+    private final static PermissionTable permissionTable = Tables.PERMISSION_TABLE;
     private final static RoleTable roleTable = Tables.ROLE_TABLE;
 
     @Override
     public Optional<Account> findById(UUID id) {
         return dslContext.selectFrom(accountTable)
                 .where(accountTable.ID.eq(id))
+                .fetchOptional(Account::fromDAO);
+    }
+
+    @Override
+    public Optional<Account> findByLogin(String login) {
+        return dslContext.selectFrom(accountTable)
+                .where(accountTable.LOGIN.eq(login))
                 .fetchOptional(Account::fromDAO);
     }
 
@@ -138,12 +151,27 @@ public class AccountPostgresRepository implements AccountRepository {
     }
 
     @Override
-    public List<Role> getRoleByBusinessRoleId(UUID accountId) {
+    public List<Role> getRoles(UUID accountId) {
         return dslContext.selectFrom(accountRoleTable)
                 .where(accountRoleTable.ACCOUNT_ID.eq(accountId))
                 .fetch(link -> dslContext.selectFrom(roleTable)
                         .where(roleTable.ID.eq(link.getRoleId()))
                         .fetchOne(Role::fromDAO)
                 );
+    }
+
+    @Override
+    public List<Permission> getPermissions(UUID accountId) {
+        return dslContext.selectFrom(accountRoleTable)
+                .where(accountRoleTable.ACCOUNT_ID.eq(accountId))
+                .fetch(link -> dslContext.selectFrom(rolePermissionTable)
+                        .where(rolePermissionTable.ROLE_ID.eq(link.getRoleId()))
+                        .fetch(link2 -> dslContext.selectFrom(permissionTable)
+                                .where(permissionTable.ID.eq(link2.getPermissionId()))
+                                .fetchOne(Permission::fromDAO))
+                )
+                .stream()
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
     }
 }
