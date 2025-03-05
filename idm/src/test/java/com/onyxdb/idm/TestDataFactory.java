@@ -34,25 +34,29 @@ public class TestDataFactory {
     }
 
     public static RoleDTO createRoleDTO(
-            UUID id, String roleType, String name, String description,
-            LocalDateTime createdAt, LocalDateTime updatedAt) {
+            UUID id, String roleType, String name, String description, Boolean isShopHidden,
+            UUID productId, UUID orgUnitId, LocalDateTime createdAt, LocalDateTime updatedAt) {
         RoleDTO roleDTO = new RoleDTO();
         roleDTO.setId(id != null ? id : UUID.randomUUID());
         roleDTO.setRoleType(roleType);
+        roleDTO.setIsShopHidden(isShopHidden);
         roleDTO.setName(name);
         roleDTO.setDescription(description);
+        roleDTO.setProductId(productId);
+        roleDTO.setOrgUnitId(orgUnitId);
         roleDTO.setCreatedAt(createdAt != null ? createdAt : LocalDateTime.now());
         roleDTO.setUpdatedAt(updatedAt != null ? updatedAt : LocalDateTime.now());
         return roleDTO;
     }
 
     public static BusinessRoleDTO createBusinessRoleDTO(
-            UUID id, String name, String description,
+            UUID id, String name, String description, UUID parentId,
             LocalDateTime createdAt, LocalDateTime updatedAt) {
         BusinessRoleDTO businessRoleDTO = new BusinessRoleDTO();
         businessRoleDTO.setId(id != null ? id : UUID.randomUUID());
         businessRoleDTO.setName(name);
         businessRoleDTO.setDescription(description);
+        businessRoleDTO.setParentId(parentId);
         businessRoleDTO.setCreatedAt(createdAt != null ? createdAt : LocalDateTime.now());
         businessRoleDTO.setUpdatedAt(updatedAt != null ? updatedAt : LocalDateTime.now());
         return businessRoleDTO;

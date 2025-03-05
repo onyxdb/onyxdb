@@ -58,7 +58,6 @@ public class OrganizationUnitPostgresRepository implements OrganizationUnitRepos
                 .where(condition).fetch(OrganizationUnit::fromDAO);
 
         int totalCount = dslContext.fetchCount(organizationUnitTable, condition);
-
         return new PaginatedResult<>(
                 data,
                 totalCount,

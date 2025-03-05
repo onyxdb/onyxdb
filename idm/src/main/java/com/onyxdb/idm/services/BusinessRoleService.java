@@ -9,7 +9,6 @@ import com.onyxdb.idm.repositories.BusinessRoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,7 +35,7 @@ public class BusinessRoleService {
     }
 
     public List<BusinessRole> findParents(UUID id) {
-        return businessRoleRepository.findParents(id);
+        return businessRoleRepository.findAllParents(id);
     }
 
     public BusinessRole create(BusinessRole businessRole) {

@@ -15,6 +15,7 @@ import org.jooq.Condition;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.jooq.DSLContext;
+import org.jooq.Table;
 import org.jooq.impl.DSL;
 import org.springframework.stereotype.Repository;
 
@@ -82,15 +83,15 @@ public class BusinessRolePostgresRepository implements BusinessRoleRepository {
     }
 
     @Override
-    public List<BusinessRole> findParents(UUID id) {
+    public List<BusinessRole> findAllParents(UUID id) {
+        var parentTable = businessRoleTable.as("parent");
         var cte = name("recursive_cte").as(select(businessRoleTable.fields())
                 .from(businessRoleTable)
                 .where(businessRoleTable.ID.eq(id))
-                .unionAll(select(businessRoleTable.fields())
-                        .from(businessRoleTable.as("parent"))
+                .unionAll(select(parentTable.fields())
+                        .from(parentTable)
                         .join(name("recursive_cte"))
-                        .on(field(name("recursive_cte", "parent_id"))
-                                .eq(businessRoleTable.PARENT_ID))
+                        .on(parentTable.PARENT_ID.eq(field(name("recursive_cte", "id"), UUID.class)))
                 )
         );
 

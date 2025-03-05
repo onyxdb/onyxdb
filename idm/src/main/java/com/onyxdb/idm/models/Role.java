@@ -43,8 +43,8 @@ public record Role(
                 roleDTO.getShopName(),
                 roleDTO.getDescription(),
                 roleDTO.getIsShopHidden(),
-                roleDTO.getProductId(),
                 roleDTO.getOrgUnitId(),
+                roleDTO.getProductId(),
                 roleDTO.getCreatedAt(),
                 roleDTO.getUpdatedAt()
         );
@@ -58,8 +58,8 @@ public record Role(
                 roleDAO.getShopName(),
                 roleDAO.getDescription(),
                 roleDAO.getIsShopHidden(),
-                roleDAO.getProductId(),
                 roleDAO.getOrgUnitId(),
+                roleDAO.getProductId(),
                 roleDAO.getCreatedAt(),
                 roleDAO.getUpdatedAt()
         );

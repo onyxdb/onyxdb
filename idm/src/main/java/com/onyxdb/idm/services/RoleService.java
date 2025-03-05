@@ -46,13 +46,13 @@ public class RoleService {
 
         newPermissions.forEach(p -> roleRepository.addPermission(newRole.id(), p.id()));
 
-        return new RoleWithPermissions(role, newPermissions);
+        return new RoleWithPermissions(newRole, newPermissions);
     }
 
     public RoleWithPermissions update(RoleWithPermissions roleWithPermission) {
         Role role = roleWithPermission.role();
         List<Permission> updatedPermissions = roleWithPermission.permissions();
-        roleRepository.update(role);
+        Role newRole =roleRepository.update(role);
 
         List<Permission> existingPermissions = roleRepository.getPermissions(role.id());
         Map<UUID, Permission> updatedPermIds = new HashMap<>();
@@ -83,7 +83,7 @@ public class RoleService {
             }
         }
 
-        return new RoleWithPermissions(role, newPermissions);
+        return new RoleWithPermissions(newRole, newPermissions);
     }
 
     public void delete(UUID id) {

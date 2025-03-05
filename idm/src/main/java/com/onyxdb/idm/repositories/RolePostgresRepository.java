@@ -73,7 +73,13 @@ public class RolePostgresRepository implements RoleRepository {
                 .fetch();
         List<Role> data = records.map(record -> Role.fromDAO(record.into(roleTable)));
 
-        int totalCount = dslContext.fetchCount(roleTable, condition);
+        int totalCount = dslContext.selectCount()
+                .from(table)
+                .where(condition)
+                .fetchOptional()
+                .map(record -> record.get(0, int.class))
+                .orElse(0);
+
         return new PaginatedResult<>(
                 data,
                 totalCount,
@@ -84,15 +90,15 @@ public class RolePostgresRepository implements RoleRepository {
 
     @Override
     public Role create(Role role) {
-        var id = UUID.randomUUID();
         var record = dslContext.insertInto(roleTable)
                 .set(roleTable.ID, UUID.randomUUID())
                 .set(roleTable.NAME, role.name())
                 .set(roleTable.SHOP_NAME, role.name())
                 .set(roleTable.DESCRIPTION, role.description())
+                .set(roleTable.ROLE_TYPE, role.roleType())
                 .set(roleTable.IS_SHOP_HIDDEN, role.isShopHidden())
-                .set(roleTable.ORG_UNIT_ID, role.orgUnitId())
                 .set(roleTable.PRODUCT_ID, role.productId())
+                .set(roleTable.ORG_UNIT_ID, role.orgUnitId())
                 .set(roleTable.CREATED_AT, LocalDateTime.now())
                 .set(roleTable.UPDATED_AT, LocalDateTime.now())
                 .returning()
@@ -108,9 +114,10 @@ public class RolePostgresRepository implements RoleRepository {
                 .set(roleTable.NAME, role.name())
                 .set(roleTable.SHOP_NAME, role.name())
                 .set(roleTable.DESCRIPTION, role.description())
+                .set(roleTable.ROLE_TYPE, role.roleType())
                 .set(roleTable.IS_SHOP_HIDDEN, role.isShopHidden())
-                .set(roleTable.ORG_UNIT_ID, role.orgUnitId())
                 .set(roleTable.PRODUCT_ID, role.productId())
+                .set(roleTable.ORG_UNIT_ID, role.orgUnitId())
                 .set(roleTable.UPDATED_AT, LocalDateTime.now())
                 .where(roleTable.ID.eq(role.id()))
                 .returning()

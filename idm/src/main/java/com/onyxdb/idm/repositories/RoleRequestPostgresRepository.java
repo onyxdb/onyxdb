@@ -94,7 +94,12 @@ public class RoleRequestPostgresRepository implements RoleRequestRepository {
 
         List<RoleRequest> data = records.map(record -> RoleRequest.fromDAO(record.into(roleRequestTable)));
 
-        int totalCount = dslContext.fetchCount(table, condition);
+        int totalCount = dslContext.selectCount()
+                .from(table)
+                .where(condition)
+                .fetchOptional()
+                .map(record -> record.get(0, int.class))
+                .orElse(0);
         return new PaginatedResult<>(
                 data,
                 totalCount,
@@ -109,8 +114,8 @@ public class RoleRequestPostgresRepository implements RoleRequestRepository {
                 .set(roleRequestTable.ID, UUID.randomUUID())
                 .set(roleRequestTable.ROLE_ID, roleRequest.roleId())
                 .set(roleRequestTable.ACCOUNT_ID, roleRequest.accountId())
-                .set(roleRequestTable.OWNER_ID, roleRequest.ownerId())
                 .set(roleRequestTable.REASON, roleRequest.reason())
+                .set(roleRequestTable.OWNER_ID, roleRequest.ownerId())
                 .set(roleRequestTable.STATUS, roleRequest.status())
                 .set(roleRequestTable.CREATED_AT, LocalDateTime.now())
                 .returning()
@@ -125,8 +130,8 @@ public class RoleRequestPostgresRepository implements RoleRequestRepository {
         var record = dslContext.update(roleRequestTable)
                 .set(roleRequestTable.ROLE_ID, roleRequest.roleId())
                 .set(roleRequestTable.ACCOUNT_ID, roleRequest.accountId())
-                .set(roleRequestTable.OWNER_ID, roleRequest.ownerId())
                 .set(roleRequestTable.REASON, roleRequest.reason())
+                .set(roleRequestTable.OWNER_ID, roleRequest.ownerId())
                 .set(roleRequestTable.STATUS, roleRequest.status())
                 .set(roleRequestTable.RESOLVED_AT, roleRequest.resolvedAt())
                 .where(roleRequestTable.ID.eq(roleRequest.id()))

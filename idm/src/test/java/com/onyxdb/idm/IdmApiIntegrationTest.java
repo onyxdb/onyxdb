@@ -88,7 +88,11 @@ public class IdmApiIntegrationTest {
         ProductDTO product1Child1 = TestDataFactory.createProductDTO(null, "Product1Child1", "First Product Child1", product1.getId(), null, null);
         ProductDTO product1Child2 = TestDataFactory.createProductDTO(null, "Product1Child2", "First Product Child2", product1.getId(), null, null);
 
+        product1Child1 = createProduct(product1Child1);
+        product1Child2 = createProduct(product1Child2);
+
         ProductDTO product2Child1 = TestDataFactory.createProductDTO(null, "Product2Child1", "Second Product Child1", product2.getId(), null, null);
+        product2Child1 = createProduct(product2Child1);
 
         // 5. Создаем аккаунты
         AccountDTO account1 = TestDataFactory.createAccountDTO(null, "user1", "pass1", "user1@example.com", "User", "One", null, null, null);
@@ -120,30 +124,30 @@ public class IdmApiIntegrationTest {
         linkAccountToOrganizationUnit(ou4Child1.getId(), account7.getId());
 
         // 7. Создаем роли с разными наборами прав
+        PermissionDTO anyPermission = TestDataFactory.createPermissionDTO(null, "ANY", "IDM", null, null);
         PermissionDTO createPermission = TestDataFactory.createPermissionDTO(null, "CREATE", "IDM", null, null);
         PermissionDTO patchPermission = TestDataFactory.createPermissionDTO(null, "PATCH", "IDM", null, null);
         PermissionDTO getPermission = TestDataFactory.createPermissionDTO(null, "GET", "IDM", null, null);
         PermissionDTO deletePermission = TestDataFactory.createPermissionDTO(null, "DELETE", "IDM", null, null);
 
-        RoleDTO adminDc1Role = TestDataFactory.createRoleDTO(null, "ADMIN", "Admin DC1", "Admin role for DC1", null, null);
-        RoleDTO adminDc2Role = TestDataFactory.createRoleDTO(null, "ADMIN", "Admin DC2", "Admin role for DC2", null, null);
-        RoleDTO adminMdbRole = TestDataFactory.createRoleDTO(null, "ADMIN", "Admin MDB", "Admin role for root product", null, null);
-        RoleDTO ownerOuRole = TestDataFactory.createRoleDTO(null, "OWNER", "Owner OU", "Owner role for OU", null, null);
-        RoleDTO ownerProductRole = TestDataFactory.createRoleDTO(null, "OWNER", "Owner Product", "Owner role for Product", null, null);
-        RoleDTO developerRole = TestDataFactory.createRoleDTO(null, "DEVELOPER", "Developer", "Developer role for leaf products", null, null);
-        RoleDTO auditorRole = TestDataFactory.createRoleDTO(null, "AUDITOR", "Auditor", "Auditor role for root products and OUs", null, null);
+        RoleDTO adminOu1Role = TestDataFactory.createRoleDTO(null, "ADMIN", "Admin OU1", "Admin role for OU1", false, null, ou1.getId(), null, null);
+        RoleDTO adminOu2Role = TestDataFactory.createRoleDTO(null, "ADMIN", "Admin OU2", "Admin role for OU2", false, null, ou2.getId(), null, null);
+        RoleDTO adminMdbRole = TestDataFactory.createRoleDTO(null, "ADMIN", "Admin MDB", "Admin role for root product", false, rootProduct.getId(), null, null, null);
+        RoleDTO ownerOuRole = TestDataFactory.createRoleDTO(null, "OWNER", "Owner OU", "Owner role for OU", false, null, ou3.getId(), null, null);
+        RoleDTO ownerProductRole = TestDataFactory.createRoleDTO(null, "OWNER", "Owner Product", "Owner role for Product", false, product1.getId(), null, null, null);
+        RoleDTO developerRole = TestDataFactory.createRoleDTO(null, "DEVELOPER", "Developer", "Developer role for leaf products", false, product1Child1.getId(), null, null, null);
+        RoleDTO auditorRole = TestDataFactory.createRoleDTO(null, "AUDITOR", "Auditor", "Auditor role for root products and OUs", false, rootProduct.getId(), null, null, null);
 
+        RoleWithPermissionsDTO adminOu1RoleWP = TestDataFactory.createRoleWithPermissionsDTO(adminOu1Role, List.of(anyPermission));
+        RoleWithPermissionsDTO adminOu2RoleWP = TestDataFactory.createRoleWithPermissionsDTO(adminOu2Role, List.of(anyPermission));
+        RoleWithPermissionsDTO adminMdbRoleWP = TestDataFactory.createRoleWithPermissionsDTO(adminMdbRole, List.of(anyPermission));
+        RoleWithPermissionsDTO ownerOuRoleWP = TestDataFactory.createRoleWithPermissionsDTO(ownerOuRole, List.of(createPermission, patchPermission, getPermission));
+        RoleWithPermissionsDTO ownerProductRoleWP = TestDataFactory.createRoleWithPermissionsDTO(ownerProductRole, List.of(createPermission, patchPermission, getPermission));
+        RoleWithPermissionsDTO developerRoleWP = TestDataFactory.createRoleWithPermissionsDTO(developerRole, List.of(patchPermission, getPermission));
+        RoleWithPermissionsDTO auditorRoleWP = TestDataFactory.createRoleWithPermissionsDTO(auditorRole, List.of(getPermission));
 
-        RoleWithPermissionsDTO adminDc1RoleWP = TestDataFactory.createRoleWithPermissionsDTO(adminDc1Role, List.of());
-        RoleWithPermissionsDTO adminDc2RoleWP = TestDataFactory.createRoleWithPermissionsDTO(adminDc2Role, List.of());
-        RoleWithPermissionsDTO adminMdbRoleWP = TestDataFactory.createRoleWithPermissionsDTO(adminMdbRole, List.of());
-        RoleWithPermissionsDTO ownerOuRoleWP = TestDataFactory.createRoleWithPermissionsDTO(ownerOuRole, List.of());
-        RoleWithPermissionsDTO ownerProductRoleWP = TestDataFactory.createRoleWithPermissionsDTO(ownerProductRole, List.of());
-        RoleWithPermissionsDTO developerRoleWP = TestDataFactory.createRoleWithPermissionsDTO(developerRole, List.of());
-        RoleWithPermissionsDTO auditorRoleWP = TestDataFactory.createRoleWithPermissionsDTO(auditorRole, List.of());
-
-        adminDc1RoleWP = createRole(adminDc1RoleWP);
-        adminDc2RoleWP = createRole(adminDc2RoleWP);
+        adminOu1RoleWP = createRole(adminOu1RoleWP);
+        adminOu2RoleWP = createRole(adminOu2RoleWP);
         adminMdbRoleWP = createRole(adminMdbRoleWP);
         ownerOuRoleWP = createRole(ownerOuRoleWP);
         ownerProductRoleWP = createRole(ownerProductRoleWP);
@@ -151,10 +155,13 @@ public class IdmApiIntegrationTest {
         auditorRoleWP = createRole(auditorRoleWP);
 
         // 8. Создаем бизнес-роли и распределяем роли
-        BusinessRoleDTO javaDeveloper = TestDataFactory.createBusinessRoleDTO(null, "Java Developer", "Role for Java developers", null, null);
-        BusinessRoleDTO manager = TestDataFactory.createBusinessRoleDTO(null, "Manager", "Role for managers", null, null);
-        BusinessRoleDTO cto = TestDataFactory.createBusinessRoleDTO(null, "CTO", "Role for CTO", null, null);
-        BusinessRoleDTO admin = TestDataFactory.createBusinessRoleDTO(null, "Admin", "Role for admins", null, null);
+        BusinessRoleDTO employee = TestDataFactory.createBusinessRoleDTO(null, "Employee", "Base employee", null, null, null);
+        employee = createBusinessRole(employee);
+
+        BusinessRoleDTO javaDeveloper = TestDataFactory.createBusinessRoleDTO(null, "Java Developer", "Role for Java developers", employee.getId(), null, null);
+        BusinessRoleDTO manager = TestDataFactory.createBusinessRoleDTO(null, "Manager", "Role for managers", employee.getId(), null, null);
+        BusinessRoleDTO cto = TestDataFactory.createBusinessRoleDTO(null, "CTO", "Role for CTO", employee.getId(), null, null);
+        BusinessRoleDTO admin = TestDataFactory.createBusinessRoleDTO(null, "Admin", "Role for admins", employee.getId(), null, null);
 
         javaDeveloper = createBusinessRole(javaDeveloper);
         manager = createBusinessRole(manager);
@@ -162,11 +169,13 @@ public class IdmApiIntegrationTest {
         admin = createBusinessRole(admin);
 
         // 9. Связываем роли с бизнес-ролями
-        linkRoleToBusinessRole(javaDeveloper.getId(), developerRole.getId());
-        linkRoleToBusinessRole(manager.getId(), ownerOuRole.getId());
-        linkRoleToBusinessRole(cto.getId(), adminMdbRole.getId());
-        linkRoleToBusinessRole(admin.getId(), adminDc1Role.getId());
-        linkRoleToBusinessRole(admin.getId(), adminDc2Role.getId());
+        linkRoleToBusinessRole(employee.getId(), auditorRoleWP.getRole().getId());
+
+        linkRoleToBusinessRole(javaDeveloper.getId(), developerRoleWP.getRole().getId());
+        linkRoleToBusinessRole(manager.getId(), ownerOuRoleWP.getRole().getId());
+        linkRoleToBusinessRole(cto.getId(), adminMdbRoleWP.getRole().getId());
+        linkRoleToBusinessRole(admin.getId(), adminOu1RoleWP.getRole().getId());
+        linkRoleToBusinessRole(admin.getId(), adminOu2RoleWP.getRole().getId());
     }
 
     private DomainComponentDTO createDomainComponent(DomainComponentDTO domainComponentDTO) {
@@ -245,13 +254,13 @@ public class IdmApiIntegrationTest {
         webTestClient.post()
                 .uri("/api/v1/organization-units/{ouId}/accounts/{accountId}", ouId, accountId)
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isCreated();
     }
 
     private void linkRoleToBusinessRole(UUID businessRoleId, UUID roleId) {
         webTestClient.post()
                 .uri("/api/v1/business-roles/{businessRoleId}/roles/{roleId}", businessRoleId, roleId)
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isCreated();
     }
 }

@@ -20,7 +20,7 @@ public interface BusinessRoleRepository {
 
     List<BusinessRole> findChildren(UUID parentId);
 
-    List<BusinessRole> findParents(UUID id);
+    List<BusinessRole> findAllParents(UUID id);
 
     BusinessRole create(BusinessRole businessRole);
 
