@@ -14,7 +14,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class IdmApiGetRequestsTest {
+class IdmApiIntegrationGetTest extends PostgresTests {
 
     @Autowired
     private WebTestClient webTestClient;

@@ -16,7 +16,7 @@ import org.springframework.http.MediaType;
 
 @ActiveProfiles({"dev"})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class IdmApiIntegrationTest {
+public class IdmApiIntegrationCreateTest extends PostgresTests {
 
     @Autowired
     private WebTestClient webTestClient;
