@@ -4,16 +4,31 @@ import com.onyxdb.idm.generated.jooq.Tables;
 import com.onyxdb.idm.generated.jooq.tables.BusinessRoleRoleTable;
 import com.onyxdb.idm.generated.jooq.tables.BusinessRoleTable;
 import com.onyxdb.idm.generated.jooq.tables.RoleTable;
+import com.onyxdb.idm.generated.jooq.tables.records.BusinessRoleTableRecord;
 import com.onyxdb.idm.models.BusinessRole;
+import com.onyxdb.idm.models.PaginatedResult;
 import com.onyxdb.idm.models.Role;
+import com.onyxdb.idm.models.RoleRequest;
 
 import lombok.RequiredArgsConstructor;
+import org.jooq.Condition;
+import org.jooq.Record;
+import org.jooq.Result;
 import org.jooq.DSLContext;
+import org.jooq.Table;
+import org.jooq.impl.DSL;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
+import static org.jooq.impl.DSL.field;
+import static org.jooq.impl.DSL.name;
+import static org.jooq.impl.DSL.select;
+import static org.jooq.impl.DSL.trueCondition;
 
 /**
  * @author ArtemFed
@@ -34,42 +49,89 @@ public class BusinessRolePostgresRepository implements BusinessRoleRepository {
     }
 
     @Override
-    public List<BusinessRole> findAll() {
-        return dslContext.selectFrom(businessRoleTable)
-                .fetch(BusinessRole::fromDAO);
+    public PaginatedResult<BusinessRole> findAll(String query, Integer limit, Integer offset) {
+        limit = (limit != null) ? limit : Integer.MAX_VALUE;
+        offset = (offset != null) ? offset : 0;
+
+        Condition condition = query != null ? businessRoleTable.NAME.containsIgnoreCase(query)
+                .or(businessRoleTable.DESCRIPTION.containsIgnoreCase(query))
+                : trueCondition();
+
+        Result<BusinessRoleTableRecord> records = dslContext.selectFrom(businessRoleTable)
+                .where(condition)
+                .limit(limit)
+                .offset(offset)
+                .fetch();
+
+        List<BusinessRole> data = records.map(record -> BusinessRole.fromDAO(record.into(businessRoleTable)));
+
+        int totalCount = dslContext.fetchCount(businessRoleTable, condition);
+        return new PaginatedResult<>(
+                data,
+                totalCount,
+                offset + 1,
+                Math.min(offset + limit, totalCount)
+        );
     }
 
 
     @Override
-    public List<BusinessRole> findByParentId(UUID parentId) {
+    public List<BusinessRole> findChildren(UUID parentId) {
         return dslContext.selectFrom(businessRoleTable)
                 .where(businessRoleTable.PARENT_ID.eq(parentId))
                 .fetch(BusinessRole::fromDAO);
     }
 
     @Override
-    public void create(BusinessRole businessRole) {
-        dslContext.insertInto(businessRoleTable)
-                .set(businessRoleTable.ID, businessRole.id())
-                .set(businessRoleTable.NAME, businessRole.name())
-                .set(businessRoleTable.DESCRIPTION, businessRole.description())
-                .set(businessRoleTable.PARENT_ID, businessRole.parentId())
-                .set(businessRoleTable.DATA, businessRole.getDataAsJsonb())
-                .set(businessRoleTable.CREATED_AT, businessRole.createdAt())
-                .set(businessRoleTable.UPDATED_AT, businessRole.updatedAt())
-                .execute();
+    public List<BusinessRole> findAllParents(UUID id) {
+        var parentTable = businessRoleTable.as("parent");
+        var cte = name("recursive_cte").as(select(businessRoleTable.fields())
+                .from(businessRoleTable)
+                .where(businessRoleTable.ID.eq(id))
+                .unionAll(select(parentTable.fields())
+                        .from(parentTable)
+                        .join(name("recursive_cte"))
+                        .on(parentTable.PARENT_ID.eq(field(name("recursive_cte", "id"), UUID.class)))
+                )
+        );
+
+        return dslContext.withRecursive(cte)
+                .selectFrom(cte)
+                .fetch()
+                .map(record -> BusinessRole.fromDAO(record.into(BusinessRoleTableRecord.class)));
     }
 
     @Override
-    public void update(BusinessRole businessRole) {
-        dslContext.update(businessRoleTable)
+    public BusinessRole create(BusinessRole businessRole) {
+        var record = dslContext.insertInto(businessRoleTable)
+                .set(businessRoleTable.ID, UUID.randomUUID())
                 .set(businessRoleTable.NAME, businessRole.name())
                 .set(businessRoleTable.DESCRIPTION, businessRole.description())
                 .set(businessRoleTable.PARENT_ID, businessRole.parentId())
                 .set(businessRoleTable.DATA, businessRole.getDataAsJsonb())
-                .set(businessRoleTable.UPDATED_AT, businessRole.updatedAt())
+                .set(businessRoleTable.CREATED_AT, LocalDateTime.now())
+                .set(businessRoleTable.UPDATED_AT, LocalDateTime.now())
+                .returning()
+                .fetchOne();
+
+        assert record != null;
+        return BusinessRole.fromDAO(record);
+    }
+
+    @Override
+    public BusinessRole update(BusinessRole businessRole) {
+        var record = dslContext.update(businessRoleTable)
+                .set(businessRoleTable.NAME, businessRole.name())
+                .set(businessRoleTable.DESCRIPTION, businessRole.description())
+                .set(businessRoleTable.PARENT_ID, businessRole.parentId())
+                .set(businessRoleTable.DATA, businessRole.getDataAsJsonb())
+                .set(businessRoleTable.UPDATED_AT, LocalDateTime.now())
                 .where(businessRoleTable.ID.eq(businessRole.id()))
-                .execute();
+                .returning()
+                .fetchOne();
+
+        assert record != null;
+        return BusinessRole.fromDAO(record);
     }
 
     @Override
@@ -96,7 +158,7 @@ public class BusinessRolePostgresRepository implements BusinessRoleRepository {
     }
 
     @Override
-    public List<Role> getRoleByBusinessRoleId(UUID businessRoleId) {
+    public List<Role> getRoles(UUID businessRoleId) {
         return dslContext.selectFrom(businessRoleToRoleTable)
                 .where(businessRoleToRoleTable.BUSINESS_ROLE_ID.eq(businessRoleId))
                 .fetch(link -> dslContext.selectFrom(roleTable)

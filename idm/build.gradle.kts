@@ -39,6 +39,13 @@ dependencies {
     implementation(libs.javaxValidation.validationApi)
     // openapi generator END
 
+    implementation(libs.ioJsonwebtoken.jjwtApi)
+    implementation(libs.ioJsonwebtoken.jjwtImpl)
+    implementation(libs.ioJsonwebtoken.jjwtJackson)
+
+//    implementation("com.google.guava:guava:10.0.1")
+
+    testImplementation(libs.springBoot.starterWebflux)
     testImplementation(libs.springBoot.starterTest)
     testImplementation(libs.testcontainers.junitJupiter)
     testImplementation(libs.testcontainers.postgresql)

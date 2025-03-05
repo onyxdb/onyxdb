@@ -2,11 +2,11 @@ package com.onyxdb.idm.services;
 
 import com.onyxdb.idm.controllers.v1.ResourceNotFoundException;
 import com.onyxdb.idm.models.Product;
+import com.onyxdb.idm.models.ProductTree;
 import com.onyxdb.idm.repositories.ProductRepository;
 
 import lombok.RequiredArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,34 +28,26 @@ public class ProductService {
         return productRepository.findAll();
     }
 
+    public List<Product> findRootProducts() {
+        return productRepository.findRootProducts();
+    }
+
+    public List<Product> findChildren(UUID productId) {
+        return productRepository.findChildren(productId);
+    }
+
+    public ProductTree findChildrenTree(UUID productId, Integer depth) {
+        var product = productRepository.findById(productId).orElseThrow();
+        var children = productRepository.findChildrenTree(productId, depth);
+        return new ProductTree(product, children);
+    }
+
     public Product create(Product product) {
-        Product forCreate = new Product(
-                UUID.randomUUID(),
-                product.name(),
-                product.description(),
-                product.parent_id(),
-                product.ownerId(),
-                product.data(),
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
-        productRepository.create(forCreate);
-        return forCreate;
+        return productRepository.create(product);
     }
 
     public Product update(Product product) {
-        Product forUpdate = new Product(
-                product.id(),
-                product.name(),
-                product.description(),
-                product.parent_id(),
-                product.ownerId(),
-                product.data(),
-                product.createdAt(),
-                LocalDateTime.now()
-        );
-        productRepository.update(forUpdate);
-        return forUpdate;
+        return productRepository.update(product);
     }
 
     public void delete(UUID id) {

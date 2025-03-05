@@ -3,6 +3,8 @@ package com.onyxdb.idm.services;
 import com.onyxdb.idm.controllers.v1.ResourceNotFoundException;
 import com.onyxdb.idm.models.Account;
 import com.onyxdb.idm.models.BusinessRole;
+import com.onyxdb.idm.models.PaginatedResult;
+import com.onyxdb.idm.models.Role;
 import com.onyxdb.idm.repositories.AccountRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -31,38 +33,16 @@ public class AccountService {
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
     }
 
-    public List<Account> findAll() {
-        return accountRepository.findAll();
+    public PaginatedResult<Account> findAll(String query, Integer limit, Integer offset) {
+        return accountRepository.findAll(query, limit, offset);
     }
 
-    public void create(Account account) {
-        Account forCreate = new Account(
-                UUID.randomUUID(),
-                account.login(),
-                account.password(),
-                account.email(),
-                account.firstName(),
-                account.lastName(),
-                account.data(),
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
-        accountRepository.create(forCreate);
+    public Account create(Account account) {
+        return accountRepository.create(account);
     }
 
-    public void update(Account account) {
-        Account forUpdate = new Account(
-                account.id(),
-                account.login(),
-                account.password(),
-                account.email(),
-                account.firstName(),
-                account.lastName(),
-                account.data(),
-                account.createdAt(),
-                LocalDateTime.now()
-        );
-        accountRepository.update(forUpdate);
+    public Account update(Account account) {
+        return accountRepository.update(account);
     }
 
     public void delete(UUID id) {
@@ -83,5 +63,9 @@ public class AccountService {
 
     public List<BusinessRole> getBusinessRoles(UUID accountId) {
         return accountRepository.getAccountBusinessRoles(accountId);
+    }
+
+    public List<Role> getRoles(UUID accountId) {
+        return accountRepository.getAccountRoles(accountId);
     }
 }

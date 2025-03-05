@@ -3,11 +3,12 @@ package com.onyxdb.idm.services;
 import com.onyxdb.idm.controllers.v1.ResourceNotFoundException;
 import com.onyxdb.idm.models.Account;
 import com.onyxdb.idm.models.OrganizationUnit;
+import com.onyxdb.idm.models.PaginatedResult;
 import com.onyxdb.idm.repositories.OrganizationUnitRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,40 +26,20 @@ public class OrganizationUnitService {
                 .orElseThrow(() -> new ResourceNotFoundException("OrganizationUnit not found"));
     }
 
-    public List<OrganizationUnit> findAll() {
-        return organizationUnitRepository.findAll();
+    public PaginatedResult<OrganizationUnit> findAll(UUID dcId, UUID parentOuId, Integer limit, Integer offset) {
+        return organizationUnitRepository.findAll(dcId, parentOuId, limit, offset);
     }
 
-    public List<OrganizationUnit> findByDomainComponentId(UUID domainComponentId) {
-        return organizationUnitRepository.findByDomainComponentId(domainComponentId);
+    public PaginatedResult<OrganizationUnit> findChildren(UUID parentOuId) {
+        return organizationUnitRepository.findAll(null, parentOuId, 0, 0);
     }
 
     public OrganizationUnit create(OrganizationUnit organizationUnit) {
-        OrganizationUnit forCreate = new OrganizationUnit(
-                UUID.randomUUID(),
-                organizationUnit.name(),
-                organizationUnit.description(),
-                organizationUnit.domainComponentId(),
-                organizationUnit.parentId(),
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
-        organizationUnitRepository.create(forCreate);
-        return forCreate;
+        return organizationUnitRepository.create(organizationUnit);
     }
 
     public OrganizationUnit update(OrganizationUnit organizationUnit) {
-        OrganizationUnit forUpdate = new OrganizationUnit(
-                organizationUnit.id(),
-                organizationUnit.name(),
-                organizationUnit.description(),
-                organizationUnit.domainComponentId(),
-                organizationUnit.parentId(),
-                organizationUnit.createdAt(),
-                LocalDateTime.now()
-        );
-        organizationUnitRepository.update(forUpdate);
-        return forUpdate;
+        return organizationUnitRepository.update(organizationUnit);
     }
 
     public void delete(UUID id) {

@@ -1,0 +1,74 @@
+---- Вставка тестовых данных в таблицу domain_component_table
+--INSERT INTO domain_component_table (id, name, description, created_at, updated_at) VALUES
+--(gen_random_uuid(), 'Component1', 'Description for Component1', NOW(), NOW()),
+--(gen_random_uuid(), 'Component2', 'Description for Component2', NOW(), NOW()),
+--(gen_random_uuid(), 'Component3', 'Description for Component3', NOW(), NOW()),
+--(gen_random_uuid(), 'Component4', 'Description for Component4', NOW(), NOW()),
+--(gen_random_uuid(), 'Component5', 'Description for Component5', NOW(), NOW());
+--
+---- Вставка тестовых данных в таблицу organization_unit_table
+--INSERT INTO organization_unit_table (id, name, description, domain_component_id, parent_id, created_at, updated_at) VALUES
+--(gen_random_uuid(), 'OU1', 'Description for OU1', (SELECT id FROM domain_component_table WHERE name = 'Component1'), NULL, NOW(), NOW()),
+--(gen_random_uuid(), 'OU2', 'Description for OU2', (SELECT id FROM domain_component_table WHERE name = 'Component2'), NULL, NOW(), NOW()),
+--(gen_random_uuid(), 'OU3', 'Description for OU3', (SELECT id FROM domain_component_table WHERE name = 'Component3'), NULL, NOW(), NOW()),
+--(gen_random_uuid(), 'OU4', 'Description for OU4', (SELECT id FROM domain_component_table WHERE name = 'Component4'), NULL, NOW(), NOW()),
+--(gen_random_uuid(), 'OU5', 'Description for OU5', (SELECT id FROM domain_component_table WHERE name = 'Component5'), NULL, NOW(), NOW());
+--
+---- Вставка тестовых данных в таблицу account_table
+--INSERT INTO account_table (id, login, password, email, first_name, last_name, data, created_at, updated_at) VALUES
+--(gen_random_uuid(), 'user1', 'password1', 'user1@example.com', 'First', 'Last1', '{}', NOW(), NOW()),
+--(gen_random_uuid(), 'user2', 'password2', 'user2@example.com', 'First', 'Last2', '{}', NOW(), NOW()),
+--(gen_random_uuid(), 'user3', 'password3', 'user3@example.com', 'First', 'Last3', '{}', NOW(), NOW()),
+--(gen_random_uuid(), 'user4', 'password4', 'user4@example.com', 'First', 'Last4', '{}', NOW(), NOW()),
+--(gen_random_uuid(), 'user5', 'password5', 'user5@example.com', 'First', 'Last5', '{}', NOW(), NOW());
+--
+---- Вставка тестовых данных в таблицу product_table
+--INSERT INTO product_table (id, name, description, parent_id, owner_id, data, created_at, updated_at) VALUES
+--(gen_random_uuid(), 'Product1', 'Description for Product1', NULL, (SELECT id FROM account_table WHERE login = 'user1'), '{}', NOW(), NOW()),
+--(gen_random_uuid(), 'Product2', 'Description for Product2', NULL, (SELECT id FROM account_table WHERE login = 'user2'), '{}', NOW(), NOW()),
+--(gen_random_uuid(), 'Product3', 'Description for Product3', NULL, (SELECT id FROM account_table WHERE login = 'user3'), '{}', NOW(), NOW()),
+--(gen_random_uuid(), 'Product4', 'Description for Product4', NULL, (SELECT id FROM account_table WHERE login = 'user4'), '{}', NOW(), NOW()),
+--(gen_random_uuid(), 'Product5', 'Description for Product5', NULL, (SELECT id FROM account_table WHERE login = 'user5'), '{}', NOW(), NOW());
+--
+---- Вставка тестовых данных в таблицу role_table
+--INSERT INTO role_table (id, role_type, name, shop_name, description, product_id, created_at, updated_at) VALUES
+--(gen_random_uuid(), 'Auditor', 'Auditor1', 'Shop1', 'Auditor role description', NULL, NOW(), NOW()),
+--(gen_random_uuid(), 'Developer', 'Developer1', 'Shop2', 'Developer role description', NULL, NOW(), NOW()),
+--(gen_random_uuid(), 'Owner', 'Owner1', 'Shop3', 'Owner role description', NULL, NOW(), NOW()),
+--(gen_random_uuid(), 'Admin', 'Admin1', 'Shop4', 'Admin role description', NULL, NOW(), NOW()),
+--(gen_random_uuid(), 'Auditor', 'Auditor2', 'Shop5', 'Auditor role description', NULL, NOW(), NOW()),
+--(gen_random_uuid(), 'Developer', 'Developer2', 'Shop6', 'Developer role description', NULL, NOW(), NOW()),
+--(gen_random_uuid(), 'Owner', 'Owner2', 'Shop7', 'Owner role description', NULL, NOW(), NOW()),
+--(gen_random_uuid(), 'Admin', 'Admin2', 'Shop8', 'Admin role description', NULL, NOW(), NOW()),
+--(gen_random_uuid(), 'Auditor', 'Auditor3', 'Shop9', 'Auditor role description', NULL, NOW(), NOW()),
+--(gen_random_uuid(), 'Developer', 'Developer3', 'Shop10', 'Developer role description', NULL, NOW(), NOW());
+--
+---- Вставка тестовых данных в таблицу permission_table
+--INSERT INTO permission_table (id, action_type, resource_type, data, created_at, updated_at) VALUES
+--(gen_random_uuid(), 'READ', 'IDM', '{}', NOW(), NOW()),
+--(gen_random_uuid(), 'WRITE', 'IDM', '{}', NOW(), NOW()),
+--(gen_random_uuid(), 'DELETE', 'IDM', '{}', NOW(), NOW()),
+--(gen_random_uuid(), 'CREATE', 'IDM', '{}', NOW(), NOW()),
+--(gen_random_uuid(), 'UPDATE', 'IDM', '{}', NOW(), NOW()),
+--(gen_random_uuid(), 'VIEW', 'IDM', '{}', NOW(), NOW()),
+--(gen_random_uuid(), 'MANAGE', 'IDM', '{}', NOW(), NOW()),
+--(gen_random_uuid(), 'EXECUTE', 'IDM', '{}', NOW(), NOW()),
+--(gen_random_uuid(), 'ACCESS', 'IDM', '{}', NOW(), NOW()),
+--(gen_random_uuid(), 'CONTROL', 'IDM', '{}', NOW(), NOW());
+--
+---- Вставка тестовых данных в таблицу role_permission_table
+--INSERT INTO role_permission_table (role_id, permission_id) VALUES
+--((SELECT id FROM role_table WHERE name = 'Auditor1'), (SELECT id FROM permission_table WHERE action_type = 'READ')),
+--((SELECT id FROM role_table WHERE name = 'Auditor1'), (SELECT id FROM permission_table WHERE action_type = 'WRITE')),
+--((SELECT id FROM role_table WHERE name = 'Developer1'), (SELECT id FROM permission_table WHERE action_type = 'CREATE')),
+--((SELECT id FROM role_table WHERE name = 'Developer1'), (SELECT id FROM permission_table WHERE action_type = 'UPDATE')),
+--((SELECT id FROM role_table WHERE name = 'Owner1'), (SELECT id FROM permission_table WHERE action_type = 'DELETE')),
+--((SELECT id FROM role_table WHERE name = 'Owner1'), (SELECT id FROM permission_table WHERE action_type = 'MANAGE')),
+--((SELECT id FROM role_table WHERE name = 'Admin1'), (SELECT id FROM permission_table WHERE action_type = 'VIEW')),
+--((SELECT id FROM role_table WHERE name = 'Admin1'), (SELECT id FROM permission_table WHERE action_type = 'CONTROL')),
+--((SELECT id FROM role_table WHERE name = 'Auditor2'), (SELECT id FROM permission_table WHERE action_type = 'READ')),
+--((SELECT id FROM role_table WHERE name = 'Developer2'), (SELECT id FROM permission_table WHERE action_type = 'WRITE')),
+--((SELECT id FROM role_table WHERE name = 'Owner2'), (SELECT id FROM permission_table WHERE action_type = 'DELETE')),
+--((SELECT id FROM role_table WHERE name = 'Admin2'), (SELECT id FROM permission_table WHERE action_type = 'MANAGE')),
+--((SELECT id FROM role_table WHERE name = 'Auditor3'), (SELECT id FROM permission_table WHERE action_type = 'READ')),
+--((SELECT id FROM role_table WHERE name = 'Developer3'), (SELECT id FROM permission_table WHERE action_type = 'WRITE'));

@@ -2,18 +2,27 @@ package com.onyxdb.idm.repositories;
 
 import com.onyxdb.idm.generated.jooq.Tables;
 import com.onyxdb.idm.generated.jooq.tables.PermissionTable;
+import com.onyxdb.idm.generated.jooq.tables.ProductTable;
 import com.onyxdb.idm.generated.jooq.tables.RolePermissionTable;
 import com.onyxdb.idm.generated.jooq.tables.RoleTable;
+import com.onyxdb.idm.models.PaginatedResult;
 import com.onyxdb.idm.models.Permission;
 import com.onyxdb.idm.models.Role;
 
 import lombok.RequiredArgsConstructor;
+import org.jooq.Condition;
 import org.jooq.DSLContext;
+import org.jooq.Record;
+import org.jooq.Result;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import static org.jooq.impl.DSL.noTable;
+import static org.jooq.impl.DSL.trueCondition;
 
 /**
  * @author ArtemFed
@@ -25,6 +34,7 @@ public class RolePostgresRepository implements RoleRepository {
     private final static RoleTable roleTable = Tables.ROLE_TABLE;
     private final static RolePermissionTable roleToPermissionTable = Tables.ROLE_PERMISSION_TABLE;
     private final static PermissionTable permissionTable = Tables.PERMISSION_TABLE;
+    private final static ProductTable productTable = Tables.PRODUCT_TABLE;
 
     @Override
     public Optional<Role> findById(UUID id) {
@@ -34,35 +44,93 @@ public class RolePostgresRepository implements RoleRepository {
     }
 
     @Override
-    public List<Role> findAll() {
-        return dslContext.selectFrom(roleTable)
-                .fetch(Role::fromDAO);
+    public PaginatedResult<Role> findAll(String query, UUID productId, UUID orgUnitId, Integer limit, Integer offset) {
+        limit = (limit != null) ? limit : Integer.MAX_VALUE;
+        offset = (offset != null) ? offset : 0;
+
+        Condition condition = trueCondition();
+
+        var table = roleTable.leftJoin(noTable()).on();
+        if (productId != null) {
+            condition = condition.and(roleTable.PRODUCT_ID.eq(productId));
+        }
+        if (orgUnitId != null) {
+            condition = condition.and(roleTable.ORG_UNIT_ID.eq(orgUnitId));
+        }
+        if (query != null && !query.isEmpty()) {
+            table = roleTable.leftJoin(productTable).on(roleTable.PRODUCT_ID.eq(productTable.ID));
+            condition = roleTable.NAME.containsIgnoreCase(query)
+                    .or(roleTable.SHOP_NAME.containsIgnoreCase(query))
+                    .or(roleTable.DESCRIPTION.containsIgnoreCase(query))
+                    .or(productTable.NAME.containsIgnoreCase(query))
+                    .or(productTable.DESCRIPTION.containsIgnoreCase(query));
+        }
+
+        Result<Record> records = dslContext.selectFrom(table)
+                .where(condition)
+                .limit(limit)
+                .offset(offset)
+                .fetch();
+        List<Role> data = records.map(record -> Role.fromDAO(record.into(roleTable)));
+
+        int totalCount = dslContext.selectCount()
+                .from(table)
+                .where(condition)
+                .fetchOptional()
+                .map(record -> record.get(0, int.class))
+                .orElse(0);
+
+        return new PaginatedResult<>(
+                data,
+                totalCount,
+                offset + 1,
+                Math.min(offset + limit, totalCount)
+        );
     }
 
     @Override
-    public void create(Role role) {
-        dslContext.insertInto(roleTable)
-                .set(roleTable.ID, role.id())
+    public Role create(Role role) {
+        var record = dslContext.insertInto(roleTable)
+                .set(roleTable.ID, UUID.randomUUID())
                 .set(roleTable.NAME, role.name())
+                .set(roleTable.SHOP_NAME, role.name())
                 .set(roleTable.DESCRIPTION, role.description())
+                .set(roleTable.ROLE_TYPE, role.roleType())
+                .set(roleTable.IS_SHOP_HIDDEN, role.isShopHidden())
                 .set(roleTable.PRODUCT_ID, role.productId())
-                .set(roleTable.CREATED_AT, role.createdAt())
-                .set(roleTable.UPDATED_AT, role.updatedAt())
-                .execute();
+                .set(roleTable.ORG_UNIT_ID, role.orgUnitId())
+                .set(roleTable.CREATED_AT, LocalDateTime.now())
+                .set(roleTable.UPDATED_AT, LocalDateTime.now())
+                .returning()
+                .fetchOne();
+
+        assert record != null;
+        return Role.fromDAO(record);
     }
 
     @Override
-    public void update(Role role) {
-        dslContext.update(roleTable)
+    public Role update(Role role) {
+        var record = dslContext.update(roleTable)
                 .set(roleTable.NAME, role.name())
+                .set(roleTable.SHOP_NAME, role.name())
                 .set(roleTable.DESCRIPTION, role.description())
-                .set(roleTable.UPDATED_AT, role.updatedAt())
+                .set(roleTable.ROLE_TYPE, role.roleType())
+                .set(roleTable.IS_SHOP_HIDDEN, role.isShopHidden())
+                .set(roleTable.PRODUCT_ID, role.productId())
+                .set(roleTable.ORG_UNIT_ID, role.orgUnitId())
+                .set(roleTable.UPDATED_AT, LocalDateTime.now())
                 .where(roleTable.ID.eq(role.id()))
-                .execute();
+                .returning()
+                .fetchOne();
+
+        assert record != null;
+        return Role.fromDAO(record);
     }
 
     @Override
     public void delete(UUID id) {
+        // TODO удалять все ссылки к Permission и их самих тоже
+
         dslContext.deleteFrom(roleTable)
                 .where(roleTable.ID.eq(id))
                 .execute();
@@ -85,7 +153,7 @@ public class RolePostgresRepository implements RoleRepository {
     }
 
     @Override
-    public List<Permission> getPermissionsByRoleId(UUID roleId) {
+    public List<Permission> getPermissions(UUID roleId) {
         return dslContext.selectFrom(roleToPermissionTable)
                 .where(roleToPermissionTable.ROLE_ID.eq(roleId))
                 .fetch(link -> dslContext.selectFrom(permissionTable)

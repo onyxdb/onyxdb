@@ -12,9 +12,9 @@ spring:
 
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${ONYXDB_IDM_API_PSQL_URL:jdbc:postgresql://localhost:5432/postgres}
+    url: ${ONYXDB_IDM_API_PSQL_URL:jdbc:postgresql://localhost:5432/ao.fedorov}
     username: ${ONYXDB_IDM_API_PSQL_USERNAME:ao.fedorov}
-    password: ${ONYXDB_IDM_API_PSQL_PASSWORD:root}
+    password: ${ONYXDB_IDM_API_PSQL_PASSWORD:}
   jooq:
     sql-dialect: Postgres
   flyway:
@@ -28,3 +28,8 @@ springdoc:
     path: /internal/api-docs
   swagger-ui:
     path: /internal/swagger-ui
+
+jwt-token:
+  salt-jwt: ${JWT_TOKEN_SALT_JWT:ns9ozm2ani3oc6xo4pozoijxsperv8rpo1bsdijvdlpszq}
+  salt-refresh: ${JWT_TOKEN_SALT_REFRESH:nn9ozm2ani3oc6xo4pozoijxsperv8rpo1bsdijvdlpszq}
+  expiration: ${JWT_TOKEN_EXPIRATION:5 } # minutes

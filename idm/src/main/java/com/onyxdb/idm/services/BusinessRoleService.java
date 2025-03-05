@@ -2,13 +2,13 @@ package com.onyxdb.idm.services;
 
 import com.onyxdb.idm.controllers.v1.ResourceNotFoundException;
 import com.onyxdb.idm.models.BusinessRole;
+import com.onyxdb.idm.models.PaginatedResult;
 import com.onyxdb.idm.models.Role;
 import com.onyxdb.idm.repositories.BusinessRoleRepository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,40 +26,24 @@ public class BusinessRoleService {
                 .orElseThrow(() -> new ResourceNotFoundException("BusinessRole not found"));
     }
 
-    public List<BusinessRole> findAll() {
-        return businessRoleRepository.findAll();
+    public PaginatedResult<BusinessRole> findAll(String search, Integer limit, Integer offset) {
+        return businessRoleRepository.findAll(search, limit, offset);
     }
 
-    public List<BusinessRole> findByParentId(UUID parentId) {
-        return businessRoleRepository.findByParentId(parentId);
+    public List<BusinessRole> findChildren(UUID parentId) {
+        return businessRoleRepository.findChildren(parentId);
+    }
+
+    public List<BusinessRole> findParents(UUID id) {
+        return businessRoleRepository.findAllParents(id);
     }
 
     public BusinessRole create(BusinessRole businessRole) {
-        BusinessRole forCreate = new BusinessRole(
-                UUID.randomUUID(),
-                businessRole.name(),
-                businessRole.description(),
-                businessRole.parentId(),
-                businessRole.data(),
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
-        businessRoleRepository.create(forCreate);
-        return forCreate;
+        return businessRoleRepository.create(businessRole);
     }
 
     public BusinessRole update(BusinessRole businessRole) {
-        BusinessRole forUpdate = new BusinessRole(
-                businessRole.id(),
-                businessRole.name(),
-                businessRole.description(),
-                businessRole.parentId(),
-                businessRole.data(),
-                businessRole.createdAt(),
-                LocalDateTime.now()
-        );
-        businessRoleRepository.update(forUpdate);
-        return forUpdate;
+        return businessRoleRepository.update(businessRole);
     }
 
     public void delete(UUID id) {
@@ -75,6 +59,6 @@ public class BusinessRoleService {
     }
 
     public List<Role> getRolesByBusinessRoleId(UUID businessRoleId) {
-        return businessRoleRepository.getRoleByBusinessRoleId(businessRoleId);
+        return businessRoleRepository.getRoles(businessRoleId);
     }
 }

@@ -1,6 +1,7 @@
 package com.onyxdb.idm.repositories;
 
 import com.onyxdb.idm.models.Product;
+import com.onyxdb.idm.models.ProductTree;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,9 +15,15 @@ public interface ProductRepository {
 
     List<Product> findAll();
 
-    void create(Product product);
+    List<Product> findRootProducts();
 
-    void update(Product product);
+    List<Product> findChildren(UUID productId);
+
+    List<ProductTree> findChildrenTree(UUID productId, Integer depth);
+
+    Product create(Product product);
+
+    Product update(Product product);
 
     void delete(UUID id);
 }

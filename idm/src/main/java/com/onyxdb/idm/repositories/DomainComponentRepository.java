@@ -14,9 +14,9 @@ public interface DomainComponentRepository {
 
     List<DomainComponent> findAll();
 
-    void create(DomainComponent domainComponent);
+    DomainComponent create(DomainComponent domainComponent);
 
-    void update(DomainComponent domainComponent);
+    DomainComponent update(DomainComponent domainComponent);
 
     void delete(UUID id);
 }

@@ -27,36 +27,16 @@ public class DomainComponentService {
                 .orElseThrow(() -> new ResourceNotFoundException("DomainComponent not found"));
     }
 
-    public List<OrganizationUnit> findChildrenOrganizationUnits(UUID id) {
-        return organizationUnitRepository.findByDomainComponentId(id);
-    }
-
     public List<DomainComponent> findAll() {
         return domainComponentRepository.findAll();
     }
 
     public DomainComponent create(DomainComponent domainComponent) {
-        DomainComponent forCreate = new DomainComponent(
-                UUID.randomUUID(),
-                domainComponent.name(),
-                domainComponent.description(),
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
-        domainComponentRepository.create(forCreate);
-        return forCreate;
+        return domainComponentRepository.create(domainComponent);
     }
 
     public DomainComponent update(DomainComponent domainComponent) {
-        DomainComponent forUpdate = new DomainComponent(
-                domainComponent.id(),
-                domainComponent.name(),
-                domainComponent.description(),
-                domainComponent.createdAt(),
-                LocalDateTime.now()
-        );
-        domainComponentRepository.update(forUpdate);
-        return forUpdate;
+        return domainComponentRepository.update(domainComponent);
     }
 
     public void delete(UUID id) {

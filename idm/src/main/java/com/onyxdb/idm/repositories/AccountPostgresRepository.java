@@ -5,18 +5,29 @@ import com.onyxdb.idm.generated.jooq.tables.AccountBusinessRoleTable;
 import com.onyxdb.idm.generated.jooq.tables.AccountRoleTable;
 import com.onyxdb.idm.generated.jooq.tables.AccountTable;
 import com.onyxdb.idm.generated.jooq.tables.BusinessRoleTable;
+import com.onyxdb.idm.generated.jooq.tables.PermissionTable;
+import com.onyxdb.idm.generated.jooq.tables.RolePermissionTable;
 import com.onyxdb.idm.generated.jooq.tables.RoleTable;
+import com.onyxdb.idm.generated.jooq.tables.records.AccountTableRecord;
 import com.onyxdb.idm.models.Account;
 import com.onyxdb.idm.models.BusinessRole;
+import com.onyxdb.idm.models.PaginatedResult;
+import com.onyxdb.idm.models.Permission;
 import com.onyxdb.idm.models.Role;
 
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
+import org.jooq.Condition;
+import org.jooq.Result;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
+import static org.jooq.impl.DSL.trueCondition;
 
 /**
  * @author ArtemFed
@@ -29,6 +40,8 @@ public class AccountPostgresRepository implements AccountRepository {
     private final static AccountBusinessRoleTable accountBusinessRoleTable = Tables.ACCOUNT_BUSINESS_ROLE_TABLE;
     private final static BusinessRoleTable businessRoleTable = Tables.BUSINESS_ROLE_TABLE;
     private final static AccountRoleTable accountRoleTable = Tables.ACCOUNT_ROLE_TABLE;
+    private final static RolePermissionTable rolePermissionTable = Tables.ROLE_PERMISSION_TABLE;
+    private final static PermissionTable permissionTable = Tables.PERMISSION_TABLE;
     private final static RoleTable roleTable = Tables.ROLE_TABLE;
 
     @Override
@@ -39,9 +52,38 @@ public class AccountPostgresRepository implements AccountRepository {
     }
 
     @Override
-    public List<Account> findAll() {
+    public Optional<Account> findByLogin(String login) {
         return dslContext.selectFrom(accountTable)
-                .fetch(Account::fromDAO);
+                .where(accountTable.LOGIN.eq(login))
+                .fetchOptional(Account::fromDAO);
+    }
+
+    @Override
+    public PaginatedResult<Account> findAll(String query, Integer limit, Integer offset) {
+        limit = (limit != null) ? limit : Integer.MAX_VALUE;
+        offset = (offset != null) ? offset : 0;
+
+        Condition condition = query != null ? accountTable.LOGIN.containsIgnoreCase(query)
+                .or(accountTable.EMAIL.containsIgnoreCase(query))
+                .or(accountTable.FIRST_NAME.containsIgnoreCase(query))
+                .or(accountTable.LAST_NAME.containsIgnoreCase(query))
+                : trueCondition();
+
+        Result<AccountTableRecord> records = dslContext.selectFrom(accountTable)
+                .where(condition)
+                .limit(limit)
+                .offset(offset)
+                .fetch();
+
+        List<Account> data = records.map(record -> Account.fromDAO(record.into(accountTable)));
+
+        int totalCount = dslContext.fetchCount(accountTable, condition);
+        return new PaginatedResult<>(
+                data,
+                totalCount,
+                offset + 1,
+                Math.min(offset + limit, totalCount)
+        );
     }
 
 //    @Override
@@ -61,32 +103,40 @@ public class AccountPostgresRepository implements AccountRepository {
 //    }
 
     @Override
-    public void create(Account account) {
-        dslContext.insertInto(accountTable)
-                .set(accountTable.ID, account.id())
+    public Account create(Account account) {
+        var record = dslContext.insertInto(accountTable)
+                .set(accountTable.ID, UUID.randomUUID())
                 .set(accountTable.LOGIN, account.login())
                 .set(accountTable.PASSWORD, account.password())
                 .set(accountTable.EMAIL, account.email())
                 .set(accountTable.FIRST_NAME, account.firstName())
                 .set(accountTable.LAST_NAME, account.lastName())
                 .set(accountTable.DATA, account.getDataAsJsonb())
-                .set(accountTable.CREATED_AT, account.createdAt())
-                .set(accountTable.UPDATED_AT, account.updatedAt())
-                .execute();
+                .set(accountTable.CREATED_AT, LocalDateTime.now())
+                .set(accountTable.UPDATED_AT, LocalDateTime.now())
+                .returning()
+                .fetchOne();
+
+        assert record != null;
+        return Account.fromDAO(record);
     }
 
     @Override
-    public void update(Account account) {
-        dslContext.update(accountTable)
+    public Account update(Account account) {
+        var record = dslContext.update(accountTable)
                 .set(accountTable.LOGIN, account.login())
                 .set(accountTable.PASSWORD, account.password())
                 .set(accountTable.EMAIL, account.email())
                 .set(accountTable.FIRST_NAME, account.firstName())
                 .set(accountTable.LAST_NAME, account.lastName())
                 .set(accountTable.DATA, account.getDataAsJsonb())
-                .set(accountTable.UPDATED_AT, account.updatedAt())
+                .set(accountTable.UPDATED_AT, LocalDateTime.now())
                 .where(accountTable.ID.eq(account.id()))
-                .execute();
+                .returning()
+                .fetchOne();
+
+        assert record != null;
+        return Account.fromDAO(record);
     }
 
     @Override
@@ -122,6 +172,15 @@ public class AccountPostgresRepository implements AccountRepository {
     }
 
     @Override
+    public List<Role> getAccountRoles(UUID accountId) {
+        return dslContext.selectFrom(accountRoleTable)
+                .where(accountRoleTable.ACCOUNT_ID.eq(accountId))
+                .fetch(link -> dslContext.selectFrom(roleTable)
+                        .where(roleTable.ID.eq(link.getRoleId()))
+                        .fetchOne(Role::fromDAO));
+    }
+
+    @Override
     public void addRole(UUID accountId, UUID roleId) {
         dslContext.insertInto(accountRoleTable)
                 .set(accountRoleTable.ACCOUNT_ID, accountId)
@@ -138,12 +197,27 @@ public class AccountPostgresRepository implements AccountRepository {
     }
 
     @Override
-    public List<Role> getRoleByBusinessRoleId(UUID accountId) {
+    public List<Role> getRoles(UUID accountId) {
         return dslContext.selectFrom(accountRoleTable)
                 .where(accountRoleTable.ACCOUNT_ID.eq(accountId))
                 .fetch(link -> dslContext.selectFrom(roleTable)
                         .where(roleTable.ID.eq(link.getRoleId()))
                         .fetchOne(Role::fromDAO)
                 );
+    }
+
+    @Override
+    public List<Permission> getPermissions(UUID accountId) {
+        return dslContext.selectFrom(accountRoleTable)
+                .where(accountRoleTable.ACCOUNT_ID.eq(accountId))
+                .fetch(link -> dslContext.selectFrom(rolePermissionTable)
+                        .where(rolePermissionTable.ROLE_ID.eq(link.getRoleId()))
+                        .fetch(link2 -> dslContext.selectFrom(permissionTable)
+                                .where(permissionTable.ID.eq(link2.getPermissionId()))
+                                .fetchOne(Permission::fromDAO))
+                )
+                .stream()
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
     }
 }

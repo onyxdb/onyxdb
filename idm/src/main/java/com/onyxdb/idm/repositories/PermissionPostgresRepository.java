@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -35,24 +36,34 @@ public class PermissionPostgresRepository implements PermissionRepository {
     }
 
     @Override
-    public void create(Permission permission) {
-        dslContext.insertInto(permissionTable)
-                .set(permissionTable.ID, permission.id())
+    public Permission create(Permission permission) {
+        var record = dslContext.insertInto(permissionTable)
+                .set(permissionTable.ID, UUID.randomUUID())
                 .set(permissionTable.ACTION_TYPE, permission.actionType())
+                .set(permissionTable.RESOURCE_TYPE, permission.resourceType())
                 .set(permissionTable.DATA, permission.getDataAsJsonb())
-                .set(permissionTable.CREATED_AT, permission.createdAt())
-                .set(permissionTable.UPDATED_AT, permission.updatedAt())
-                .execute();
+                .set(permissionTable.CREATED_AT, LocalDateTime.now())
+                .set(permissionTable.UPDATED_AT, LocalDateTime.now())
+                .returning()
+                .fetchOne();
+
+        assert record != null;
+        return Permission.fromDAO(record);
     }
 
     @Override
-    public void update(Permission permission) {
-        dslContext.update(permissionTable)
+    public Permission update(Permission permission) {
+        var record = dslContext.update(permissionTable)
                 .set(permissionTable.ACTION_TYPE, permission.actionType())
+                .set(permissionTable.RESOURCE_TYPE, permission.resourceType())
                 .set(permissionTable.DATA, permission.getDataAsJsonb())
-                .set(permissionTable.UPDATED_AT, permission.updatedAt())
+                .set(permissionTable.UPDATED_AT, LocalDateTime.now())
                 .where(permissionTable.ID.eq(permission.id()))
-                .execute();
+                .returning()
+                .fetchOne();
+
+        assert record != null;
+        return Permission.fromDAO(record);
     }
 
     @Override

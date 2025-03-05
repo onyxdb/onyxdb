@@ -6,14 +6,22 @@ import com.onyxdb.idm.generated.jooq.tables.AccountTable;
 import com.onyxdb.idm.generated.jooq.tables.OrganizationUnitTable;
 import com.onyxdb.idm.models.Account;
 import com.onyxdb.idm.models.OrganizationUnit;
+import com.onyxdb.idm.models.PaginatedResult;
+import com.onyxdb.idm.models.RoleRequest;
 
 import lombok.RequiredArgsConstructor;
+import org.jooq.Condition;
 import org.jooq.DSLContext;
+import org.jooq.Record;
+import org.jooq.Result;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import static org.jooq.impl.DSL.trueCondition;
 
 /**
  * @author ArtemFed
@@ -34,41 +42,61 @@ public class OrganizationUnitPostgresRepository implements OrganizationUnitRepos
     }
 
     @Override
-    public List<OrganizationUnit> findAll() {
-        return dslContext.selectFrom(organizationUnitTable)
-                .fetch(OrganizationUnit::fromDAO);
+    public PaginatedResult<OrganizationUnit> findAll(UUID dcId, UUID parentOuId, Integer limit, Integer offset) {
+        limit = (limit != null) ? limit : Integer.MAX_VALUE;
+        offset = (offset != null) ? offset : 0;
+
+        Condition condition = trueCondition();
+        if (dcId != null) {
+            condition = condition.and(organizationUnitTable.DOMAIN_COMPONENT_ID.eq(dcId));
+        }
+        if (parentOuId != null) {
+            condition = condition.and(organizationUnitTable.PARENT_ID.eq(parentOuId));
+        }
+
+        List<OrganizationUnit> data = dslContext.selectFrom(organizationUnitTable)
+                .where(condition).fetch(OrganizationUnit::fromDAO);
+
+        int totalCount = dslContext.fetchCount(organizationUnitTable, condition);
+        return new PaginatedResult<>(
+                data,
+                totalCount,
+                offset + 1,
+                Math.min(offset + limit, totalCount)
+        );
     }
 
     @Override
-    public List<OrganizationUnit> findByDomainComponentId(UUID domainComponentId) {
-        return dslContext.selectFrom(organizationUnitTable)
-                .where(organizationUnitTable.DOMAIN_COMPONENT_ID.eq(domainComponentId))
-                .fetch(OrganizationUnit::fromDAO);
-    }
-
-    @Override
-    public void create(OrganizationUnit organizationUnit) {
-        dslContext.insertInto(organizationUnitTable)
-                .set(organizationUnitTable.ID, organizationUnit.id())
+    public OrganizationUnit create(OrganizationUnit organizationUnit) {
+        var record = dslContext.insertInto(organizationUnitTable)
+                .set(organizationUnitTable.ID, UUID.randomUUID())
                 .set(organizationUnitTable.NAME, organizationUnit.name())
                 .set(organizationUnitTable.DESCRIPTION, organizationUnit.description())
                 .set(organizationUnitTable.DOMAIN_COMPONENT_ID, organizationUnit.domainComponentId())
                 .set(organizationUnitTable.PARENT_ID, organizationUnit.parentId())
-                .set(organizationUnitTable.CREATED_AT, organizationUnit.createdAt())
-                .set(organizationUnitTable.UPDATED_AT, organizationUnit.updatedAt())
-                .execute();
+                .set(organizationUnitTable.CREATED_AT, LocalDateTime.now())
+                .set(organizationUnitTable.UPDATED_AT, LocalDateTime.now())
+                .returning()
+                .fetchOne();
+
+        assert record != null;
+        return OrganizationUnit.fromDAO(record);
     }
 
     @Override
-    public void update(OrganizationUnit organizationUnit) {
-        dslContext.update(organizationUnitTable)
+    public OrganizationUnit update(OrganizationUnit organizationUnit) {
+        var record = dslContext.update(organizationUnitTable)
                 .set(organizationUnitTable.NAME, organizationUnit.name())
                 .set(organizationUnitTable.DESCRIPTION, organizationUnit.description())
                 .set(organizationUnitTable.DOMAIN_COMPONENT_ID, organizationUnit.domainComponentId())
                 .set(organizationUnitTable.PARENT_ID, organizationUnit.parentId())
-                .set(organizationUnitTable.UPDATED_AT, organizationUnit.updatedAt())
+                .set(organizationUnitTable.UPDATED_AT, LocalDateTime.now())
                 .where(organizationUnitTable.ID.eq(organizationUnit.id()))
-                .execute();
+                .returning()
+                .fetchOne();
+
+        assert record != null;
+        return OrganizationUnit.fromDAO(record);
     }
 
     @Override

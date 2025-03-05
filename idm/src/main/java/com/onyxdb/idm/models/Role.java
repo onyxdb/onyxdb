@@ -15,6 +15,8 @@ public record Role(
         String name,
         String shopName,
         String description,
+        Boolean isShopHidden,
+        UUID orgUnitId,
         UUID productId,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
@@ -26,7 +28,9 @@ public record Role(
                 .name(name)
                 .shopName(shopName)
                 .description(description)
+                .isShopHidden(isShopHidden)
                 .productId(productId)
+                .orgUnitId(orgUnitId)
                 .createdAt(createdAt)
                 .updatedAt(updatedAt);
     }
@@ -38,6 +42,8 @@ public record Role(
                 roleDTO.getName(),
                 roleDTO.getShopName(),
                 roleDTO.getDescription(),
+                roleDTO.getIsShopHidden(),
+                roleDTO.getOrgUnitId(),
                 roleDTO.getProductId(),
                 roleDTO.getCreatedAt(),
                 roleDTO.getUpdatedAt()
@@ -51,6 +57,8 @@ public record Role(
                 roleDAO.getName(),
                 roleDAO.getShopName(),
                 roleDAO.getDescription(),
+                roleDAO.getIsShopHidden(),
+                roleDAO.getOrgUnitId(),
                 roleDAO.getProductId(),
                 roleDAO.getCreatedAt(),
                 roleDAO.getUpdatedAt()

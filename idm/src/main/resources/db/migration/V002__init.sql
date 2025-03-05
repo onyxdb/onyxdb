@@ -24,10 +24,12 @@ CREATE TABLE role_table (
     shop_name VARCHAR(255) NOT NULL UNIQUE,
     description TEXT,
     product_id UUID,
+    org_unit_id UUID,
     is_shop_hidden BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (product_id) REFERENCES product_table(id)
+    FOREIGN KEY (product_id) REFERENCES product_table(id),
+    FOREIGN KEY (org_unit_id) REFERENCES organization_unit_table(id)
 );
 
 CREATE INDEX IF NOT EXISTS role_table_index ON role_table(name, shop_name);
@@ -37,6 +39,7 @@ CREATE INDEX IF NOT EXISTS role_table_product_id_index ON role_table(product_id)
 CREATE TABLE permission_table (
     id UUID PRIMARY KEY,
     action_type VARCHAR(255) NOT NULL, -- Например: CREATE, READ, UPDATE, DELETE or any custom
+    resource_type VARCHAR(255) NOT NULL, -- На кого распространяется, например: FRONT, MDB, IDM
     data JSONB NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

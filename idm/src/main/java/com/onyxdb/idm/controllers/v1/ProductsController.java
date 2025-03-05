@@ -2,14 +2,18 @@ package com.onyxdb.idm.controllers.v1;
 
 import com.onyxdb.idm.generated.openapi.apis.ProductsApi;
 import com.onyxdb.idm.generated.openapi.models.ProductDTO;
+import com.onyxdb.idm.generated.openapi.models.ProductTreeDTO;
 import com.onyxdb.idm.models.Product;
+import com.onyxdb.idm.models.ProductTree;
 import com.onyxdb.idm.services.ProductService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -38,6 +42,26 @@ public class ProductsController implements ProductsApi {
     public ResponseEntity<ProductDTO> getProductById(UUID productId) {
         Product product = productService.findById(productId);
         return ResponseEntity.ok(product.toDTO());
+    }
+
+    @Override
+    public ResponseEntity<List<ProductDTO>> getProductChildren(UUID productId) {
+        List<Product> products = productService.findChildren(productId);
+        List<ProductDTO> productDTOs = products.stream().map(Product::toDTO).toList();
+        return ResponseEntity.ok(productDTOs);
+    }
+
+    @Override
+    public ResponseEntity<ProductTreeDTO> getProductTree(UUID productId, Integer depth) {
+        ProductTree productTree = productService.findChildrenTree(productId, depth);
+        return ResponseEntity.ok(productTree.toDTO());
+    }
+
+    @Override
+    public ResponseEntity<List<ProductDTO>> getProductsRoots() {
+        List<Product> products = productService.findRootProducts();
+        List<ProductDTO> productDTOs = products.stream().map(Product::toDTO).toList();
+        return ResponseEntity.ok(productDTOs);
     }
 
     @Override

@@ -3,15 +3,19 @@ package com.onyxdb.idm.controllers.v1;
 import com.onyxdb.idm.generated.openapi.apis.OrganizationUnitsApi;
 import com.onyxdb.idm.generated.openapi.models.AccountDTO;
 import com.onyxdb.idm.generated.openapi.models.OrganizationUnitDTO;
+import com.onyxdb.idm.generated.openapi.models.PaginatedOrganizationUnitResponse;
 import com.onyxdb.idm.models.Account;
 import com.onyxdb.idm.models.OrganizationUnit;
+import com.onyxdb.idm.models.PaginatedResult;
 import com.onyxdb.idm.services.OrganizationUnitService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -37,17 +41,37 @@ public class OrganizationUnitsController implements OrganizationUnitsApi {
     }
 
     @Override
+    public ResponseEntity<List<AccountDTO>> getAccountsByouId(UUID ouId) {
+        List<Account> data = organizationUnitService.getOUAccounts(ouId);
+        List<AccountDTO> res = data.stream().map(Account::toDTO).toList();
+        return ResponseEntity.ok(res);
+    }
+
+    @Override
+    public ResponseEntity<PaginatedOrganizationUnitResponse> getAllOrganizationUnits(
+            UUID parentOuId, UUID dcId, Integer limit, Integer offset
+    ) {
+        PaginatedResult<OrganizationUnit> data = organizationUnitService.findAll(dcId, parentOuId, limit, offset);
+        List<OrganizationUnitDTO> res = data.data().stream().map(OrganizationUnit::toDTO).toList();
+        return ResponseEntity.ok(new PaginatedOrganizationUnitResponse()
+                .data(res)
+                .totalCount(data.totalCount())
+                .startPosition(data.startPosition())
+                .endPosition(data.endPosition())
+        );
+    }
+
+    @Override
     public ResponseEntity<OrganizationUnitDTO> getOrganizationUnitById(UUID ouId) {
         OrganizationUnit organizationUnit = organizationUnitService.findById(ouId);
         return ResponseEntity.ok(organizationUnit.toDTO());
     }
 
     @Override
-    public ResponseEntity<List<OrganizationUnitDTO>> getAllOrganizationUnits() {
-        List<OrganizationUnit> organizationUnits = organizationUnitService.findAll();
-        List<OrganizationUnitDTO> organizationUnitDTOs = organizationUnits
-                .stream().map(OrganizationUnit::toDTO).toList();
-        return ResponseEntity.ok(organizationUnitDTOs);
+    public ResponseEntity<List<OrganizationUnitDTO>> getOrganizationUnitChildren(UUID ouId) {
+        PaginatedResult<OrganizationUnit> data = organizationUnitService.findChildren(ouId);
+        List<OrganizationUnitDTO> res = data.data().stream().map(OrganizationUnit::toDTO).toList();
+        return ResponseEntity.ok(res);
     }
 
     @Override
@@ -70,12 +94,5 @@ public class OrganizationUnitsController implements OrganizationUnitsApi {
     public ResponseEntity<Void> removeAccountFromOrganizationUnit(UUID ouId, UUID accountId) {
         organizationUnitService.removeAccount(ouId, accountId);
         return ResponseEntity.noContent().build();
-    }
-
-    @Override
-    public ResponseEntity<List<AccountDTO>> getAccountsByOrganizationUnitId(UUID ouId) {
-        List<Account> accounts = organizationUnitService.getOUAccounts(ouId);
-        List<AccountDTO> accountDTOs = accounts.stream().map(Account::toDTO).toList();
-        return ResponseEntity.ok(accountDTOs);
     }
 }
