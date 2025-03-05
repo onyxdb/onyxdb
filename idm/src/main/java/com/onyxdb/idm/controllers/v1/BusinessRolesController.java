@@ -87,13 +87,13 @@ public class BusinessRolesController implements BusinessRolesApi {
     @Override
     public ResponseEntity<Void> addRoleToBusinessRole(UUID businessRoleId, UUID roleId) {
         businessRoleService.addRole(businessRoleId, roleId);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return null;
     }
 
     @Override
     public ResponseEntity<Void> removeRoleFromBusinessRole(UUID businessRoleId, UUID roleId) {
         businessRoleService.removeRole(businessRoleId, roleId);
-        return ResponseEntity.noContent().build();
+        return null;
     }
 
     @Override

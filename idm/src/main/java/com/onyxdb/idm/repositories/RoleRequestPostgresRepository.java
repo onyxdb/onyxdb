@@ -143,11 +143,15 @@ public class RoleRequestPostgresRepository implements RoleRequestRepository {
     }
 
     @Override
-    public void setStatus(UUID id, String status) {
-        dslContext.update(roleRequestTable)
+    public RoleRequest setStatus(UUID id, String status) {
+        var record = dslContext.update(roleRequestTable)
                 .set(roleRequestTable.STATUS, status)
                 .set(roleRequestTable.RESOLVED_AT, LocalDateTime.now())
                 .where(roleRequestTable.ID.eq(id))
-                .execute();
+                .returning()
+                .fetchOne();
+
+        assert record != null;
+        return RoleRequest.fromDAO(record);
     }
 }
