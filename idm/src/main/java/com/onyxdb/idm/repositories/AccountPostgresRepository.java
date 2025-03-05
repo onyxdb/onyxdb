@@ -27,6 +27,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static org.jooq.impl.DSL.trueCondition;
+
 /**
  * @author ArtemFed
  */
@@ -61,11 +63,11 @@ public class AccountPostgresRepository implements AccountRepository {
         limit = (limit != null) ? limit : Integer.MAX_VALUE;
         offset = (offset != null) ? offset : 0;
 
-        Condition condition = accountTable.ID.eq(UUID.fromString(query))
-                .or(accountTable.LOGIN.containsIgnoreCase(query))
+        Condition condition = query != null ? accountTable.LOGIN.containsIgnoreCase(query)
                 .or(accountTable.EMAIL.containsIgnoreCase(query))
                 .or(accountTable.FIRST_NAME.containsIgnoreCase(query))
-                .or(accountTable.LAST_NAME.containsIgnoreCase(query));
+                .or(accountTable.LAST_NAME.containsIgnoreCase(query))
+                : trueCondition();
 
         Result<AccountTableRecord> records = dslContext.selectFrom(accountTable)
                 .where(condition)

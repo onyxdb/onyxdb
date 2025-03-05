@@ -1,10 +1,9 @@
 package com.onyxdb.idm;
 
-import com.onyxdb.idm.generated.openapi.models.AccountDTO;
-import com.onyxdb.idm.generated.openapi.models.RoleDTO;
-import com.onyxdb.idm.generated.openapi.models.DomainComponentDTO;
-import com.onyxdb.idm.generated.openapi.models.OrganizationUnitDTO;
-import com.onyxdb.idm.generated.openapi.models.ProductDTO;
+import java.util.List;
+import java.util.UUID;
+
+import com.onyxdb.idm.generated.openapi.models.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,7 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.http.MediaType;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class IdmApiIntegrationTest {
@@ -29,87 +27,229 @@ public class IdmApiIntegrationTest {
     }
 
     @Test
-    public void testCreateAccount() {
-        AccountDTO accountDTO = TestDataFactory.createAccountDTO();
+    public void testCreateAllEntities() {
+        // 1. Создаем два Domain Components (DC)
+        DomainComponentDTO dc1 = TestDataFactory.createDomainComponentDTO(null, "DC1", "First Domain Component", null, null);
+        DomainComponentDTO dc2 = TestDataFactory.createDomainComponentDTO(null, "DC2", "Second Domain Component", null, null);
 
-        webTestClient.post()
-                .uri("/api/v1/accounts")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(accountDTO)
-                .exchange()
-                .expectStatus().isCreated()
-                .expectBody(AccountDTO.class)
-                .value(createdAccount -> {
-                    assertNotNull(createdAccount.getId());
-                    assertNotNull(createdAccount.getUsername());
-                });
+        dc1 = createDomainComponent(dc1);
+        dc2 = createDomainComponent(dc2);
+
+        // 2. Создаем иерархию Organization Units (OU) для первого DC
+        OrganizationUnitDTO ou1 = TestDataFactory.createOrganizationUnitDTO(null, "OU1", "First OU", dc1.getId(), null, null, null);
+        OrganizationUnitDTO ou2 = TestDataFactory.createOrganizationUnitDTO(null, "OU2", "Second OU", dc1.getId(), null, null, null);
+        OrganizationUnitDTO ou3 = TestDataFactory.createOrganizationUnitDTO(null, "OU3", "Third OU", dc1.getId(), null, null, null);
+
+        ou1 = createOrganizationUnit(ou1);
+        ou2 = createOrganizationUnit(ou2);
+        ou3 = createOrganizationUnit(ou3);
+
+        // Создаем дочерние OU для каждого из трех главных OU
+        OrganizationUnitDTO ou1Child1 = TestDataFactory.createOrganizationUnitDTO(null, "OU1-Child1", "Child of OU1", dc1.getId(), ou1.getId(), null, null);
+        OrganizationUnitDTO ou2Child1 = TestDataFactory.createOrganizationUnitDTO(null, "OU2-Child1", "Child of OU2", dc1.getId(), ou2.getId(), null, null);
+        OrganizationUnitDTO ou2Child2 = TestDataFactory.createOrganizationUnitDTO(null, "OU2-Child2", "Child of OU2", dc1.getId(), ou2.getId(), null, null);
+        OrganizationUnitDTO ou3Child1 = TestDataFactory.createOrganizationUnitDTO(null, "OU3-Child1", "Child of OU3", dc1.getId(), ou3.getId(), null, null);
+        OrganizationUnitDTO ou3Child2 = TestDataFactory.createOrganizationUnitDTO(null, "OU3-Child2", "Child of OU3", dc1.getId(), ou3.getId(), null, null);
+        OrganizationUnitDTO ou3Child3 = TestDataFactory.createOrganizationUnitDTO(null, "OU3-Child3", "Child of OU3", dc1.getId(), ou3.getId(), null, null);
+
+        ou1Child1 = createOrganizationUnit(ou1Child1);
+        ou2Child1 = createOrganizationUnit(ou2Child1);
+        ou2Child2 = createOrganizationUnit(ou2Child2);
+        ou3Child1 = createOrganizationUnit(ou3Child1);
+        ou3Child2 = createOrganizationUnit(ou3Child2);
+        ou3Child3 = createOrganizationUnit(ou3Child3);
+
+        // Создаем еще одного ребенка для одного из детей OU3
+        OrganizationUnitDTO ou3Child1Child1 = TestDataFactory.createOrganizationUnitDTO(null, "OU3-Child1-Child1", "Child of OU3-Child1", dc1.getId(), ou3Child1.getId(), null, null);
+        ou3Child1Child1 = createOrganizationUnit(ou3Child1Child1);
+
+        // 3. Создаем один OU для второго DC
+        OrganizationUnitDTO ou4 = TestDataFactory.createOrganizationUnitDTO(null, "OU4", "Fourth OU", dc2.getId(), null, null, null);
+        ou4 = createOrganizationUnit(ou4);
+
+        // Создаем дочерний OU для OU4
+        OrganizationUnitDTO ou4Child1 = TestDataFactory.createOrganizationUnitDTO(null, "OU4-Child1", "Child of OU4", dc2.getId(), ou4.getId(), null, null);
+        ou4Child1 = createOrganizationUnit(ou4Child1);
+
+        // 4. Создаем иерархию продуктов
+        ProductDTO rootProduct = TestDataFactory.createProductDTO(null, "RootProduct", "Root Product", null, null, null);
+        rootProduct = createProduct(rootProduct);
+
+        ProductDTO product1 = TestDataFactory.createProductDTO(null, "Product1", "First Product", rootProduct.getId(), null, null);
+        ProductDTO product2 = TestDataFactory.createProductDTO(null, "Product2", "Second Product", rootProduct.getId(), null, null);
+        ProductDTO product3 = TestDataFactory.createProductDTO(null, "Product3", "Third Product", rootProduct.getId(), null, null);
+
+        product1 = createProduct(product1);
+        product2 = createProduct(product2);
+        product3 = createProduct(product3);
+
+        ProductDTO product1Child1 = TestDataFactory.createProductDTO(null, "Product1Child1", "First Product Child1", product1.getId(), null, null);
+        ProductDTO product1Child2 = TestDataFactory.createProductDTO(null, "Product1Child2", "First Product Child2", product1.getId(), null, null);
+
+        ProductDTO product2Child1 = TestDataFactory.createProductDTO(null, "Product2Child1", "Second Product Child1", product2.getId(), null, null);
+
+        // 5. Создаем аккаунты
+        AccountDTO account1 = TestDataFactory.createAccountDTO(null, "user1", "pass1", "user1@example.com", "User", "One", null, null, null);
+        AccountDTO account2 = TestDataFactory.createAccountDTO(null, "user2", "pass2", "user2@example.com", "User", "Two", null, null, null);
+        AccountDTO account3 = TestDataFactory.createAccountDTO(null, "user3", "pass3", "user3@example.com", "User", "Three", null, null, null);
+        AccountDTO account4 = TestDataFactory.createAccountDTO(null, "user4", "pass4", "user4@example.com", "User", "Four", null, null, null);
+        AccountDTO account5 = TestDataFactory.createAccountDTO(null, "user5", "pass5", "user5@example.com", "User", "Five", null, null, null);
+
+        account1 = createAccount(account1);
+        account2 = createAccount(account2);
+        account3 = createAccount(account3);
+        account4 = createAccount(account4);
+        account5 = createAccount(account5);
+
+        // Создаем 2 аккаунта для второго DC
+        AccountDTO account6 = TestDataFactory.createAccountDTO(null, "user6", "pass6", "user6@example.com", "User", "Six", null, null, null);
+        AccountDTO account7 = TestDataFactory.createAccountDTO(null, "user7", "pass7", "user7@example.com", "User", "Seven", null, null, null);
+
+        account6 = createAccount(account6);
+        account7 = createAccount(account7);
+
+        // 6. Связываем аккаунты с OU
+        linkAccountToOrganizationUnit(ou1.getId(), account1.getId());
+        linkAccountToOrganizationUnit(ou2.getId(), account2.getId());
+        linkAccountToOrganizationUnit(ou3.getId(), account3.getId());
+        linkAccountToOrganizationUnit(ou1Child1.getId(), account4.getId());
+        linkAccountToOrganizationUnit(ou2Child1.getId(), account5.getId());
+        linkAccountToOrganizationUnit(ou4.getId(), account6.getId());
+        linkAccountToOrganizationUnit(ou4Child1.getId(), account7.getId());
+
+        // 7. Создаем роли с разными наборами прав
+        PermissionDTO createPermission = TestDataFactory.createPermissionDTO(null, "CREATE", "IDM", null, null);
+        PermissionDTO patchPermission = TestDataFactory.createPermissionDTO(null, "PATCH", "IDM", null, null);
+        PermissionDTO getPermission = TestDataFactory.createPermissionDTO(null, "GET", "IDM", null, null);
+        PermissionDTO deletePermission = TestDataFactory.createPermissionDTO(null, "DELETE", "IDM", null, null);
+
+        RoleDTO adminDc1Role = TestDataFactory.createRoleDTO(null, "ADMIN", "Admin DC1", "Admin role for DC1", null, null);
+        RoleDTO adminDc2Role = TestDataFactory.createRoleDTO(null, "ADMIN", "Admin DC2", "Admin role for DC2", null, null);
+        RoleDTO adminMdbRole = TestDataFactory.createRoleDTO(null, "ADMIN", "Admin MDB", "Admin role for root product", null, null);
+        RoleDTO ownerOuRole = TestDataFactory.createRoleDTO(null, "OWNER", "Owner OU", "Owner role for OU", null, null);
+        RoleDTO ownerProductRole = TestDataFactory.createRoleDTO(null, "OWNER", "Owner Product", "Owner role for Product", null, null);
+        RoleDTO developerRole = TestDataFactory.createRoleDTO(null, "DEVELOPER", "Developer", "Developer role for leaf products", null, null);
+        RoleDTO auditorRole = TestDataFactory.createRoleDTO(null, "AUDITOR", "Auditor", "Auditor role for root products and OUs", null, null);
+
+
+        RoleWithPermissionsDTO adminDc1RoleWP = TestDataFactory.createRoleWithPermissionsDTO(adminDc1Role, List.of());
+        RoleWithPermissionsDTO adminDc2RoleWP = TestDataFactory.createRoleWithPermissionsDTO(adminDc2Role, List.of());
+        RoleWithPermissionsDTO adminMdbRoleWP = TestDataFactory.createRoleWithPermissionsDTO(adminMdbRole, List.of());
+        RoleWithPermissionsDTO ownerOuRoleWP = TestDataFactory.createRoleWithPermissionsDTO(ownerOuRole, List.of());
+        RoleWithPermissionsDTO ownerProductRoleWP = TestDataFactory.createRoleWithPermissionsDTO(ownerProductRole, List.of());
+        RoleWithPermissionsDTO developerRoleWP = TestDataFactory.createRoleWithPermissionsDTO(developerRole, List.of());
+        RoleWithPermissionsDTO auditorRoleWP = TestDataFactory.createRoleWithPermissionsDTO(auditorRole, List.of());
+
+        adminDc1RoleWP = createRole(adminDc1RoleWP);
+        adminDc2RoleWP = createRole(adminDc2RoleWP);
+        adminMdbRoleWP = createRole(adminMdbRoleWP);
+        ownerOuRoleWP = createRole(ownerOuRoleWP);
+        ownerProductRoleWP = createRole(ownerProductRoleWP);
+        developerRoleWP = createRole(developerRoleWP);
+        auditorRoleWP = createRole(auditorRoleWP);
+
+        // 8. Создаем бизнес-роли и распределяем роли
+        BusinessRoleDTO javaDeveloper = TestDataFactory.createBusinessRoleDTO(null, "Java Developer", "Role for Java developers", null, null);
+        BusinessRoleDTO manager = TestDataFactory.createBusinessRoleDTO(null, "Manager", "Role for managers", null, null);
+        BusinessRoleDTO cto = TestDataFactory.createBusinessRoleDTO(null, "CTO", "Role for CTO", null, null);
+        BusinessRoleDTO admin = TestDataFactory.createBusinessRoleDTO(null, "Admin", "Role for admins", null, null);
+
+        javaDeveloper = createBusinessRole(javaDeveloper);
+        manager = createBusinessRole(manager);
+        cto = createBusinessRole(cto);
+        admin = createBusinessRole(admin);
+
+        // 9. Связываем роли с бизнес-ролями
+        linkRoleToBusinessRole(javaDeveloper.getId(), developerRole.getId());
+        linkRoleToBusinessRole(manager.getId(), ownerOuRole.getId());
+        linkRoleToBusinessRole(cto.getId(), adminMdbRole.getId());
+        linkRoleToBusinessRole(admin.getId(), adminDc1Role.getId());
+        linkRoleToBusinessRole(admin.getId(), adminDc2Role.getId());
     }
 
-    @Test
-    public void testCreateRole() {
-        RoleDTO roleDTO = TestDataFactory.createRoleDTO();
-
-        webTestClient.post()
-                .uri("/api/v1/roles")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(roleDTO)
-                .exchange()
-                .expectStatus().isCreated()
-                .expectBody(RoleDTO.class)
-                .value(createdRole -> {
-                    assertNotNull(createdRole.getId());
-                    assertNotNull(createdRole.getName());
-                });
-    }
-
-    @Test
-    public void testCreateDomainComponent() {
-        DomainComponentDTO domainComponentDTO = TestDataFactory.createDomainComponentDTO();
-
-        webTestClient.post()
+    private DomainComponentDTO createDomainComponent(DomainComponentDTO domainComponentDTO) {
+        return webTestClient.post()
                 .uri("/api/v1/domain-components")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(domainComponentDTO)
                 .exchange()
                 .expectStatus().isCreated()
                 .expectBody(DomainComponentDTO.class)
-                .value(createdDC -> {
-                    assertNotNull(createdDC.getId());
-                    assertNotNull(createdDC.getName());
-                });
+                .returnResult()
+                .getResponseBody();
     }
 
-    @Test
-    public void testCreateOrganizationUnit() {
-        OrganizationUnitDTO organizationUnitDTO = TestDataFactory.createOrganizationUnitDTO();
-
-        webTestClient.post()
+    private OrganizationUnitDTO createOrganizationUnit(OrganizationUnitDTO organizationUnitDTO) {
+        return webTestClient.post()
                 .uri("/api/v1/organization-units")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(organizationUnitDTO)
                 .exchange()
                 .expectStatus().isCreated()
                 .expectBody(OrganizationUnitDTO.class)
-                .value(createdOU -> {
-                    assertNotNull(createdOU.getId());
-                    assertNotNull(createdOU.getName());
-                });
+                .returnResult()
+                .getResponseBody();
     }
 
-    @Test
-    public void testCreateProduct() {
-        ProductDTO productDTO = TestDataFactory.createProductDTO();
-
-        webTestClient.post()
+    private ProductDTO createProduct(ProductDTO productDTO) {
+        return webTestClient.post()
                 .uri("/api/v1/products")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(productDTO)
                 .exchange()
                 .expectStatus().isCreated()
                 .expectBody(ProductDTO.class)
-                .value(createdProduct -> {
-                    assertNotNull(createdProduct.getId());
-                    assertNotNull(createdProduct.getName());
-                });
+                .returnResult()
+                .getResponseBody();
+    }
+
+    private AccountDTO createAccount(AccountDTO accountDTO) {
+        return webTestClient.post()
+                .uri("/api/v1/accounts")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(accountDTO)
+                .exchange()
+                .expectStatus().isCreated()
+                .expectBody(AccountDTO.class)
+                .returnResult()
+                .getResponseBody();
+    }
+
+    private RoleWithPermissionsDTO createRole(RoleWithPermissionsDTO roleWithPermissionsDTO) {
+        return webTestClient.post()
+                .uri("/api/v1/roles")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(roleWithPermissionsDTO)
+                .exchange()
+                .expectStatus().isCreated()
+                .expectBody(RoleWithPermissionsDTO.class)
+                .returnResult()
+                .getResponseBody();
+    }
+
+    private BusinessRoleDTO createBusinessRole(BusinessRoleDTO businessRoleDTO) {
+        return webTestClient.post()
+                .uri("/api/v1/business-roles")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(businessRoleDTO)
+                .exchange()
+                .expectStatus().isCreated()
+                .expectBody(BusinessRoleDTO.class)
+                .returnResult()
+                .getResponseBody();
+    }
+
+    private void linkAccountToOrganizationUnit(UUID ouId, UUID accountId) {
+        webTestClient.post()
+                .uri("/api/v1/organization-units/{ouId}/accounts/{accountId}", ouId, accountId)
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    private void linkRoleToBusinessRole(UUID businessRoleId, UUID roleId) {
+        webTestClient.post()
+                .uri("/api/v1/business-roles/{businessRoleId}/roles/{roleId}", businessRoleId, roleId)
+                .exchange()
+                .expectStatus().isOk();
     }
 }

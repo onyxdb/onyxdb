@@ -59,8 +59,7 @@ public class RolePostgresRepository implements RoleRepository {
         }
         if (query != null && !query.isEmpty()) {
             table = roleTable.leftJoin(productTable).on(roleTable.PRODUCT_ID.eq(productTable.ID));
-            condition = roleTable.ID.eq(UUID.fromString(query))
-                    .or(roleTable.NAME.containsIgnoreCase(query))
+            condition = roleTable.NAME.containsIgnoreCase(query)
                     .or(roleTable.SHOP_NAME.containsIgnoreCase(query))
                     .or(roleTable.DESCRIPTION.containsIgnoreCase(query))
                     .or(productTable.NAME.containsIgnoreCase(query))
@@ -123,6 +122,8 @@ public class RolePostgresRepository implements RoleRepository {
 
     @Override
     public void delete(UUID id) {
+        // TODO удалять все ссылки к Permission и их самих тоже
+
         dslContext.deleteFrom(roleTable)
                 .where(roleTable.ID.eq(id))
                 .execute();

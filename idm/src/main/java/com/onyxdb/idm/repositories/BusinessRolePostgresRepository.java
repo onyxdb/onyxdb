@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.name;
 import static org.jooq.impl.DSL.select;
+import static org.jooq.impl.DSL.trueCondition;
 
 /**
  * @author ArtemFed
@@ -51,9 +52,9 @@ public class BusinessRolePostgresRepository implements BusinessRoleRepository {
         limit = (limit != null) ? limit : Integer.MAX_VALUE;
         offset = (offset != null) ? offset : 0;
 
-        Condition condition = businessRoleTable.ID.eq(UUID.fromString(query))
-                .or(businessRoleTable.NAME.containsIgnoreCase(query))
-                .or(businessRoleTable.DESCRIPTION.containsIgnoreCase(query));
+        Condition condition = query != null ? businessRoleTable.NAME.containsIgnoreCase(query)
+                .or(businessRoleTable.DESCRIPTION.containsIgnoreCase(query))
+                : trueCondition();
 
         Result<BusinessRoleTableRecord> records = dslContext.selectFrom(businessRoleTable)
                 .where(condition)

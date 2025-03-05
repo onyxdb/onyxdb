@@ -79,8 +79,7 @@ public class RoleRequestPostgresRepository implements RoleRequestRepository {
         limit = (limit != null) ? limit : Integer.MAX_VALUE;
         offset = (offset != null) ? offset : 0;
 
-        Condition condition = roleRequestTable.ROLE_ID.eq(UUID.fromString(query))
-                .or(roleTable.NAME.containsIgnoreCase(query))
+        Condition condition = roleTable.NAME.containsIgnoreCase(query)
                 .or(accountTable.FIRST_NAME.containsIgnoreCase(query))
                 .or(accountTable.LAST_NAME.containsIgnoreCase(query));
 

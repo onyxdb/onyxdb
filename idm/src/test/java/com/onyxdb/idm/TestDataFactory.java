@@ -33,8 +33,9 @@ public class TestDataFactory {
         return accountDTO;
     }
 
-    public static RoleDTO createRoleDTO(UUID id, String roleType, String name, String description,
-                                        LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public static RoleDTO createRoleDTO(
+            UUID id, String roleType, String name, String description,
+            LocalDateTime createdAt, LocalDateTime updatedAt) {
         RoleDTO roleDTO = new RoleDTO();
         roleDTO.setId(id != null ? id : UUID.randomUUID());
         roleDTO.setRoleType(roleType);
@@ -45,8 +46,9 @@ public class TestDataFactory {
         return roleDTO;
     }
 
-    public static BusinessRoleDTO createBusinessRoleDTO(UUID id, String name, String description,
-                                                        LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public static BusinessRoleDTO createBusinessRoleDTO(
+            UUID id, String name, String description,
+            LocalDateTime createdAt, LocalDateTime updatedAt) {
         BusinessRoleDTO businessRoleDTO = new BusinessRoleDTO();
         businessRoleDTO.setId(id != null ? id : UUID.randomUUID());
         businessRoleDTO.setName(name);
@@ -56,8 +58,9 @@ public class TestDataFactory {
         return businessRoleDTO;
     }
 
-    public static PermissionDTO createPermissionDTO(UUID id, String actionType, String resourceType,
-                                                    LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public static PermissionDTO createPermissionDTO(
+            UUID id, String actionType, String resourceType,
+            LocalDateTime createdAt, LocalDateTime updatedAt) {
         PermissionDTO permissionDTO = new PermissionDTO();
         permissionDTO.setId(id != null ? id : UUID.randomUUID());
         permissionDTO.setActionType(actionType);
@@ -67,8 +70,9 @@ public class TestDataFactory {
         return permissionDTO;
     }
 
-    public static DomainComponentDTO createDomainComponentDTO(UUID id, String name, String description,
-                                                              LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public static DomainComponentDTO createDomainComponentDTO(
+            UUID id, String name, String description,
+            LocalDateTime createdAt, LocalDateTime updatedAt) {
         DomainComponentDTO domainComponentDTO = new DomainComponentDTO();
         domainComponentDTO.setId(id != null ? id : UUID.randomUUID());
         domainComponentDTO.setName(name);
@@ -78,24 +82,28 @@ public class TestDataFactory {
         return domainComponentDTO;
     }
 
-    public static OrganizationUnitDTO createOrganizationUnitDTO(UUID id, String name, String description,
-                                                                UUID domainComponentId, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public static OrganizationUnitDTO createOrganizationUnitDTO(
+            UUID id, String name, String description, UUID domainComponentId, UUID parentId,
+            LocalDateTime createdAt, LocalDateTime updatedAt) {
         OrganizationUnitDTO organizationUnitDTO = new OrganizationUnitDTO();
         organizationUnitDTO.setId(id != null ? id : UUID.randomUUID());
         organizationUnitDTO.setName(name);
         organizationUnitDTO.setDescription(description);
-        organizationUnitDTO.setDomainComponentId(domainComponentId); // Добавляем domainComponentId
+        organizationUnitDTO.setDomainComponentId(domainComponentId);
+        organizationUnitDTO.setParentId(parentId);
         organizationUnitDTO.setCreatedAt(createdAt != null ? createdAt : LocalDateTime.now());
         organizationUnitDTO.setUpdatedAt(updatedAt != null ? updatedAt : LocalDateTime.now());
         return organizationUnitDTO;
     }
 
-    public static ProductDTO createProductDTO(UUID id, String name, String description,
-                                              LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public static ProductDTO createProductDTO(
+            UUID id, String name, String description, UUID parentId,
+            LocalDateTime createdAt, LocalDateTime updatedAt) {
         ProductDTO productDTO = new ProductDTO();
         productDTO.setId(id != null ? id : UUID.randomUUID());
         productDTO.setName(name);
         productDTO.setDescription(description);
+        productDTO.setParentId(parentId);
         productDTO.setCreatedAt(createdAt != null ? createdAt : LocalDateTime.now());
         productDTO.setUpdatedAt(updatedAt != null ? updatedAt : LocalDateTime.now());
         return productDTO;
