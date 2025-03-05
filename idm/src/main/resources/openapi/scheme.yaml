@@ -491,6 +491,18 @@ paths:
       tags:
         - Organization Units
       parameters:
+        - name: parentOuId
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: dcId
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
         - name: limit
           in: query
           required: false
@@ -509,9 +521,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/OrganizationUnitDTO'
+                $ref: '#/components/schemas/PaginatedOrganizationUnitResponse'
         '400':
           description: Bad Request
           content:

@@ -60,30 +60,18 @@ public class BusinessRolesController implements BusinessRolesApi {
         return ResponseEntity.ok(businessRole.toDTO());
     }
 
-    /**
-     * GET /api/v1/business-roles/{businessRoleId}/children : Get a business role children business roles
-     *
-     * @param businessRoleId (required)
-     * @return OK (status code 200)
-     * or Not Found (status code 404)
-     * or Bad Request (status code 400)
-     */
     @Override
     public ResponseEntity<List<BusinessRoleDTO>> getBusinessRoleChildrenBRs(UUID businessRoleId) {
-        return null;
+        List<BusinessRole> businessRoles = businessRoleService.findChildren(businessRoleId);
+        List<BusinessRoleDTO> businessRoleDTOs = businessRoles.stream().map(BusinessRole::toDTO).toList();
+        return ResponseEntity.ok(businessRoleDTOs);
     }
 
-    /**
-     * GET /api/v1/business-roles/{businessRoleId}/parents : Get a business role parents business roles
-     *
-     * @param businessRoleId (required)
-     * @return OK (status code 200)
-     * or Not Found (status code 404)
-     * or Bad Request (status code 400)
-     */
     @Override
     public ResponseEntity<List<BusinessRoleDTO>> getBusinessRoleParentsBRs(UUID businessRoleId) {
-        return null;
+        List<BusinessRole> businessRoles = businessRoleService.findParents(businessRoleId);
+        List<BusinessRoleDTO> businessRoleDTOs = businessRoles.stream().map(BusinessRole::toDTO).toList();
+        return ResponseEntity.ok(businessRoleDTOs);
     }
 
     @Override

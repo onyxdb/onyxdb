@@ -31,6 +31,14 @@ public class BusinessRoleService {
         return businessRoleRepository.findAll(search, limit, offset);
     }
 
+    public List<BusinessRole> findChildren(UUID parentId) {
+        return businessRoleRepository.findChildren(parentId);
+    }
+
+    public List<BusinessRole> findParents(UUID id) {
+        return businessRoleRepository.findParents(id);
+    }
+
     public BusinessRole create(BusinessRole businessRole) {
         return businessRoleRepository.create(businessRole);
     }

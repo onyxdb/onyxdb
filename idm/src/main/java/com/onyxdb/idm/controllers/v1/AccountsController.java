@@ -31,8 +31,8 @@ public class AccountsController implements AccountsApi {
     @Override
     public ResponseEntity<AccountDTO> createAccount(AccountDTO accountDTO) {
         Account account = Account.fromDTO(accountDTO);
-        accountService.create(account);
-        return new ResponseEntity<>(account.toDTO(), HttpStatus.CREATED);
+        Account newAccount = accountService.create(account);
+        return new ResponseEntity<>(newAccount.toDTO(), HttpStatus.CREATED);
     }
 
     @Override
@@ -77,7 +77,7 @@ public class AccountsController implements AccountsApi {
     public ResponseEntity<AccountDTO> updateAccount(UUID accountId, AccountDTO accountDTO) {
         accountDTO.setId(accountId);
         Account account = Account.fromDTO(accountDTO);
-        accountService.update(account);
-        return ResponseEntity.ok(account.toDTO());
+        Account newAccount = accountService.update(account);
+        return ResponseEntity.ok(newAccount.toDTO());
     }
 }

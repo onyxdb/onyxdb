@@ -39,10 +39,12 @@ public class ProductPostgresRepository implements ProductRepository {
 
     @Override
     public List<ProductTree> findChildrenTree(UUID productId, Integer depth) {
+        if (depth == null) depth = 100;
         if (depth <= 0) return List.of();
         List<Product> children = findChildren(productId);
+        Integer finalDepth = depth;
         return children.stream()
-                .map(child -> new ProductTree(child, findChildrenTree(child.id(), depth - 1)))
+                .map(child -> new ProductTree(child, findChildrenTree(child.id(), finalDepth - 1)))
                 .collect(Collectors.toList());
     }
 
