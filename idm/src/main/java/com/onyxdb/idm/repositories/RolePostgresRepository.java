@@ -44,7 +44,10 @@ public class RolePostgresRepository implements RoleRepository {
     }
 
     @Override
-    public PaginatedResult<Role> findAll(String query, UUID productId, UUID orgUnitId, int limit, int offset) {
+    public PaginatedResult<Role> findAll(String query, UUID productId, UUID orgUnitId, Integer limit, Integer offset) {
+        limit = (limit != null) ? limit : Integer.MAX_VALUE;
+        offset = (offset != null) ? offset : 0;
+
         Condition condition = trueCondition();
 
         var table = roleTable.leftJoin(noTable()).on();
@@ -72,11 +75,12 @@ public class RolePostgresRepository implements RoleRepository {
         List<Role> data = records.map(record -> Role.fromDAO(record.into(roleTable)));
 
         int totalCount = dslContext.fetchCount(roleTable, condition);
-
-        int startPosition = offset + 1;
-        int endPosition = Math.min(offset + limit, totalCount);
-
-        return new PaginatedResult<>(data, totalCount, startPosition, endPosition);
+        return new PaginatedResult<>(
+                data,
+                totalCount,
+                offset + 1,
+                Math.min(offset + limit, totalCount)
+        );
     }
 
     @Override
@@ -88,6 +92,7 @@ public class RolePostgresRepository implements RoleRepository {
                 .set(roleTable.SHOP_NAME, role.name())
                 .set(roleTable.DESCRIPTION, role.description())
                 .set(roleTable.IS_SHOP_HIDDEN, role.isShopHidden())
+                .set(roleTable.ORG_UNIT_ID, role.orgUnitId())
                 .set(roleTable.PRODUCT_ID, role.productId())
                 .set(roleTable.CREATED_AT, LocalDateTime.now())
                 .set(roleTable.UPDATED_AT, LocalDateTime.now())
@@ -104,6 +109,9 @@ public class RolePostgresRepository implements RoleRepository {
                 .set(roleTable.NAME, role.name())
                 .set(roleTable.SHOP_NAME, role.name())
                 .set(roleTable.DESCRIPTION, role.description())
+                .set(roleTable.IS_SHOP_HIDDEN, role.isShopHidden())
+                .set(roleTable.ORG_UNIT_ID, role.orgUnitId())
+                .set(roleTable.PRODUCT_ID, role.productId())
                 .set(roleTable.UPDATED_AT, LocalDateTime.now())
                 .where(roleTable.ID.eq(role.id()))
                 .returning()

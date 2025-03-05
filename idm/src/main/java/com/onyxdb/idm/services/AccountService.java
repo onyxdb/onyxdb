@@ -33,7 +33,7 @@ public class AccountService {
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
     }
 
-    public PaginatedResult<Account> findAll(String query, int limit, int offset) {
+    public PaginatedResult<Account> findAll(String query, Integer limit, Integer offset) {
         return accountRepository.findAll(query, limit, offset);
     }
 

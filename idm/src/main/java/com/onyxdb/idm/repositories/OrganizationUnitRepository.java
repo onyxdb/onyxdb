@@ -14,7 +14,7 @@ import java.util.UUID;
 public interface OrganizationUnitRepository {
     Optional<OrganizationUnit> findById(UUID id);
 
-    PaginatedResult<OrganizationUnit> findAll(UUID dcId, UUID parentOuId, int limit, int offset);
+    PaginatedResult<OrganizationUnit> findAll(UUID dcId, UUID parentOuId, Integer limit, Integer offset);
 
     OrganizationUnit create(OrganizationUnit organizationUnit);
 

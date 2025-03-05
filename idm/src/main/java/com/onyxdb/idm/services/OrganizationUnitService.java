@@ -26,7 +26,7 @@ public class OrganizationUnitService {
                 .orElseThrow(() -> new ResourceNotFoundException("OrganizationUnit not found"));
     }
 
-    public PaginatedResult<OrganizationUnit> findAll(UUID dcId, UUID parentOuId, int limit, int offset) {
+    public PaginatedResult<OrganizationUnit> findAll(UUID dcId, UUID parentOuId, Integer limit, Integer offset) {
         return organizationUnitRepository.findAll(dcId, parentOuId, limit, offset);
     }
 

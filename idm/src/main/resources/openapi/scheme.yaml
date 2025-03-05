@@ -1823,6 +1823,9 @@ components:
         productId:
           type: string
           format: uuid
+        orgUnitId:
+          type: string
+          format: uuid
         createdAt:
           type: string
           format: date-time

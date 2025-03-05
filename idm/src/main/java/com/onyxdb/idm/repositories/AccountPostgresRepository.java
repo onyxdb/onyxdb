@@ -57,7 +57,10 @@ public class AccountPostgresRepository implements AccountRepository {
     }
 
     @Override
-    public PaginatedResult<Account> findAll(String query, int limit, int offset) {
+    public PaginatedResult<Account> findAll(String query, Integer limit, Integer offset) {
+        limit = (limit != null) ? limit : Integer.MAX_VALUE;
+        offset = (offset != null) ? offset : 0;
+
         Condition condition = accountTable.ID.eq(UUID.fromString(query))
                 .or(accountTable.LOGIN.containsIgnoreCase(query))
                 .or(accountTable.EMAIL.containsIgnoreCase(query))

@@ -42,7 +42,10 @@ public class OrganizationUnitPostgresRepository implements OrganizationUnitRepos
     }
 
     @Override
-    public PaginatedResult<OrganizationUnit> findAll(UUID dcId, UUID parentOuId, int limit, int offset) {
+    public PaginatedResult<OrganizationUnit> findAll(UUID dcId, UUID parentOuId, Integer limit, Integer offset) {
+        limit = (limit != null) ? limit : Integer.MAX_VALUE;
+        offset = (offset != null) ? offset : 0;
+
         Condition condition = trueCondition();
         if (dcId != null) {
             condition = condition.and(organizationUnitTable.DOMAIN_COMPONENT_ID.eq(dcId));
@@ -56,10 +59,12 @@ public class OrganizationUnitPostgresRepository implements OrganizationUnitRepos
 
         int totalCount = dslContext.fetchCount(organizationUnitTable, condition);
 
-        int startPosition = offset + 1;
-        int endPosition = Math.min(offset + limit, totalCount);
-
-        return new PaginatedResult<>(data, totalCount, startPosition, endPosition);
+        return new PaginatedResult<>(
+                data,
+                totalCount,
+                offset + 1,
+                Math.min(offset + limit, totalCount)
+        );
     }
 
     @Override

@@ -41,7 +41,10 @@ public class RoleRequestPostgresRepository implements RoleRequestRepository {
     }
 
     @Override
-    public PaginatedResult<RoleRequest> findAll(String status, UUID ownerId, UUID accountId, int limit, int offset) {
+    public PaginatedResult<RoleRequest> findAll(String status, UUID ownerId, UUID accountId, Integer limit, Integer offset) {
+        limit = (limit != null) ? limit : Integer.MAX_VALUE;
+        offset = (offset != null) ? offset : 0;
+
         Condition condition = trueCondition();
         if (status != null && !status.isEmpty()) {
             condition = condition.and(roleRequestTable.STATUS.eq(status));
@@ -69,10 +72,12 @@ public class RoleRequestPostgresRepository implements RoleRequestRepository {
     }
 
     @Override
-    public PaginatedResult<RoleRequest> search(String query, int limit, int offset) {
+    public PaginatedResult<RoleRequest> search(String query, Integer limit, Integer offset) {
         if (query == null || query.isEmpty()) {
             return findAll(null, null, null, limit, offset);
         }
+        limit = (limit != null) ? limit : Integer.MAX_VALUE;
+        offset = (offset != null) ? offset : 0;
 
         Condition condition = roleRequestTable.ROLE_ID.eq(UUID.fromString(query))
                 .or(roleTable.NAME.containsIgnoreCase(query))

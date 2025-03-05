@@ -11,8 +11,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -30,7 +32,7 @@ public class RoleService {
                 .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
     }
 
-    public PaginatedResult<Role> findAll(String query, UUID productId, UUID orgUnitId, int limit, int offset) {
+    public PaginatedResult<Role> findAll(String query, UUID productId, UUID orgUnitId, Integer limit, Integer offset) {
         return roleRepository.findAll(query, productId, orgUnitId, limit, offset);
     }
 
@@ -54,22 +56,27 @@ public class RoleService {
 
         List<Permission> existingPermissions = roleRepository.getPermissions(role.id());
         Map<UUID, Permission> updatedPermIds = new HashMap<>();
-        updatedPermissions.forEach(p -> updatedPermIds.put(p.id(), p));
+        updatedPermissions.forEach(p -> {
+            if (p.id() != null) {
+                updatedPermIds.put(p.id(), p);
+            }
+        });
 
         Map<UUID, Permission> existingPermIds = new HashMap<>();
         existingPermissions.forEach(p -> existingPermIds.put(p.id(), p));
 
+        List<Permission> newPermissions = new java.util.ArrayList<>(List.of());
         for (Permission p : existingPermissions) {
             if (updatedPermIds.containsKey(p.id())) {
-                permissionService.update(p);
+                Permission updatedPermission = permissionService.update(p);
+                newPermissions.add(updatedPermission);
             } else {
                 roleRepository.removePermission(role.id(), p.id());
             }
         }
 
-        List<Permission> newPermissions = new java.util.ArrayList<>(List.of());
         for (Permission p : updatedPermissions) {
-            if (p.id() != null && !existingPermIds.containsKey(p.id())) {
+            if (p.id() == null || !existingPermIds.containsKey(p.id())) {
                 var newPermission = permissionService.create(p);
                 newPermissions.add(newPermission);
                 roleRepository.addPermission(role.id(), newPermission.id());

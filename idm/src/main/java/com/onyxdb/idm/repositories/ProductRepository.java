@@ -19,7 +19,7 @@ public interface ProductRepository {
 
     List<Product> findChildren(UUID productId);
 
-    List<ProductTree> findChildrenTree(UUID productId, int depth);
+    List<ProductTree> findChildrenTree(UUID productId, Integer depth);
 
     Product create(Product product);
 

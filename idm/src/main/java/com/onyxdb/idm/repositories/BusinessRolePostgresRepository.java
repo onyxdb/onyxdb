@@ -48,6 +48,9 @@ public class BusinessRolePostgresRepository implements BusinessRoleRepository {
 
     @Override
     public PaginatedResult<BusinessRole> findAll(String query, Integer limit, Integer offset) {
+        limit = (limit != null) ? limit : Integer.MAX_VALUE;
+        offset = (offset != null) ? offset : 0;
+
         Condition condition = businessRoleTable.ID.eq(UUID.fromString(query))
                 .or(businessRoleTable.NAME.containsIgnoreCase(query))
                 .or(businessRoleTable.DESCRIPTION.containsIgnoreCase(query));

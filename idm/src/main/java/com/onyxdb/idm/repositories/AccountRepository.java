@@ -18,7 +18,7 @@ public interface AccountRepository {
 
     Optional<Account> findByLogin(String login);
 
-    PaginatedResult<Account> findAll(String query, int limit, int offset);
+    PaginatedResult<Account> findAll(String query, Integer limit, Integer offset);
 
     Account create(Account account);
 

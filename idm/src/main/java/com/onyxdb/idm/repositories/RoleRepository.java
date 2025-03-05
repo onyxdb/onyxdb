@@ -14,7 +14,7 @@ import java.util.UUID;
 public interface RoleRepository {
     Optional<Role> findById(UUID id);
 
-    PaginatedResult<Role> findAll(String query, UUID productId, UUID orgUnitId, int limit, int offset);
+    PaginatedResult<Role> findAll(String query, UUID productId, UUID orgUnitId, Integer limit, Integer offset);
 
     Role create(Role role);
 

@@ -38,7 +38,7 @@ public class ProductPostgresRepository implements ProductRepository {
     }
 
     @Override
-    public List<ProductTree> findChildrenTree(UUID productId, int depth) {
+    public List<ProductTree> findChildrenTree(UUID productId, Integer depth) {
         if (depth <= 0) return List.of();
         List<Product> children = findChildren(productId);
         return children.stream()
@@ -59,7 +59,7 @@ public class ProductPostgresRepository implements ProductRepository {
                 .fetchOptional(Product::fromDAO);
     }
 
-    private List<Product> fetchProductTree(UUID productId, int depth) {
+    private List<Product> fetchProductTree(UUID productId, Integer depth) {
         return dslContext.fetch("""
                     WITH RECURSIVE product_hierarchy AS (
                         SELECT *, 1 AS level FROM product_table WHERE id = ?
@@ -82,11 +82,13 @@ public class ProductPostgresRepository implements ProductRepository {
     @Override
     public Product create(Product product) {
         var record = dslContext.insertInto(productTable)
+                .set(productTable.ID, UUID.randomUUID())
                 .set(productTable.NAME, product.name())
                 .set(productTable.DESCRIPTION, product.description())
                 .set(productTable.PARENT_ID, product.parent_id())
                 .set(productTable.DATA, product.getDataAsJsonb())
                 .set(productTable.OWNER_ID, product.ownerId())
+                .set(productTable.CREATED_AT, LocalDateTime.now())
                 .set(productTable.UPDATED_AT, LocalDateTime.now())
                 .returning()
                 .fetchOne();

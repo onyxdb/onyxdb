@@ -36,7 +36,7 @@ public class ProductService {
         return productRepository.findChildren(productId);
     }
 
-    public ProductTree findChildrenTree(UUID productId, int depth) {
+    public ProductTree findChildrenTree(UUID productId, Integer depth) {
         var product = productRepository.findById(productId).orElseThrow();
         var children = productRepository.findChildrenTree(productId, depth);
         return new ProductTree(product, children);
