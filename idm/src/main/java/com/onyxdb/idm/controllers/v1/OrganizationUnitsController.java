@@ -87,12 +87,12 @@ public class OrganizationUnitsController implements OrganizationUnitsApi {
     @Override
     public ResponseEntity<Void> addAccountToOrganizationUnit(UUID ouId, UUID accountId) {
         organizationUnitService.addAccount(ouId, accountId);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return null;
     }
 
     @Override
     public ResponseEntity<Void> removeAccountFromOrganizationUnit(UUID ouId, UUID accountId) {
         organizationUnitService.removeAccount(ouId, accountId);
-        return ResponseEntity.noContent().build();
+        return null;
     }
 }

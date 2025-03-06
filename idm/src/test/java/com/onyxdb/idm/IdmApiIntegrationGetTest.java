@@ -244,5 +244,18 @@ class IdmApiIntegrationGetTest extends PostgresTests {
                         .build())
                 .exchange()
                 .expectStatus().isOk();
+
+        // 25. Проверка получения запросов на доступы
+        webTestClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/api/v1/roles-requests")
+                        .queryParam("ownerId", UUID.randomUUID().toString())
+                        .queryParam("status", "WAITING")
+                        .queryParam("accountId", UUID.randomUUID().toString())
+                        .queryParam("limit", 10)
+                        .queryParam("offset", 1)
+                        .build())
+                .exchange()
+                .expectStatus().isOk();
     }
 }

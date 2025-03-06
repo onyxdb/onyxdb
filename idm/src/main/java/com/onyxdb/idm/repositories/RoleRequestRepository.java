@@ -20,5 +20,5 @@ public interface RoleRequestRepository {
 
     RoleRequest update(RoleRequest RoleRequest);
 
-    void setStatus(UUID id, String status);
+    RoleRequest setStatus(UUID id, String status);
 }

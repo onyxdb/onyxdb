@@ -27,7 +27,6 @@ import java.util.UUID;
 public class AccountsController implements AccountsApi {
     private final AccountService accountService;
 
-
     @Override
     public ResponseEntity<AccountDTO> createAccount(AccountDTO accountDTO) {
         Account account = Account.fromDTO(accountDTO);
@@ -79,5 +78,30 @@ public class AccountsController implements AccountsApi {
         Account account = Account.fromDTO(accountDTO);
         Account newAccount = accountService.update(account);
         return ResponseEntity.ok(newAccount.toDTO());
+    }
+
+    @Override
+    public ResponseEntity<Void> addBusinessRoleToAccount(UUID accountId, UUID businessRoleId) {
+        accountService.addBusinessRole(accountId, businessRoleId);
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<Void> addRoleToAccount(UUID accountId, UUID roleId) {
+        accountService.addRole(accountId, roleId);
+        return null;
+    }
+
+
+    @Override
+    public ResponseEntity<Void> removeBusinessRoleFromAccount(UUID accountId, UUID businessRoleId) {
+        accountService.removeBusinessRole(accountId, businessRoleId);
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<Void> removeRoleFromAccount(UUID accountId, UUID roleId) {
+        accountService.removeRole(accountId, roleId);
+        return null;
     }
 }

@@ -313,6 +313,61 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
+  /api/v1/accounts/{accountId}/roles/{roleId}:
+    post:
+      summary: Add role to account link
+      operationId: addRoleToAccount
+      tags:
+        - Accounts
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+    delete:
+      summary: Remove Role from Account
+      operationId: removeRoleFromAccount
+      tags:
+        - Accounts
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
   /api/v1/accounts/{accountId}/business-roles:
     get:
       summary: Get account business roles
@@ -341,6 +396,61 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
+  /api/v1/accounts/{accountId}/business-roles/{businessRoleId}:
+    post:
+      summary: Add business role to account link
+      operationId: addBusinessRoleToAccount
+      tags:
+        - Accounts
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: businessRoleId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Ok
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+    delete:
+      summary: Remove Business Role from Account
+      operationId: removeBusinessRoleFromAccount
+      tags:
+        - Accounts
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: businessRoleId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
 
   /api/v1/domain-components:
     get:
@@ -1305,7 +1415,7 @@ paths:
             format: uuid
       responses:
         '200':
-          description: OK
+          description: Ok
         '404':
           description: Not Found
           content:
@@ -1363,6 +1473,7 @@ paths:
           required: false
           schema:
             type: string
+            format: uuid
         - name: limit
           in: query
           required: false
@@ -1498,12 +1609,7 @@ paths:
           required: true
           schema:
             type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/RoleRequestDTO'
+            enum: [WAITING, APPROVED, DECLINED]
       responses:
         '200':
           description: OK
@@ -2032,6 +2138,7 @@ components:
           type: string
         status:
           type: string
+          enum: [WAITING, APPROVED, DECLINED]
         createdAt:
           type: string
           format: date-time

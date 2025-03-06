@@ -26,7 +26,7 @@ public record RoleRequest(
                 .accountId(accountId)
                 .ownerId(ownerId)
                 .reason(reason)
-                .status(status)
+                .status(RoleRequestDTO.StatusEnum.valueOf(status))
                 .createdAt(createdAt)
                 .resolvedAt(resolvedAt);
     }
@@ -38,22 +38,22 @@ public record RoleRequest(
                 RoleRequestDTO.getAccountId(),
                 RoleRequestDTO.getOwnerId(),
                 RoleRequestDTO.getReason(),
-                RoleRequestDTO.getStatus(),
+                RoleRequestDTO.getStatus().toString(),
                 RoleRequestDTO.getCreatedAt(),
                 RoleRequestDTO.getResolvedAt()
         );
     }
 
-    public static RoleRequest fromDAO(RoleRequestTableRecord roleDAO) {
+    public static RoleRequest fromDAO(RoleRequestTableRecord roleRequestDAO) {
         return new RoleRequest(
-                roleDAO.getId(),
-                roleDAO.getRoleId(),
-                roleDAO.getAccountId(),
-                roleDAO.getOwnerId(),
-                roleDAO.getReason(),
-                roleDAO.getStatus(),
-                roleDAO.getCreatedAt(),
-                roleDAO.getResolvedAt()
+                roleRequestDAO.getId(),
+                roleRequestDAO.getRoleId(),
+                roleRequestDAO.getAccountId(),
+                roleRequestDAO.getOwnerId(),
+                roleRequestDAO.getReason(),
+                roleRequestDAO.getStatus(),
+                roleRequestDAO.getCreatedAt(),
+                roleRequestDAO.getResolvedAt()
         );
     }
 }

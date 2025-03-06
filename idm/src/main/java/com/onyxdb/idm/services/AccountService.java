@@ -65,6 +65,15 @@ public class AccountService {
         return accountRepository.getAccountBusinessRoles(accountId);
     }
 
+
+    public void addRole(UUID accountId, UUID roleId) {
+        accountRepository.addRole(accountId, roleId);
+    }
+
+    public void removeRole(UUID accountId, UUID roleId) {
+        accountRepository.removeRole(accountId, roleId);
+    }
+
     public List<Role> getRoles(UUID accountId) {
         return accountRepository.getAccountRoles(accountId);
     }
