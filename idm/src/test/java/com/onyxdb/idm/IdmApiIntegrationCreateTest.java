@@ -3,16 +3,24 @@ package com.onyxdb.idm;
 import java.util.List;
 import java.util.UUID;
 
-import com.onyxdb.idm.generated.openapi.models.*;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.http.MediaType;
+
+import com.onyxdb.idm.generated.openapi.models.AccountDTO;
+import com.onyxdb.idm.generated.openapi.models.BusinessRoleDTO;
+import com.onyxdb.idm.generated.openapi.models.DomainComponentDTO;
+import com.onyxdb.idm.generated.openapi.models.OrganizationUnitDTO;
+import com.onyxdb.idm.generated.openapi.models.PermissionDTO;
+import com.onyxdb.idm.generated.openapi.models.ProductDTO;
+import com.onyxdb.idm.generated.openapi.models.RoleDTO;
+import com.onyxdb.idm.generated.openapi.models.RoleRequestDTO;
+import com.onyxdb.idm.generated.openapi.models.RoleWithPermissionsDTO;
 
 import static com.onyxdb.idm.TestDataFactory.createRoleRequestDTO;
 

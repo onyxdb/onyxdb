@@ -1,19 +1,19 @@
 package com.onyxdb.idm.controllers.v1;
 
-import com.onyxdb.idm.generated.openapi.apis.DomainComponentsApi;
-import com.onyxdb.idm.generated.openapi.models.DomainComponentDTO;
-import com.onyxdb.idm.generated.openapi.models.OrganizationUnitDTO;
-import com.onyxdb.idm.models.DomainComponent;
-import com.onyxdb.idm.models.OrganizationUnit;
-import com.onyxdb.idm.services.DomainComponentService;
+import java.util.List;
+import java.util.UUID;
+
+import javax.validation.Valid;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.util.List;
-import java.util.UUID;
+import com.onyxdb.idm.generated.openapi.apis.DomainComponentsApi;
+import com.onyxdb.idm.generated.openapi.models.DomainComponentDTO;
+import com.onyxdb.idm.models.DomainComponent;
+import com.onyxdb.idm.services.DomainComponentService;
 
 /**
  * @author ArtemFed

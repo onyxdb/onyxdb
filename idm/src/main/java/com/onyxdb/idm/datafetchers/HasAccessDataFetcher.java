@@ -6,11 +6,11 @@ import graphql.schema.DataFetchingEnvironment;
 
 @DgsComponent
 public class HasAccessDataFetcher {
-  @DgsData(
-      parentType = "Query",
-      field = "hasAccess"
-  )
-  public boolean getHasAccess(DataFetchingEnvironment dataFetchingEnvironment) {
-    return false;
-  }
+    @DgsData(
+            parentType = "Query",
+            field = "hasAccess"
+    )
+    public boolean getHasAccess(DataFetchingEnvironment dataFetchingEnvironment) {
+        return false;
+    }
 }

@@ -23,17 +23,9 @@ public record Permission(
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
+    static final TypeReference<Map<String, Object>> typeRef = new TypeReference<>() {
+    };
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    static final TypeReference<Map<String, Object>> typeRef = new TypeReference<>(){};
-
-    public PermissionDTO toDTO() {
-        return new PermissionDTO()
-                .id(id)
-                .actionType(actionType)
-                .data(data)
-                .createdAt(createdAt)
-                .updatedAt(updatedAt);
-    }
 
     public static Permission fromDTO(PermissionDTO permissionDTO) {
         return new Permission(
@@ -61,6 +53,15 @@ public record Permission(
                 permissionDAO.getCreatedAt(),
                 permissionDAO.getUpdatedAt()
         );
+    }
+
+    public PermissionDTO toDTO() {
+        return new PermissionDTO()
+                .id(id)
+                .actionType(actionType)
+                .data(data)
+                .createdAt(createdAt)
+                .updatedAt(updatedAt);
     }
 
     public JSONB getDataAsJsonb() {

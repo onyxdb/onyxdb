@@ -8,8 +8,8 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
-import org.jooq.Result;
 import org.jooq.Record;
+import org.jooq.Result;
 import org.springframework.stereotype.Repository;
 
 import com.onyxdb.idm.generated.jooq.Tables;
@@ -27,11 +27,10 @@ import static org.jooq.impl.DSL.trueCondition;
 @Repository
 @RequiredArgsConstructor
 public class RoleRequestPostgresRepository implements RoleRequestRepository {
-    private final DSLContext dslContext;
     private final static RoleRequestTable roleRequestTable = Tables.ROLE_REQUEST_TABLE;
     private final static RoleTable roleTable = Tables.ROLE_TABLE;
     private final static AccountTable accountTable = Tables.ACCOUNT_TABLE;
-
+    private final DSLContext dslContext;
 
     @Override
     public Optional<RoleRequest> findById(UUID id) {

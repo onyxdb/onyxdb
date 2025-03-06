@@ -1,5 +1,17 @@
 package com.onyxdb.idm.repositories;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import lombok.RequiredArgsConstructor;
+import org.jooq.Condition;
+import org.jooq.DSLContext;
+import org.jooq.Result;
+import org.springframework.stereotype.Repository;
+
 import com.onyxdb.idm.generated.jooq.Tables;
 import com.onyxdb.idm.generated.jooq.tables.AccountBusinessRoleTable;
 import com.onyxdb.idm.generated.jooq.tables.AccountRoleTable;
@@ -15,18 +27,6 @@ import com.onyxdb.idm.models.PaginatedResult;
 import com.onyxdb.idm.models.Permission;
 import com.onyxdb.idm.models.Role;
 
-import lombok.RequiredArgsConstructor;
-import org.jooq.DSLContext;
-import org.springframework.stereotype.Repository;
-import org.jooq.Condition;
-import org.jooq.Result;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
 import static org.jooq.impl.DSL.trueCondition;
 
 /**
@@ -35,7 +35,6 @@ import static org.jooq.impl.DSL.trueCondition;
 @Repository
 @RequiredArgsConstructor
 public class AccountPostgresRepository implements AccountRepository {
-    private final DSLContext dslContext;
     private final static AccountTable accountTable = Tables.ACCOUNT_TABLE;
     private final static AccountBusinessRoleTable accountBusinessRoleTable = Tables.ACCOUNT_BUSINESS_ROLE_TABLE;
     private final static BusinessRoleTable businessRoleTable = Tables.BUSINESS_ROLE_TABLE;
@@ -43,6 +42,7 @@ public class AccountPostgresRepository implements AccountRepository {
     private final static RolePermissionTable rolePermissionTable = Tables.ROLE_PERMISSION_TABLE;
     private final static PermissionTable permissionTable = Tables.PERMISSION_TABLE;
     private final static RoleTable roleTable = Tables.ROLE_TABLE;
+    private final DSLContext dslContext;
 
     @Override
     public Optional<Account> findById(UUID id) {

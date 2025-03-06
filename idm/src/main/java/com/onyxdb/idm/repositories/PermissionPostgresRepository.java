@@ -1,17 +1,17 @@
 package com.onyxdb.idm.repositories;
 
-import com.onyxdb.idm.generated.jooq.Tables;
-import com.onyxdb.idm.generated.jooq.tables.PermissionTable;
-import com.onyxdb.idm.models.Permission;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import com.onyxdb.idm.generated.jooq.Tables;
+import com.onyxdb.idm.generated.jooq.tables.PermissionTable;
+import com.onyxdb.idm.models.Permission;
 
 /**
  * @author ArtemFed
@@ -19,8 +19,8 @@ import java.util.UUID;
 @Repository
 @RequiredArgsConstructor
 public class PermissionPostgresRepository implements PermissionRepository {
-    private final DSLContext dslContext;
     private final static PermissionTable permissionTable = Tables.PERMISSION_TABLE;
+    private final DSLContext dslContext;
 
     @Override
     public Optional<Permission> findById(UUID id) {

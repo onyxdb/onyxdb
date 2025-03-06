@@ -15,7 +15,6 @@ import com.onyxdb.idm.generated.openapi.models.PaginatedRoleRequestResponse;
 import com.onyxdb.idm.generated.openapi.models.RoleRequestDTO;
 import com.onyxdb.idm.models.PaginatedResult;
 import com.onyxdb.idm.models.RoleRequest;
-import com.onyxdb.idm.models.RoleRequest;
 import com.onyxdb.idm.models.RoleRequestStatus;
 import com.onyxdb.idm.services.RoleRequestService;
 

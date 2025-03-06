@@ -18,17 +18,6 @@ public record OrganizationUnit(
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
-    public OrganizationUnitDTO toDTO() {
-        return new OrganizationUnitDTO()
-                .id(id)
-                .name(name)
-                .description(description)
-                .domainComponentId(domainComponentId)
-                .parentId(parentId)
-                .createdAt(createdAt)
-                .updatedAt(updatedAt);
-    }
-
     public static OrganizationUnit fromDTO(OrganizationUnitDTO organizationUnitDTO) {
         return new OrganizationUnit(
                 organizationUnitDTO.getId(),
@@ -51,5 +40,16 @@ public record OrganizationUnit(
                 organizationUnitDAO.getCreatedAt(),
                 organizationUnitDAO.getUpdatedAt()
         );
+    }
+
+    public OrganizationUnitDTO toDTO() {
+        return new OrganizationUnitDTO()
+                .id(id)
+                .name(name)
+                .description(description)
+                .domainComponentId(domainComponentId)
+                .parentId(parentId)
+                .createdAt(createdAt)
+                .updatedAt(updatedAt);
     }
 }

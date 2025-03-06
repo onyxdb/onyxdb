@@ -1,14 +1,14 @@
 package com.onyxdb.idm.repositories;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
 import com.onyxdb.idm.models.Account;
 import com.onyxdb.idm.models.BusinessRole;
 import com.onyxdb.idm.models.PaginatedResult;
 import com.onyxdb.idm.models.Permission;
 import com.onyxdb.idm.models.Role;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 /**
  * @author ArtemFed

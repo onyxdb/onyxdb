@@ -1,19 +1,19 @@
 package com.onyxdb.idm;
 
-import com.onyxdb.idm.generated.openapi.models.AccountDTO;
-import com.onyxdb.idm.generated.openapi.models.RoleDTO;
-import com.onyxdb.idm.generated.openapi.models.BusinessRoleDTO;
-import com.onyxdb.idm.generated.openapi.models.PermissionDTO;
-import com.onyxdb.idm.generated.openapi.models.DomainComponentDTO;
-import com.onyxdb.idm.generated.openapi.models.OrganizationUnitDTO;
-import com.onyxdb.idm.generated.openapi.models.ProductDTO;
-import com.onyxdb.idm.generated.openapi.models.RoleRequestDTO;
-import com.onyxdb.idm.generated.openapi.models.RoleWithPermissionsDTO;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import com.onyxdb.idm.generated.openapi.models.AccountDTO;
+import com.onyxdb.idm.generated.openapi.models.BusinessRoleDTO;
+import com.onyxdb.idm.generated.openapi.models.DomainComponentDTO;
+import com.onyxdb.idm.generated.openapi.models.OrganizationUnitDTO;
+import com.onyxdb.idm.generated.openapi.models.PermissionDTO;
+import com.onyxdb.idm.generated.openapi.models.ProductDTO;
+import com.onyxdb.idm.generated.openapi.models.RoleDTO;
+import com.onyxdb.idm.generated.openapi.models.RoleRequestDTO;
+import com.onyxdb.idm.generated.openapi.models.RoleWithPermissionsDTO;
 
 public class TestDataFactory {
 

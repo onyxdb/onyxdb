@@ -1,10 +1,10 @@
 package com.onyxdb.idm.repositories;
 
-import com.onyxdb.idm.models.DomainComponent;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import com.onyxdb.idm.models.DomainComponent;
 
 /**
  * @author ArtemFed

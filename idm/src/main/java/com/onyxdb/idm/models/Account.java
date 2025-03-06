@@ -26,22 +26,9 @@ public record Account(
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
-    private static final ObjectMapper objectMapper = new ObjectMapper();
     static final TypeReference<Map<String, Object>> typeRef = new TypeReference<>() {
     };
-
-    public AccountDTO toDTO() {
-        return new AccountDTO()
-                .id(id)
-                .username(login)
-                .password(password)
-                .email(email)
-                .firstName(firstName)
-                .lastName(lastName)
-                .data(data)
-                .createdAt(createdAt)
-                .updatedAt(updatedAt);
-    }
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public static Account fromDTO(AccountDTO accountDTO) {
         return new Account(
@@ -74,6 +61,19 @@ public record Account(
                 accountDAO.getCreatedAt(),
                 accountDAO.getUpdatedAt()
         );
+    }
+
+    public AccountDTO toDTO() {
+        return new AccountDTO()
+                .id(id)
+                .username(login)
+                .password(password)
+                .email(email)
+                .firstName(firstName)
+                .lastName(lastName)
+                .data(data)
+                .createdAt(createdAt)
+                .updatedAt(updatedAt);
     }
 
     public JSONB getDataAsJsonb() {

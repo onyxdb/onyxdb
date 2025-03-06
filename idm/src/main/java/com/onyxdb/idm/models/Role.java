@@ -21,20 +21,6 @@ public record Role(
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
-    public RoleDTO toDTO() {
-        return new RoleDTO()
-                .id(id)
-                .roleType(roleType)
-                .name(name)
-                .shopName(shopName)
-                .description(description)
-                .isShopHidden(isShopHidden)
-                .productId(productId)
-                .orgUnitId(orgUnitId)
-                .createdAt(createdAt)
-                .updatedAt(updatedAt);
-    }
-
     public static Role fromDTO(RoleDTO roleDTO) {
         return new Role(
                 roleDTO.getId(),
@@ -63,5 +49,19 @@ public record Role(
                 roleDAO.getCreatedAt(),
                 roleDAO.getUpdatedAt()
         );
+    }
+
+    public RoleDTO toDTO() {
+        return new RoleDTO()
+                .id(id)
+                .roleType(roleType)
+                .name(name)
+                .shopName(shopName)
+                .description(description)
+                .isShopHidden(isShopHidden)
+                .productId(productId)
+                .orgUnitId(orgUnitId)
+                .createdAt(createdAt)
+                .updatedAt(updatedAt);
     }
 }

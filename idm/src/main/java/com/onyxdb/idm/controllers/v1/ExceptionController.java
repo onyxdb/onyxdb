@@ -1,12 +1,13 @@
 package com.onyxdb.idm.controllers.v1;
 
-import com.onyxdb.idm.generated.openapi.models.BadRequestResponse;
-import com.onyxdb.idm.generated.openapi.models.NotFoundResponse;
-import com.onyxdb.idm.generated.openapi.models.InternalServerErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import com.onyxdb.idm.generated.openapi.models.BadRequestResponse;
+import com.onyxdb.idm.generated.openapi.models.InternalServerErrorResponse;
+import com.onyxdb.idm.generated.openapi.models.NotFoundResponse;
 
 /**
  * @author ArtemFed
