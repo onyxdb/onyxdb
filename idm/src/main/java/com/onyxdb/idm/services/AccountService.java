@@ -1,20 +1,19 @@
 package com.onyxdb.idm.services;
 
+import java.util.List;
+import java.util.UUID;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import com.onyxdb.idm.controllers.v1.ResourceNotFoundException;
 import com.onyxdb.idm.models.Account;
 import com.onyxdb.idm.models.BusinessRole;
 import com.onyxdb.idm.models.PaginatedResult;
 import com.onyxdb.idm.models.Role;
 import com.onyxdb.idm.repositories.AccountRepository;
-
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
 
 /**
  * @author ArtemFed

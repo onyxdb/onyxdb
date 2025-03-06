@@ -8,8 +8,8 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
-import org.jooq.Result;
 import org.jooq.Record;
+import org.jooq.Result;
 import org.springframework.stereotype.Repository;
 
 import com.onyxdb.idm.generated.jooq.Tables;

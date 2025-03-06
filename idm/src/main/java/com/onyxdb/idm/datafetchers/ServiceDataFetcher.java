@@ -2,8 +2,9 @@ package com.onyxdb.idm.datafetchers;
 
 import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsData;
-import com.onyxdb.idm.codegen.types.Service;
 import graphql.schema.DataFetchingEnvironment;
+
+import com.onyxdb.idm.codegen.types.Service;
 
 @DgsComponent
 public class ServiceDataFetcher {

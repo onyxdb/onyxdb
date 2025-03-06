@@ -1,10 +1,8 @@
 package com.onyxdb.idm.controllers.v1;
 
 
-import java.util.Map;
 import java.util.UUID;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;

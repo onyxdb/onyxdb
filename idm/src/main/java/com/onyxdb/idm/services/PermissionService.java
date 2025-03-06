@@ -1,14 +1,14 @@
 package com.onyxdb.idm.services;
 
-import com.onyxdb.idm.controllers.v1.ResourceNotFoundException;
-import com.onyxdb.idm.models.Permission;
-import com.onyxdb.idm.repositories.PermissionRepository;
+import java.util.List;
+import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.UUID;
+import com.onyxdb.idm.controllers.v1.ResourceNotFoundException;
+import com.onyxdb.idm.models.Permission;
+import com.onyxdb.idm.repositories.PermissionRepository;
 
 /**
  * @author ArtemFed

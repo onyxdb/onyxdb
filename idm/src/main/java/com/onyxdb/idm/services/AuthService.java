@@ -1,6 +1,16 @@
 package com.onyxdb.idm.services;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+
 import io.jsonwebtoken.Claims;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import com.onyxdb.idm.models.Account;
 import com.onyxdb.idm.models.AccountWithRoles;
@@ -9,17 +19,6 @@ import com.onyxdb.idm.repositories.AccountRepository;
 import com.onyxdb.idm.repositories.RoleRepository;
 import com.onyxdb.idm.services.jwt.JwtProvider;
 import com.onyxdb.idm.services.jwt.JwtResponse;
-
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
 
 /**
  * @author ArtemFed

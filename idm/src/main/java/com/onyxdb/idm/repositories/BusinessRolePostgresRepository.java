@@ -1,5 +1,16 @@
 package com.onyxdb.idm.repositories;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import lombok.RequiredArgsConstructor;
+import org.jooq.Condition;
+import org.jooq.DSLContext;
+import org.jooq.Result;
+import org.springframework.stereotype.Repository;
+
 import com.onyxdb.idm.generated.jooq.Tables;
 import com.onyxdb.idm.generated.jooq.tables.BusinessRoleRoleTable;
 import com.onyxdb.idm.generated.jooq.tables.BusinessRoleTable;
@@ -8,22 +19,6 @@ import com.onyxdb.idm.generated.jooq.tables.records.BusinessRoleTableRecord;
 import com.onyxdb.idm.models.BusinessRole;
 import com.onyxdb.idm.models.PaginatedResult;
 import com.onyxdb.idm.models.Role;
-import com.onyxdb.idm.models.RoleRequest;
-
-import lombok.RequiredArgsConstructor;
-import org.jooq.Condition;
-import org.jooq.Record;
-import org.jooq.Result;
-import org.jooq.DSLContext;
-import org.jooq.Table;
-import org.jooq.impl.DSL;
-import org.springframework.stereotype.Repository;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.name;

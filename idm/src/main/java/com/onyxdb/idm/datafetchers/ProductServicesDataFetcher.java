@@ -1,10 +1,12 @@
 package com.onyxdb.idm.datafetchers;
 
+import java.util.List;
+
 import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsData;
-import com.onyxdb.idm.codegen.types.Service;
 import graphql.schema.DataFetchingEnvironment;
-import java.util.List;
+
+import com.onyxdb.idm.codegen.types.Service;
 
 @DgsComponent
 public class ProductServicesDataFetcher {

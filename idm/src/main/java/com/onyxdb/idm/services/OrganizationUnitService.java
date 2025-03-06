@@ -1,16 +1,16 @@
 package com.onyxdb.idm.services;
 
+import java.util.List;
+import java.util.UUID;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
 import com.onyxdb.idm.controllers.v1.ResourceNotFoundException;
 import com.onyxdb.idm.models.Account;
 import com.onyxdb.idm.models.OrganizationUnit;
 import com.onyxdb.idm.models.PaginatedResult;
 import com.onyxdb.idm.repositories.OrganizationUnitRepository;
-
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.UUID;
 
 /**
  * @author ArtemFed

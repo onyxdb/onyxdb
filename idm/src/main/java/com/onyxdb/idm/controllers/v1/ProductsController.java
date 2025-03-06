@@ -1,21 +1,21 @@
 package com.onyxdb.idm.controllers.v1;
 
-import com.onyxdb.idm.generated.openapi.apis.ProductsApi;
-import com.onyxdb.idm.generated.openapi.models.ProductDTO;
-import com.onyxdb.idm.generated.openapi.models.ProductTreeDTO;
-import com.onyxdb.idm.models.Product;
-import com.onyxdb.idm.models.ProductTree;
-import com.onyxdb.idm.services.ProductService;
+import java.util.List;
+import java.util.UUID;
+
+import javax.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-
-import java.util.List;
-import java.util.UUID;
+import com.onyxdb.idm.generated.openapi.apis.ProductsApi;
+import com.onyxdb.idm.generated.openapi.models.ProductDTO;
+import com.onyxdb.idm.generated.openapi.models.ProductTreeDTO;
+import com.onyxdb.idm.models.Product;
+import com.onyxdb.idm.models.ProductTree;
+import com.onyxdb.idm.services.ProductService;
 
 /**
  * @author ArtemFed

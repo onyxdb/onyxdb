@@ -1,14 +1,14 @@
 package com.onyxdb.idm.services;
 
+import java.util.List;
+import java.util.UUID;
+
+import lombok.RequiredArgsConstructor;
+
 import com.onyxdb.idm.controllers.v1.ResourceNotFoundException;
 import com.onyxdb.idm.models.Product;
 import com.onyxdb.idm.models.ProductTree;
 import com.onyxdb.idm.repositories.ProductRepository;
-
-import lombok.RequiredArgsConstructor;
-
-import java.util.List;
-import java.util.UUID;
 
 /**
  * @author ArtemFed

@@ -1,5 +1,15 @@
 package com.onyxdb.idm.controllers.v1;
 
+import java.util.List;
+import java.util.UUID;
+
+import javax.validation.Valid;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.onyxdb.idm.generated.openapi.apis.OrganizationUnitsApi;
 import com.onyxdb.idm.generated.openapi.models.AccountDTO;
 import com.onyxdb.idm.generated.openapi.models.OrganizationUnitDTO;
@@ -8,16 +18,6 @@ import com.onyxdb.idm.models.Account;
 import com.onyxdb.idm.models.OrganizationUnit;
 import com.onyxdb.idm.models.PaginatedResult;
 import com.onyxdb.idm.services.OrganizationUnitService;
-
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
-
-import java.util.List;
-import java.util.UUID;
 
 /**
  * @author ArtemFed

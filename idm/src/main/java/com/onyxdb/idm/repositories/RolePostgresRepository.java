@@ -1,13 +1,9 @@
 package com.onyxdb.idm.repositories;
 
-import com.onyxdb.idm.generated.jooq.Tables;
-import com.onyxdb.idm.generated.jooq.tables.PermissionTable;
-import com.onyxdb.idm.generated.jooq.tables.ProductTable;
-import com.onyxdb.idm.generated.jooq.tables.RolePermissionTable;
-import com.onyxdb.idm.generated.jooq.tables.RoleTable;
-import com.onyxdb.idm.models.PaginatedResult;
-import com.onyxdb.idm.models.Permission;
-import com.onyxdb.idm.models.Role;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
 import org.jooq.Condition;
@@ -16,10 +12,14 @@ import org.jooq.Record;
 import org.jooq.Result;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import com.onyxdb.idm.generated.jooq.Tables;
+import com.onyxdb.idm.generated.jooq.tables.PermissionTable;
+import com.onyxdb.idm.generated.jooq.tables.ProductTable;
+import com.onyxdb.idm.generated.jooq.tables.RolePermissionTable;
+import com.onyxdb.idm.generated.jooq.tables.RoleTable;
+import com.onyxdb.idm.models.PaginatedResult;
+import com.onyxdb.idm.models.Permission;
+import com.onyxdb.idm.models.Role;
 
 import static org.jooq.impl.DSL.noTable;
 import static org.jooq.impl.DSL.trueCondition;

@@ -1,21 +1,19 @@
 package com.onyxdb.idm.services;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
 import com.onyxdb.idm.controllers.v1.ResourceNotFoundException;
 import com.onyxdb.idm.models.PaginatedResult;
 import com.onyxdb.idm.models.Permission;
 import com.onyxdb.idm.models.Role;
 import com.onyxdb.idm.models.RoleWithPermissions;
 import com.onyxdb.idm.repositories.RoleRepository;
-
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
 
 /**
  * @author ArtemFed

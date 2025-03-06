@@ -1,18 +1,14 @@
 package com.onyxdb.idm.datafetchers;
 
+import java.util.List;
+
 import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsData;
-
-import com.onyxdb.idm.codegen.types.AccountInput;
-import com.onyxdb.idm.models.Account;
-import com.onyxdb.idm.services.AccountService;
 import graphql.schema.DataFetchingEnvironment;
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import com.onyxdb.idm.models.Account;
+import com.onyxdb.idm.services.AccountService;
 
 @DgsComponent
 @RequiredArgsConstructor

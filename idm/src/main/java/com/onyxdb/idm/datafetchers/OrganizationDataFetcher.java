@@ -2,8 +2,9 @@ package com.onyxdb.idm.datafetchers;
 
 import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsData;
-import com.onyxdb.idm.codegen.types.Organization;
 import graphql.schema.DataFetchingEnvironment;
+
+import com.onyxdb.idm.codegen.types.Organization;
 
 @DgsComponent
 public class OrganizationDataFetcher {

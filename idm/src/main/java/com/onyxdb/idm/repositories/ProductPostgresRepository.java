@@ -1,19 +1,19 @@
 package com.onyxdb.idm.repositories;
 
-import com.onyxdb.idm.generated.jooq.Tables;
-import com.onyxdb.idm.generated.jooq.tables.ProductTable;
-import com.onyxdb.idm.models.Product;
-import com.onyxdb.idm.models.ProductTree;
-
-import lombok.RequiredArgsConstructor;
-import org.jooq.DSLContext;
-import org.springframework.stereotype.Repository;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import lombok.RequiredArgsConstructor;
+import org.jooq.DSLContext;
+import org.springframework.stereotype.Repository;
+
+import com.onyxdb.idm.generated.jooq.Tables;
+import com.onyxdb.idm.generated.jooq.tables.ProductTable;
+import com.onyxdb.idm.models.Product;
+import com.onyxdb.idm.models.ProductTree;
 
 /**
  * @author ArtemFed
