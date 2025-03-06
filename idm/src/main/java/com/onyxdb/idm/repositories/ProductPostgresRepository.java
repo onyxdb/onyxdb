@@ -21,8 +21,8 @@ import com.onyxdb.idm.models.ProductTree;
 @Repository
 @RequiredArgsConstructor
 public class ProductPostgresRepository implements ProductRepository {
-    private final DSLContext dslContext;
     private final static ProductTable productTable = Tables.PRODUCT_TABLE;
+    private final DSLContext dslContext;
 
     @Override
     public List<Product> findChildren(UUID productId) {

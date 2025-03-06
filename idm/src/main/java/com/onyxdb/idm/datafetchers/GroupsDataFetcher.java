@@ -10,11 +10,11 @@ import com.onyxdb.idm.codegen.types.Group;
 
 @DgsComponent
 public class GroupsDataFetcher {
-  @DgsData(
-      parentType = "Query",
-      field = "groups"
-  )
-  public List<Group> getGroups(DataFetchingEnvironment dataFetchingEnvironment) {
-    return null;
-  }
+    @DgsData(
+            parentType = "Query",
+            field = "groups"
+    )
+    public List<Group> getGroups(DataFetchingEnvironment dataFetchingEnvironment) {
+        return null;
+    }
 }

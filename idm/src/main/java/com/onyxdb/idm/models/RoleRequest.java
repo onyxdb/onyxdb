@@ -19,18 +19,6 @@ public record RoleRequest(
         LocalDateTime createdAt,
         LocalDateTime resolvedAt
 ) {
-    public RoleRequestDTO toDTO() {
-        return new RoleRequestDTO()
-                .id(id)
-                .roleId(roleId)
-                .accountId(accountId)
-                .ownerId(ownerId)
-                .reason(reason)
-                .status(RoleRequestDTO.StatusEnum.valueOf(status))
-                .createdAt(createdAt)
-                .resolvedAt(resolvedAt);
-    }
-
     public static RoleRequest fromDTO(RoleRequestDTO RoleRequestDTO) {
         return new RoleRequest(
                 RoleRequestDTO.getId(),
@@ -55,5 +43,17 @@ public record RoleRequest(
                 roleRequestDAO.getCreatedAt(),
                 roleRequestDAO.getResolvedAt()
         );
+    }
+
+    public RoleRequestDTO toDTO() {
+        return new RoleRequestDTO()
+                .id(id)
+                .roleId(roleId)
+                .accountId(accountId)
+                .ownerId(ownerId)
+                .reason(reason)
+                .status(RoleRequestDTO.StatusEnum.valueOf(status))
+                .createdAt(createdAt)
+                .resolvedAt(resolvedAt);
     }
 }

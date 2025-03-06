@@ -10,11 +10,11 @@ import com.onyxdb.idm.codegen.types.Organization;
 
 @DgsComponent
 public class OrganizationsDataFetcher {
-  @DgsData(
-      parentType = "Query",
-      field = "organizations"
-  )
-  public List<Organization> getOrganizations(DataFetchingEnvironment dataFetchingEnvironment) {
-    return null;
-  }
+    @DgsData(
+            parentType = "Query",
+            field = "organizations"
+    )
+    public List<Organization> getOrganizations(DataFetchingEnvironment dataFetchingEnvironment) {
+        return null;
+    }
 }

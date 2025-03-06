@@ -7,7 +7,7 @@ spring:
     graphiql:
       enabled: true
     schema:
-#      locations=classpath*:/:
+      #      locations=classpath*:/:
       locations=classpath*:graphql/**/:
 
   datasource:

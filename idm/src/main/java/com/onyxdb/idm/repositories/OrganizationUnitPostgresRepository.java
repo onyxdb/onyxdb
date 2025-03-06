@@ -26,10 +26,10 @@ import static org.jooq.impl.DSL.trueCondition;
 @Repository
 @RequiredArgsConstructor
 public class OrganizationUnitPostgresRepository implements OrganizationUnitRepository {
-    private final DSLContext dslContext;
     private final static OrganizationUnitTable organizationUnitTable = Tables.ORGANIZATION_UNIT_TABLE;
     private final static AccountOuTable organizationUnitAccountTable = Tables.ACCOUNT_OU_TABLE;
     private final static AccountTable accountTable = Tables.ACCOUNT_TABLE;
+    private final DSLContext dslContext;
 
     @Override
     public Optional<OrganizationUnit> findById(UUID id) {

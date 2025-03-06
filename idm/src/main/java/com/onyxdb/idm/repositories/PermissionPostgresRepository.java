@@ -19,8 +19,8 @@ import com.onyxdb.idm.models.Permission;
 @Repository
 @RequiredArgsConstructor
 public class PermissionPostgresRepository implements PermissionRepository {
-    private final DSLContext dslContext;
     private final static PermissionTable permissionTable = Tables.PERMISSION_TABLE;
+    private final DSLContext dslContext;
 
     @Override
     public Optional<Permission> findById(UUID id) {

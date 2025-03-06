@@ -24,19 +24,9 @@ public record BusinessRole(
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
+    static final TypeReference<Map<String, Object>> typeRef = new TypeReference<>() {
+    };
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    static final TypeReference<Map<String, Object>> typeRef = new TypeReference<>(){};
-
-    public BusinessRoleDTO toDTO() {
-        return new BusinessRoleDTO()
-                .id(id)
-                .name(name)
-                .description(description)
-                .parentId(parentId)
-                .data(data)
-                .createdAt(createdAt)
-                .updatedAt(updatedAt);
-    }
 
     public static BusinessRole fromDTO(BusinessRoleDTO businessRoleDTO) {
         return new BusinessRole(
@@ -65,6 +55,17 @@ public record BusinessRole(
                 businessRoleDAO.getCreatedAt(),
                 businessRoleDAO.getUpdatedAt()
         );
+    }
+
+    public BusinessRoleDTO toDTO() {
+        return new BusinessRoleDTO()
+                .id(id)
+                .name(name)
+                .description(description)
+                .parentId(parentId)
+                .data(data)
+                .createdAt(createdAt)
+                .updatedAt(updatedAt);
     }
 
     public JSONB getDataAsJsonb() {

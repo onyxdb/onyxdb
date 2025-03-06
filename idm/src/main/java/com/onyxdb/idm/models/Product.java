@@ -25,33 +25,9 @@ public record Product(
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
+    static final TypeReference<Map<String, Object>> typeRef = new TypeReference<>() {
+    };
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    static final TypeReference<Map<String, Object>> typeRef = new TypeReference<>(){};
-
-    public ProductDTO toDTO() {
-        return new ProductDTO()
-                .id(id)
-                .name(name)
-                .description(description)
-                .parentId(parent_id)
-                .ownerId(ownerId)
-                .data(data)
-                .createdAt(createdAt)
-                .updatedAt(updatedAt);
-    }
-
-    public ProductTableRecord toDAO() {
-        return new ProductTableRecord(
-                id,
-                name,
-                description,
-                parent_id,
-                ownerId,
-                getDataAsJsonb(),
-                createdAt,
-                updatedAt
-        );
-    }
 
     public static Product fromDTO(ProductDTO productDTO) {
         return new Product(
@@ -81,6 +57,31 @@ public record Product(
                 dataMap,
                 productDAO.getCreatedAt(),
                 productDAO.getUpdatedAt()
+        );
+    }
+
+    public ProductDTO toDTO() {
+        return new ProductDTO()
+                .id(id)
+                .name(name)
+                .description(description)
+                .parentId(parent_id)
+                .ownerId(ownerId)
+                .data(data)
+                .createdAt(createdAt)
+                .updatedAt(updatedAt);
+    }
+
+    public ProductTableRecord toDAO() {
+        return new ProductTableRecord(
+                id,
+                name,
+                description,
+                parent_id,
+                ownerId,
+                getDataAsJsonb(),
+                createdAt,
+                updatedAt
         );
     }
 

@@ -19,8 +19,8 @@ import com.onyxdb.idm.models.DomainComponent;
 @Repository
 @RequiredArgsConstructor
 public class DomainComponentPostgresRepository implements DomainComponentRepository {
-    private final DSLContext dslContext;
     private final static DomainComponentTable domainComponentTable = Tables.DOMAIN_COMPONENT_TABLE;
+    private final DSLContext dslContext;
 
     @Override
     public Optional<DomainComponent> findById(UUID id) {

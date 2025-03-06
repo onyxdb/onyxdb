@@ -50,7 +50,7 @@ public class RoleService {
     public RoleWithPermissions update(RoleWithPermissions roleWithPermission) {
         Role role = roleWithPermission.role();
         List<Permission> updatedPermissions = roleWithPermission.permissions();
-        Role newRole =roleRepository.update(role);
+        Role newRole = roleRepository.update(role);
 
         List<Permission> existingPermissions = roleRepository.getPermissions(role.id());
         Map<UUID, Permission> updatedPermIds = new HashMap<>();

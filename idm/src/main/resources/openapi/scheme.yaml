@@ -1609,7 +1609,7 @@ paths:
           required: true
           schema:
             type: string
-            enum: [WAITING, APPROVED, DECLINED]
+            enum: [ WAITING, APPROVED, DECLINED ]
       responses:
         '200':
           description: OK
@@ -2138,7 +2138,7 @@ components:
           type: string
         status:
           type: string
-          enum: [WAITING, APPROVED, DECLINED]
+          enum: [ WAITING, APPROVED, DECLINED ]
         createdAt:
           type: string
           format: date-time
@@ -2194,4 +2194,4 @@ components:
 
 #  Apply the security globally to all operations
 security:
-  - bearerAuth: []
+  - bearerAuth: [ ]

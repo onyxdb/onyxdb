@@ -23,8 +23,8 @@ import com.onyxdb.idm.repositories.AccountRepository;
 public class AccountService {
 //    TODO: Добавить смену пароля
 
-    private final AccountRepository accountRepository;
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final AccountRepository accountRepository;
 
     public Account findById(UUID id) {
         return accountRepository

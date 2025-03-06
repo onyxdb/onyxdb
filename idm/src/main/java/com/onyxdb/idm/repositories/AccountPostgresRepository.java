@@ -35,7 +35,6 @@ import static org.jooq.impl.DSL.trueCondition;
 @Repository
 @RequiredArgsConstructor
 public class AccountPostgresRepository implements AccountRepository {
-    private final DSLContext dslContext;
     private final static AccountTable accountTable = Tables.ACCOUNT_TABLE;
     private final static AccountBusinessRoleTable accountBusinessRoleTable = Tables.ACCOUNT_BUSINESS_ROLE_TABLE;
     private final static BusinessRoleTable businessRoleTable = Tables.BUSINESS_ROLE_TABLE;
@@ -43,6 +42,7 @@ public class AccountPostgresRepository implements AccountRepository {
     private final static RolePermissionTable rolePermissionTable = Tables.ROLE_PERMISSION_TABLE;
     private final static PermissionTable permissionTable = Tables.PERMISSION_TABLE;
     private final static RoleTable roleTable = Tables.ROLE_TABLE;
+    private final DSLContext dslContext;
 
     @Override
     public Optional<Account> findById(UUID id) {

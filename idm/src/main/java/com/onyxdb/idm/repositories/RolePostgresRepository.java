@@ -30,11 +30,11 @@ import static org.jooq.impl.DSL.trueCondition;
 @Repository
 @RequiredArgsConstructor
 public class RolePostgresRepository implements RoleRepository {
-    private final DSLContext dslContext;
     private final static RoleTable roleTable = Tables.ROLE_TABLE;
     private final static RolePermissionTable roleToPermissionTable = Tables.ROLE_PERMISSION_TABLE;
     private final static PermissionTable permissionTable = Tables.PERMISSION_TABLE;
     private final static ProductTable productTable = Tables.PRODUCT_TABLE;
+    private final DSLContext dslContext;
 
     @Override
     public Optional<Role> findById(UUID id) {

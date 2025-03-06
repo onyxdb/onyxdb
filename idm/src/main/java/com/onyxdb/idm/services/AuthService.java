@@ -26,10 +26,10 @@ import com.onyxdb.idm.services.jwt.JwtResponse;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
+    private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final AccountRepository accountRepository;
     private final RoleRepository roleRepository;
     private final JwtProvider jwtProvider;
-    private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final Map<String, String> refreshStorage = new HashMap<>();
 
     /**

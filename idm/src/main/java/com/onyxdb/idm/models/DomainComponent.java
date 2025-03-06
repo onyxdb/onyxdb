@@ -16,15 +16,6 @@ public record DomainComponent(
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
-    public DomainComponentDTO toDTO() {
-        return new DomainComponentDTO()
-                .id(id)
-                .name(name)
-                .description(description)
-                .createdAt(createdAt)
-                .updatedAt(updatedAt);
-    }
-
     public static DomainComponent fromDTO(DomainComponentDTO domainComponentDTO) {
         return new DomainComponent(
                 domainComponentDTO.getId(),
@@ -43,5 +34,14 @@ public record DomainComponent(
                 domainComponentDAO.getCreatedAt(),
                 domainComponentDAO.getUpdatedAt()
         );
+    }
+
+    public DomainComponentDTO toDTO() {
+        return new DomainComponentDTO()
+                .id(id)
+                .name(name)
+                .description(description)
+                .createdAt(createdAt)
+                .updatedAt(updatedAt);
     }
 }

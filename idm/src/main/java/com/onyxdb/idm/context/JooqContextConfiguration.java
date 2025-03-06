@@ -20,8 +20,7 @@ public class JooqContextConfiguration {
     public DSLContext dslContext(
             @Value("${spring.datasource.url}") String url,
             @Value("${spring.datasource.username}") String username,
-            @Value("${spring.datasource.password}") String password) throws SQLException
-    {
+            @Value("${spring.datasource.password}") String password) throws SQLException {
         Connection conn = DriverManager.getConnection(url, username, password);
         return DSL.using(conn, SQLDialect.POSTGRES);
     }

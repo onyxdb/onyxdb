@@ -10,11 +10,11 @@ import com.onyxdb.idm.codegen.types.Product;
 
 @DgsComponent
 public class OrganizationProductsDataFetcher {
-  @DgsData(
-      parentType = "Query",
-      field = "organizationProducts"
-  )
-  public List<Product> getOrganizationProducts(DataFetchingEnvironment dataFetchingEnvironment) {
-    return null;
-  }
+    @DgsData(
+            parentType = "Query",
+            field = "organizationProducts"
+    )
+    public List<Product> getOrganizationProducts(DataFetchingEnvironment dataFetchingEnvironment) {
+        return null;
+    }
 }

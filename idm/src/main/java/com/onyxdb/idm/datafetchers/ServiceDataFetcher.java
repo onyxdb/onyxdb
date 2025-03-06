@@ -8,11 +8,11 @@ import com.onyxdb.idm.codegen.types.Service;
 
 @DgsComponent
 public class ServiceDataFetcher {
-  @DgsData(
-      parentType = "Query",
-      field = "service"
-  )
-  public Service getService(DataFetchingEnvironment dataFetchingEnvironment) {
-    return null;
-  }
+    @DgsData(
+            parentType = "Query",
+            field = "service"
+    )
+    public Service getService(DataFetchingEnvironment dataFetchingEnvironment) {
+        return null;
+    }
 }

@@ -8,11 +8,11 @@ import com.onyxdb.idm.codegen.types.Role;
 
 @DgsComponent
 public class RoleDataFetcher {
-  @DgsData(
-      parentType = "Query",
-      field = "role"
-  )
-  public Role getRole(DataFetchingEnvironment dataFetchingEnvironment) {
-    return null;
-  }
+    @DgsData(
+            parentType = "Query",
+            field = "role"
+    )
+    public Role getRole(DataFetchingEnvironment dataFetchingEnvironment) {
+        return null;
+    }
 }
