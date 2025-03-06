@@ -18,6 +18,9 @@ import com.onyxdb.idm.models.Account;
 import com.onyxdb.idm.models.OrganizationUnit;
 import com.onyxdb.idm.models.PaginatedResult;
 
+import static org.jooq.impl.DSL.field;
+import static org.jooq.impl.DSL.name;
+import static org.jooq.impl.DSL.select;
 import static org.jooq.impl.DSL.trueCondition;
 
 /**
@@ -61,6 +64,15 @@ public class OrganizationUnitPostgresRepository implements OrganizationUnitRepos
                 offset + 1,
                 Math.min(offset + limit, totalCount)
         );
+    }
+
+    @Override
+    public List<OrganizationUnit> findRootOrgUnits(UUID dcId) {
+        return dslContext.selectFrom(organizationUnitTable)
+                .where(organizationUnitTable.DOMAIN_COMPONENT_ID.eq(dcId)
+                        .and(organizationUnitTable.PARENT_ID.isNull()
+                                .or(organizationUnitTable.PARENT_ID.eq(organizationUnitTable.ID))))
+                .fetch(OrganizationUnit::fromDAO);
     }
 
     @Override
@@ -117,6 +129,11 @@ public class OrganizationUnitPostgresRepository implements OrganizationUnitRepos
                 .where(organizationUnitAccountTable.OU_ID.eq(ouId)
                         .and(organizationUnitAccountTable.ACCOUNT_ID.eq(accountId)))
                 .execute();
+    }
+
+    @Override
+    public List<OrganizationUnit> findAllParentOrganizationUnits(UUID organizationUnitId) {
+        return List.of();
     }
 
     @Override

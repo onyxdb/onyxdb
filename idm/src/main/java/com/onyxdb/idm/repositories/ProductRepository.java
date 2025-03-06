@@ -21,6 +21,8 @@ public interface ProductRepository {
 
     List<ProductTree> findChildrenTree(UUID productId, Integer depth);
 
+    List<Product> findAllParentProducts(UUID productId);
+
     Product create(Product product);
 
     Product update(Product product);

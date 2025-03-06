@@ -16,6 +16,8 @@ public interface OrganizationUnitRepository {
 
     PaginatedResult<OrganizationUnit> findAll(UUID dcId, UUID parentOuId, Integer limit, Integer offset);
 
+    List<OrganizationUnit> findRootOrgUnits(UUID dcId);
+
     OrganizationUnit create(OrganizationUnit organizationUnit);
 
     OrganizationUnit update(OrganizationUnit organizationUnit);
@@ -27,4 +29,6 @@ public interface OrganizationUnitRepository {
     void addAccount(UUID ouId, UUID accountId);
 
     void removeAccount(UUID ouId, UUID accountId);
+
+    List<OrganizationUnit> findAllParentOrganizationUnits(UUID organizationUnitId);
 }

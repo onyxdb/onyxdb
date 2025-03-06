@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.onyxdb.idm.controllers.v1.ResourceNotFoundException;
 import com.onyxdb.idm.models.DomainComponent;
+import com.onyxdb.idm.models.OrganizationUnit;
 import com.onyxdb.idm.repositories.DomainComponentRepository;
 import com.onyxdb.idm.repositories.OrganizationUnitRepository;
 
@@ -40,5 +41,9 @@ public class DomainComponentService {
 
     public void delete(UUID id) {
         domainComponentRepository.delete(id);
+    }
+
+    public List<OrganizationUnit> findRootOrgUnits(UUID dcId) {
+        return organizationUnitRepository.findRootOrgUnits(dcId);
     }
 }

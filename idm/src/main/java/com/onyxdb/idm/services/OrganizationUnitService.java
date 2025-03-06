@@ -34,6 +34,14 @@ public class OrganizationUnitService {
         return organizationUnitRepository.findAll(null, parentOuId, 0, 0);
     }
 
+    public List<OrganizationUnit> findRootOrgUnits(UUID dcId) {
+        return organizationUnitRepository.findRootOrgUnits(dcId);
+    }
+
+    public List<OrganizationUnit> findAllParentOrganizationUnits(UUID parentOuId) {
+        return organizationUnitRepository.findAllParentOrganizationUnits(parentOuId);
+    }
+
     public OrganizationUnit create(OrganizationUnit organizationUnit) {
         return organizationUnitRepository.create(organizationUnit);
     }

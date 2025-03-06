@@ -171,14 +171,15 @@ public class IdmApiIntegrationCreateTest extends PostgresTests {
         employee = createBusinessRole(employee);
 
         BusinessRoleDTO javaDeveloper = TestDataFactory.createBusinessRoleDTO(null, "Java Developer", "Role for Java developers", employee.getId());
-        BusinessRoleDTO manager = TestDataFactory.createBusinessRoleDTO(null, "Manager", "Role for managers", employee.getId());
-        BusinessRoleDTO cto = TestDataFactory.createBusinessRoleDTO(null, "CTO", "Role for CTO", employee.getId());
         BusinessRoleDTO admin = TestDataFactory.createBusinessRoleDTO(null, "Admin", "Role for admins", employee.getId());
+        BusinessRoleDTO manager = TestDataFactory.createBusinessRoleDTO(null, "Manager", "Role for managers", employee.getId());
 
         javaDeveloper = createBusinessRole(javaDeveloper);
         manager = createBusinessRole(manager);
-        cto = createBusinessRole(cto);
         admin = createBusinessRole(admin);
+
+        BusinessRoleDTO cto = TestDataFactory.createBusinessRoleDTO(null, "CTO", "Role for CTO", manager.getId());
+        cto = createBusinessRole(cto);
 
         // 9. Связываем роли с бизнес-ролями
         linkRoleToBusinessRole(employee.getId(), auditorRoleWP.getRole().getId());

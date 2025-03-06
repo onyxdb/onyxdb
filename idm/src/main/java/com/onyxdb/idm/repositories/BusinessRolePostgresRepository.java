@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import org.jooq.Condition;
@@ -12,6 +13,7 @@ import org.jooq.Result;
 import org.springframework.stereotype.Repository;
 
 import com.onyxdb.idm.generated.jooq.Tables;
+import com.onyxdb.idm.generated.jooq.tables.AccountBusinessRoleTable;
 import com.onyxdb.idm.generated.jooq.tables.BusinessRoleRoleTable;
 import com.onyxdb.idm.generated.jooq.tables.BusinessRoleTable;
 import com.onyxdb.idm.generated.jooq.tables.RoleTable;
@@ -33,6 +35,7 @@ import static org.jooq.impl.DSL.trueCondition;
 public class BusinessRolePostgresRepository implements BusinessRoleRepository {
     private final static BusinessRoleTable businessRoleTable = Tables.BUSINESS_ROLE_TABLE;
     private final static BusinessRoleRoleTable businessRoleToRoleTable = Tables.BUSINESS_ROLE_ROLE_TABLE;
+    private final static AccountBusinessRoleTable accountBusinessRoleTable = Tables.ACCOUNT_BUSINESS_ROLE_TABLE;
     private final static RoleTable roleTable = Tables.ROLE_TABLE;
     private final DSLContext dslContext;
 
@@ -80,14 +83,41 @@ public class BusinessRolePostgresRepository implements BusinessRoleRepository {
     @Override
     public List<BusinessRole> findAllParents(UUID id) {
         var parentTable = businessRoleTable.as("parent");
-        var cte = name("recursive_cte").as(select(businessRoleTable.fields())
-                .from(businessRoleTable)
-                .where(businessRoleTable.ID.eq(id))
-                .unionAll(select(parentTable.fields())
-                        .from(parentTable)
-                        .join(name("recursive_cte"))
-                        .on(parentTable.PARENT_ID.eq(field(name("recursive_cte", "id"), UUID.class)))
-                )
+        var cte = name("recursive_cte").as(
+                select(businessRoleTable.fields())
+                        .from(businessRoleTable)
+                        .where(businessRoleTable.ID.eq(id))
+                        .unionAll(
+                                select(parentTable.fields())
+                                        .from(parentTable)
+                                        .join(name("recursive_cte"))
+                                        .on(parentTable.PARENT_ID.eq(field(name("recursive_cte", "id"), UUID.class)))
+                        )
+        );
+
+        return dslContext.withRecursive(cte)
+                .selectFrom(cte)
+                .fetch()
+                .map(record -> BusinessRole.fromDAO(record.into(BusinessRoleTableRecord.class)));
+    }
+
+    @Override
+    public List<BusinessRole> findBusinessRolesWithHierarchyByAccountId(UUID accountId) {
+        var parentTable = businessRoleTable.as("parent");
+
+        // Определяем рекурсивный CTE
+        var cte = name("recursive_cte").as(
+                select(businessRoleTable.fields())
+                        .from(businessRoleTable)
+                        .innerJoin(accountBusinessRoleTable)
+                        .on(businessRoleTable.ID.eq(accountBusinessRoleTable.BUSINESS_ROLE_ID))
+                        .where(accountBusinessRoleTable.ACCOUNT_ID.eq(accountId))
+                        .unionAll(
+                                select(parentTable.fields())
+                                        .from(parentTable)
+                                        .join(name("recursive_cte"))
+                                        .on(parentTable.PARENT_ID.eq(field(name("recursive_cte", "id"), UUID.class)))
+                        )
         );
 
         return dslContext.withRecursive(cte)

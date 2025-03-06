@@ -42,6 +42,10 @@ public class ProductService {
         return new ProductTree(product, children);
     }
 
+    public List<Product> findAllParentProducts(UUID productId) {
+        return productRepository.findAllParentProducts(productId);
+    }
+
     public Product create(Product product) {
         return productRepository.create(product);
     }
