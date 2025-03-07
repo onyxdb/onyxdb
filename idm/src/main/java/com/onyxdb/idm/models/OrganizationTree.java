@@ -14,7 +14,7 @@ public record OrganizationTree(
 ) {
     public OrganizationTreeDTO toDTO() {
         return new OrganizationTreeDTO()
-                .item(orgUnit.toDTO())
-                .children(children.isEmpty() ? new ArrayList<>() : children.stream().map(OrganizationTree::toDTO).toList());
+                .unit(orgUnit.toDTO())
+                .items(children.isEmpty() ? new ArrayList<>() : children.stream().map(OrganizationTree::toDTO).toList());
     }
 }

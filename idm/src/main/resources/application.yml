@@ -20,8 +20,13 @@ spring:
   flyway:
     enabled: true
 
+logging:
+  level:
+    org.springframework.web.filter.CommonsRequestLoggingFilter:
+      DEBUG
+
 server:
-  port: ${ONYXDB_IDM_API_HTTP_PORT:9005}
+  port: ${ONYXDB_IDM_API_HTTP_PORT:9003}
 
 springdoc:
   api-docs:

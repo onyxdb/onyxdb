@@ -37,7 +37,7 @@ public class IdmApiIntegrationCreateTest extends PostgresTests {
     @BeforeEach
     public void setup() {
         this.webTestClient = WebTestClient.bindToServer()
-                .baseUrl("http://localhost:9005")
+                .baseUrl("http://localhost:9003")
                 .build();
     }
 

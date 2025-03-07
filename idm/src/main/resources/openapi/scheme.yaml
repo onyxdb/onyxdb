@@ -2228,21 +2228,21 @@ components:
       required:
         - name
         - description
-        - domainComponentId
+        - domainComponentIdr
 
     OrganizationTreeDTO:
       type: object
       properties:
-        item:
-          type: object
-          $ref: '#/components/schemas/OrganizationUnitDTO'
-        children:
+        items:
           type: array
           items:
             $ref: '#/components/schemas/OrganizationTreeDTO'
+        unit:
+          type: object
+          $ref: '#/components/schemas/OrganizationUnitDTO'
       required:
-        - item
-        - children
+        - unit
+        - items
 
     DomainTreeDTO:
       type: object
