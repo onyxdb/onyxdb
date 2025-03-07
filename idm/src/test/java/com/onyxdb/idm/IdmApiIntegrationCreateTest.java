@@ -88,8 +88,8 @@ public class IdmApiIntegrationCreateTest extends PostgresTests {
         account20 = createAccount(account20);
 
         // 2. Создаем Domain Components (DC)
-        DomainComponentDTO dc1 = TestDataFactory.createDomainComponentDTO(null, "DC1", "First Domain Component");
-        DomainComponentDTO dc2 = TestDataFactory.createDomainComponentDTO(null, "DC2", "Second Domain Component");
+        DomainComponentDTO dc1 = TestDataFactory.createDomainComponentDTO(null, "DC1", "Сonnectify");
+        DomainComponentDTO dc2 = TestDataFactory.createDomainComponentDTO(null, "DC2", "Outsource");
 
         dc1 = createDomainComponent(dc1);
         dc2 = createDomainComponent(dc2);

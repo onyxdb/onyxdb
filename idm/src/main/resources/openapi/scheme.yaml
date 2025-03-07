@@ -610,6 +610,38 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
+  /api/v1/domain-components/{dcId}/tree:
+    get:
+      summary: Get a domain component tree
+      operationId: getDomainComponentTree
+      tags:
+        - Domain Components
+      parameters:
+        - name: dcId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainTreeDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
   /api/v1/domain-components/{dcId}/organization-units/roots:
     get:
       summary: Получение корневых элементов organization-unit
@@ -853,6 +885,32 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/OrganizationUnitDTO'
+        '404':
+          description: Organization Unit не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+  /api/v1/organization-units/{ouId}/tree:
+    get:
+      summary: Получение дерева organization-unit
+      operationId: getOrganizationUnitTree
+      tags:
+        - Organization Units
+      parameters:
+        - name: ouId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Успешное дерева элементов
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationTreeDTO'
         '404':
           description: Organization Unit не найден
           content:
@@ -2102,6 +2160,8 @@ components:
           format: uuid
         name:
           type: string
+        shopName:
+          type: string
         description:
           type: string
         parentId:
@@ -2118,6 +2178,7 @@ components:
           format: date-time
       required:
         - name
+        - shop_name
         - description
 
     PaginatedBusinessRoleResponse:
@@ -2166,7 +2227,36 @@ components:
           format: uuid
       required:
         - name
+        - description
         - domainComponentId
+
+    OrganizationTreeDTO:
+      type: object
+      properties:
+        item:
+          type: object
+          $ref: '#/components/schemas/OrganizationUnitDTO'
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationTreeDTO'
+      required:
+        - item
+        - children
+
+    DomainTreeDTO:
+      type: object
+      properties:
+        item:
+          type: object
+          $ref: '#/components/schemas/DomainComponentDTO'
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationTreeDTO'
+      required:
+        - item
+        - children
 
     PaginatedOrganizationUnitResponse:
       type: object
@@ -2219,7 +2309,7 @@ components:
     ProductTreeDTO:
       type: object
       properties:
-        product:
+        item:
           type: object
           $ref: '#/components/schemas/ProductDTO'
         children:
@@ -2228,7 +2318,6 @@ components:
             $ref: '#/components/schemas/ProductTreeDTO'
       required:
         - product
-        - children
 
     PaginatedProductResponse:
       type: object

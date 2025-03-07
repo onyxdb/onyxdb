@@ -12,10 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.onyxdb.idm.generated.openapi.apis.DomainComponentsApi;
 import com.onyxdb.idm.generated.openapi.models.DomainComponentDTO;
+import com.onyxdb.idm.generated.openapi.models.DomainTreeDTO;
 import com.onyxdb.idm.generated.openapi.models.OrganizationUnitDTO;
 import com.onyxdb.idm.models.DomainComponent;
+import com.onyxdb.idm.models.DomainTree;
 import com.onyxdb.idm.models.OrganizationUnit;
 import com.onyxdb.idm.services.DomainComponentService;
+import com.onyxdb.idm.services.OrganizationUnitService;
 
 /**
  * @author ArtemFed
@@ -49,6 +52,12 @@ public class DomainComponentsController implements DomainComponentsApi {
         List<OrganizationUnit> data = domainComponentService.findRootOrgUnits(dcId);
         List<OrganizationUnitDTO> res = data.stream().map(OrganizationUnit::toDTO).toList();
         return ResponseEntity.ok(res);
+    }
+
+    @Override
+    public ResponseEntity<DomainTreeDTO> getDomainComponentTree(UUID dcId) {
+        DomainTree tree = domainComponentService.findDomainTree(dcId);
+        return ResponseEntity.ok(tree.toDTO());
     }
 
     @Override

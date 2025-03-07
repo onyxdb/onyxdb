@@ -15,6 +15,7 @@ public record OrganizationUnit(
         String description,
         UUID domainComponentId,
         UUID parentId,
+        UUID ownerId,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
@@ -25,6 +26,7 @@ public record OrganizationUnit(
                 organizationUnitDTO.getDescription(),
                 organizationUnitDTO.getDomainComponentId(),
                 organizationUnitDTO.getParentId(),
+                organizationUnitDTO.getOwnerId(),
                 organizationUnitDTO.getCreatedAt(),
                 organizationUnitDTO.getUpdatedAt()
         );
@@ -37,6 +39,7 @@ public record OrganizationUnit(
                 organizationUnitDAO.getDescription(),
                 organizationUnitDAO.getDomainComponentId(),
                 organizationUnitDAO.getParentId(),
+                organizationUnitDAO.getOwnerId(),
                 organizationUnitDAO.getCreatedAt(),
                 organizationUnitDAO.getUpdatedAt()
         );
@@ -49,6 +52,7 @@ public record OrganizationUnit(
                 .description(description)
                 .domainComponentId(domainComponentId)
                 .parentId(parentId)
+                .ownerId(ownerId)
                 .createdAt(createdAt)
                 .updatedAt(updatedAt);
     }

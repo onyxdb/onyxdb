@@ -14,7 +14,7 @@ public record ProductTree(
 ) {
     public ProductTreeDTO toDTO() {
         return new ProductTreeDTO()
-                .product(product.toDTO())
+                .item(product.toDTO())
                 .children(children.isEmpty() ? new ArrayList<>() : children.stream().map(ProductTree::toDTO).toList());
     }
 }

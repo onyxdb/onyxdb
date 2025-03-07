@@ -5,8 +5,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 import com.onyxdb.idm.models.Account;
+import com.onyxdb.idm.models.OrganizationTree;
 import com.onyxdb.idm.models.OrganizationUnit;
 import com.onyxdb.idm.models.PaginatedResult;
+import com.onyxdb.idm.models.ProductTree;
 
 /**
  * @author ArtemFed
@@ -17,6 +19,8 @@ public interface OrganizationUnitRepository {
     PaginatedResult<OrganizationUnit> findAll(UUID dcId, UUID parentOuId, Integer limit, Integer offset);
 
     List<OrganizationUnit> findRootOrgUnits(UUID dcId);
+
+    List<OrganizationTree> findChildrenTree(UUID orgId);
 
     OrganizationUnit create(OrganizationUnit organizationUnit);
 

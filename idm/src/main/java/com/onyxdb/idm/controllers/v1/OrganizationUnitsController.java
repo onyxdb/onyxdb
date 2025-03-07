@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.onyxdb.idm.generated.openapi.apis.OrganizationUnitsApi;
 import com.onyxdb.idm.generated.openapi.models.AccountDTO;
+import com.onyxdb.idm.generated.openapi.models.OrganizationTreeDTO;
 import com.onyxdb.idm.generated.openapi.models.OrganizationUnitDTO;
 import com.onyxdb.idm.generated.openapi.models.PaginatedOrganizationUnitResponse;
 import com.onyxdb.idm.models.Account;
+import com.onyxdb.idm.models.OrganizationTree;
 import com.onyxdb.idm.models.OrganizationUnit;
 import com.onyxdb.idm.models.PaginatedResult;
 import com.onyxdb.idm.services.OrganizationUnitService;
@@ -79,6 +81,12 @@ public class OrganizationUnitsController implements OrganizationUnitsApi {
         List<OrganizationUnit> data = organizationUnitService.findAllParentOrganizationUnits(ouId);
         List<OrganizationUnitDTO> res = data.stream().map(OrganizationUnit::toDTO).toList();
         return ResponseEntity.ok(res);
+    }
+
+    @Override
+    public ResponseEntity<OrganizationTreeDTO> getOrganizationUnitTree(UUID ouId) {
+        OrganizationTree tree = organizationUnitService.findChildrenTree(ouId);
+        return ResponseEntity.ok(tree.toDTO());
     }
 
     @Override

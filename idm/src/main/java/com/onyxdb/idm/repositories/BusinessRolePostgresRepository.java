@@ -142,6 +142,7 @@ public class BusinessRolePostgresRepository implements BusinessRoleRepository {
         var record = dslContext.insertInto(businessRoleTable)
                 .set(businessRoleTable.ID, UUID.randomUUID())
                 .set(businessRoleTable.NAME, businessRole.name())
+                .set(businessRoleTable.SHOP_NAME, businessRole.shop_name())
                 .set(businessRoleTable.DESCRIPTION, businessRole.description())
                 .set(businessRoleTable.PARENT_ID, businessRole.parentId())
                 .set(businessRoleTable.DATA, businessRole.getDataAsJsonb())
@@ -158,6 +159,7 @@ public class BusinessRolePostgresRepository implements BusinessRoleRepository {
     public BusinessRole update(BusinessRole businessRole) {
         var record = dslContext.update(businessRoleTable)
                 .set(businessRoleTable.NAME, businessRole.name())
+                .set(businessRoleTable.SHOP_NAME, businessRole.shop_name())
                 .set(businessRoleTable.DESCRIPTION, businessRole.description())
                 .set(businessRoleTable.PARENT_ID, businessRole.parentId())
                 .set(businessRoleTable.DATA, businessRole.getDataAsJsonb())

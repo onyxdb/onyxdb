@@ -8,8 +8,10 @@ import org.springframework.stereotype.Service;
 
 import com.onyxdb.idm.controllers.v1.ResourceNotFoundException;
 import com.onyxdb.idm.models.Account;
+import com.onyxdb.idm.models.OrganizationTree;
 import com.onyxdb.idm.models.OrganizationUnit;
 import com.onyxdb.idm.models.PaginatedResult;
+import com.onyxdb.idm.models.ProductTree;
 import com.onyxdb.idm.repositories.OrganizationUnitRepository;
 
 /**
@@ -36,6 +38,12 @@ public class OrganizationUnitService {
 
     public List<OrganizationUnit> findRootOrgUnits(UUID dcId) {
         return organizationUnitRepository.findRootOrgUnits(dcId);
+    }
+
+    public OrganizationTree findChildrenTree(UUID ouId) {
+        var orgUnit = findById(ouId);
+        var children = organizationUnitRepository.findChildrenTree(ouId);
+        return new OrganizationTree(orgUnit, children);
     }
 
     public List<OrganizationUnit> findAllParentOrganizationUnits(UUID parentOuId) {

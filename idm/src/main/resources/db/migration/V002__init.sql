@@ -1,4 +1,3 @@
-
 -- Создание таблицы для Product
 CREATE TABLE product_table (
     id UUID PRIMARY KEY,
