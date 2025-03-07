@@ -14,6 +14,7 @@ import com.onyxdb.idm.generated.jooq.Tables;
 import com.onyxdb.idm.generated.jooq.tables.AccountOuTable;
 import com.onyxdb.idm.generated.jooq.tables.AccountTable;
 import com.onyxdb.idm.generated.jooq.tables.OrganizationUnitTable;
+import com.onyxdb.idm.generated.jooq.tables.records.OrganizationUnitTableRecord;
 import com.onyxdb.idm.models.Account;
 import com.onyxdb.idm.models.OrganizationUnit;
 import com.onyxdb.idm.models.PaginatedResult;
@@ -21,6 +22,7 @@ import com.onyxdb.idm.models.PaginatedResult;
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.name;
 import static org.jooq.impl.DSL.select;
+import static org.jooq.impl.DSL.table;
 import static org.jooq.impl.DSL.trueCondition;
 
 /**
@@ -133,7 +135,22 @@ public class OrganizationUnitPostgresRepository implements OrganizationUnitRepos
 
     @Override
     public List<OrganizationUnit> findAllParentOrganizationUnits(UUID organizationUnitId) {
-        return List.of();
+        var cte = name("recursive_cte").as(
+                select(organizationUnitTable.fields())
+                        .from(organizationUnitTable)
+                        .where(organizationUnitTable.ID.eq(organizationUnitId))
+                        .unionAll(
+                                select(organizationUnitTable.fields())
+                                        .from(organizationUnitTable)
+                                        .join(table(name("recursive_cte")))
+                                        .on(field(name("recursive_cte", "parent_id"), org.jooq.impl.SQLDataType.UUID)
+                                                .eq(organizationUnitTable.ID)))
+        );
+
+        return dslContext.withRecursive(cte)
+                .selectFrom(cte)
+                .fetch()
+                .map(record -> OrganizationUnit.fromDAO(record.into(OrganizationUnitTableRecord.class)));
     }
 
     @Override

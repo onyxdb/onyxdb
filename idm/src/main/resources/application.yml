@@ -21,7 +21,7 @@ spring:
     enabled: true
 
 server:
-  port: ${ONYXDB_IDM_API_HTTP_PORT:9002}
+  port: ${ONYXDB_IDM_API_HTTP_PORT:9005}
 
 springdoc:
   api-docs:

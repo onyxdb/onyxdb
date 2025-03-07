@@ -75,6 +75,13 @@ public class OrganizationUnitsController implements OrganizationUnitsApi {
     }
 
     @Override
+    public ResponseEntity<List<OrganizationUnitDTO>> getOrganizationUnitParents(UUID ouId) {
+        List<OrganizationUnit> data = organizationUnitService.findAllParentOrganizationUnits(ouId);
+        List<OrganizationUnitDTO> res = data.stream().map(OrganizationUnit::toDTO).toList();
+        return ResponseEntity.ok(res);
+    }
+
+    @Override
     public ResponseEntity<OrganizationUnitDTO> updateOrganizationUnit(
             UUID ouId, @Valid OrganizationUnitDTO organizationUnitDTO
     ) {

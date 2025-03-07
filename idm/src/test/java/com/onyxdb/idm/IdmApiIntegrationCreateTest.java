@@ -1,6 +1,7 @@
 package com.onyxdb.idm;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -36,35 +37,79 @@ public class IdmApiIntegrationCreateTest extends PostgresTests {
     @BeforeEach
     public void setup() {
         this.webTestClient = WebTestClient.bindToServer()
-                .baseUrl("http://localhost:9002")
+                .baseUrl("http://localhost:9005")
                 .build();
     }
 
     @Test
     public void testCreateAllEntities() {
-        // 1. Создаем два Domain Components (DC)
+        // 1. Создаем аккаунты
+        AccountDTO account1 = TestDataFactory.createAccountDTO(null, "alexey.ivanov", "pass1", "alexey.ivanov@example.com", "Alexey", "Ivanov", null);
+        AccountDTO account2 = TestDataFactory.createAccountDTO(null, "ekaterina.smirnova", "pass2", "ekaterina.smirnova@example.com", "Ekaterina", "Smirnova", null);
+        AccountDTO account3 = TestDataFactory.createAccountDTO(null, "dmitry.petrov", "pass3", "dmitry.petrov@example.com", "Dmitry", "Petrov", null);
+        AccountDTO account4 = TestDataFactory.createAccountDTO(null, "olga.sidorova", "pass4", "olga.sidorova@example.com", "Olga", "Sidorova", null);
+        AccountDTO account5 = TestDataFactory.createAccountDTO(null, "sergey.kuznetsov", "pass5", "sergey.kuznetsov@example.com", "Sergey", "Kuznetsov", null);
+        AccountDTO account6 = TestDataFactory.createAccountDTO(null, "anna.volkova", "pass6", "anna.volkova@example.com", "Anna", "Volkova", null);
+        AccountDTO account7 = TestDataFactory.createAccountDTO(null, "pavel.morozov", "pass7", "pavel.morozov@example.com", "Pavel", "Morozov", null);
+        AccountDTO account8 = TestDataFactory.createAccountDTO(null, "marina.egorova", "pass8", "marina.egorova@example.com", "Marina", "Egorova", null);
+        AccountDTO account9 = TestDataFactory.createAccountDTO(null, "ivan.vasiliev", "pass9", "ivan.vasiliev@example.com", "Ivan", "Vasiliev", null);
+        AccountDTO account10 = TestDataFactory.createAccountDTO(null, "tatiana.romanova", "pass10", "tatiana.romanova@example.com", "Tatiana", "Romanova", null);
+        AccountDTO account11 = TestDataFactory.createAccountDTO(null, "vladimir.sokolov", "pass11", "vladimir.sokolov@example.com", "Vladimir", "Sokolov", null);
+        AccountDTO account12 = TestDataFactory.createAccountDTO(null, "elena.lebedeva", "pass12", "elena.lebedeva@example.com", "Elena", "Lebedeva", null);
+        AccountDTO account13 = TestDataFactory.createAccountDTO(null, "nikolay.kozlov", "pass13", "nikolay.kozlov@example.com", "Nikolay", "Kozlov", null);
+        AccountDTO account14 = TestDataFactory.createAccountDTO(null, "irina.fedorova", "pass14", "irina.fedorova@example.com", "Irina", "Fedorova", null);
+        AccountDTO account15 = TestDataFactory.createAccountDTO(null, "andrey.belov", "pass15", "andrey.belov@example.com", "Andrey", "Belov", null);
+        AccountDTO account16 = TestDataFactory.createAccountDTO(null, "svetlana.dmitrieva", "pass16", "svetlana.dmitrieva@example.com", "Svetlana", "Dmitrieva", null);
+        AccountDTO account17 = TestDataFactory.createAccountDTO(null, "mikhail.efimov", "pass17", "mikhail.efimov@example.com", "Mikhail", "Efimov", null);
+        AccountDTO account18 = TestDataFactory.createAccountDTO(null, "yulia.andreeva", "pass18", "yulia.andreeva@example.com", "Yulia", "Andreeva", null);
+        AccountDTO account19 = TestDataFactory.createAccountDTO(null, "artem.nikitin", "pass19", "artem.nikitin@example.com", "Artem", "Nikitin", null);
+        AccountDTO account20 = TestDataFactory.createAccountDTO(null, "nadezhda.tikhonova", "pass20", "nadezhda.tikhonova@example.com", "Nadezhda", "Tikhonova", null);
+
+        // Создаем аккаунты
+        account1 = createAccount(account1);
+        account2 = createAccount(account2);
+        account3 = createAccount(account3);
+        account4 = createAccount(account4);
+        account5 = createAccount(account5);
+        account6 = createAccount(account6);
+        account7 = createAccount(account7);
+        account8 = createAccount(account8);
+        account9 = createAccount(account9);
+        account10 = createAccount(account10);
+        account11 = createAccount(account11);
+        account12 = createAccount(account12);
+        account13 = createAccount(account13);
+        account14 = createAccount(account14);
+        account15 = createAccount(account15);
+        account16 = createAccount(account16);
+        account17 = createAccount(account17);
+        account18 = createAccount(account18);
+        account19 = createAccount(account19);
+        account20 = createAccount(account20);
+
+        // 2. Создаем Domain Components (DC)
         DomainComponentDTO dc1 = TestDataFactory.createDomainComponentDTO(null, "DC1", "First Domain Component");
         DomainComponentDTO dc2 = TestDataFactory.createDomainComponentDTO(null, "DC2", "Second Domain Component");
 
         dc1 = createDomainComponent(dc1);
         dc2 = createDomainComponent(dc2);
 
-        // 2. Создаем иерархию Organization Units (OU) для первого DC
-        OrganizationUnitDTO ou1 = TestDataFactory.createOrganizationUnitDTO(null, "OU1", "First OU", dc1.getId(), null);
-        OrganizationUnitDTO ou2 = TestDataFactory.createOrganizationUnitDTO(null, "OU2", "Second OU", dc1.getId(), null);
-        OrganizationUnitDTO ou3 = TestDataFactory.createOrganizationUnitDTO(null, "OU3", "Third OU", dc1.getId(), null);
+        // 3. Создаем Organization Units (OU) для DC1
+        OrganizationUnitDTO ou1 = TestDataFactory.createOrganizationUnitDTO(null, "OU1", "Управление", account1.getId(), dc1.getId(), null);
+        OrganizationUnitDTO ou2 = TestDataFactory.createOrganizationUnitDTO(null, "OU2", "Разработка", account2.getId(), dc1.getId(), null);
+        OrganizationUnitDTO ou3 = TestDataFactory.createOrganizationUnitDTO(null, "OU3", "Аналитика и данные", account3.getId(), dc1.getId(), null);
 
         ou1 = createOrganizationUnit(ou1);
         ou2 = createOrganizationUnit(ou2);
         ou3 = createOrganizationUnit(ou3);
 
-        // Создаем дочерние OU для каждого из трех главных OU
-        OrganizationUnitDTO ou1Child1 = TestDataFactory.createOrganizationUnitDTO(null, "OU1-Child1", "Child of OU1", dc1.getId(), ou1.getId());
-        OrganizationUnitDTO ou2Child1 = TestDataFactory.createOrganizationUnitDTO(null, "OU2-Child1", "Child of OU2", dc1.getId(), ou2.getId());
-        OrganizationUnitDTO ou2Child2 = TestDataFactory.createOrganizationUnitDTO(null, "OU2-Child2", "Child of OU2", dc1.getId(), ou2.getId());
-        OrganizationUnitDTO ou3Child1 = TestDataFactory.createOrganizationUnitDTO(null, "OU3-Child1", "Child of OU3", dc1.getId(), ou3.getId());
-        OrganizationUnitDTO ou3Child2 = TestDataFactory.createOrganizationUnitDTO(null, "OU3-Child2", "Child of OU3", dc1.getId(), ou3.getId());
-        OrganizationUnitDTO ou3Child3 = TestDataFactory.createOrganizationUnitDTO(null, "OU3-Child3", "Child of OU3", dc1.getId(), ou3.getId());
+        // 3.1. Дочерние OU для DC1
+        OrganizationUnitDTO ou1Child1 = TestDataFactory.createOrganizationUnitDTO(null, "OU1-Child1", "Отдел стратегии и планирования", account1.getId(), dc1.getId(), ou1.getId());
+        OrganizationUnitDTO ou2Child1 = TestDataFactory.createOrganizationUnitDTO(null, "OU2-Child1", "Команда Backend-разработки", account2.getId(), dc1.getId(), ou2.getId());
+        OrganizationUnitDTO ou2Child2 = TestDataFactory.createOrganizationUnitDTO(null, "OU2-Child2", "Команда Frontend-разработки", account2.getId(), dc1.getId(), ou2.getId());
+        OrganizationUnitDTO ou3Child1 = TestDataFactory.createOrganizationUnitDTO(null, "OU3-Child1", "Команда аналитики", account3.getId(), dc1.getId(), ou3.getId());
+        OrganizationUnitDTO ou3Child2 = TestDataFactory.createOrganizationUnitDTO(null, "OU3-Child2", "Команда Data Science", account3.getId(), dc1.getId(), ou3.getId());
+        OrganizationUnitDTO ou3Child3 = TestDataFactory.createOrganizationUnitDTO(null, "OU3-Child3", "Команда BI (Business Intelligence)", account3.getId(), dc1.getId(), ou3.getId());
 
         ou1Child1 = createOrganizationUnit(ou1Child1);
         ou2Child1 = createOrganizationUnit(ou2Child1);
@@ -73,145 +118,358 @@ public class IdmApiIntegrationCreateTest extends PostgresTests {
         ou3Child2 = createOrganizationUnit(ou3Child2);
         ou3Child3 = createOrganizationUnit(ou3Child3);
 
-        // Создаем еще одного ребенка для одного из детей OU3
-        OrganizationUnitDTO ou3Child1Child1 = TestDataFactory.createOrganizationUnitDTO(null, "OU3-Child1-Child1", "Child of OU3-Child1", dc1.getId(), ou3Child1.getId());
+        // 3.2. Вложенные OU для аналитики
+        OrganizationUnitDTO ou3Child1Child1 = TestDataFactory.createOrganizationUnitDTO(null, "OU3-Child1-Child1", "Группа анализа данных", account14.getId(), dc1.getId(), ou3Child1.getId());
         ou3Child1Child1 = createOrganizationUnit(ou3Child1Child1);
 
-        // 3. Создаем один OU для второго DC
-        OrganizationUnitDTO ou4 = TestDataFactory.createOrganizationUnitDTO(null, "OU4", "Fourth OU", dc2.getId(), null);
+        // 4. Создаем OU для DC2
+        OrganizationUnitDTO ou4 = TestDataFactory.createOrganizationUnitDTO(null, "OU4", "Маркетинг и продажи", account6.getId(), dc2.getId(), null);
         ou4 = createOrganizationUnit(ou4);
 
-        // Создаем дочерний OU для OU4
-        OrganizationUnitDTO ou4Child1 = TestDataFactory.createOrganizationUnitDTO(null, "OU4-Child1", "Child of OU4", dc2.getId(), ou4.getId());
+        OrganizationUnitDTO ou4Child1 = TestDataFactory.createOrganizationUnitDTO(null, "OU4-Child1", "Команда цифрового маркетинга", account6.getId(), dc2.getId(), ou4.getId());
         ou4Child1 = createOrganizationUnit(ou4Child1);
 
+        // 5. Связываем аккаунты с OU
+        linkAccountToOrganizationUnit(ou1.getId(), account1.getId()); // Управление
+        linkAccountToOrganizationUnit(ou1Child1.getId(), account4.getId()); // Отдел стратегии
+
+        linkAccountToOrganizationUnit(ou2.getId(), account2.getId()); // Разработка
+        linkAccountToOrganizationUnit(ou2Child1.getId(), account5.getId()); // Backend
+        linkAccountToOrganizationUnit(ou2Child1.getId(), account11.getId());
+        linkAccountToOrganizationUnit(ou2Child1.getId(), account9.getId());
+        linkAccountToOrganizationUnit(ou2Child2.getId(), account12.getId()); // Frontend
+        linkAccountToOrganizationUnit(ou2Child2.getId(), account13.getId());
+        linkAccountToOrganizationUnit(ou2Child2.getId(), account8.getId());
+
+        linkAccountToOrganizationUnit(ou3.getId(), account3.getId()); // Аналитика
+        linkAccountToOrganizationUnit(ou3Child1.getId(), account14.getId()); // Аналитика
+        linkAccountToOrganizationUnit(ou3Child1Child1.getId(), account15.getId()); // Группа анализа данных
+        linkAccountToOrganizationUnit(ou3Child1Child1.getId(), account16.getId());
+        linkAccountToOrganizationUnit(ou3Child2.getId(), account17.getId()); // Data Science
+        linkAccountToOrganizationUnit(ou3Child3.getId(), account18.getId()); // BI
+        linkAccountToOrganizationUnit(ou3Child3.getId(), account19.getId());
+        linkAccountToOrganizationUnit(ou3Child3.getId(), account20.getId());
+
+        linkAccountToOrganizationUnit(ou4.getId(), account6.getId()); // Маркетинг
+        linkAccountToOrganizationUnit(ou4Child1.getId(), account7.getId()); // Цифровой маркетинг
+        linkAccountToOrganizationUnit(ou4Child1.getId(), account10.getId());
+
         // 4. Создаем иерархию продуктов
-        ProductDTO rootProduct = TestDataFactory.createProductDTO(null, "RootProduct", "Root Product", null);
-        rootProduct = createProduct(rootProduct);
+        // 1. Главный продукт
+        ProductDTO connectify = TestDataFactory.createProductDTO(null, "Connectify", "Социальная сеть Connectify", null, account1.getId());
+        connectify = createProduct(connectify);
 
-        ProductDTO product1 = TestDataFactory.createProductDTO(null, "Product1", "First Product", rootProduct.getId());
-        ProductDTO product2 = TestDataFactory.createProductDTO(null, "Product2", "Second Product", rootProduct.getId());
-        ProductDTO product3 = TestDataFactory.createProductDTO(null, "Product3", "Third Product", rootProduct.getId());
+        // 2. Разработка (Development)
+        // 2.1. Production
+        ProductDTO production = TestDataFactory.createProductDTO(null, "Production", "Основной функционал Connectify", connectify.getId(), account1.getId());
+        production = createProduct(production);
 
-        product1 = createProduct(product1);
-        product2 = createProduct(product2);
-        product3 = createProduct(product3);
+        ProductDTO accountManagement = TestDataFactory.createProductDTO(null, "AccountManagement", "Управление аккаунтами", production.getId(), account2.getId());
+        ProductDTO messenger = TestDataFactory.createProductDTO(null, "Messenger", "Мессенджер", production.getId(), account3.getId());
+        ProductDTO contentFeed = TestDataFactory.createProductDTO(null, "ContentFeed", "Лента контента", production.getId(), account4.getId());
+        ProductDTO notifications = TestDataFactory.createProductDTO(null, "Notifications", "Система уведомлений", production.getId(), account5.getId());
 
-        ProductDTO product1Child1 = TestDataFactory.createProductDTO(null, "Product1Child1", "First Product Child1", product1.getId());
-        ProductDTO product1Child2 = TestDataFactory.createProductDTO(null, "Product1Child2", "First Product Child2", product1.getId());
+        accountManagement = createProduct(accountManagement);
+        messenger = createProduct(messenger);
+        contentFeed = createProduct(contentFeed);
+        notifications = createProduct(notifications);
 
-        product1Child1 = createProduct(product1Child1);
-        product1Child2 = createProduct(product1Child2);
+        // 2.2. Infrastructure
+        ProductDTO infrastructure = TestDataFactory.createProductDTO(null, "Infrastructure", "Инфраструктура платформы", connectify.getId(), account1.getId());
+        infrastructure = createProduct(infrastructure);
 
-        ProductDTO product2Child1 = TestDataFactory.createProductDTO(null, "Product2Child1", "Second Product Child1", product2.getId());
-        product2Child1 = createProduct(product2Child1);
+        ProductDTO k8sManagement = TestDataFactory.createProductDTO(null, "K8sManagement", "Управление Kubernetes", infrastructure.getId(), account6.getId());
+        ProductDTO monitoringLogging = TestDataFactory.createProductDTO(null, "MonitoringLogging", "Мониторинг и логирование", infrastructure.getId(), account7.getId());
 
-        // 5. Создаем аккаунты
-        AccountDTO account1 = TestDataFactory.createAccountDTO(null, "user1", "pass1", "user1@example.com", "User", "One", null);
-        AccountDTO account2 = TestDataFactory.createAccountDTO(null, "user2", "pass2", "user2@example.com", "User", "Two", null);
-        AccountDTO account3 = TestDataFactory.createAccountDTO(null, "user3", "pass3", "user3@example.com", "User", "Three", null);
-        AccountDTO account4 = TestDataFactory.createAccountDTO(null, "user4", "pass4", "user4@example.com", "User", "Four", null);
-        AccountDTO account5 = TestDataFactory.createAccountDTO(null, "user5", "pass5", "user5@example.com", "User", "Five", null);
+        k8sManagement = createProduct(k8sManagement);
+        monitoringLogging = createProduct(monitoringLogging);
 
-        account1 = createAccount(account1);
-        account2 = createAccount(account2);
-        account3 = createAccount(account3);
-        account4 = createAccount(account4);
-        account5 = createAccount(account5);
+        // 2.3. Backoffice
+        ProductDTO backoffice = TestDataFactory.createProductDTO(null, "Backoffice", "Внутренний инструмент для сотрудников", connectify.getId(), account1.getId());
+        backoffice = createProduct(backoffice);
 
-        // Создаем 2 аккаунта для второго DC
-        AccountDTO account6 = TestDataFactory.createAccountDTO(null, "user6", "pass6", "user6@example.com", "User", "Six", null);
-        AccountDTO account7 = TestDataFactory.createAccountDTO(null, "user7", "pass7", "user7@example.com", "User", "Seven", null);
+        // 3. Аналитика (Analytics)
+        ProductDTO analytics = TestDataFactory.createProductDTO(null, "Analytics", "Аналитика данных", connectify.getId(), account3.getId());
+        analytics = createProduct(analytics);
 
-        account6 = createAccount(account6);
-        account7 = createAccount(account7);
+        ProductDTO userAnalytics = TestDataFactory.createProductDTO(null, "UserAnalytics", "Аналитика пользователей", analytics.getId(), account14.getId());
+        ProductDTO businessIntelligence = TestDataFactory.createProductDTO(null, "BusinessIntelligence", "Бизнес-аналитика", analytics.getId(), account15.getId());
 
-        // 6. Связываем аккаунты с OU
-        linkAccountToOrganizationUnit(ou1.getId(), account1.getId());
-        linkAccountToOrganizationUnit(ou2.getId(), account2.getId());
-        linkAccountToOrganizationUnit(ou3.getId(), account3.getId());
-        linkAccountToOrganizationUnit(ou1Child1.getId(), account4.getId());
-        linkAccountToOrganizationUnit(ou2Child1.getId(), account5.getId());
-        linkAccountToOrganizationUnit(ou4.getId(), account6.getId());
-        linkAccountToOrganizationUnit(ou4Child1.getId(), account7.getId());
+        userAnalytics = createProduct(userAnalytics);
+        businessIntelligence = createProduct(businessIntelligence);
 
-        // 7. Создаем роли с разными наборами прав
-        PermissionDTO anyPermission = TestDataFactory.createPermissionDTO(null, "ANY", "IDM");
-        PermissionDTO createPermission = TestDataFactory.createPermissionDTO(null, "CREATE", "IDM");
-        PermissionDTO patchPermission = TestDataFactory.createPermissionDTO(null, "PATCH", "IDM");
-        PermissionDTO getPermission = TestDataFactory.createPermissionDTO(null, "GET", "IDM");
-        PermissionDTO deletePermission = TestDataFactory.createPermissionDTO(null, "DELETE", "IDM");
+        // 4. Маркетинг (Marketing)
+        ProductDTO marketing = TestDataFactory.createProductDTO(null, "Marketing", "Маркетинг и реклама", connectify.getId(), account6.getId());
+        marketing = createProduct(marketing);
 
-        RoleDTO adminOu1Role = TestDataFactory.createRoleDTO(null, "ADMIN", "Admin OU1", "Admin role for OU1", false, null, ou1.getId());
-        RoleDTO adminOu2Role = TestDataFactory.createRoleDTO(null, "ADMIN", "Admin OU2", "Admin role for OU2", false, null, ou2.getId());
-        RoleDTO adminMdbRole = TestDataFactory.createRoleDTO(null, "ADMIN", "Admin MDB", "Admin role for root product", false, rootProduct.getId(), null);
-        RoleDTO ownerOuRole = TestDataFactory.createRoleDTO(null, "OWNER", "Owner OU", "Owner role for OU", false, null, ou3.getId());
-        RoleDTO ownerProductRole = TestDataFactory.createRoleDTO(null, "OWNER", "Owner Product", "Owner role for Product", false, product1.getId(), null);
-        RoleDTO developerRole = TestDataFactory.createRoleDTO(null, "DEVELOPER", "Developer", "Developer role for leaf products", false, product1Child1.getId(), null);
-        RoleDTO auditorRole = TestDataFactory.createRoleDTO(null, "AUDITOR", "Auditor", "Auditor role for root products and OUs", false, rootProduct.getId(), null);
+        ProductDTO advertising = TestDataFactory.createProductDTO(null, "Advertising", "Рекламные кампании", marketing.getId(), account6.getId());
+        ProductDTO socialMediaIntegration = TestDataFactory.createProductDTO(null, "SocialMediaIntegration", "Интеграция с соцсетями", marketing.getId(), account10.getId());
 
-        RoleWithPermissionsDTO adminOu1RoleWP = TestDataFactory.createRoleWithPermissionsDTO(adminOu1Role, List.of(anyPermission));
-        RoleWithPermissionsDTO adminOu2RoleWP = TestDataFactory.createRoleWithPermissionsDTO(adminOu2Role, List.of(anyPermission));
-        RoleWithPermissionsDTO adminMdbRoleWP = TestDataFactory.createRoleWithPermissionsDTO(adminMdbRole, List.of(anyPermission));
-        RoleWithPermissionsDTO ownerOuRoleWP = TestDataFactory.createRoleWithPermissionsDTO(ownerOuRole, List.of(createPermission, patchPermission, getPermission));
-        RoleWithPermissionsDTO ownerProductRoleWP = TestDataFactory.createRoleWithPermissionsDTO(ownerProductRole, List.of(createPermission, patchPermission, getPermission));
-        RoleWithPermissionsDTO developerRoleWP = TestDataFactory.createRoleWithPermissionsDTO(developerRole, List.of(patchPermission, getPermission));
-        RoleWithPermissionsDTO auditorRoleWP = TestDataFactory.createRoleWithPermissionsDTO(auditorRole, List.of(getPermission));
+        advertising = createProduct(advertising);
+        socialMediaIntegration = createProduct(socialMediaIntegration);
 
-        adminOu1RoleWP = createRole(adminOu1RoleWP);
-        adminOu2RoleWP = createRole(adminOu2RoleWP);
-        adminMdbRoleWP = createRole(adminMdbRoleWP);
-        ownerOuRoleWP = createRole(ownerOuRoleWP);
-        ownerProductRoleWP = createRole(ownerProductRoleWP);
-        developerRoleWP = createRole(developerRoleWP);
-        auditorRoleWP = createRole(auditorRoleWP);
-
-        // 8. Создаем бизнес-роли и распределяем роли
+        // 8. Создаем бизнес-роли
         BusinessRoleDTO employee = TestDataFactory.createBusinessRoleDTO(null, "Employee", "Base employee", null);
         employee = createBusinessRole(employee);
 
-        BusinessRoleDTO javaDeveloper = TestDataFactory.createBusinessRoleDTO(null, "Java Developer", "Role for Java developers", employee.getId());
         BusinessRoleDTO admin = TestDataFactory.createBusinessRoleDTO(null, "Admin", "Role for admins", employee.getId());
+        BusinessRoleDTO developer = TestDataFactory.createBusinessRoleDTO(null, "Developer", "Role for developers", employee.getId());
+        BusinessRoleDTO backofficer = TestDataFactory.createBusinessRoleDTO(null, "Backoffice", "Role for backoffice", employee.getId());
         BusinessRoleDTO manager = TestDataFactory.createBusinessRoleDTO(null, "Manager", "Role for managers", employee.getId());
+        BusinessRoleDTO analytic = TestDataFactory.createBusinessRoleDTO(null, "Analytic", "Role for analytics", employee.getId());
+        BusinessRoleDTO marketer = TestDataFactory.createBusinessRoleDTO(null, "Marketer", "Role for marketers", employee.getId());
 
-        javaDeveloper = createBusinessRole(javaDeveloper);
+        backofficer = createBusinessRole(backofficer);
+        developer = createBusinessRole(developer);
         manager = createBusinessRole(manager);
         admin = createBusinessRole(admin);
+        analytic = createBusinessRole(analytic);
+        marketer = createBusinessRole(marketer);
 
-        BusinessRoleDTO cto = TestDataFactory.createBusinessRoleDTO(null, "CTO", "Role for CTO", manager.getId());
-        cto = createBusinessRole(cto);
+        BusinessRoleDTO backendDev = TestDataFactory.createBusinessRoleDTO(null, "Backend Developer", "Role for backend developer", manager.getId());
+        BusinessRoleDTO frontedDev = TestDataFactory.createBusinessRoleDTO(null, "Frontend Developer", "Role for frontend developer", manager.getId());
+        BusinessRoleDTO devOps = TestDataFactory.createBusinessRoleDTO(null, "DevOps", "Role for DevOps", manager.getId());
 
-        // 9. Связываем роли с бизнес-ролями
-        linkRoleToBusinessRole(employee.getId(), auditorRoleWP.getRole().getId());
+        backendDev = createBusinessRole(backendDev);
+        frontedDev = createBusinessRole(frontedDev);
+        devOps = createBusinessRole(devOps);
 
-        linkRoleToBusinessRole(javaDeveloper.getId(), developerRoleWP.getRole().getId());
-        linkRoleToBusinessRole(manager.getId(), ownerOuRoleWP.getRole().getId());
-        linkRoleToBusinessRole(cto.getId(), adminMdbRoleWP.getRole().getId());
-        linkRoleToBusinessRole(admin.getId(), adminOu1RoleWP.getRole().getId());
-        linkRoleToBusinessRole(admin.getId(), adminOu2RoleWP.getRole().getId());
+        // 7. Создаем права
+        PermissionDTO anyPermission = TestDataFactory.createPermissionDTO(null, "ANY", "IDM", null);
+        PermissionDTO createPermission = TestDataFactory.createPermissionDTO(null, "CREATE", "IDM", null);
+        PermissionDTO patchPermission = TestDataFactory.createPermissionDTO(null, "PATCH", "IDM", null);
+        PermissionDTO getPermission = TestDataFactory.createPermissionDTO(null, "GET", "IDM", null);
+        PermissionDTO deletePermission = TestDataFactory.createPermissionDTO(null, "DELETE", "IDM", null);
+        PermissionDTO anyDomainComponentPermission = TestDataFactory.createPermissionDTO(null, "ANY", "IDM", Map.of("entity", "domain-component"));
+        PermissionDTO anyBusinessRolePermission = TestDataFactory.createPermissionDTO(null, "ANY", "IDM", Map.of("entity", "business-role"));
+        PermissionDTO anyRolePermission = TestDataFactory.createPermissionDTO(null, "ANY", "IDM", Map.of("entity", "role"));
+        PermissionDTO anyPermissionPermission = TestDataFactory.createPermissionDTO(null, "ANY", "IDM", Map.of("entity", "permission"));
 
-        // 10. Делаем запросы ролей на аккаунты
-        RoleRequestDTO roleRequestAdminOu1 = createRoleRequestDTO(null, adminOu1RoleWP.getRole().getId(), account1.getId(), account1.getId(), "I'm the first user", RoleRequestDTO.StatusEnum.WAITING);
-        RoleRequestDTO roleRequestAdminOu2 = createRoleRequestDTO(null, adminOu2RoleWP.getRole().getId(), account1.getId(), account1.getId(), "I'm the first user", RoleRequestDTO.StatusEnum.WAITING);
-        RoleRequestDTO roleRequestAdminMDB = createRoleRequestDTO(null, adminMdbRoleWP.getRole().getId(), account1.getId(), account1.getId(), "I'm the first user", RoleRequestDTO.StatusEnum.WAITING);
-        RoleRequestDTO roleRequestDeveloper = createRoleRequestDTO(null, ownerProductRoleWP.getRole().getId(), account3.getId(), account1.getId(), "I'm the owner of the product 1", RoleRequestDTO.StatusEnum.WAITING);
+        // 8. Создаем роли
 
-        roleRequestAdminOu1 = createRoleRequest(roleRequestAdminOu1);
-        roleRequestAdminOu2 = createRoleRequest(roleRequestAdminOu2);
-        roleRequestAdminMDB = createRoleRequest(roleRequestAdminMDB);
-        roleRequestDeveloper = createRoleRequest(roleRequestDeveloper);
+        // Глобальные роли
+        RoleDTO domainComponentAdmin = TestDataFactory.createRoleDTO(null, "ADMIN", "Domain Component Admin", "Domain Component Admin", "Admin role for Domain Component", false, null, null);
+        RoleDTO businessRoleAdmin = TestDataFactory.createRoleDTO(null, "ADMIN", "Business Role Admin", "Business Role Admin", "Admin role for Business Role", false, null, null);
+        RoleDTO roleAdmin = TestDataFactory.createRoleDTO(null, "ADMIN", "Role Admin", "Role Admin", "Admin role for Role", false, null, null);
+        RoleDTO permissionAdmin = TestDataFactory.createRoleDTO(null, "ADMIN", "Permission Admin", "Permission Admin", "Admin role for Permission", false, null, null);
 
-        updateRoleRequestStatus(roleRequestAdminOu1.getId(), RoleRequestDTO.StatusEnum.APPROVED);
-        updateRoleRequestStatus(roleRequestAdminOu2.getId(), RoleRequestDTO.StatusEnum.APPROVED);
-        updateRoleRequestStatus(roleRequestAdminMDB.getId(), RoleRequestDTO.StatusEnum.APPROVED);
-        updateRoleRequestStatus(roleRequestDeveloper.getId(), RoleRequestDTO.StatusEnum.APPROVED);
+        RoleWithPermissionsDTO domainComponentAdminWP = TestDataFactory.createRoleWithPermissionsDTO(domainComponentAdmin, List.of(anyDomainComponentPermission));
+        RoleWithPermissionsDTO businessRoleAdminWP = TestDataFactory.createRoleWithPermissionsDTO(businessRoleAdmin, List.of(anyBusinessRolePermission));
+        RoleWithPermissionsDTO roleAdminWP = TestDataFactory.createRoleWithPermissionsDTO(roleAdmin, List.of(anyRolePermission));
+        RoleWithPermissionsDTO permissionAdminWP = TestDataFactory.createRoleWithPermissionsDTO(permissionAdmin, List.of(anyPermissionPermission));
 
-        // 11. Связи Аккаунтов и Бизнес ролей
-        linkAccountToBusinessRole(account2.getId(), admin.getId());
-        linkAccountToBusinessRole(account3.getId(), manager.getId());
-        linkAccountToBusinessRole(account4.getId(), javaDeveloper.getId());
+        domainComponentAdminWP = createRole(domainComponentAdminWP);
+        businessRoleAdminWP = createRole(businessRoleAdminWP);
+        roleAdminWP = createRole(roleAdminWP);
+        permissionAdminWP = createRole(permissionAdminWP);
 
-        linkAccountToBusinessRole(account6.getId(), cto.getId());
+        // Создаем роли для каждого продукта (viewer, editor, owner)
+        Map<String, RoleWithPermissionsDTO> accountManagementRoles = createProductRoles(accountManagement.getId(), "Account Management");
+        Map<String, RoleWithPermissionsDTO> messengerRoles = createProductRoles(messenger.getId(), "Messenger");
+        Map<String, RoleWithPermissionsDTO> contentFeedRoles = createProductRoles(contentFeed.getId(), "Content Feed");
+        Map<String, RoleWithPermissionsDTO> notificationsRoles = createProductRoles(notifications.getId(), "Notifications");
+        Map<String, RoleWithPermissionsDTO> k8sManagementRoles = createProductRoles(k8sManagement.getId(), "K8s Management");
+        Map<String, RoleWithPermissionsDTO> monitoringLoggingRoles = createProductRoles(monitoringLogging.getId(), "Monitoring Logging");
+        Map<String, RoleWithPermissionsDTO> backofficeRoles = createProductRoles(backoffice.getId(), "Backoffice");
+        Map<String, RoleWithPermissionsDTO> analyticsRoles = createProductRoles(analytics.getId(), "Analytics");
+        Map<String, RoleWithPermissionsDTO> userAnalyticsRoles = createProductRoles(userAnalytics.getId(), "User Analytics");
+        Map<String, RoleWithPermissionsDTO> businessIntelligenceRoles = createProductRoles(businessIntelligence.getId(), "Business Intelligence");
+        Map<String, RoleWithPermissionsDTO> marketingRoles1 = createProductRoles(marketing.getId(), "Marketing");
+
+        // Создаем роли для родительских продуктов (admin и auditor)
+        Map<String, RoleWithPermissionsDTO> connectifyRoles = createAdminAndAuditorRoles(connectify.getId(), "Connectify");
+        Map<String, RoleWithPermissionsDTO> productionRoles = createAdminAndAuditorRoles(production.getId(), "Production");
+        Map<String, RoleWithPermissionsDTO> infrastructureRoles = createAdminAndAuditorRoles(infrastructure.getId(), "Infrastructure");
+        Map<String, RoleWithPermissionsDTO> analyticsParentRoles = createAdminAndAuditorRoles(analytics.getId(), "Analytics");
+        Map<String, RoleWithPermissionsDTO> marketingRoles2 = createAdminAndAuditorRoles(marketing.getId(), "Marketing");
+
+        // Связываем роли с бизнес-ролями
+        // Admin
+        linkRoleToBusinessRole(admin.getId(), connectifyRoles.get("admin").getRole().getId());
+        linkRoleToBusinessRole(admin.getId(), productionRoles.get("admin").getRole().getId());
+        linkRoleToBusinessRole(admin.getId(), infrastructureRoles.get("admin").getRole().getId());
+        linkRoleToBusinessRole(admin.getId(), analyticsParentRoles.get("admin").getRole().getId());
+        linkRoleToBusinessRole(admin.getId(), marketingRoles2.get("admin").getRole().getId());
+
+        // Developer
+        linkRoleToBusinessRole(developer.getId(), accountManagementRoles.get("editor").getRole().getId());
+        linkRoleToBusinessRole(developer.getId(), messengerRoles.get("editor").getRole().getId());
+        linkRoleToBusinessRole(developer.getId(), contentFeedRoles.get("editor").getRole().getId());
+
+        // Backofficer
+        linkRoleToBusinessRole(backofficer.getId(), backofficeRoles.get("viewer").getRole().getId());
+
+        // Manager
+        linkRoleToBusinessRole(manager.getId(), accountManagementRoles.get("owner").getRole().getId());
+        linkRoleToBusinessRole(manager.getId(), k8sManagementRoles.get("owner").getRole().getId());
+
+        // Analytic
+        linkRoleToBusinessRole(analytic.getId(), userAnalyticsRoles.get("viewer").getRole().getId());
+        linkRoleToBusinessRole(analytic.getId(), businessIntelligenceRoles.get("viewer").getRole().getId());
+
+        // Marketer
+        linkRoleToBusinessRole(marketer.getId(), marketingRoles1.get("editor").getRole().getId());
+
+        // Backend Developer
+        linkRoleToBusinessRole(backendDev.getId(), accountManagementRoles.get("editor").getRole().getId());
+        linkRoleToBusinessRole(backendDev.getId(), notificationsRoles.get("editor").getRole().getId());
+
+        // Frontend Developer
+        linkRoleToBusinessRole(frontedDev.getId(), contentFeedRoles.get("editor").getRole().getId());
+        linkRoleToBusinessRole(frontedDev.getId(), messengerRoles.get("editor").getRole().getId());
+
+        // DevOps
+        linkRoleToBusinessRole(devOps.getId(), k8sManagementRoles.get("editor").getRole().getId());
+        linkRoleToBusinessRole(devOps.getId(), monitoringLoggingRoles.get("editor").getRole().getId());
+
+        // Заявка на роль Connectify Admin
+        RoleRequestDTO roleRequestConnectifyAdmin = createRoleRequestDTO(null, connectifyRoles.get("admin").getRole().getId(), account1.getId(), account1.getId(), "I'm the admin", RoleRequestDTO.StatusEnum.WAITING);
+        roleRequestConnectifyAdmin = createRoleRequest(roleRequestConnectifyAdmin);
+        updateRoleRequestStatus(roleRequestConnectifyAdmin.getId(), RoleRequestDTO.StatusEnum.APPROVED);
+
+        // Заявка на роль Production Admin
+        RoleRequestDTO roleRequestProductionAdmin = createRoleRequestDTO(null, productionRoles.get("admin").getRole().getId(), account1.getId(), account1.getId(), "I'm the admin", RoleRequestDTO.StatusEnum.WAITING);
+        roleRequestProductionAdmin = createRoleRequest(roleRequestProductionAdmin);
+        updateRoleRequestStatus(roleRequestProductionAdmin.getId(), RoleRequestDTO.StatusEnum.APPROVED);
+
+        // Заявка на роль Account Management Editor
+        RoleRequestDTO roleRequestAccountManagementEditor = createRoleRequestDTO(null, accountManagementRoles.get("editor").getRole().getId(), account2.getId(), account1.getId(), "I'm a developer", RoleRequestDTO.StatusEnum.WAITING);
+        roleRequestAccountManagementEditor = createRoleRequest(roleRequestAccountManagementEditor);
+        updateRoleRequestStatus(roleRequestAccountManagementEditor.getId(), RoleRequestDTO.StatusEnum.APPROVED);
+
+        // Заявка на роль Messenger Editor
+        RoleRequestDTO roleRequestMessengerEditor = createRoleRequestDTO(null, messengerRoles.get("editor").getRole().getId(), account2.getId(), account1.getId(), "I'm a developer", RoleRequestDTO.StatusEnum.WAITING);
+        roleRequestMessengerEditor = createRoleRequest(roleRequestMessengerEditor);
+        updateRoleRequestStatus(roleRequestMessengerEditor.getId(), RoleRequestDTO.StatusEnum.APPROVED);
+
+        // Заявка на роль Backoffice Viewer
+        RoleRequestDTO roleRequestBackofficeViewer = createRoleRequestDTO(null, backofficeRoles.get("viewer").getRole().getId(), account3.getId(), account1.getId(), "I'm a backofficer", RoleRequestDTO.StatusEnum.WAITING);
+        roleRequestBackofficeViewer = createRoleRequest(roleRequestBackofficeViewer);
+        updateRoleRequestStatus(roleRequestBackofficeViewer.getId(), RoleRequestDTO.StatusEnum.APPROVED);
+
+        // Заявка на роль Account Management Owner
+        RoleRequestDTO roleRequestAccountManagementOwner = createRoleRequestDTO(null, accountManagementRoles.get("owner").getRole().getId(), account4.getId(), account1.getId(), "I'm a manager", RoleRequestDTO.StatusEnum.WAITING);
+        roleRequestAccountManagementOwner = createRoleRequest(roleRequestAccountManagementOwner);
+        updateRoleRequestStatus(roleRequestAccountManagementOwner.getId(), RoleRequestDTO.StatusEnum.APPROVED);
+
+        // Заявка на роль K8s Management Owner
+        RoleRequestDTO roleRequestK8sManagementOwner = createRoleRequestDTO(null, k8sManagementRoles.get("owner").getRole().getId(), account4.getId(), account1.getId(), "I'm a manager", RoleRequestDTO.StatusEnum.WAITING);
+        roleRequestK8sManagementOwner = createRoleRequest(roleRequestK8sManagementOwner);
+        updateRoleRequestStatus(roleRequestK8sManagementOwner.getId(), RoleRequestDTO.StatusEnum.APPROVED);
+
+        // Заявка на роль User Analytics Viewer
+        RoleRequestDTO roleRequestUserAnalyticsViewer = createRoleRequestDTO(null, userAnalyticsRoles.get("viewer").getRole().getId(), account5.getId(), account1.getId(), "I'm an analyst", RoleRequestDTO.StatusEnum.WAITING);
+        roleRequestUserAnalyticsViewer = createRoleRequest(roleRequestUserAnalyticsViewer);
+        updateRoleRequestStatus(roleRequestUserAnalyticsViewer.getId(), RoleRequestDTO.StatusEnum.APPROVED);
+
+        // Заявка на роль Business Intelligence Viewer
+        RoleRequestDTO roleRequestBusinessIntelligenceViewer = createRoleRequestDTO(null, businessIntelligenceRoles.get("viewer").getRole().getId(), account5.getId(), account1.getId(), "I'm an analyst", RoleRequestDTO.StatusEnum.WAITING);
+        roleRequestBusinessIntelligenceViewer = createRoleRequest(roleRequestBusinessIntelligenceViewer);
+        updateRoleRequestStatus(roleRequestBusinessIntelligenceViewer.getId(), RoleRequestDTO.StatusEnum.APPROVED);
+
+        // Заявка на роль Account Management Editor
+        RoleRequestDTO roleRequestAccountManagementEditor2 = createRoleRequestDTO(null, accountManagementRoles.get("editor").getRole().getId(), account7.getId(), account1.getId(), "I'm a backend developer", RoleRequestDTO.StatusEnum.WAITING);
+        roleRequestAccountManagementEditor2 = createRoleRequest(roleRequestAccountManagementEditor2);
+        updateRoleRequestStatus(roleRequestAccountManagementEditor2.getId(), RoleRequestDTO.StatusEnum.APPROVED);
+
+        // Заявка на роль Marketing Editor
+        RoleRequestDTO roleRequestMarketingEditor = createRoleRequestDTO(null, marketingRoles1.get("editor").getRole().getId(), account6.getId(), account1.getId(), "I'm a marketer", RoleRequestDTO.StatusEnum.WAITING);
+        roleRequestMarketingEditor = createRoleRequest(roleRequestMarketingEditor);
+        updateRoleRequestStatus(roleRequestMarketingEditor.getId(), RoleRequestDTO.StatusEnum.APPROVED);
+
+        // Заявка на роль Notifications Editor
+        RoleRequestDTO roleRequestNotificationsEditor = createRoleRequestDTO(null, notificationsRoles.get("editor").getRole().getId(), account7.getId(), account1.getId(), "I'm a backend developer", RoleRequestDTO.StatusEnum.WAITING);
+        roleRequestNotificationsEditor = createRoleRequest(roleRequestNotificationsEditor);
+        updateRoleRequestStatus(roleRequestNotificationsEditor.getId(), RoleRequestDTO.StatusEnum.APPROVED);
+
+        // Заявка на роль Content Feed Editor
+        RoleRequestDTO roleRequestContentFeedEditor = createRoleRequestDTO(null, contentFeedRoles.get("editor").getRole().getId(), account8.getId(), account1.getId(), "I'm a frontend developer", RoleRequestDTO.StatusEnum.WAITING);
+        roleRequestContentFeedEditor = createRoleRequest(roleRequestContentFeedEditor);
+        updateRoleRequestStatus(roleRequestContentFeedEditor.getId(), RoleRequestDTO.StatusEnum.APPROVED);
+
+        // Заявка на роль Messenger Editor
+        RoleRequestDTO roleRequestMessengerEditor3 = createRoleRequestDTO(null, messengerRoles.get("editor").getRole().getId(), account8.getId(), account1.getId(), "I'm a frontend developer", RoleRequestDTO.StatusEnum.WAITING);
+        roleRequestMessengerEditor3 = createRoleRequest(roleRequestMessengerEditor3);
+        updateRoleRequestStatus(roleRequestMessengerEditor3.getId(), RoleRequestDTO.StatusEnum.APPROVED);
+
+        // Заявка на роль K8s Management Editor
+        RoleRequestDTO roleRequestK8sManagementEditor = createRoleRequestDTO(null, k8sManagementRoles.get("editor").getRole().getId(), account9.getId(), account1.getId(), "I'm a DevOps engineer", RoleRequestDTO.StatusEnum.WAITING);
+        roleRequestK8sManagementEditor = createRoleRequest(roleRequestK8sManagementEditor);
+        updateRoleRequestStatus(roleRequestK8sManagementEditor.getId(), RoleRequestDTO.StatusEnum.APPROVED);
+
+        // Заявка на роль Monitoring Logging Editor
+        RoleRequestDTO roleRequestMonitoringLoggingEditor = createRoleRequestDTO(null, monitoringLoggingRoles.get("editor").getRole().getId(), account9.getId(), account1.getId(), "I'm a DevOps engineer", RoleRequestDTO.StatusEnum.WAITING);
+        roleRequestMonitoringLoggingEditor = createRoleRequest(roleRequestMonitoringLoggingEditor);
+        updateRoleRequestStatus(roleRequestMonitoringLoggingEditor.getId(), RoleRequestDTO.StatusEnum.APPROVED);
+    }
+
+    /**
+     * Создает роли viewer, editor, owner для указанного продукта.
+     *
+     * @param productId   ID продукта, для которого создаются роли.
+     * @param productName Название продукта (для формирования имени роли).
+     * @return Map<String, RoleWithPermissionsDTO>, содержащий созданные роли.
+     */
+    public Map<String, RoleWithPermissionsDTO> createProductRoles(UUID productId, String productName) {
+        PermissionDTO anyPermission = TestDataFactory.createPermissionDTO(null, "ANY", "IDM", null);
+        PermissionDTO createPermission = TestDataFactory.createPermissionDTO(null, "CREATE", "IDM", null);
+        PermissionDTO patchPermission = TestDataFactory.createPermissionDTO(null, "PATCH", "IDM", null);
+        PermissionDTO getPermission = TestDataFactory.createPermissionDTO(null, "GET", "IDM", null);
+
+        // Создаем роли
+        RoleDTO viewerRole = TestDataFactory.createRoleDTO(null, "VIEWER", productName + " Viewer", productName + " Viewer", "Viewer role for " + productName, false, productId, null);
+        RoleDTO editorRole = TestDataFactory.createRoleDTO(null, "EDITOR", productName + " Editor", productName + " Editor", "Editor role for " + productName, false, productId, null);
+        RoleDTO ownerRole = TestDataFactory.createRoleDTO(null, "OWNER", productName + " Owner", productName + " Owner", "Owner role for " + productName, false, productId, null);
+
+        // Создаем RoleWithPermissions
+        RoleWithPermissionsDTO viewerRoleWP = TestDataFactory.createRoleWithPermissionsDTO(viewerRole, List.of(getPermission));
+        RoleWithPermissionsDTO editorRoleWP = TestDataFactory.createRoleWithPermissionsDTO(editorRole, List.of(getPermission, createPermission, patchPermission));
+        RoleWithPermissionsDTO ownerRoleWP = TestDataFactory.createRoleWithPermissionsDTO(ownerRole, List.of(anyPermission));
+
+        // Вызываем createRole
+        viewerRoleWP = createRole(viewerRoleWP);
+        editorRoleWP = createRole(editorRoleWP);
+        ownerRoleWP = createRole(ownerRoleWP);
+
+        // Возвращаем созданные роли
+        return Map.of(
+                "viewer", viewerRoleWP,
+                "editor", editorRoleWP,
+                "owner", ownerRoleWP
+        );
+    }
+
+    /**
+     * Создает роли admin и auditor для указанного продукта.
+     *
+     * @param productId   ID продукта, для которого создаются роли.
+     * @param productName Название продукта (для формирования имени роли).
+     * @return Map<String, RoleWithPermissionsDTO>, содержащий созданные роли.
+     */
+    public Map<String, RoleWithPermissionsDTO> createAdminAndAuditorRoles(UUID productId, String productName) {
+        PermissionDTO anyPermission = TestDataFactory.createPermissionDTO(null, "ANY", "IDM", null);
+        PermissionDTO createPermission = TestDataFactory.createPermissionDTO(null, "CREATE", "IDM", null);
+        PermissionDTO patchPermission = TestDataFactory.createPermissionDTO(null, "PATCH", "IDM", null);
+        PermissionDTO getPermission = TestDataFactory.createPermissionDTO(null, "GET", "IDM", null);
+        PermissionDTO deletePermission = TestDataFactory.createPermissionDTO(null, "DELETE", "IDM", null);
+
+        // Создаем роли
+        RoleDTO adminRole = TestDataFactory.createRoleDTO(null, "ADMIN", productName + " Admin", productName + " Admin", "Admin role for " + productName, false, productId, null);
+        RoleDTO auditorRole = TestDataFactory.createRoleDTO(null, "AUDITOR", productName + " Auditor", productName + " Auditor", "Auditor role for " + productName, false, productId, null);
+
+        // Создаем RoleWithPermissions
+        RoleWithPermissionsDTO adminRoleWP = TestDataFactory.createRoleWithPermissionsDTO(adminRole, List.of(getPermission, createPermission, patchPermission, deletePermission));
+        RoleWithPermissionsDTO auditorRoleWP = TestDataFactory.createRoleWithPermissionsDTO(auditorRole, List.of(getPermission));
+
+        // Вызываем createRole
+        adminRoleWP = createRole(adminRoleWP);
+        auditorRoleWP = createRole(auditorRoleWP);
+
+        // Возвращаем созданные роли
+        return Map.of(
+                "admin", adminRoleWP,
+                "auditor", auditorRoleWP
+        );
     }
 
     private DomainComponentDTO createDomainComponent(DomainComponentDTO domainComponentDTO) {
