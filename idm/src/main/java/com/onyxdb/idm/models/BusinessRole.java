@@ -18,6 +18,7 @@ import com.onyxdb.idm.generated.openapi.models.BusinessRoleDTO;
 public record BusinessRole(
         UUID id,
         String name,
+        String shop_name,
         String description,
         UUID parentId,
         Map<String, Object> data,
@@ -32,6 +33,7 @@ public record BusinessRole(
         return new BusinessRole(
                 businessRoleDTO.getId(),
                 businessRoleDTO.getName(),
+                businessRoleDTO.getShopName(),
                 businessRoleDTO.getDescription(),
                 businessRoleDTO.getParentId(),
                 businessRoleDTO.getData(),
@@ -49,6 +51,7 @@ public record BusinessRole(
         return new BusinessRole(
                 businessRoleDAO.getId(),
                 businessRoleDAO.getName(),
+                businessRoleDAO.getShopName(),
                 businessRoleDAO.getDescription(),
                 businessRoleDAO.getParentId(),
                 dataMap,
@@ -61,6 +64,7 @@ public record BusinessRole(
         return new BusinessRoleDTO()
                 .id(id)
                 .name(name)
+                .shopName(shop_name)
                 .description(description)
                 .parentId(parentId)
                 .data(data)

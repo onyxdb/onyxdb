@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import org.jooq.Condition;
@@ -14,10 +15,18 @@ import com.onyxdb.idm.generated.jooq.Tables;
 import com.onyxdb.idm.generated.jooq.tables.AccountOuTable;
 import com.onyxdb.idm.generated.jooq.tables.AccountTable;
 import com.onyxdb.idm.generated.jooq.tables.OrganizationUnitTable;
+import com.onyxdb.idm.generated.jooq.tables.records.OrganizationUnitTableRecord;
 import com.onyxdb.idm.models.Account;
+import com.onyxdb.idm.models.OrganizationTree;
 import com.onyxdb.idm.models.OrganizationUnit;
 import com.onyxdb.idm.models.PaginatedResult;
+import com.onyxdb.idm.models.Product;
+import com.onyxdb.idm.models.ProductTree;
 
+import static org.jooq.impl.DSL.field;
+import static org.jooq.impl.DSL.name;
+import static org.jooq.impl.DSL.select;
+import static org.jooq.impl.DSL.table;
 import static org.jooq.impl.DSL.trueCondition;
 
 /**
@@ -64,6 +73,29 @@ public class OrganizationUnitPostgresRepository implements OrganizationUnitRepos
     }
 
     @Override
+    public List<OrganizationUnit> findRootOrgUnits(UUID dcId) {
+        return dslContext.selectFrom(organizationUnitTable)
+                .where(organizationUnitTable.DOMAIN_COMPONENT_ID.eq(dcId)
+                        .and(organizationUnitTable.PARENT_ID.isNull()
+                                .or(organizationUnitTable.PARENT_ID.eq(organizationUnitTable.ID))))
+                .fetch(OrganizationUnit::fromDAO);
+    }
+
+    @Override
+    public List<OrganizationTree> findChildrenTree(UUID orgId) {
+        List<OrganizationUnit> children = fetchChildrenFromDb(orgId);
+        return children.stream()
+                .map(child -> new OrganizationTree(child, findChildrenTree(child.id())))
+                .collect(Collectors.toList());
+    }
+
+    private List<OrganizationUnit> fetchChildrenFromDb(UUID parentId) {
+        return dslContext.selectFrom(organizationUnitTable)
+                .where(organizationUnitTable.PARENT_ID.eq(parentId))
+                .fetchInto(OrganizationUnit.class);
+    }
+
+    @Override
     public OrganizationUnit create(OrganizationUnit organizationUnit) {
         var record = dslContext.insertInto(organizationUnitTable)
                 .set(organizationUnitTable.ID, UUID.randomUUID())
@@ -71,6 +103,7 @@ public class OrganizationUnitPostgresRepository implements OrganizationUnitRepos
                 .set(organizationUnitTable.DESCRIPTION, organizationUnit.description())
                 .set(organizationUnitTable.DOMAIN_COMPONENT_ID, organizationUnit.domainComponentId())
                 .set(organizationUnitTable.PARENT_ID, organizationUnit.parentId())
+                .set(organizationUnitTable.OWNER_ID, organizationUnit.ownerId())
                 .set(organizationUnitTable.CREATED_AT, LocalDateTime.now())
                 .set(organizationUnitTable.UPDATED_AT, LocalDateTime.now())
                 .returning()
@@ -117,6 +150,26 @@ public class OrganizationUnitPostgresRepository implements OrganizationUnitRepos
                 .where(organizationUnitAccountTable.OU_ID.eq(ouId)
                         .and(organizationUnitAccountTable.ACCOUNT_ID.eq(accountId)))
                 .execute();
+    }
+
+    @Override
+    public List<OrganizationUnit> findAllParentOrganizationUnits(UUID organizationUnitId) {
+        var cte = name("recursive_cte").as(
+                select(organizationUnitTable.fields())
+                        .from(organizationUnitTable)
+                        .where(organizationUnitTable.ID.eq(organizationUnitId))
+                        .unionAll(
+                                select(organizationUnitTable.fields())
+                                        .from(organizationUnitTable)
+                                        .join(table(name("recursive_cte")))
+                                        .on(field(name("recursive_cte", "parent_id"), org.jooq.impl.SQLDataType.UUID)
+                                                .eq(organizationUnitTable.ID)))
+        );
+
+        return dslContext.withRecursive(cte)
+                .selectFrom(cte)
+                .fetch()
+                .map(record -> OrganizationUnit.fromDAO(record.into(OrganizationUnitTableRecord.class)));
     }
 
     @Override

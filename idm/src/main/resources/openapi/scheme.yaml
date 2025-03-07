@@ -23,6 +23,9 @@ paths:
                   type: string
                 password:
                   type: string
+              required:
+                - username
+                - password
       responses:
         '200':
           description: Успешная аутентификация
@@ -35,6 +38,9 @@ paths:
                     type: string
                   refreshToken:
                     type: string
+                required:
+                  - accessToken
+                  - refreshToken
         '400':
           description: Неверные учетные данные
           content:
@@ -56,6 +62,8 @@ paths:
               properties:
                 refreshToken:
                   type: string
+              required:
+                - refreshToken
       responses:
         '204':
           description: Успешный выход
@@ -80,6 +88,8 @@ paths:
               properties:
                 refreshToken:
                   type: string
+              required:
+                - refreshToken
       responses:
         '200':
           description: Успешное обновление токена
@@ -90,6 +100,8 @@ paths:
                 properties:
                   accessToken:
                     type: string
+                required:
+                  - accessToken
         '400':
           description: Неверный запрос
           content:
@@ -121,6 +133,11 @@ paths:
                     type: array
                     items:
                       type: string
+                required:
+                  - id
+                  - username
+                  - email
+                  - roles
         '401':
           description: Пользователь не авторизован
           content:
@@ -593,6 +610,66 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
+  /api/v1/domain-components/{dcId}/tree:
+    get:
+      summary: Get a domain component tree
+      operationId: getDomainComponentTree
+      tags:
+        - Domain Components
+      parameters:
+        - name: dcId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainTreeDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+  /api/v1/domain-components/{dcId}/organization-units/roots:
+    get:
+      summary: Получение корневых элементов organization-unit
+      operationId: getDomainComponentRootsOrganizationUnits
+      tags:
+        - Domain Components
+      parameters:
+        - name: dcId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Успешное получение корневых элементов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrganizationUnitDTO'
+        '404':
+          description: Organization Unit не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
 
   /api/v1/organization-units:
     get:
@@ -780,6 +857,60 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/OrganizationUnitDTO'
+        '404':
+          description: Organization Unit не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+  /api/v1/organization-units/{ouId}/parents:
+    get:
+      summary: Получение родительских элементов organization-unit
+      operationId: getOrganizationUnitParents
+      tags:
+        - Organization Units
+      parameters:
+        - name: ouId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Успешное получение родительских элементов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrganizationUnitDTO'
+        '404':
+          description: Organization Unit не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+  /api/v1/organization-units/{ouId}/tree:
+    get:
+      summary: Получение дерева organization-unit
+      operationId: getOrganizationUnitTree
+      tags:
+        - Organization Units
+      parameters:
+        - name: ouId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Успешное дерева элементов
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationTreeDTO'
         '404':
           description: Organization Unit не найден
           content:
@@ -1885,6 +2016,11 @@ components:
         updatedAt:
           type: string
           format: date-time
+      required:
+        - username
+        - email
+        - firstname
+        - lastname
 
     PaginatedAccountResponse:
       type: object
@@ -1899,6 +2035,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AccountDTO'
+      required:
+        - totalCount
+        - startPosition
+        - endPosition
+        - data
 
     PermissionDTO:
       type: object
@@ -1919,6 +2060,9 @@ components:
         updatedAt:
           type: string
           format: date-time
+      required:
+        - actionType
+        - resourceType
 
     RoleDTO:
       type: object
@@ -1948,6 +2092,12 @@ components:
         updatedAt:
           type: string
           format: date-time
+      required:
+        - roleType
+        - name
+        - shopName
+        - isShopHidden
+        - description
 
     RoleWithPermissionsDTO:
       type: object
@@ -1959,6 +2109,9 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PermissionDTO'
+      required:
+        - role
+        - permissions
 
     PaginatedRoleResponse:
       type: object
@@ -1973,6 +2126,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/RoleDTO'
+      required:
+        - totalCount
+        - startPosition
+        - endPosition
+        - data
 
     DomainComponentDTO:
       type: object
@@ -1990,6 +2148,9 @@ components:
         updatedAt:
           type: string
           format: date-time
+      required:
+        - name
+        - description
 
     BusinessRoleDTO:
       type: object
@@ -1998,6 +2159,8 @@ components:
           type: string
           format: uuid
         name:
+          type: string
+        shopName:
           type: string
         description:
           type: string
@@ -2013,6 +2176,10 @@ components:
         updatedAt:
           type: string
           format: date-time
+      required:
+        - name
+        - shop_name
+        - description
 
     PaginatedBusinessRoleResponse:
       type: object
@@ -2027,6 +2194,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/BusinessRoleDTO'
+      required:
+        - totalCount
+        - startPosition
+        - endPosition
+        - data
 
     OrganizationUnitDTO:
       type: object
@@ -2053,6 +2225,38 @@ components:
         ownerId:
           type: string
           format: uuid
+      required:
+        - name
+        - description
+        - domainComponentIdr
+
+    OrganizationTreeDTO:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationTreeDTO'
+        unit:
+          type: object
+          $ref: '#/components/schemas/OrganizationUnitDTO'
+      required:
+        - unit
+        - items
+
+    DomainTreeDTO:
+      type: object
+      properties:
+        item:
+          type: object
+          $ref: '#/components/schemas/DomainComponentDTO'
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationTreeDTO'
+      required:
+        - item
+        - children
 
     PaginatedOrganizationUnitResponse:
       type: object
@@ -2067,6 +2271,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/OrganizationUnitDTO'
+      required:
+        - totalCount
+        - startPosition
+        - endPosition
+        - data
 
     ProductDTO:
       type: object
@@ -2093,17 +2302,22 @@ components:
         updatedAt:
           type: string
           format: date-time
+      required:
+        - name
+        - description
 
     ProductTreeDTO:
       type: object
       properties:
-        product:
+        item:
           type: object
           $ref: '#/components/schemas/ProductDTO'
         children:
           type: array
           items:
             $ref: '#/components/schemas/ProductTreeDTO'
+      required:
+        - product
 
     PaginatedProductResponse:
       type: object
@@ -2118,6 +2332,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ProductDTO'
+      required:
+        - totalCount
+        - startPosition
+        - endPosition
+        - data
 
     RoleRequestDTO:
       type: object
@@ -2145,6 +2364,11 @@ components:
         resolvedAt:
           type: string
           format: date-time
+      required:
+        - roleId
+        - accountId
+        - reason
+        - status
 
     PaginatedRoleRequestResponse:
       type: object
@@ -2159,6 +2383,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/RoleRequestDTO'
+      required:
+        - totalCount
+        - startPosition
+        - endPosition
+        - data
 
     BadRequestResponse:
       type: object

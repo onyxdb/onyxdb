@@ -1,5 +1,6 @@
 package com.onyxdb.idm.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -8,8 +9,10 @@ import org.springframework.stereotype.Service;
 
 import com.onyxdb.idm.controllers.v1.ResourceNotFoundException;
 import com.onyxdb.idm.models.DomainComponent;
+import com.onyxdb.idm.models.DomainTree;
+import com.onyxdb.idm.models.OrganizationTree;
+import com.onyxdb.idm.models.OrganizationUnit;
 import com.onyxdb.idm.repositories.DomainComponentRepository;
-import com.onyxdb.idm.repositories.OrganizationUnitRepository;
 
 /**
  * @author ArtemFed
@@ -18,7 +21,7 @@ import com.onyxdb.idm.repositories.OrganizationUnitRepository;
 @RequiredArgsConstructor
 public class DomainComponentService {
     private final DomainComponentRepository domainComponentRepository;
-    private final OrganizationUnitRepository organizationUnitRepository;
+    private final OrganizationUnitService organizationUnitService;
 
     public DomainComponent findById(UUID id) {
         return domainComponentRepository
@@ -40,5 +43,19 @@ public class DomainComponentService {
 
     public void delete(UUID id) {
         domainComponentRepository.delete(id);
+    }
+
+    public List<OrganizationUnit> findRootOrgUnits(UUID dcId) {
+        return organizationUnitService.findRootOrgUnits(dcId);
+    }
+
+    public DomainTree findDomainTree(UUID dcId) {
+        DomainComponent domainComponent = findById(dcId);
+        var roots = findRootOrgUnits(dcId);
+        List<OrganizationTree> list = new ArrayList<>();
+        for (OrganizationUnit root : roots) {
+            list.add(organizationUnitService.findChildrenTree(root.id()));
+        }
+        return new DomainTree(domainComponent, list);
     }
 }

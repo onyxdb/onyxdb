@@ -22,6 +22,8 @@ public interface BusinessRoleRepository {
 
     List<BusinessRole> findAllParents(UUID id);
 
+    List<BusinessRole> findBusinessRolesWithHierarchyByAccountId(UUID accountId);
+
     BusinessRole create(BusinessRole businessRole);
 
     BusinessRole update(BusinessRole businessRole);

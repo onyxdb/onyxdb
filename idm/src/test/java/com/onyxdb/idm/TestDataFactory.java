@@ -2,6 +2,7 @@ package com.onyxdb.idm;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -33,13 +34,14 @@ public class TestDataFactory {
     }
 
     public static RoleDTO createRoleDTO(
-            UUID id, String roleType, String name, String description, Boolean isShopHidden, UUID productId, UUID orgUnitId
+            UUID id, String roleType, String name, String shopName, String description, Boolean isShopHidden, UUID productId, UUID orgUnitId
     ) {
         RoleDTO roleDTO = new RoleDTO();
         roleDTO.setId(id != null ? id : UUID.randomUUID());
         roleDTO.setRoleType(roleType);
-        roleDTO.setIsShopHidden(isShopHidden);
         roleDTO.setName(name);
+        roleDTO.setShopName(shopName);
+        roleDTO.setIsShopHidden(isShopHidden);
         roleDTO.setDescription(description);
         roleDTO.setProductId(productId);
         roleDTO.setOrgUnitId(orgUnitId);
@@ -51,19 +53,21 @@ public class TestDataFactory {
     ) {
         BusinessRoleDTO businessRoleDTO = new BusinessRoleDTO();
         businessRoleDTO.setId(id != null ? id : UUID.randomUUID());
-        businessRoleDTO.setName(name);
+        businessRoleDTO.setName(name.toLowerCase().replace(' ', '-'));
+        businessRoleDTO.setShopName(name);
         businessRoleDTO.setDescription(description);
         businessRoleDTO.setParentId(parentId);
         return businessRoleDTO;
     }
 
     public static PermissionDTO createPermissionDTO(
-            UUID id, String actionType, String resourceType
+            UUID id, String actionType, String resourceType, Map<String, Object> data
     ) {
         PermissionDTO permissionDTO = new PermissionDTO();
         permissionDTO.setId(id != null ? id : UUID.randomUUID());
         permissionDTO.setActionType(actionType);
         permissionDTO.setResourceType(resourceType);
+        permissionDTO.setData(data != null ? data : new HashMap<>());
         return permissionDTO;
     }
 
@@ -92,11 +96,12 @@ public class TestDataFactory {
     }
 
     public static OrganizationUnitDTO createOrganizationUnitDTO(
-            UUID id, String name, String description, UUID domainComponentId, UUID parentId
+            UUID id, String name, String description, UUID ownerId, UUID domainComponentId, UUID parentId
     ) {
         OrganizationUnitDTO organizationUnitDTO = new OrganizationUnitDTO();
         organizationUnitDTO.setId(id != null ? id : UUID.randomUUID());
         organizationUnitDTO.setName(name);
+        organizationUnitDTO.setOwnerId(ownerId);
         organizationUnitDTO.setDescription(description);
         organizationUnitDTO.setDomainComponentId(domainComponentId);
         organizationUnitDTO.setParentId(parentId);
@@ -104,13 +109,14 @@ public class TestDataFactory {
     }
 
     public static ProductDTO createProductDTO(
-            UUID id, String name, String description, UUID parentId
+            UUID id, String name, String description, UUID parentId, UUID ownerId
     ) {
         ProductDTO productDTO = new ProductDTO();
         productDTO.setId(id != null ? id : UUID.randomUUID());
         productDTO.setName(name);
         productDTO.setDescription(description);
         productDTO.setParentId(parentId);
+        productDTO.setOwnerId(ownerId);
         return productDTO;
     }
 

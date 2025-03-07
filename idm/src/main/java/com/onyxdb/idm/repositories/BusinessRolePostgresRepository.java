@@ -12,6 +12,7 @@ import org.jooq.Result;
 import org.springframework.stereotype.Repository;
 
 import com.onyxdb.idm.generated.jooq.Tables;
+import com.onyxdb.idm.generated.jooq.tables.AccountBusinessRoleTable;
 import com.onyxdb.idm.generated.jooq.tables.BusinessRoleRoleTable;
 import com.onyxdb.idm.generated.jooq.tables.BusinessRoleTable;
 import com.onyxdb.idm.generated.jooq.tables.RoleTable;
@@ -23,6 +24,7 @@ import com.onyxdb.idm.models.Role;
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.name;
 import static org.jooq.impl.DSL.select;
+import static org.jooq.impl.DSL.table;
 import static org.jooq.impl.DSL.trueCondition;
 
 /**
@@ -33,6 +35,7 @@ import static org.jooq.impl.DSL.trueCondition;
 public class BusinessRolePostgresRepository implements BusinessRoleRepository {
     private final static BusinessRoleTable businessRoleTable = Tables.BUSINESS_ROLE_TABLE;
     private final static BusinessRoleRoleTable businessRoleToRoleTable = Tables.BUSINESS_ROLE_ROLE_TABLE;
+    private final static AccountBusinessRoleTable accountBusinessRoleTable = Tables.ACCOUNT_BUSINESS_ROLE_TABLE;
     private final static RoleTable roleTable = Tables.ROLE_TABLE;
     private final DSLContext dslContext;
 
@@ -79,16 +82,54 @@ public class BusinessRolePostgresRepository implements BusinessRoleRepository {
 
     @Override
     public List<BusinessRole> findAllParents(UUID id) {
-        var parentTable = businessRoleTable.as("parent");
-        var cte = name("recursive_cte").as(select(businessRoleTable.fields())
-                .from(businessRoleTable)
-                .where(businessRoleTable.ID.eq(id))
-                .unionAll(select(parentTable.fields())
-                        .from(parentTable)
-                        .join(name("recursive_cte"))
-                        .on(parentTable.PARENT_ID.eq(field(name("recursive_cte", "id"), UUID.class)))
-                )
+        var cte = name("recursive_cte").as(
+                select(businessRoleTable.fields())
+                        .from(businessRoleTable)
+                        .where(businessRoleTable.ID.eq(id))
+                        .unionAll(
+                                select(businessRoleTable.fields())
+                                        .from(businessRoleTable)
+                                        .join(table(name("recursive_cte")))
+                                        .on(field(name("recursive_cte", "parent_id"), org.jooq.impl.SQLDataType.UUID)
+                                                .eq(businessRoleTable.ID)))
         );
+
+        return dslContext.withRecursive(cte)
+                .selectFrom(cte)
+                .fetch()
+                .map(record -> BusinessRole.fromDAO(record.into(BusinessRoleTableRecord.class)));
+    }
+
+    @Override
+    public List<BusinessRole> findBusinessRolesWithHierarchyByAccountId(UUID accountId) {
+        var parentTable = businessRoleTable.as("parent");
+        var cte = name("recursive_cte").as(
+                select(businessRoleTable.fields())
+                        .from(businessRoleTable)
+                        .innerJoin(accountBusinessRoleTable)
+                        .on(businessRoleTable.ID.eq(accountBusinessRoleTable.BUSINESS_ROLE_ID))
+                        .where(accountBusinessRoleTable.ACCOUNT_ID.eq(accountId))
+                        .unionAll(
+                                select(businessRoleTable.fields())
+                                        .from(businessRoleTable)
+                                        .join(table(name("recursive_cte")))
+                                        .on(field(name("recursive_cte", "parent_id"), org.jooq.impl.SQLDataType.UUID)
+                                                .eq(businessRoleTable.ID)))
+        );
+
+//        var cte = name("recursive_cte").as(
+//                select(businessRoleTable.fields())
+//                        .from(businessRoleTable)
+//                        .innerJoin(accountBusinessRoleTable)
+//                        .on(businessRoleTable.ID.eq(accountBusinessRoleTable.BUSINESS_ROLE_ID))
+//                        .where(accountBusinessRoleTable.ACCOUNT_ID.eq(accountId))
+//                        .unionAll(
+//                                select(parentTable.fields())
+//                                        .from(parentTable)
+//                                        .join(name("recursive_cte"))
+//                                        .on(parentTable.PARENT_ID.eq(field(name("recursive_cte", "id"), UUID.class)))
+//                        )
+//        );
 
         return dslContext.withRecursive(cte)
                 .selectFrom(cte)
@@ -101,6 +142,7 @@ public class BusinessRolePostgresRepository implements BusinessRoleRepository {
         var record = dslContext.insertInto(businessRoleTable)
                 .set(businessRoleTable.ID, UUID.randomUUID())
                 .set(businessRoleTable.NAME, businessRole.name())
+                .set(businessRoleTable.SHOP_NAME, businessRole.shop_name())
                 .set(businessRoleTable.DESCRIPTION, businessRole.description())
                 .set(businessRoleTable.PARENT_ID, businessRole.parentId())
                 .set(businessRoleTable.DATA, businessRole.getDataAsJsonb())
@@ -117,6 +159,7 @@ public class BusinessRolePostgresRepository implements BusinessRoleRepository {
     public BusinessRole update(BusinessRole businessRole) {
         var record = dslContext.update(businessRoleTable)
                 .set(businessRoleTable.NAME, businessRole.name())
+                .set(businessRoleTable.SHOP_NAME, businessRole.shop_name())
                 .set(businessRoleTable.DESCRIPTION, businessRole.description())
                 .set(businessRoleTable.PARENT_ID, businessRole.parentId())
                 .set(businessRoleTable.DATA, businessRole.getDataAsJsonb())

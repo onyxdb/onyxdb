@@ -15,6 +15,10 @@ import com.onyxdb.idm.generated.jooq.tables.ProductTable;
 import com.onyxdb.idm.models.Product;
 import com.onyxdb.idm.models.ProductTree;
 
+import static org.jooq.impl.DSL.field;
+import static org.jooq.impl.DSL.name;
+import static org.jooq.impl.DSL.select;
+
 /**
  * @author ArtemFed
  */
@@ -79,6 +83,25 @@ public class ProductPostgresRepository implements ProductRepository {
     public List<Product> findAll() {
         return dslContext.selectFrom(productTable)
                 .fetch(Product::fromDAO);
+    }
+
+    @Override
+    public List<Product> findAllParentProducts(UUID productId) {
+        var parentTable = productTable.as("parent");
+        var cte = name("recursive_cte").as(
+                select(productTable.fields())
+                        .from(productTable)
+                        .where(productTable.ID.eq(productId))
+                        .unionAll(
+                                select(parentTable.fields())
+                                        .from(parentTable)
+                                        .join(name("recursive_cte"))
+                                        .on(parentTable.PARENT_ID.eq(field(name("recursive_cte", "id"), UUID.class)))
+                        )
+        );
+        return dslContext.withRecursive(cte)
+                .selectFrom(cte)
+                .fetchInto(Product.class);
     }
 
     @Override

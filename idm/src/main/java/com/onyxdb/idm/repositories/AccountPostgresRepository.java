@@ -14,19 +14,28 @@ import org.springframework.stereotype.Repository;
 
 import com.onyxdb.idm.generated.jooq.Tables;
 import com.onyxdb.idm.generated.jooq.tables.AccountBusinessRoleTable;
+import com.onyxdb.idm.generated.jooq.tables.AccountOuTable;
 import com.onyxdb.idm.generated.jooq.tables.AccountRoleTable;
 import com.onyxdb.idm.generated.jooq.tables.AccountTable;
+import com.onyxdb.idm.generated.jooq.tables.BusinessRoleRoleTable;
 import com.onyxdb.idm.generated.jooq.tables.BusinessRoleTable;
+import com.onyxdb.idm.generated.jooq.tables.OrganizationUnitTable;
 import com.onyxdb.idm.generated.jooq.tables.PermissionTable;
+import com.onyxdb.idm.generated.jooq.tables.ProductTable;
 import com.onyxdb.idm.generated.jooq.tables.RolePermissionTable;
 import com.onyxdb.idm.generated.jooq.tables.RoleTable;
 import com.onyxdb.idm.generated.jooq.tables.records.AccountTableRecord;
 import com.onyxdb.idm.models.Account;
 import com.onyxdb.idm.models.BusinessRole;
+import com.onyxdb.idm.models.OrganizationUnit;
 import com.onyxdb.idm.models.PaginatedResult;
 import com.onyxdb.idm.models.Permission;
+import com.onyxdb.idm.models.Product;
 import com.onyxdb.idm.models.Role;
 
+import static org.jooq.impl.DSL.field;
+import static org.jooq.impl.DSL.name;
+import static org.jooq.impl.DSL.select;
 import static org.jooq.impl.DSL.trueCondition;
 
 /**
@@ -37,11 +46,16 @@ import static org.jooq.impl.DSL.trueCondition;
 public class AccountPostgresRepository implements AccountRepository {
     private final static AccountTable accountTable = Tables.ACCOUNT_TABLE;
     private final static AccountBusinessRoleTable accountBusinessRoleTable = Tables.ACCOUNT_BUSINESS_ROLE_TABLE;
-    private final static BusinessRoleTable businessRoleTable = Tables.BUSINESS_ROLE_TABLE;
     private final static AccountRoleTable accountRoleTable = Tables.ACCOUNT_ROLE_TABLE;
+    private final static BusinessRoleTable businessRoleTable = Tables.BUSINESS_ROLE_TABLE;
+    private final static BusinessRoleRoleTable businessRoleToRoleTable = Tables.BUSINESS_ROLE_ROLE_TABLE;
     private final static RolePermissionTable rolePermissionTable = Tables.ROLE_PERMISSION_TABLE;
-    private final static PermissionTable permissionTable = Tables.PERMISSION_TABLE;
     private final static RoleTable roleTable = Tables.ROLE_TABLE;
+    private final static PermissionTable permissionTable = Tables.PERMISSION_TABLE;
+    private final static ProductTable productTable = Tables.PRODUCT_TABLE;
+    private final static OrganizationUnitTable organizationUnitTable = Tables.ORGANIZATION_UNIT_TABLE;
+    private final static AccountOuTable organizationUnitAccountTable = Tables.ACCOUNT_OU_TABLE;
+
     private final DSLContext dslContext;
 
     @Override

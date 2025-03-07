@@ -19,4 +19,12 @@ public interface PermissionRepository {
     Permission update(Permission permission);
 
     void delete(UUID id);
+
+    List<Permission> findAccountPermissionsToProduct(UUID accountId, UUID productId, String permissionType);
+
+    List<Permission> findAccountPermissionsToOrgUnit(UUID accountId, UUID orgUnitId, String permissionType);
+
+    List<Permission> findAllAccountPermissions(UUID accountId, String resourceType);
+
+    List<Permission> findAccountPermissionsViaBusinessRoles(UUID accountId, String resourceType, String permissionType);
 }
