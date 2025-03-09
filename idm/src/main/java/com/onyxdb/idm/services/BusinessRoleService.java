@@ -35,8 +35,6 @@ public class BusinessRoleService {
     }
 
     public List<BusinessRole> findParents(UUID id) {
-        var res = businessRoleRepository.findBusinessRolesWithHierarchyByAccountId(UUID.fromString("ea14d1b2-9cc4-4aeb-ac13-1a8b51c6806a"));
-
         return businessRoleRepository.findAllParents(id);
     }
 

@@ -1795,15 +1795,31 @@ paths:
       operationId: getAllProducts
       tags:
         - Products
+      parameters:
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ProductDTO'
+                $ref: '#/components/schemas/PaginatedProductResponse'
         '400':
           description: Bad Request
           content:
@@ -1849,6 +1865,27 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ProductDTO'
+        '404':
+          description: Продукт не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+  /api/v1/products-tree:
+    get:
+      summary: Получение дочерних элементов всех продуктов деревом
+      operationId: getAllProductTree
+      tags:
+        - Products
+      responses:
+        '200':
+          description: Успешное получение деревьев элементов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductTreeDTO'
         '404':
           description: Продукт не найден
           content:
@@ -2345,7 +2382,7 @@ components:
           items:
             $ref: '#/components/schemas/ProductTreeDTO'
       required:
-        - product
+        - item
 
     PaginatedProductResponse:
       type: object

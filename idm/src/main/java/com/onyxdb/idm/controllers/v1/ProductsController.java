@@ -11,8 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.onyxdb.idm.generated.openapi.apis.ProductsApi;
+import com.onyxdb.idm.generated.openapi.models.PaginatedProductResponse;
 import com.onyxdb.idm.generated.openapi.models.ProductDTO;
 import com.onyxdb.idm.generated.openapi.models.ProductTreeDTO;
+import com.onyxdb.idm.models.PaginatedResult;
 import com.onyxdb.idm.models.Product;
 import com.onyxdb.idm.models.ProductTree;
 import com.onyxdb.idm.services.ProductService;
@@ -39,6 +41,25 @@ public class ProductsController implements ProductsApi {
     }
 
     @Override
+    public ResponseEntity<List<ProductTreeDTO>> getAllProductTree() {
+        List<ProductTree> productTrees = productService.findAllTrees();
+        List<ProductTreeDTO> productTreesDTOs = productTrees.stream().map(ProductTree::toDTO).toList();
+        return ResponseEntity.ok(productTreesDTOs);
+    }
+
+    @Override
+    public ResponseEntity<PaginatedProductResponse> getAllProducts(String search, Integer limit, Integer offset) {
+        PaginatedResult<Product> products = productService.findAll(search, limit, offset);
+        List<ProductDTO> productDTOs = products.data().stream().map(Product::toDTO).toList();
+        return ResponseEntity.ok(new PaginatedProductResponse()
+                .data(productDTOs)
+                .totalCount(products.totalCount())
+                .startPosition(products.startPosition())
+                .endPosition(products.endPosition())
+        );
+    }
+
+    @Override
     public ResponseEntity<ProductDTO> getProductById(UUID productId) {
         Product product = productService.findById(productId);
         return ResponseEntity.ok(product.toDTO());
@@ -60,13 +81,6 @@ public class ProductsController implements ProductsApi {
     @Override
     public ResponseEntity<List<ProductDTO>> getProductsRoots() {
         List<Product> products = productService.findRootProducts();
-        List<ProductDTO> productDTOs = products.stream().map(Product::toDTO).toList();
-        return ResponseEntity.ok(productDTOs);
-    }
-
-    @Override
-    public ResponseEntity<List<ProductDTO>> getAllProducts() {
-        List<Product> products = productService.findAll();
         List<ProductDTO> productDTOs = products.stream().map(Product::toDTO).toList();
         return ResponseEntity.ok(productDTOs);
     }

@@ -12,6 +12,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 import com.onyxdb.idm.generated.openapi.models.PaginatedAccountResponse;
 import com.onyxdb.idm.generated.openapi.models.PaginatedBusinessRoleResponse;
+import com.onyxdb.idm.generated.openapi.models.PaginatedProductResponse;
 import com.onyxdb.idm.generated.openapi.models.PaginatedRoleResponse;
 import com.onyxdb.idm.generated.openapi.models.PermissionDTO;
 import com.onyxdb.idm.generated.openapi.models.ProductDTO;
@@ -64,7 +65,7 @@ class IdmApiIntegrationGetTest extends PostgresTests {
                 .uri("/api/v1/products")
                 .exchange()
                 .expectStatus().isOk()
-                .expectBodyList(ProductDTO.class)
+                .expectBody(PaginatedProductResponse.class)
                 .returnResult()
                 .getResponseBody();
 
