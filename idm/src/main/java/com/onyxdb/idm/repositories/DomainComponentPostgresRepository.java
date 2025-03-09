@@ -32,6 +32,7 @@ public class DomainComponentPostgresRepository implements DomainComponentReposit
     @Override
     public List<DomainComponent> findAll() {
         return dslContext.selectFrom(domainComponentTable)
+                .orderBy(domainComponentTable.CREATED_AT)
                 .fetch(DomainComponent::fromDAO);
     }
 

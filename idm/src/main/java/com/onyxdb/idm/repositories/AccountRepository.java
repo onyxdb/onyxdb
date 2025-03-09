@@ -30,13 +30,13 @@ public interface AccountRepository {
 
     List<BusinessRole> getAccountBusinessRoles(UUID accountId);
 
+    List<OrganizationUnit> getAccountOrganizationUnits(UUID accountId);
+
     List<Role> getAccountRoles(UUID accountId);
 
     void addBusinessRole(UUID accountId, UUID businessRoleId);
 
     void removeBusinessRole(UUID accountId, UUID businessRoleId);
-
-    List<Role> getRoles(UUID accountId);
 
     void addRole(UUID accountId, UUID roleId);
 

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.onyxdb.idm.controllers.v1.ResourceNotFoundException;
 import com.onyxdb.idm.models.Account;
 import com.onyxdb.idm.models.BusinessRole;
+import com.onyxdb.idm.models.OrganizationUnit;
 import com.onyxdb.idm.models.PaginatedResult;
 import com.onyxdb.idm.models.Permission;
 import com.onyxdb.idm.models.Role;
@@ -70,6 +71,10 @@ public class AccountService {
 
     public List<BusinessRole> getBusinessRoles(UUID accountId) {
         return accountRepository.getAccountBusinessRoles(accountId);
+    }
+
+    public List<OrganizationUnit> getOrganizationUnits(UUID accountId) {
+        return accountRepository.getAccountOrganizationUnits(accountId);
     }
 
     public void addRole(UUID accountId, UUID roleId) {

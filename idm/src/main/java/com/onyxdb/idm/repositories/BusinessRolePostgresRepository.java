@@ -57,6 +57,7 @@ public class BusinessRolePostgresRepository implements BusinessRoleRepository {
 
         Result<BusinessRoleTableRecord> records = dslContext.selectFrom(businessRoleTable)
                 .where(condition)
+                .orderBy(businessRoleTable.CREATED_AT)
                 .limit(limit)
                 .offset(offset)
                 .fetch();
@@ -96,13 +97,13 @@ public class BusinessRolePostgresRepository implements BusinessRoleRepository {
 
         return dslContext.withRecursive(cte)
                 .selectFrom(cte)
+                .orderBy(businessRoleTable.CREATED_AT)
                 .fetch()
                 .map(record -> BusinessRole.fromDAO(record.into(BusinessRoleTableRecord.class)));
     }
 
     @Override
     public List<BusinessRole> findBusinessRolesWithHierarchyByAccountId(UUID accountId) {
-        var parentTable = businessRoleTable.as("parent");
         var cte = name("recursive_cte").as(
                 select(businessRoleTable.fields())
                         .from(businessRoleTable)
@@ -117,22 +118,9 @@ public class BusinessRolePostgresRepository implements BusinessRoleRepository {
                                                 .eq(businessRoleTable.ID)))
         );
 
-//        var cte = name("recursive_cte").as(
-//                select(businessRoleTable.fields())
-//                        .from(businessRoleTable)
-//                        .innerJoin(accountBusinessRoleTable)
-//                        .on(businessRoleTable.ID.eq(accountBusinessRoleTable.BUSINESS_ROLE_ID))
-//                        .where(accountBusinessRoleTable.ACCOUNT_ID.eq(accountId))
-//                        .unionAll(
-//                                select(parentTable.fields())
-//                                        .from(parentTable)
-//                                        .join(name("recursive_cte"))
-//                                        .on(parentTable.PARENT_ID.eq(field(name("recursive_cte", "id"), UUID.class)))
-//                        )
-//        );
-
         return dslContext.withRecursive(cte)
                 .selectFrom(cte)
+                .orderBy(businessRoleTable.CREATED_AT)
                 .fetch()
                 .map(record -> BusinessRole.fromDAO(record.into(BusinessRoleTableRecord.class)));
     }
@@ -201,6 +189,7 @@ public class BusinessRolePostgresRepository implements BusinessRoleRepository {
                 .where(businessRoleToRoleTable.BUSINESS_ROLE_ID.eq(businessRoleId))
                 .fetch(link -> dslContext.selectFrom(roleTable)
                         .where(roleTable.ID.eq(link.getRoleId()))
+                        .orderBy(roleTable.CREATED_AT)
                         .fetchOne(Role::fromDAO)
                 );
     }

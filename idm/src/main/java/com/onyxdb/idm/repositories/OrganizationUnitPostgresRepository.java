@@ -20,8 +20,6 @@ import com.onyxdb.idm.models.Account;
 import com.onyxdb.idm.models.OrganizationTree;
 import com.onyxdb.idm.models.OrganizationUnit;
 import com.onyxdb.idm.models.PaginatedResult;
-import com.onyxdb.idm.models.Product;
-import com.onyxdb.idm.models.ProductTree;
 
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.name;
@@ -61,7 +59,9 @@ public class OrganizationUnitPostgresRepository implements OrganizationUnitRepos
         }
 
         List<OrganizationUnit> data = dslContext.selectFrom(organizationUnitTable)
-                .where(condition).fetch(OrganizationUnit::fromDAO);
+                .where(condition)
+                .orderBy(organizationUnitTable.CREATED_AT)
+                .fetch(OrganizationUnit::fromDAO);
 
         int totalCount = dslContext.fetchCount(organizationUnitTable, condition);
         return new PaginatedResult<>(
@@ -78,6 +78,7 @@ public class OrganizationUnitPostgresRepository implements OrganizationUnitRepos
                 .where(organizationUnitTable.DOMAIN_COMPONENT_ID.eq(dcId)
                         .and(organizationUnitTable.PARENT_ID.isNull()
                                 .or(organizationUnitTable.PARENT_ID.eq(organizationUnitTable.ID))))
+                .orderBy(organizationUnitTable.CREATED_AT)
                 .fetch(OrganizationUnit::fromDAO);
     }
 
@@ -168,6 +169,7 @@ public class OrganizationUnitPostgresRepository implements OrganizationUnitRepos
 
         return dslContext.withRecursive(cte)
                 .selectFrom(cte)
+                .orderBy(organizationUnitTable.CREATED_AT)
                 .fetch()
                 .map(record -> OrganizationUnit.fromDAO(record.into(OrganizationUnitTableRecord.class)));
     }
@@ -178,6 +180,7 @@ public class OrganizationUnitPostgresRepository implements OrganizationUnitRepos
                 .where(organizationUnitAccountTable.OU_ID.eq(ouId))
                 .fetch(link -> dslContext.selectFrom(accountTable)
                         .where(accountTable.ID.eq(link.getAccountId()))
+                        .orderBy(accountTable.CREATED_AT)
                         .fetchOne(Account::fromDAO)
                 );
     }

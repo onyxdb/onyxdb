@@ -56,6 +56,7 @@ public class PermissionPostgresRepository implements PermissionRepository {
     @Override
     public List<Permission> findAll() {
         return dslContext.selectFrom(permissionTable)
+                .orderBy(permissionTable.CREATED_AT)
                 .fetch(Permission::fromDAO);
     }
 
@@ -120,6 +121,7 @@ public class PermissionPostgresRepository implements PermissionRepository {
                 .where(accountRoleTable.ACCOUNT_ID.eq(accountId))
                 .and(roleTable.ORG_UNIT_ID.eq(orgUnitId))
                 .and(permissionType == null ? noCondition() : permissionTable.ACTION_TYPE.eq(permissionType))
+                .orderBy(permissionTable.CREATED_AT)
                 .fetch(record -> Permission.fromDAO(record.into(permissionTable)));
     }
 
@@ -132,6 +134,7 @@ public class PermissionPostgresRepository implements PermissionRepository {
                 .join(accountRoleTable).on(roleTable.ID.eq(accountRoleTable.ROLE_ID))
                 .where(accountRoleTable.ACCOUNT_ID.eq(accountId))
                 .and(resourceType == null ? noCondition() : permissionTable.RESOURCE_TYPE.eq(resourceType))
+                .orderBy(permissionTable.CREATED_AT)
                 .fetch(record -> Permission.fromDAO(record.into(permissionTable)));
     }
 
@@ -147,6 +150,7 @@ public class PermissionPostgresRepository implements PermissionRepository {
                 .where(accountBusinessRoleTable.ACCOUNT_ID.eq(accountId))
                 .and(resourceType == null ? noCondition() : permissionTable.RESOURCE_TYPE.eq(resourceType))
                 .and(permissionType == null ? noCondition() : permissionTable.ACTION_TYPE.eq(permissionType))
+                .orderBy(permissionTable.CREATED_AT)
                 .fetch(record -> Permission.fromDAO(record.into(permissionTable)));
     }
 }
