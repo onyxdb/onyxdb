@@ -38,6 +38,7 @@ public class ProductPostgresRepository implements ProductRepository {
         return dslContext.selectFrom(productTable)
                 .where(productTable.PARENT_ID.isNull()
                         .or(productTable.PARENT_ID.eq(productTable.ID)))
+                .orderBy(productTable.CREATED_AT)
                 .fetch(Product::fromDAO);
     }
 
@@ -55,6 +56,7 @@ public class ProductPostgresRepository implements ProductRepository {
     private List<Product> fetchChildrenFromDb(UUID parentId) {
         return dslContext.selectFrom(productTable)
                 .where(productTable.PARENT_ID.eq(parentId))
+                .orderBy(productTable.CREATED_AT)
                 .fetchInto(Product.class);
     }
 
@@ -82,6 +84,7 @@ public class ProductPostgresRepository implements ProductRepository {
     @Override
     public List<Product> findAll() {
         return dslContext.selectFrom(productTable)
+                .orderBy(productTable.CREATED_AT)
                 .fetch(Product::fromDAO);
     }
 
@@ -101,6 +104,7 @@ public class ProductPostgresRepository implements ProductRepository {
         );
         return dslContext.withRecursive(cte)
                 .selectFrom(cte)
+                .orderBy(productTable.CREATED_AT)
                 .fetchInto(Product.class);
     }
 

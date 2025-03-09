@@ -44,7 +44,7 @@ public class AuthService {
         Optional<Account> accountOptional = accountRepository.findByLogin(login);
         if (accountOptional.isPresent()) {
             Account account = accountOptional.get();
-            List<Role> roles = accountRepository.getRoles(account.id());
+            List<Role> roles = accountRepository.getAccountRoles(account.id());
             AccountWithRoles awr = new AccountWithRoles(account, roles);
 
             if (passwordEncoder.matches(password, account.password())) {
@@ -69,7 +69,7 @@ public class AuthService {
             if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
                 Account account = accountRepository.findByLogin(login)
                         .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
-                List<Role> roles = accountRepository.getRoles(account.id());
+                List<Role> roles = accountRepository.getAccountRoles(account.id());
                 AccountWithRoles awr = new AccountWithRoles(account, roles);
 
                 final String accessToken = jwtProvider.generateAccessToken(awr);
@@ -87,7 +87,7 @@ public class AuthService {
             if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
                 Account account = accountRepository.findByLogin(login)
                         .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
-                List<Role> roles = accountRepository.getRoles(account.id());
+                List<Role> roles = accountRepository.getAccountRoles(account.id());
                 AccountWithRoles awr = new AccountWithRoles(account, roles);
 
                 final String accessToken = jwtProvider.generateAccessToken(awr);

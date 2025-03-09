@@ -401,6 +401,34 @@ public class IdmApiIntegrationCreateTest extends PostgresTests {
         RoleRequestDTO roleRequestMonitoringLoggingEditor = createRoleRequestDTO(null, monitoringLoggingRoles.get("editor").getRole().getId(), account9.getId(), account1.getId(), "I'm a DevOps engineer", RoleRequestDTO.StatusEnum.WAITING);
         roleRequestMonitoringLoggingEditor = createRoleRequest(roleRequestMonitoringLoggingEditor);
         updateRoleRequestStatus(roleRequestMonitoringLoggingEditor.getId(), RoleRequestDTO.StatusEnum.APPROVED);
+
+        // 1. Связываем аккаунты с бизнес-ролями
+        // Admin
+        linkAccountToBusinessRole(account1.getId(), admin.getId());
+
+        // Developer
+        linkAccountToBusinessRole(account2.getId(), developer.getId());
+
+        // Backofficer
+        linkAccountToBusinessRole(account3.getId(), backofficer.getId());
+
+        // Manager
+        linkAccountToBusinessRole(account4.getId(), manager.getId());
+
+        // Analytic
+        linkAccountToBusinessRole(account5.getId(), analytic.getId());
+
+        // Marketer
+        linkAccountToBusinessRole(account6.getId(), marketer.getId());
+
+        // Backend Developer
+        linkAccountToBusinessRole(account7.getId(), backendDev.getId());
+
+        // Frontend Developer
+        linkAccountToBusinessRole(account8.getId(), frontedDev.getId());
+
+        // DevOps
+        linkAccountToBusinessRole(account9.getId(), devOps.getId());
     }
 
     /**

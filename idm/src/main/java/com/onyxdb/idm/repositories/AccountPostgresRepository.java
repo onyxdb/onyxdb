@@ -30,12 +30,8 @@ import com.onyxdb.idm.models.BusinessRole;
 import com.onyxdb.idm.models.OrganizationUnit;
 import com.onyxdb.idm.models.PaginatedResult;
 import com.onyxdb.idm.models.Permission;
-import com.onyxdb.idm.models.Product;
 import com.onyxdb.idm.models.Role;
 
-import static org.jooq.impl.DSL.field;
-import static org.jooq.impl.DSL.name;
-import static org.jooq.impl.DSL.select;
 import static org.jooq.impl.DSL.trueCondition;
 
 /**
@@ -48,11 +44,9 @@ public class AccountPostgresRepository implements AccountRepository {
     private final static AccountBusinessRoleTable accountBusinessRoleTable = Tables.ACCOUNT_BUSINESS_ROLE_TABLE;
     private final static AccountRoleTable accountRoleTable = Tables.ACCOUNT_ROLE_TABLE;
     private final static BusinessRoleTable businessRoleTable = Tables.BUSINESS_ROLE_TABLE;
-    private final static BusinessRoleRoleTable businessRoleToRoleTable = Tables.BUSINESS_ROLE_ROLE_TABLE;
     private final static RolePermissionTable rolePermissionTable = Tables.ROLE_PERMISSION_TABLE;
     private final static RoleTable roleTable = Tables.ROLE_TABLE;
     private final static PermissionTable permissionTable = Tables.PERMISSION_TABLE;
-    private final static ProductTable productTable = Tables.PRODUCT_TABLE;
     private final static OrganizationUnitTable organizationUnitTable = Tables.ORGANIZATION_UNIT_TABLE;
     private final static AccountOuTable organizationUnitAccountTable = Tables.ACCOUNT_OU_TABLE;
 
@@ -85,6 +79,7 @@ public class AccountPostgresRepository implements AccountRepository {
 
         Result<AccountTableRecord> records = dslContext.selectFrom(accountTable)
                 .where(condition)
+                .orderBy(accountTable.CREATED_AT)
                 .limit(limit)
                 .offset(offset)
                 .fetch();
@@ -182,7 +177,18 @@ public class AccountPostgresRepository implements AccountRepository {
                 .where(accountBusinessRoleTable.ACCOUNT_ID.eq(accountId))
                 .fetch(link -> dslContext.selectFrom(businessRoleTable)
                         .where(businessRoleTable.ID.eq(link.getBusinessRoleId()))
+                        .orderBy(businessRoleTable.CREATED_AT)
                         .fetchOne(BusinessRole::fromDAO));
+    }
+
+    @Override
+    public List<OrganizationUnit> getAccountOrganizationUnits(UUID accountId) {
+        return dslContext.selectFrom(organizationUnitAccountTable)
+                .where(organizationUnitAccountTable.ACCOUNT_ID.eq(accountId))
+                .fetch(link -> dslContext.selectFrom(organizationUnitTable)
+                        .where(organizationUnitTable.ID.eq(link.getOuId()))
+                        .orderBy(organizationUnitTable.CREATED_AT)
+                        .fetchOne(OrganizationUnit::fromDAO));
     }
 
     @Override
@@ -191,6 +197,7 @@ public class AccountPostgresRepository implements AccountRepository {
                 .where(accountRoleTable.ACCOUNT_ID.eq(accountId))
                 .fetch(link -> dslContext.selectFrom(roleTable)
                         .where(roleTable.ID.eq(link.getRoleId()))
+                        .orderBy(roleTable.CREATED_AT)
                         .fetchOne(Role::fromDAO));
     }
 
@@ -211,16 +218,6 @@ public class AccountPostgresRepository implements AccountRepository {
     }
 
     @Override
-    public List<Role> getRoles(UUID accountId) {
-        return dslContext.selectFrom(accountRoleTable)
-                .where(accountRoleTable.ACCOUNT_ID.eq(accountId))
-                .fetch(link -> dslContext.selectFrom(roleTable)
-                        .where(roleTable.ID.eq(link.getRoleId()))
-                        .fetchOne(Role::fromDAO)
-                );
-    }
-
-    @Override
     public List<Permission> getPermissions(UUID accountId) {
         return dslContext.selectFrom(accountRoleTable)
                 .where(accountRoleTable.ACCOUNT_ID.eq(accountId))
@@ -228,6 +225,7 @@ public class AccountPostgresRepository implements AccountRepository {
                         .where(rolePermissionTable.ROLE_ID.eq(link.getRoleId()))
                         .fetch(link2 -> dslContext.selectFrom(permissionTable)
                                 .where(permissionTable.ID.eq(link2.getPermissionId()))
+                                .orderBy(permissionTable.CREATED_AT)
                                 .fetchOne(Permission::fromDAO))
                 )
                 .stream()

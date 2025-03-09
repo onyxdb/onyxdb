@@ -68,6 +68,7 @@ public class RolePostgresRepository implements RoleRepository {
 
         Result<Record> records = dslContext.selectFrom(table)
                 .where(condition)
+                .orderBy(roleTable.CREATED_AT)
                 .limit(limit)
                 .offset(offset)
                 .fetch();
@@ -128,11 +129,24 @@ public class RolePostgresRepository implements RoleRepository {
     }
 
     @Override
-    public void delete(UUID id) {
-        // TODO удалять все ссылки к Permission и их самих тоже
+    public void delete(UUID roleId) {
+        List<UUID> permissionIds = dslContext.select(roleToPermissionTable.PERMISSION_ID)
+                .from(roleToPermissionTable)
+                .where(roleToPermissionTable.ROLE_ID.eq(roleId))
+                .fetch(roleToPermissionTable.PERMISSION_ID);
+
+        if (!permissionIds.isEmpty()) {
+            dslContext.deleteFrom(permissionTable)
+                    .where(permissionTable.ID.in(permissionIds))
+                    .execute();
+        }
+
+        dslContext.deleteFrom(roleToPermissionTable)
+                .where(roleToPermissionTable.ROLE_ID.eq(roleId))
+                .execute();
 
         dslContext.deleteFrom(roleTable)
-                .where(roleTable.ID.eq(id))
+                .where(roleTable.ID.eq(roleId))
                 .execute();
     }
 
