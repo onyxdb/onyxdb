@@ -18,7 +18,6 @@ import com.onyxdb.idm.models.DomainComponent;
 import com.onyxdb.idm.models.DomainTree;
 import com.onyxdb.idm.models.OrganizationUnit;
 import com.onyxdb.idm.services.DomainComponentService;
-import com.onyxdb.idm.services.OrganizationUnitService;
 
 /**
  * @author ArtemFed

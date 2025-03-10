@@ -8,7 +8,6 @@ import com.onyxdb.idm.models.Account;
 import com.onyxdb.idm.models.OrganizationTree;
 import com.onyxdb.idm.models.OrganizationUnit;
 import com.onyxdb.idm.models.PaginatedResult;
-import com.onyxdb.idm.models.ProductTree;
 
 /**
  * @author ArtemFed

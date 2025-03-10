@@ -2,7 +2,6 @@ package com.onyxdb.idm.services;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -14,7 +13,6 @@ import com.onyxdb.idm.models.Account;
 import com.onyxdb.idm.models.BusinessRole;
 import com.onyxdb.idm.models.OrganizationUnit;
 import com.onyxdb.idm.models.PaginatedResult;
-import com.onyxdb.idm.models.Permission;
 import com.onyxdb.idm.models.Role;
 import com.onyxdb.idm.repositories.AccountRepository;
 import com.onyxdb.idm.repositories.BusinessRoleRepository;

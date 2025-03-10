@@ -9,7 +9,6 @@ import com.onyxdb.idm.models.BusinessRole;
 import com.onyxdb.idm.models.OrganizationUnit;
 import com.onyxdb.idm.models.PaginatedResult;
 import com.onyxdb.idm.models.Permission;
-import com.onyxdb.idm.models.Product;
 import com.onyxdb.idm.models.Role;
 
 /**
