@@ -49,7 +49,6 @@ public class RolePostgresRepository implements RoleRepository {
         offset = (offset != null) ? offset : 0;
 
         Condition condition = trueCondition();
-
         var table = roleTable.leftJoin(noTable()).on();
         if (productId != null) {
             condition = condition.and(roleTable.PRODUCT_ID.eq(productId));
@@ -59,11 +58,12 @@ public class RolePostgresRepository implements RoleRepository {
         }
         if (query != null && !query.isEmpty()) {
             table = roleTable.leftJoin(productTable).on(roleTable.PRODUCT_ID.eq(productTable.ID));
-            condition = roleTable.NAME.containsIgnoreCase(query)
-                    .or(roleTable.SHOP_NAME.containsIgnoreCase(query))
-                    .or(roleTable.DESCRIPTION.containsIgnoreCase(query))
-                    .or(productTable.NAME.containsIgnoreCase(query))
-                    .or(productTable.DESCRIPTION.containsIgnoreCase(query));
+            condition = condition.and(
+                    roleTable.NAME.containsIgnoreCase(query)
+                            .or(roleTable.SHOP_NAME.containsIgnoreCase(query))
+                            .or(roleTable.DESCRIPTION.containsIgnoreCase(query))
+                            .or(productTable.NAME.containsIgnoreCase(query))
+                            .or(productTable.DESCRIPTION.containsIgnoreCase(query)));
         }
 
         Result<Record> records = dslContext.selectFrom(table)

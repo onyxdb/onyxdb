@@ -16,7 +16,7 @@ import com.onyxdb.idm.models.ProductTree;
 public interface OrganizationUnitRepository {
     Optional<OrganizationUnit> findById(UUID id);
 
-    PaginatedResult<OrganizationUnit> findAll(UUID dcId, UUID parentOuId, Integer limit, Integer offset);
+    PaginatedResult<OrganizationUnit> findAll(String query, UUID dcId, UUID parentOuId, Integer limit, Integer offset);
 
     List<OrganizationUnit> findRootOrgUnits(UUID dcId);
 

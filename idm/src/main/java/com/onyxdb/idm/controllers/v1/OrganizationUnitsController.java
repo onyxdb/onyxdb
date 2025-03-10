@@ -51,9 +51,9 @@ public class OrganizationUnitsController implements OrganizationUnitsApi {
 
     @Override
     public ResponseEntity<PaginatedOrganizationUnitResponse> getAllOrganizationUnits(
-            UUID parentOuId, UUID dcId, Integer limit, Integer offset
+            String search, UUID parentOuId, UUID dcId, Integer limit, Integer offset
     ) {
-        PaginatedResult<OrganizationUnit> data = organizationUnitService.findAll(dcId, parentOuId, limit, offset);
+        PaginatedResult<OrganizationUnit> data = organizationUnitService.findAll(search, dcId, parentOuId, limit, offset);
         List<OrganizationUnitDTO> res = data.data().stream().map(OrganizationUnit::toDTO).toList();
         return ResponseEntity.ok(new PaginatedOrganizationUnitResponse()
                 .data(res)

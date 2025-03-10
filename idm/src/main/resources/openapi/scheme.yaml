@@ -706,6 +706,11 @@ paths:
       tags:
         - Organization Units
       parameters:
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
         - name: parentOuId
           in: query
           required: false
