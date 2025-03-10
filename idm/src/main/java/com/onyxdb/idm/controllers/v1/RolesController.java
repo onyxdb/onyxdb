@@ -12,11 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.onyxdb.idm.generated.openapi.apis.RolesApi;
 import com.onyxdb.idm.generated.openapi.models.PaginatedRoleResponse;
-import com.onyxdb.idm.generated.openapi.models.PermissionDTO;
 import com.onyxdb.idm.generated.openapi.models.RoleDTO;
 import com.onyxdb.idm.generated.openapi.models.RoleWithPermissionsDTO;
 import com.onyxdb.idm.models.PaginatedResult;
-import com.onyxdb.idm.models.Permission;
 import com.onyxdb.idm.models.Role;
 import com.onyxdb.idm.models.RoleWithPermissions;
 import com.onyxdb.idm.services.RoleService;
@@ -50,10 +48,9 @@ public class RolesController implements RolesApi {
     }
 
     @Override
-    public ResponseEntity<List<PermissionDTO>> getPermissionsByRoleId(UUID roleId) {
-        List<Permission> permissions = roleService.getPermissionsByRoleId(roleId);
-        List<PermissionDTO> permissionDTOS = permissions.stream().map(Permission::toDTO).toList();
-        return ResponseEntity.ok(permissionDTOS);
+    public ResponseEntity<RoleWithPermissionsDTO> getPermissionsByRoleId(UUID roleId) {
+        RoleWithPermissions role = roleService.getPermissionsByRoleId(roleId);
+        return ResponseEntity.ok(role.toDTO());
     }
 
     @Override

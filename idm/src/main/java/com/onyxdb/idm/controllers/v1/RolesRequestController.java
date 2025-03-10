@@ -34,8 +34,8 @@ public class RolesRequestController implements RolesRequestsApi {
     }
 
     @Override
-    public ResponseEntity<PaginatedRoleRequestResponse> getAllRolesRequests(UUID ownerId, String status, UUID accountId, Integer limit, Integer offset) {
-        PaginatedResult<RoleRequest> roleRequests = roleRequestService.findAll(status, accountId, ownerId, limit, offset);
+    public ResponseEntity<PaginatedRoleRequestResponse> getAllRolesRequests(UUID ownerId, String status, UUID accountId, UUID roleId, Integer limit, Integer offset) {
+        PaginatedResult<RoleRequest> roleRequests = roleRequestService.findAll(status, accountId, ownerId, roleId, limit, offset);
         List<RoleRequestDTO> roleRequestDTOs = roleRequests.data().stream().map(RoleRequest::toDTO).toList();
         return ResponseEntity.ok(new PaginatedRoleRequestResponse()
                 .data(roleRequestDTOs)

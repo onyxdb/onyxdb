@@ -1217,9 +1217,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/PermissionDTO'
+                $ref: '#/components/schemas/RoleWithPermissionsDTO'
         '404':
           description: Not Found
           content:
@@ -1628,6 +1626,12 @@ paths:
           schema:
             type: string
         - name: accountId
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: roleId
           in: query
           required: false
           schema:
@@ -2243,7 +2247,7 @@ components:
           format: date-time
       required:
         - name
-        - shop_name
+        - shopName
         - description
 
     PaginatedBusinessRoleResponse:

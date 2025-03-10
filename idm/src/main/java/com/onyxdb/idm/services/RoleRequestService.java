@@ -25,8 +25,8 @@ public class RoleRequestService {
                 .orElseThrow(() -> new ResourceNotFoundException("RoleRequest not found"));
     }
 
-    public PaginatedResult<RoleRequest> findAll(String status, UUID accountId, UUID ownerId, Integer limit, Integer offset) {
-        return roleRequestRepository.findAll(status, accountId, ownerId, limit, offset);
+    public PaginatedResult<RoleRequest> findAll(String status, UUID accountId, UUID ownerId, UUID roleId, Integer limit, Integer offset) {
+        return roleRequestRepository.findAll(status, accountId, ownerId, roleId, limit, offset);
     }
 
     public RoleRequest create(RoleRequest roleRequest) {

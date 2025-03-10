@@ -12,7 +12,7 @@ import com.onyxdb.idm.models.RoleRequest;
 public interface RoleRequestRepository {
     Optional<RoleRequest> findById(UUID id);
 
-    PaginatedResult<RoleRequest> findAll(String status, UUID ownerId, UUID accountId, Integer limit, Integer offset);
+    PaginatedResult<RoleRequest> findAll(String status, UUID accountId, UUID ownerId, UUID roleId, Integer limit, Integer offset);
 
     PaginatedResult<RoleRequest> search(String query, Integer limit, Integer offset);
 
