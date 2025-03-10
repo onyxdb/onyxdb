@@ -162,6 +162,10 @@ public class BusinessRolePostgresRepository implements BusinessRoleRepository {
 
     @Override
     public void delete(UUID id) {
+        dslContext.deleteFrom(businessRoleToRoleTable)
+                .where(businessRoleToRoleTable.BUSINESS_ROLE_ID.eq(id))
+                .execute();
+
         dslContext.deleteFrom(businessRoleTable)
                 .where(businessRoleTable.ID.eq(id))
                 .execute();

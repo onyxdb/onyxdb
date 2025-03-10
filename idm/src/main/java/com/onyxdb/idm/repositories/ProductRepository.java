@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.onyxdb.idm.models.PaginatedResult;
 import com.onyxdb.idm.models.Product;
 import com.onyxdb.idm.models.ProductTree;
 
@@ -13,7 +14,7 @@ import com.onyxdb.idm.models.ProductTree;
 public interface ProductRepository {
     Optional<Product> findById(UUID id);
 
-    List<Product> findAll();
+    PaginatedResult<Product> findAll(String search, Integer limit, Integer offset);
 
     List<Product> findRootProducts();
 

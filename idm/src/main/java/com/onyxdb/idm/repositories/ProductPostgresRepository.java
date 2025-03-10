@@ -7,17 +7,27 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
+import org.jooq.Condition;
 import org.jooq.DSLContext;
+import org.jooq.Record;
+import org.jooq.Result;
 import org.springframework.stereotype.Repository;
 
 import com.onyxdb.idm.generated.jooq.Tables;
 import com.onyxdb.idm.generated.jooq.tables.ProductTable;
+import com.onyxdb.idm.generated.jooq.tables.records.AccountTableRecord;
+import com.onyxdb.idm.generated.jooq.tables.records.ProductTableRecord;
+import com.onyxdb.idm.models.Account;
+import com.onyxdb.idm.models.PaginatedResult;
 import com.onyxdb.idm.models.Product;
 import com.onyxdb.idm.models.ProductTree;
+import com.onyxdb.idm.models.Role;
 
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.name;
+import static org.jooq.impl.DSL.noTable;
 import static org.jooq.impl.DSL.select;
+import static org.jooq.impl.DSL.trueCondition;
 
 /**
  * @author ArtemFed
@@ -82,10 +92,30 @@ public class ProductPostgresRepository implements ProductRepository {
     }
 
     @Override
-    public List<Product> findAll() {
-        return dslContext.selectFrom(productTable)
+    public PaginatedResult<Product> findAll(String query, Integer limit, Integer offset) {
+        limit = (limit != null) ? limit : Integer.MAX_VALUE;
+        offset = (offset != null) ? offset : 0;
+
+        Condition condition = query != null ? productTable.NAME.containsIgnoreCase(query)
+                .or(productTable.DESCRIPTION.containsIgnoreCase(query))
+                : trueCondition();
+
+        Result<ProductTableRecord> records = dslContext.selectFrom(productTable)
+                .where(condition)
                 .orderBy(productTable.CREATED_AT)
-                .fetch(Product::fromDAO);
+                .limit(limit)
+                .offset(offset)
+                .fetch();
+
+        List<Product> data = records.map(record -> Product.fromDAO(record.into(productTable)));
+
+        int totalCount = dslContext.fetchCount(productTable, condition);
+        return new PaginatedResult<>(
+                data,
+                totalCount,
+                offset + 1,
+                Math.min(offset + limit, totalCount)
+        );
     }
 
     @Override

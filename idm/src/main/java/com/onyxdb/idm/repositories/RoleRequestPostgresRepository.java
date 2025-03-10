@@ -40,7 +40,7 @@ public class RoleRequestPostgresRepository implements RoleRequestRepository {
     }
 
     @Override
-    public PaginatedResult<RoleRequest> findAll(String status, UUID ownerId, UUID accountId, Integer limit, Integer offset) {
+    public PaginatedResult<RoleRequest> findAll(String status, UUID accountId, UUID ownerId, UUID roleId, Integer limit, Integer offset) {
         limit = (limit != null) ? limit : Integer.MAX_VALUE;
         offset = (offset != null) ? offset : 0;
 
@@ -53,6 +53,9 @@ public class RoleRequestPostgresRepository implements RoleRequestRepository {
         }
         if (accountId != null) {
             condition = condition.and(roleRequestTable.ACCOUNT_ID.eq(accountId));
+        }
+        if (roleId != null) {
+            condition = condition.and(roleRequestTable.ROLE_ID.eq(roleId));
         }
 
         List<RoleRequest> data = dslContext.selectFrom(roleRequestTable).where(condition)
@@ -73,7 +76,7 @@ public class RoleRequestPostgresRepository implements RoleRequestRepository {
     @Override
     public PaginatedResult<RoleRequest> search(String query, Integer limit, Integer offset) {
         if (query == null || query.isEmpty()) {
-            return findAll(null, null, null, limit, offset);
+            return findAll(null, null, null, null, limit, offset);
         }
         limit = (limit != null) ? limit : Integer.MAX_VALUE;
         offset = (offset != null) ? offset : 0;

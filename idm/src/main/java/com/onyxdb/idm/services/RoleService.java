@@ -96,7 +96,9 @@ public class RoleService {
         roleRepository.removePermission(roleId, permissionId);
     }
 
-    public List<Permission> getPermissionsByRoleId(UUID roleId) {
-        return roleRepository.getPermissions(roleId);
+    public RoleWithPermissions getPermissionsByRoleId(UUID roleId) {
+        Role role = findById(roleId);
+        List<Permission> permissions = roleRepository.getPermissions(roleId);
+        return new RoleWithPermissions(role, permissions);
     }
 }

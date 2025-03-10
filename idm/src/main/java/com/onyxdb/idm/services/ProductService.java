@@ -1,11 +1,13 @@
 package com.onyxdb.idm.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
 
 import com.onyxdb.idm.controllers.v1.ResourceNotFoundException;
+import com.onyxdb.idm.models.PaginatedResult;
 import com.onyxdb.idm.models.Product;
 import com.onyxdb.idm.models.ProductTree;
 import com.onyxdb.idm.repositories.ProductRepository;
@@ -24,8 +26,8 @@ public class ProductService {
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
     }
 
-    public List<Product> findAll() {
-        return productRepository.findAll();
+    public PaginatedResult<Product> findAll(String search, Integer limit, Integer offset) {
+        return productRepository.findAll(search, limit, offset);
     }
 
     public List<Product> findRootProducts() {
@@ -34,6 +36,17 @@ public class ProductService {
 
     public List<Product> findChildren(UUID productId) {
         return productRepository.findChildren(productId);
+    }
+
+    public List<ProductTree> findAllTrees() {
+        List<Product> roots = findRootProducts();
+        List<ProductTree> trees = new ArrayList<>();
+        for (Product root : roots) {
+            Product product = productRepository.findById(root.id()).orElseThrow();
+            List<ProductTree> children = productRepository.findChildrenTree(product.id(), 99);
+            trees.add(new ProductTree(product, children));
+        }
+        return trees;
     }
 
     public ProductTree findChildrenTree(UUID productId, Integer depth) {
