@@ -12,6 +12,10 @@ spring:
   jooq:
     sql-dialect: Postgres
   flyway:
+    url: ${ONYXDB_MDB_PSQL_URL:jdbc:postgresql://localhost:5432/onyxdb}
+    username: ${ONYXDB_MDB_PSQL_USERNAME:postgres}
+    password: ${ONYXDB_MDB_PSQL_PASSWORD:password}
+    locations: classpath:db/migration
     enabled: true
 server:
   port: ${ONYXDB_MDB_HTTP_PORT:9001}
