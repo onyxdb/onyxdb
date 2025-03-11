@@ -37,6 +37,10 @@ public abstract class PostgresTests {
                     "spring.datasource.url=" + postgresContainer.getJdbcUrl(),
                     "spring.datasource.username=" + postgresContainer.getUsername(),
                     "spring.datasource.password=" + postgresContainer.getPassword(),
+                    "spring.flyway.url=" + postgresContainer.getJdbcUrl(),
+                    "spring.flyway.username=" + postgresContainer.getUsername(),
+                    "spring.flyway.password=" + postgresContainer.getPassword(),
+                    "spring.flyway.location=" + "classpath:db/migration",
                     "spring.redis.host=" + redisContainer.getHost(),
                     "spring.redis.port=" + redisContainer.getMappedPort(6379),
                     "clickhouse.datasource.url=jdbc:clickhouse://" + clickHouseContainer.getHost() + ":" + clickHouseContainer.getMappedPort(8123) + "/default"
