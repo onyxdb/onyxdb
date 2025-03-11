@@ -89,7 +89,6 @@ public class AccountService {
         accountRepository.addRole(accountId, roleId);
         var record = AccountRolesHistory.create(accountId, roleId, "add");
         clickHouseRepository.addAccountRoleHistory(record);
-        refreshTokenRepository.saveToken("ABC", accountId.toString());
     }
 
     public void removeRole(UUID accountId, UUID roleId) {

@@ -17,30 +17,14 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                password:
-                  type: string
-              required:
-                - username
-                - password
+              $ref: '#/components/schemas/AuthRequestDTO'
       responses:
         '200':
           description: Успешная аутентификация
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  accessToken:
-                    type: string
-                  refreshToken:
-                    type: string
-                required:
-                  - accessToken
-                  - refreshToken
+                $ref: '#/components/schemas/JwtResponseDTO'
         '400':
           description: Неверные учетные данные
           content:
@@ -58,12 +42,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                refreshToken:
-                  type: string
-              required:
-                - refreshToken
+              $ref: '#/components/schemas/RefreshTokenDTO'
       responses:
         '204':
           description: Успешный выход
@@ -84,24 +63,14 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                refreshToken:
-                  type: string
-              required:
-                - refreshToken
+              $ref: '#/components/schemas/RefreshTokenDTO'
       responses:
         '200':
           description: Успешное обновление токена
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  accessToken:
-                    type: string
-                required:
-                  - accessToken
+                $ref: '#/components/schemas/JwtResponseDTO'
         '400':
           description: Неверный запрос
           content:
@@ -122,22 +91,15 @@ paths:
               schema:
                 type: object
                 properties:
-                  id:
-                    type: string
-                    format: uuid
-                  username:
-                    type: string
-                  email:
-                    type: string
-                  roles:
+                  account:
+                    $ref: '#/components/schemas/AccountDTO'
+                  permissions:
                     type: array
                     items:
-                      type: string
+                      $ref: '#/components/schemas/PermissionDTO'
                 required:
-                  - id
-                  - username
-                  - email
-                  - roles
+                  - account
+                  - permissions
         '401':
           description: Пользователь не авторизован
           content:
@@ -2566,6 +2528,36 @@ components:
         - business_role_id
         - status
         - createdAt
+
+    AuthRequestDTO:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      required:
+        - username
+        - password
+
+    JwtResponseDTO:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+      required:
+        - accessToken
+        - refreshToken
+
+    RefreshTokenDTO:
+      type: object
+      properties:
+        refreshToken:
+          type: string
+      required:
+        - refreshToken
 
     BadRequestResponse:
       type: object

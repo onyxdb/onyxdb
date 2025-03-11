@@ -1,31 +1,35 @@
 package com.onyxdb.idm.repositories;
 
+import java.util.UUID;
+
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Repository;
+
+import com.onyxdb.idm.models.redis.RefreshToken;
 
 /**
  * @author ArtemFed
  */
 @Repository
 public class RefreshTokenRepository {
-    private final RedisTemplate<String, String> redisTemplate;
-    private final ValueOperations<String, String> valueOps;
+    private final RedisTemplate<String, RefreshToken> redisTemplate;
+    private final ValueOperations<String, RefreshToken> valueOps;
 
-    public RefreshTokenRepository(RedisTemplate<String, String> redisTemplate) {
+    public RefreshTokenRepository(RedisTemplate<String, RefreshToken> redisTemplate) {
         this.redisTemplate = redisTemplate;
         this.valueOps = redisTemplate.opsForValue();
     }
 
-    public void saveToken(String token, String userId) {
-        valueOps.set(token, userId);
+    public void saveToken(RefreshToken token) {
+        valueOps.set(token.id().toString(), token);
     }
 
-    public String getUserIdByToken(String token) {
+    public RefreshToken getByToken(String token) {
         return valueOps.get(token);
     }
 
-    public void deleteToken(String token) {
-        redisTemplate.delete(token);
+    public void deleteToken(RefreshToken token) {
+        redisTemplate.delete(token.id().toString());
     }
 }

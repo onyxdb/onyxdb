@@ -1,6 +1,7 @@
 package com.onyxdb.idm.controllers.v1;
 
 
+import java.util.List;
 import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
@@ -9,11 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.onyxdb.idm.generated.openapi.apis.AuthApi;
 import com.onyxdb.idm.generated.openapi.models.AccountDTO;
+import com.onyxdb.idm.generated.openapi.models.AuthRequestDTO;
 import com.onyxdb.idm.generated.openapi.models.GetCurrentUser200Response;
-import com.onyxdb.idm.generated.openapi.models.Login200Response;
-import com.onyxdb.idm.generated.openapi.models.LoginRequest;
-import com.onyxdb.idm.generated.openapi.models.LogoutRequest;
-import com.onyxdb.idm.generated.openapi.models.RefreshToken200Response;
+import com.onyxdb.idm.generated.openapi.models.JwtResponseDTO;
+import com.onyxdb.idm.generated.openapi.models.RefreshTokenDTO;
 import com.onyxdb.idm.models.Account;
 import com.onyxdb.idm.services.AuthService;
 import com.onyxdb.idm.services.jwt.JwtResponse;
@@ -26,29 +26,27 @@ import com.onyxdb.idm.services.jwt.JwtResponse;
 public class AuthController implements AuthApi {
     private final AuthService authService;
 
-
     @Override
-    public ResponseEntity<Login200Response> login(LoginRequest loginRequest) {
-        JwtResponse tokens = authService.login(loginRequest.getUsername(), loginRequest.getPassword());
+    public ResponseEntity<JwtResponseDTO> login(AuthRequestDTO authRequestDTO) {
+        JwtResponse tokens = authService.login(authRequestDTO.getUsername(), authRequestDTO.getPassword());
 
-        Login200Response response = new Login200Response()
+        JwtResponseDTO response = new JwtResponseDTO()
                 .accessToken(tokens.getAccessToken())
                 .refreshToken(tokens.getRefreshToken());
-
         return ResponseEntity.ok(response);
     }
 
     @Override
-    public ResponseEntity<Void> logout(LogoutRequest logoutRequest) {
-        authService.logout(logoutRequest.getRefreshToken());
+    public ResponseEntity<Void> logout(RefreshTokenDTO refreshTokenDTO) {
+        authService.logout(refreshTokenDTO.getRefreshToken());
         return ResponseEntity.noContent().build();
     }
 
     @Override
-    public ResponseEntity<RefreshToken200Response> refreshToken(LogoutRequest logoutRequest) {
-        JwtResponse tokens = authService.refresh(logoutRequest.getRefreshToken());
+    public ResponseEntity<JwtResponseDTO> refreshToken(RefreshTokenDTO refreshTokenDTO) {
+        JwtResponse tokens = authService.refresh(refreshTokenDTO.getRefreshToken());
 
-        RefreshToken200Response response = new RefreshToken200Response()
+        JwtResponseDTO response = new JwtResponseDTO()
                 .accessToken(tokens.getAccessToken());
 
         return ResponseEntity.ok(response);
@@ -63,9 +61,8 @@ public class AuthController implements AuthApi {
         AccountDTO accountDTO = account.toDTO();
 
         GetCurrentUser200Response response = new GetCurrentUser200Response()
-                .id(accountDTO.getId())
-                .username(accountDTO.getUsername())
-                .email(accountDTO.getEmail());
+                .account(accountDTO)
+                .permissions(List.of());
 
         return ResponseEntity.ok(response);
     }
