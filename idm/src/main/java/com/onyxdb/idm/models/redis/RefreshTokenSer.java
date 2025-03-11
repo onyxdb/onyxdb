@@ -6,13 +6,13 @@ import java.util.UUID;
 /**
  * @author ArtemFed
  */
-public record RefreshToken(
+public record RefreshTokenSer(
         UUID token,
         UUID accountId,
         LocalDateTime expireDate
 ) {
-    public static RefreshToken create(UUID account_id, UUID token, LocalDateTime expireDate) {
-        return new RefreshToken(
+    public static RefreshTokenSer create(UUID account_id, UUID token, LocalDateTime expireDate) {
+        return new RefreshTokenSer(
                 token,
                 account_id,
                 expireDate

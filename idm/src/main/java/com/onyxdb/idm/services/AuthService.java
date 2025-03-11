@@ -3,10 +3,12 @@ package com.onyxdb.idm.services;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
 
@@ -16,15 +18,15 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.onyxdb.idm.models.Account;
-import com.onyxdb.idm.models.AccountWithRoles;
-import com.onyxdb.idm.models.Role;
+import com.onyxdb.idm.models.redis.RefreshToken;
 import com.onyxdb.idm.repositories.AccountRepository;
-import com.onyxdb.idm.repositories.RefreshTokenRepository;
 import com.onyxdb.idm.repositories.RoleRepository;
 import com.onyxdb.idm.services.jwt.JwtProvider;
 import com.onyxdb.idm.services.jwt.JwtResponse;
@@ -38,13 +40,12 @@ public class AuthService {
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final AccountRepository accountRepository;
     private final RoleRepository roleRepository;
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final RefreshTokenService refreshTokenService;
     private final JwtProvider jwtProvider;
-    private final Map<String, String> refreshStorage = new HashMap<>();
 
     public static final String SECRET = "357638792F423F4428472B4B6250655368566D597133743677397A2443264629";
 
-    public String extractLogin(String token) {
+    public String extractAccountId(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -55,6 +56,11 @@ public class AuthService {
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
+    }
+
+    public Set<String> extractPermissions(String token) {
+        Claims claims = extractAllClaims(token);
+        return new HashSet<String>(claims.get("permissions", List.class));
     }
 
     private Claims extractAllClaims(String token) {
@@ -71,23 +77,21 @@ public class AuthService {
     }
 
     public Boolean validateToken(String token, Account account) {
-        final String login = extractLogin(token);
-        return (Objects.equals(login, account.login()) && !isTokenExpired(token));
+        final String accountId = extractAccountId(token);
+        return (Objects.equals(accountId, account.id().toString()) && !isTokenExpired(token));
     }
 
-    public String GenerateToken(String username) {
+    public String generateAccessToken(Account account, Set<String> permissions) {
         Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, username);
-    }
-
-    private String createToken(Map<String, Object> claims, String username) {
+        claims.put("permissions", permissions);
 
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(username)
+                .setSubject(account.id().toString())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 15))
-                .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30)) // 30 минут
+                .signWith(getSignKey(), SignatureAlgorithm.HS256)
+                .compact();
     }
 
     private Key getSignKey() {
@@ -95,82 +99,54 @@ public class AuthService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-
     ////////////////////////
 
-    /**
-     * Аутентификация пользователя.
-     *
-     * @param login    Имя пользователя.
-     * @param password Пароль.
-     * @return Access и Refresh токены.
-     * @throws RuntimeException Если аутентификация не удалась.
-     */
     public JwtResponse login(String login, String password) {
         Optional<Account> accountOptional = accountRepository.findByLogin(login);
-        if (accountOptional.isPresent()) {
-            Account account = accountOptional.get();
-            List<Role> roles = accountRepository.getAccountRoles(account.id());
-            AccountWithRoles awr = new AccountWithRoles(account, roles);
+        if (accountOptional.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Неверное имя пользователя или пароль");
 
-            if (passwordEncoder.matches(password, account.password())) {
-                String accessToken = jwtProvider.generateAccessToken(awr);
-                String refreshToken = jwtProvider.generateRefreshToken(awr);
-                refreshStorage.put(account.login(), refreshToken);
-                return new JwtResponse(accessToken, refreshToken);
-            }
         }
-        throw new RuntimeException("Неверное имя пользователя или пароль");
-    }
+        Account account = accountOptional.get();
 
-    public void logout(String refreshToken) {
-        refreshStorage.remove(refreshToken);
-    }
-
-    public JwtResponse getAccessToken(String refreshToken) {
-        if (jwtProvider.validateRefreshToken(refreshToken)) {
-            final Claims claims = jwtProvider.getRefreshClaims(refreshToken);
-            final String login = claims.getSubject();
-            final String saveRefreshToken = refreshStorage.get(login);
-            if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
-                Account account = accountRepository.findByLogin(login)
-                        .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
-                List<Role> roles = accountRepository.getAccountRoles(account.id());
-                AccountWithRoles awr = new AccountWithRoles(account, roles);
-
-                final String accessToken = jwtProvider.generateAccessToken(awr);
-                return new JwtResponse(accessToken, null);
-            }
+//        TODO поменять на passwordEncoder для паролей
+//        if (passwordEncoder.matches(password, account.password())) {
+        if (!Objects.equals(password, account.password())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Неверное имя пользователя или пароль");
         }
-        return new JwtResponse(null, null);
+
+//        Set<String> permissions = roleRepository.getPermissionsByAccountId(account.getId());
+        Set<String> permissions = Set.of();
+        String accessToken = generateAccessToken(account, permissions);
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(account.id());
+
+        return new JwtResponse(accessToken, refreshToken.token().toString());
     }
 
-    public JwtResponse refresh(String refreshToken) {
-        if (jwtProvider.validateRefreshToken(refreshToken)) {
-            final Claims claims = jwtProvider.getRefreshClaims(refreshToken);
-            final String login = claims.getSubject();
-            final String saveRefreshToken = refreshStorage.get(login);
-            if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
-                Account account = accountRepository.findByLogin(login)
-                        .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
-                List<Role> roles = accountRepository.getAccountRoles(account.id());
-                AccountWithRoles awr = new AccountWithRoles(account, roles);
+    public void logout(String refreshTokenRequest) {
+        Optional<RefreshToken> refreshToken = refreshTokenService.findByToken(refreshTokenRequest);
+        refreshToken.ifPresent(refreshTokenService::deleteToken);
+    }
 
-                final String accessToken = jwtProvider.generateAccessToken(awr);
-                final String newRefreshToken = jwtProvider.generateRefreshToken(awr);
-                refreshStorage.put(account.login(), newRefreshToken);
-                return new JwtResponse(accessToken, newRefreshToken);
-            }
+    public JwtResponse refresh(String refreshTokenRequest) {
+        Optional<RefreshToken> refreshTokenNullable = refreshTokenService.findByToken(refreshTokenRequest);
+        if (refreshTokenNullable.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Login is required");
         }
-        throw new RuntimeException("Невалидный JWT токен");
+
+        RefreshToken refreshToken = refreshTokenService.verifyExpiration(refreshTokenNullable.get());
+
+        Account account = accountRepository.findById(refreshToken.accountId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Account not found"));
+
+//        Set<String> permissions = roleRepository.getPermissionsByAccountId(account.id());
+        Set<String> permissions = Set.of();
+
+        String accessToken = generateAccessToken(account, permissions);
+
+        return new JwtResponse(accessToken, refreshToken.token().toString());
     }
 
-    /**
-     * Получение текущего пользователя.
-     *
-     * @param userId Идентификатор пользователя.
-     * @return Аккаунт пользователя.
-     */
     public Account getCurrentUser(UUID userId) {
         return accountRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Пользователь не найден"));

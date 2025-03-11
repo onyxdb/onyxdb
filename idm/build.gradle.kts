@@ -25,7 +25,10 @@ dependencies {
     implementation(libs.apacheCommons.commonsLang3)
     implementation(libs.springDoc.springdocOpenapiStarterWebmvcUi)
 
-    implementation("org.springframework.security:spring-security-crypto:6.4.2")
+    implementation("org.springframework.security:spring-security-core:6.4.3")
+    implementation("org.springframework.security:spring-security-config:6.4.3")
+    implementation("org.springframework.security:spring-security-crypto:6.4.3")
+    implementation("org.springframework.security:spring-security-web:6.4.3")
 
     // NETFLIX START
     implementation(libs.netflix.graphql.dgs.codegen)

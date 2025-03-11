@@ -1,6 +1,6 @@
 package com.onyxdb.idm.repositories;
 
-import java.util.UUID;
+import java.util.Optional;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -22,14 +22,14 @@ public class RefreshTokenRepository {
     }
 
     public void saveToken(RefreshToken token) {
-        valueOps.set(token.id().toString(), token);
+        valueOps.set(token.token().toString(), token);
     }
 
-    public RefreshToken getByToken(String token) {
-        return valueOps.get(token);
+    public Optional<RefreshToken> getByToken(String token) {
+        return Optional.ofNullable(valueOps.get(token));
     }
 
     public void deleteToken(RefreshToken token) {
-        redisTemplate.delete(token.id().toString());
+        redisTemplate.delete(token.token().toString());
     }
 }
