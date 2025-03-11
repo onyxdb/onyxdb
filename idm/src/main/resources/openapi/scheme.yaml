@@ -97,10 +97,10 @@ paths:
                     type: array
                     items:
                       type: string
-#                    type: object
-#                    additionalProperties: true
-#                    items:
-#                      $ref: '#/components/schemas/PermissionDTO'
+                #                    type: object
+                #                    additionalProperties: true
+                #                    items:
+                #                      $ref: '#/components/schemas/PermissionDTO'
                 required:
                   - account
                   - permissions

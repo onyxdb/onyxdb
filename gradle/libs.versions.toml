@@ -1,7 +1,7 @@
 [versions]
 springBoot = "3.3.5"
 springData = "3.4.3"
-springSecurity = "6.4.2"
+springSecurity = "6.4.3"
 openapiGenerator = "7.5.0"
 swaggerCoreV3-swaggerAnnotations = "2.2.20"
 javaxAnnotation-annotionApi = "1.3.2"
@@ -50,7 +50,10 @@ springBoot-starterJdbc = { group = "org.springframework.boot", name = "spring-bo
 springBoot-starterValidation = { group = "org.springframework.boot", name = "spring-boot-starter-validation", version.ref = "springBoot" }
 springBoot-starterDataRedis = { group = "org.springframework.boot", name = "spring-boot-starter-data-redis", version.ref = "springBoot" }
 springData-dataRedis = { group = "org.springframework.data", name = "spring-data-redis", version.ref = "springData" }
+springSecurity-core = { group = "org.springframework.security", name = "spring-security-core", version.ref = "springSecurity" }
+springSecurity-config = { group = "org.springframework.security", name = "spring-security-config", version.ref = "springSecurity" }
 springSecurity-crypto = { group = "org.springframework.security", name = "spring-security-crypto", version.ref = "springSecurity" }
+springSecurity-web = { group = "org.springframework.security", name = "spring-security-web", version.ref = "springSecurity" }
 swaggerCoreV3-swaggerAnnotations = { group = "io.swagger.core.v3", name = "swagger-annotations", version.ref = "swaggerCoreV3-swaggerAnnotations" }
 javaxAnnotation-annotionApi = { group = "javax.annotation", name = "javax.annotation-api", version.ref = "javaxAnnotation-annotionApi" }
 javaxValidation-validationApi = { group = "javax.validation", name = "validation-api", version.ref = "javaxValidation-validationApi" }

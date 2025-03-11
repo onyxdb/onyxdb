@@ -35,13 +35,12 @@ import com.onyxdb.idm.services.jwt.JwtResponse;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
+    public static final String SECRET = "357638792F423F4428472B4B6250655368566D597133743677397A2443264629";
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final AccountRepository accountRepository;
     private final RoleRepository roleRepository;
     private final RefreshTokenService refreshTokenService;
     private final JwtProvider jwtProvider;
-
-    public static final String SECRET = "357638792F423F4428472B4B6250655368566D597133743677397A2443264629";
 
     public String extractAccountId(String token) {
         return extractClaim(token, Claims::getSubject);
