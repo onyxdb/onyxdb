@@ -11,7 +11,6 @@ import com.onyxdb.idm.models.Account;
 import com.onyxdb.idm.models.OrganizationTree;
 import com.onyxdb.idm.models.OrganizationUnit;
 import com.onyxdb.idm.models.PaginatedResult;
-import com.onyxdb.idm.models.ProductTree;
 import com.onyxdb.idm.repositories.OrganizationUnitRepository;
 
 /**
@@ -28,12 +27,12 @@ public class OrganizationUnitService {
                 .orElseThrow(() -> new ResourceNotFoundException("OrganizationUnit not found"));
     }
 
-    public PaginatedResult<OrganizationUnit> findAll(UUID dcId, UUID parentOuId, Integer limit, Integer offset) {
-        return organizationUnitRepository.findAll(dcId, parentOuId, limit, offset);
+    public PaginatedResult<OrganizationUnit> findAll(String query, UUID dcId, UUID parentOuId, Integer limit, Integer offset) {
+        return organizationUnitRepository.findAll(query, dcId, parentOuId, limit, offset);
     }
 
     public PaginatedResult<OrganizationUnit> findChildren(UUID parentOuId) {
-        return organizationUnitRepository.findAll(null, parentOuId, 0, 0);
+        return organizationUnitRepository.findAll(null, null, parentOuId, 0, 0);
     }
 
     public List<OrganizationUnit> findRootOrgUnits(UUID dcId) {

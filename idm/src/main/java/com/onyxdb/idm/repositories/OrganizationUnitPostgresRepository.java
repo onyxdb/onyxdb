@@ -46,7 +46,7 @@ public class OrganizationUnitPostgresRepository implements OrganizationUnitRepos
     }
 
     @Override
-    public PaginatedResult<OrganizationUnit> findAll(UUID dcId, UUID parentOuId, Integer limit, Integer offset) {
+    public PaginatedResult<OrganizationUnit> findAll(String query, UUID dcId, UUID parentOuId, Integer limit, Integer offset) {
         limit = (limit != null) ? limit : Integer.MAX_VALUE;
         offset = (offset != null) ? offset : 0;
 
@@ -56,6 +56,11 @@ public class OrganizationUnitPostgresRepository implements OrganizationUnitRepos
         }
         if (parentOuId != null) {
             condition = condition.and(organizationUnitTable.PARENT_ID.eq(parentOuId));
+        }
+        if (query != null && !query.isEmpty()) {
+            condition = condition.and(
+                    organizationUnitTable.NAME.containsIgnoreCase(query)
+                            .or(organizationUnitTable.DESCRIPTION.containsIgnoreCase(query)));
         }
 
         List<OrganizationUnit> data = dslContext.selectFrom(organizationUnitTable)

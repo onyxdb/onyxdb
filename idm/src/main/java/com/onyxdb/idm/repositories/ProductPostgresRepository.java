@@ -9,23 +9,18 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
-import org.jooq.Record;
 import org.jooq.Result;
 import org.springframework.stereotype.Repository;
 
 import com.onyxdb.idm.generated.jooq.Tables;
 import com.onyxdb.idm.generated.jooq.tables.ProductTable;
-import com.onyxdb.idm.generated.jooq.tables.records.AccountTableRecord;
 import com.onyxdb.idm.generated.jooq.tables.records.ProductTableRecord;
-import com.onyxdb.idm.models.Account;
 import com.onyxdb.idm.models.PaginatedResult;
 import com.onyxdb.idm.models.Product;
 import com.onyxdb.idm.models.ProductTree;
-import com.onyxdb.idm.models.Role;
 
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.name;
-import static org.jooq.impl.DSL.noTable;
 import static org.jooq.impl.DSL.select;
 import static org.jooq.impl.DSL.trueCondition;
 

@@ -16,6 +16,7 @@ import com.onyxdb.idm.models.Account;
 import com.onyxdb.idm.models.AccountWithRoles;
 import com.onyxdb.idm.models.Role;
 import com.onyxdb.idm.repositories.AccountRepository;
+import com.onyxdb.idm.repositories.RefreshTokenRepository;
 import com.onyxdb.idm.repositories.RoleRepository;
 import com.onyxdb.idm.services.jwt.JwtProvider;
 import com.onyxdb.idm.services.jwt.JwtResponse;
@@ -29,8 +30,10 @@ public class AuthService {
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final AccountRepository accountRepository;
     private final RoleRepository roleRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final JwtProvider jwtProvider;
     private final Map<String, String> refreshStorage = new HashMap<>();
+
 
     /**
      * Аутентификация пользователя.
@@ -108,5 +111,17 @@ public class AuthService {
     public Account getCurrentUser(UUID userId) {
         return accountRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+    }
+
+    public void saveToken(String token, String userId) {
+        refreshTokenRepository.saveToken(token, userId);
+    }
+
+    public String getUserIdByToken(String token) {
+        return refreshTokenRepository.getUserIdByToken(token);
+    }
+
+    public void deleteToken(String token) {
+        refreshTokenRepository.deleteToken(token);
     }
 }

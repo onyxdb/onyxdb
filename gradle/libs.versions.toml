@@ -1,5 +1,6 @@
 [versions]
 springBoot = "3.3.5"
+springData = "3.4.3"
 springSecurity = "6.4.2"
 openapiGenerator = "7.5.0"
 swaggerCoreV3-swaggerAnnotations = "2.2.20"
@@ -12,11 +13,14 @@ flywaydb-flywayCore = "10.17.1"
 studerJooq-studerJooqGradlePlugin = "9.0"
 testcontainers-junitJupiter = "1.20.1"
 testcontainers-postgresql = "1.17.3"
+testcontainers-core = "1.20.6"
 io-jsonwebtoken = "0.11.2"
 # Version should be synced with onyxdb-jooq-manual-conventions plugin
 postgresql-postgresql = "42.7.2"
 apacheCommons-commonsLang3 = "3.17.0"
 springDoc-springdocOpenapiStarterWebmvcUi = "2.6.0"
+yandex-clickhouse-jdbc = "0.3.2"
+
 # GraphQL:
 netflix-dgs-version = "10.0.1"
 netflix-dgs-codegen-version = "7.0.3"
@@ -30,6 +34,7 @@ onyxdb-jooqManualConventions = { id = "onyxdb-jooq-manual-conventions" }
 spring-dependencyManagement = { id = "io.spring.dependency-management" }
 
 springBoot = { id = "org.springframework.boot" }
+springData = { id = "org.springframework.data" }
 openapiGenerator = { id = "org.openapi.generator", version.ref = "openapiGenerator" }
 lombok = { id = "io.freefair.lombok", version.ref = "lombok-gradlePlugin" }
 netflixDGSCodegen = { id = "com.netflix.dgs.codegen", version.ref = "netflix-dgs-codegen-version" }
@@ -43,6 +48,8 @@ springBoot-starterTest = { group = "org.springframework.boot", name = "spring-bo
 springBoot-starterTestcontainers = { group = "org.springframework.boot", name = "spring-boot-testcontainers", version.ref = "springBoot" }
 springBoot-starterJdbc = { group = "org.springframework.boot", name = "spring-boot-starter-jdbc", version.ref = "springBoot" }
 springBoot-starterValidation = { group = "org.springframework.boot", name = "spring-boot-starter-validation", version.ref = "springBoot" }
+springBoot-starterDataRedis = { group = "org.springframework.boot", name = "spring-boot-starter-data-redis", version.ref = "springBoot" }
+springData-dataRedis = { group = "org.springframework.data", name = "spring-data-redis", version.ref = "springData" }
 springSecurity-crypto = { group = "org.springframework.security", name = "spring-security-crypto", version.ref = "springSecurity" }
 swaggerCoreV3-swaggerAnnotations = { group = "io.swagger.core.v3", name = "swagger-annotations", version.ref = "swaggerCoreV3-swaggerAnnotations" }
 javaxAnnotation-annotionApi = { group = "javax.annotation", name = "javax.annotation-api", version.ref = "javaxAnnotation-annotionApi" }
@@ -53,12 +60,15 @@ flywaydb-flywayCore = { group = "org.flywaydb", name = "flyway-core", version.re
 studerJooq-studerJooqGradlePlugin = { group = "nu.studer.jooq", name = "nu.studer.jooq.gradle.plugin", version.ref = "studerJooq-studerJooqGradlePlugin" }
 testcontainers-junitJupiter = { group = "org.testcontainers", name = "junit-jupiter", version.ref = "testcontainers-junitJupiter" }
 testcontainers-postgresql = { group = "org.testcontainers", name = "postgresql", version.ref = "testcontainers-postgresql" }
+testcontainers-core = { group = "org.testcontainers", name = "testcontainers", version.ref = "testcontainers-core" }
+testcontainers-clickhouse = { group = "org.testcontainers", name = "clickhouse", version.ref = "testcontainers-core" }
 postgresql-postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "postgresql-postgresql" }
 apacheCommons-commonsLang3 = { group = "org.apache.commons", name = "commons-lang3", version.ref = "apacheCommons-commonsLang3" }
 springDoc-springdocOpenapiStarterWebmvcUi = { group = "org.springdoc", name = "springdoc-openapi-starter-webmvc-ui", version.ref = "springDoc-springdocOpenapiStarterWebmvcUi" }
 ioJsonwebtoken-jjwtApi = { group = 'io.jsonwebtoken', name = 'jjwt-api', version.ref = 'io-jsonwebtoken' }
 ioJsonwebtoken-jjwtImpl = { group = 'io.jsonwebtoken', name = 'jjwt-impl', version.ref = 'io-jsonwebtoken' }
 ioJsonwebtoken-jjwtJackson = { group = 'io.jsonwebtoken', name = 'jjwt-jackson', version.ref = 'io-jsonwebtoken' }
+yandex-clickhouseJdbc = { group = "ru.yandex.clickhouse", name = "clickhouse-jdbc", version.ref = "yandex-clickhouse-jdbc" }
 
 # GraphQL:
 netflix-graphql-dgs-codegen = { group = "com.netflix.graphql.dgs", name = "graphql-dgs-spring-graphql-starter" }

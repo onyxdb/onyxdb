@@ -8,7 +8,6 @@ import com.onyxdb.idm.models.Account;
 import com.onyxdb.idm.models.OrganizationTree;
 import com.onyxdb.idm.models.OrganizationUnit;
 import com.onyxdb.idm.models.PaginatedResult;
-import com.onyxdb.idm.models.ProductTree;
 
 /**
  * @author ArtemFed
@@ -16,7 +15,7 @@ import com.onyxdb.idm.models.ProductTree;
 public interface OrganizationUnitRepository {
     Optional<OrganizationUnit> findById(UUID id);
 
-    PaginatedResult<OrganizationUnit> findAll(UUID dcId, UUID parentOuId, Integer limit, Integer offset);
+    PaginatedResult<OrganizationUnit> findAll(String query, UUID dcId, UUID parentOuId, Integer limit, Integer offset);
 
     List<OrganizationUnit> findRootOrgUnits(UUID dcId);
 
