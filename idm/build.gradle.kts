@@ -39,6 +39,10 @@ dependencies {
     implementation(libs.javaxValidation.validationApi)
     // openapi generator END
 
+    implementation(libs.springBoot.starterDataRedis)
+    implementation(libs.springData.dataRedis)
+    implementation(libs.yandex.clickhouseJdbc)
+
     implementation(libs.ioJsonwebtoken.jjwtApi)
     implementation(libs.ioJsonwebtoken.jjwtImpl)
     implementation(libs.ioJsonwebtoken.jjwtJackson)

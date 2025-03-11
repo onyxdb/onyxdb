@@ -14,10 +14,11 @@ import com.onyxdb.idm.models.BusinessRole;
 import com.onyxdb.idm.models.OrganizationUnit;
 import com.onyxdb.idm.models.PaginatedResult;
 import com.onyxdb.idm.models.Role;
+import com.onyxdb.idm.models.clickhouse.AccountBusinessRolesHistory;
+import com.onyxdb.idm.models.clickhouse.AccountRolesHistory;
 import com.onyxdb.idm.repositories.AccountRepository;
-import com.onyxdb.idm.repositories.BusinessRoleRepository;
-import com.onyxdb.idm.repositories.OrganizationUnitRepository;
-import com.onyxdb.idm.repositories.ProductRepository;
+import com.onyxdb.idm.repositories.ClickHouseRepository;
+import com.onyxdb.idm.repositories.RefreshTokenRepository;
 
 /**
  * @author ArtemFed
@@ -29,9 +30,8 @@ public class AccountService {
 
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final AccountRepository accountRepository;
-    private final OrganizationUnitRepository organizationUnitRepository;
-    private final BusinessRoleRepository businessRoleRepository;
-    private final ProductRepository productRepository;
+    private final ClickHouseRepository clickHouseRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     public Account findById(UUID id) {
         return accountRepository
@@ -61,10 +61,16 @@ public class AccountService {
 
     public void addBusinessRole(UUID accountId, UUID businessRoleId) {
         accountRepository.addBusinessRole(accountId, businessRoleId);
+        clickHouseRepository.addAccountBusinessRoleHistory(AccountBusinessRolesHistory.create(accountId, businessRoleId, "add"));
     }
 
     public void removeBusinessRole(UUID accountId, UUID businessRoleId) {
         accountRepository.removeBusinessRole(accountId, businessRoleId);
+        clickHouseRepository.addAccountBusinessRoleHistory(AccountBusinessRolesHistory.create(accountId, businessRoleId, "remove"));
+    }
+
+    public List<AccountBusinessRolesHistory> getAccountBusinessRolesHistory(UUID accountId) {
+        return clickHouseRepository.getAllAccountBusinessRoleHistory(accountId);
     }
 
     public List<BusinessRole> getBusinessRoles(UUID accountId) {
@@ -75,12 +81,20 @@ public class AccountService {
         return accountRepository.getAccountOrganizationUnits(accountId);
     }
 
+    public List<AccountRolesHistory> getAccountRolesHistory(UUID accountId) {
+        return clickHouseRepository.getAllAccountRoleHistory(accountId);
+    }
+
     public void addRole(UUID accountId, UUID roleId) {
         accountRepository.addRole(accountId, roleId);
+        var record = AccountRolesHistory.create(accountId, roleId, "add");
+        clickHouseRepository.addAccountRoleHistory(record);
+        refreshTokenRepository.saveToken("ABC", accountId.toString());
     }
 
     public void removeRole(UUID accountId, UUID roleId) {
         accountRepository.removeRole(accountId, roleId);
+        clickHouseRepository.addAccountRoleHistory(AccountRolesHistory.create(accountId, roleId, "remove"));
     }
 
     public List<Role> getRoles(UUID accountId) {

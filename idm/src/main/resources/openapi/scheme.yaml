@@ -330,6 +330,34 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
+  /api/v1/accounts/{accountId}/roles-history:
+    get:
+      summary: Get account roles History
+      operationId: getAccountRolesHistory
+      tags:
+        - Accounts
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountRolesHistoryDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
   /api/v1/accounts/{accountId}/roles/{roleId}:
     post:
       summary: Add role to account link
@@ -407,6 +435,34 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/BusinessRoleDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+  /api/v1/accounts/{accountId}/business-roles-history:
+    get:
+      summary: Get account business roles History
+      operationId: getAccountBusinessRolesHistory
+      tags:
+        - Accounts
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountBusinessRolesHistoryDTO'
         '400':
           description: Bad Request
           content:
@@ -2462,6 +2518,54 @@ components:
         - startPosition
         - endPosition
         - data
+
+    AccountRolesHistoryDTO:
+      type: object
+      properties:
+        record_id:
+          type: string
+          format: uuid
+        account_id:
+          type: string
+          format: uuid
+        role_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - record_id
+        - account_id
+        - role_id
+        - status
+        - createdAt
+
+    AccountBusinessRolesHistoryDTO:
+      type: object
+      properties:
+        record_id:
+          type: string
+          format: uuid
+        account_id:
+          type: string
+          format: uuid
+        business_role_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - record_id
+        - account_id
+        - business_role_id
+        - status
+        - createdAt
 
     BadRequestResponse:
       type: object
