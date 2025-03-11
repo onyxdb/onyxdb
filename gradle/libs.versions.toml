@@ -13,6 +13,7 @@ flywaydb-flywayCore = "10.17.1"
 studerJooq-studerJooqGradlePlugin = "9.0"
 testcontainers-junitJupiter = "1.20.1"
 testcontainers-postgresql = "1.17.3"
+testcontainers-core = "1.20.6"
 io-jsonwebtoken = "0.11.2"
 # Version should be synced with onyxdb-jooq-manual-conventions plugin
 postgresql-postgresql = "42.7.2"
@@ -59,6 +60,8 @@ flywaydb-flywayCore = { group = "org.flywaydb", name = "flyway-core", version.re
 studerJooq-studerJooqGradlePlugin = { group = "nu.studer.jooq", name = "nu.studer.jooq.gradle.plugin", version.ref = "studerJooq-studerJooqGradlePlugin" }
 testcontainers-junitJupiter = { group = "org.testcontainers", name = "junit-jupiter", version.ref = "testcontainers-junitJupiter" }
 testcontainers-postgresql = { group = "org.testcontainers", name = "postgresql", version.ref = "testcontainers-postgresql" }
+testcontainers-core = { group = "org.testcontainers", name = "testcontainers", version.ref = "testcontainers-core" }
+testcontainers-clickhouse = { group = "org.testcontainers", name = "clickhouse", version.ref = "testcontainers-core" }
 postgresql-postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "postgresql-postgresql" }
 apacheCommons-commonsLang3 = { group = "org.apache.commons", name = "commons-lang3", version.ref = "apacheCommons-commonsLang3" }
 springDoc-springdocOpenapiStarterWebmvcUi = { group = "org.springdoc", name = "springdoc-openapi-starter-webmvc-ui", version.ref = "springDoc-springdocOpenapiStarterWebmvcUi" }

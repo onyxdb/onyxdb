@@ -53,6 +53,8 @@ dependencies {
     testImplementation(libs.springBoot.starterTest)
     testImplementation(libs.testcontainers.junitJupiter)
     testImplementation(libs.testcontainers.postgresql)
+    testImplementation(libs.testcontainers.core)
+    testImplementation(libs.testcontainers.clickhouse)
 }
 
 

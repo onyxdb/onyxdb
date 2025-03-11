@@ -35,6 +35,10 @@ logging:
     org.springframework.web.filter.CommonsRequestLoggingFilter:
       DEBUG
 
+clickhouse:
+  datasource:
+    url: "jdbc:clickhouse://localhost:8123/default"
+
 server:
   port: ${ONYXDB_IDM_API_HTTP_PORT:9003}
 
