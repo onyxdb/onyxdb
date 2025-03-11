@@ -96,7 +96,11 @@ paths:
                   permissions:
                     type: array
                     items:
-                      $ref: '#/components/schemas/PermissionDTO'
+                      type: string
+#                    type: object
+#                    additionalProperties: true
+#                    items:
+#                      $ref: '#/components/schemas/PermissionDTO'
                 required:
                   - account
                   - permissions

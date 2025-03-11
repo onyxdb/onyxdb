@@ -3,13 +3,11 @@ package com.onyxdb.idm.services;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 import java.util.function.Function;
 
 import io.jsonwebtoken.Claims;
@@ -58,9 +56,9 @@ public class AuthService {
         return claimsResolver.apply(claims);
     }
 
-    public Set<String> extractPermissions(String token) {
+    public List<String> extractPermissions(String token) {
         Claims claims = extractAllClaims(token);
-        return new HashSet<String>(claims.get("permissions", List.class));
+        return (claims.get("permissions", List.class));
     }
 
     private Claims extractAllClaims(String token) {
@@ -77,6 +75,7 @@ public class AuthService {
     }
 
     public Boolean validateToken(String token, Account account) {
+//        TODO как-то странно работаю с account Id и проверкой самого токена, что-то лишнее!
         final String accountId = extractAccountId(token);
         return (Objects.equals(accountId, account.id().toString()) && !isTokenExpired(token));
     }
@@ -104,7 +103,7 @@ public class AuthService {
     public JwtResponse login(String login, String password) {
         Optional<Account> accountOptional = accountRepository.findByLogin(login);
         if (accountOptional.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Неверное имя пользователя или пароль");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неверное имя пользователя или пароль");
 
         }
         Account account = accountOptional.get();
@@ -112,7 +111,7 @@ public class AuthService {
 //        TODO поменять на passwordEncoder для паролей
 //        if (passwordEncoder.matches(password, account.password())) {
         if (!Objects.equals(password, account.password())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Неверное имя пользователя или пароль");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неверное имя пользователя или пароль");
         }
 
 //        Set<String> permissions = roleRepository.getPermissionsByAccountId(account.getId());
@@ -145,10 +144,5 @@ public class AuthService {
         String accessToken = generateAccessToken(account, permissions);
 
         return new JwtResponse(accessToken, refreshToken.token().toString());
-    }
-
-    public Account getCurrentUser(UUID userId) {
-        return accountRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
     }
 }

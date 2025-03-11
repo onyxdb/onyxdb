@@ -100,7 +100,9 @@ public class AccountService {
         return accountRepository.getAccountRoles(accountId);
     }
 
-//    public List<String> getAccountPermissions(UUID accountId) {
+    public List<String> getAllPermissions(UUID accountId) {
+        return List.of();
+    }
 //
 //
 //        List<Permission> permissions = permissionRepository.findAccountPermissionsToProduct(accountId, productId, permissionType);
