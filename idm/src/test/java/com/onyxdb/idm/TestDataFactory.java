@@ -2,7 +2,6 @@ package com.onyxdb.idm;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -34,7 +33,7 @@ public class TestDataFactory {
     }
 
     public static RoleDTO createRoleDTO(
-            UUID id, String roleType, String name, String shopName, String description, Boolean isShopHidden, UUID productId, UUID orgUnitId
+            UUID id, String roleType, String name, String shopName, String description, Boolean isShopHidden, String entity, UUID productId, UUID orgUnitId
     ) {
         RoleDTO roleDTO = new RoleDTO();
         roleDTO.setId(id != null ? id : UUID.randomUUID());
@@ -43,6 +42,7 @@ public class TestDataFactory {
         roleDTO.setShopName(shopName);
         roleDTO.setIsShopHidden(isShopHidden);
         roleDTO.setDescription(description);
+        roleDTO.setEntity(entity);
         roleDTO.setProductId(productId);
         roleDTO.setOrgUnitId(orgUnitId);
         return roleDTO;

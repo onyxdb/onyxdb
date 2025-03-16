@@ -15,6 +15,8 @@ import com.onyxdb.idm.models.Role;
  * @author ArtemFed
  */
 public interface AccountRepository {
+    int count();
+
     Optional<Account> findById(UUID id);
 
     Optional<Account> findByLogin(String login);

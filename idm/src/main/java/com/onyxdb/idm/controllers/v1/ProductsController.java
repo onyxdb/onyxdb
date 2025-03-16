@@ -73,6 +73,13 @@ public class ProductsController implements ProductsApi {
     }
 
     @Override
+    public ResponseEntity<List<ProductDTO>> getProductParents(UUID productId) {
+        List<Product> products = productService.findAllParentProducts(productId);
+        List<ProductDTO> productDTOs = products.stream().map(Product::toDTO).toList();
+        return ResponseEntity.ok(productDTOs);
+    }
+
+    @Override
     public ResponseEntity<ProductTreeDTO> getProductTree(UUID productId, Integer depth) {
         ProductTree productTree = productService.findChildrenTree(productId, depth);
         return ResponseEntity.ok(productTree.toDTO());

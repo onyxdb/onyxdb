@@ -1,6 +1,10 @@
 package com.onyxdb.idm.services;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
@@ -13,12 +17,14 @@ import com.onyxdb.idm.models.Account;
 import com.onyxdb.idm.models.BusinessRole;
 import com.onyxdb.idm.models.OrganizationUnit;
 import com.onyxdb.idm.models.PaginatedResult;
+import com.onyxdb.idm.models.Permission;
 import com.onyxdb.idm.models.Role;
+import com.onyxdb.idm.models.RoleWithPermissions;
 import com.onyxdb.idm.models.clickhouse.AccountBusinessRolesHistory;
 import com.onyxdb.idm.models.clickhouse.AccountRolesHistory;
 import com.onyxdb.idm.repositories.AccountRepository;
+import com.onyxdb.idm.repositories.BusinessRoleRepository;
 import com.onyxdb.idm.repositories.ClickHouseRepository;
-import com.onyxdb.idm.repositories.RefreshTokenRepository;
 
 /**
  * @author ArtemFed
@@ -30,8 +36,9 @@ public class AccountService {
 
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final AccountRepository accountRepository;
+    private final BusinessRoleRepository businessRoleRepository;
+    private final RoleService roleService;
     private final ClickHouseRepository clickHouseRepository;
-    private final RefreshTokenRepository refreshTokenRepository;
 
     public Account findById(UUID id) {
         return accountRepository
@@ -89,7 +96,6 @@ public class AccountService {
         accountRepository.addRole(accountId, roleId);
         var record = AccountRolesHistory.create(accountId, roleId, "add");
         clickHouseRepository.addAccountRoleHistory(record);
-        refreshTokenRepository.saveToken("ABC", accountId.toString());
     }
 
     public void removeRole(UUID accountId, UUID roleId) {
@@ -101,9 +107,59 @@ public class AccountService {
         return accountRepository.getAccountRoles(accountId);
     }
 
-//    public List<String> getAccountPermissions(UUID accountId) {
-//
-//
+    public String getPermissionBit(Role role, Permission permission) {
+        String prefix = "";
+        if (permission.resourceType() != null) {
+            prefix += permission.resourceType() + "-";
+        }
+
+        if (role.productId() != null) {
+            prefix += "product-" + role.productId();
+        } else if (role.orgUnitId() != null) {
+            prefix += "orgunit-" + role.orgUnitId();
+        } else {
+            prefix += "global";
+        }
+        return (prefix + "-" + permission.actionType()).toLowerCase();
+    }
+
+    public Map<String, Map<String, Object>> getAllPermissionBitsResponse(UUID accountId) {
+        Map<String, Optional<Map<String, Object>>> optionalData = getAllPermissionBits(accountId);
+        Map<String, Map<String, Object>> data = new HashMap<>();
+        for (Map.Entry<String, Optional<Map<String, Object>>> entry : optionalData.entrySet()) {
+            data.put(entry.getKey(), entry.getValue().orElse(null));
+        }
+        return data;
+    }
+
+    public Map<String, Optional<Map<String, Object>>> getAllPermissionBits(UUID accountId) {
+        List<RoleWithPermissions> roles = getAllPermissions(accountId);
+        Map<String, Optional<Map<String, Object>>> bits = new HashMap<>();
+        for (RoleWithPermissions roleWP : roles) {
+            var role = roleWP.role();
+            for (Permission permission : roleWP.permissions()) {
+                bits.put(getPermissionBit(role, permission), Optional.ofNullable(permission.data().isEmpty() ? null : permission.data()));
+            }
+        }
+        return bits;
+    }
+
+    public List<RoleWithPermissions> getAllPermissions(UUID accountId) {
+        List<Role> roles = accountRepository.getAccountRoles(accountId);
+        List<BusinessRole> brs = accountRepository.getAccountBusinessRoles(accountId);
+        List<Role> allRoles = new ArrayList<>(roles);
+        for (BusinessRole br : brs) {
+            List<Role> brsRoles = businessRoleRepository.getRoles(br.id());
+            allRoles.addAll(brsRoles);
+        }
+        List<RoleWithPermissions> allPermissions = new ArrayList<>();
+        for (Role role : allRoles) {
+            RoleWithPermissions rolePermission = roleService.getPermissionsByRoleId(role.id());
+            allPermissions.add(rolePermission);
+        }
+        return allPermissions;
+    }
+
 //        List<Permission> permissions = permissionRepository.findAccountPermissionsToProduct(accountId, productId, permissionType);
 //        return permissions.stream()
 //                .map(permission -> String.format("%s-product-%s-%s", permission.resourceType(), productId, permission.actionType()))

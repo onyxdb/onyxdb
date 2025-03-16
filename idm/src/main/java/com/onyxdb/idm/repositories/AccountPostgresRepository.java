@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.Result;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import com.onyxdb.idm.generated.jooq.Tables;
@@ -38,6 +40,8 @@ import static org.jooq.impl.DSL.trueCondition;
 @Repository
 @RequiredArgsConstructor
 public class AccountPostgresRepository implements AccountRepository {
+    private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     private final static AccountTable accountTable = Tables.ACCOUNT_TABLE;
     private final static AccountBusinessRoleTable accountBusinessRoleTable = Tables.ACCOUNT_BUSINESS_ROLE_TABLE;
     private final static AccountRoleTable accountRoleTable = Tables.ACCOUNT_ROLE_TABLE;
@@ -49,6 +53,11 @@ public class AccountPostgresRepository implements AccountRepository {
     private final static AccountOuTable organizationUnitAccountTable = Tables.ACCOUNT_OU_TABLE;
 
     private final DSLContext dslContext;
+
+    @Override
+    public int count() {
+        return dslContext.fetchCount(accountTable);
+    }
 
     @Override
     public Optional<Account> findById(UUID id) {
@@ -114,7 +123,7 @@ public class AccountPostgresRepository implements AccountRepository {
         var record = dslContext.insertInto(accountTable)
                 .set(accountTable.ID, UUID.randomUUID())
                 .set(accountTable.LOGIN, account.login())
-                .set(accountTable.PASSWORD, account.password())
+                .set(accountTable.PASSWORD, passwordEncoder.encode(account.password()))
                 .set(accountTable.EMAIL, account.email())
                 .set(accountTable.FIRST_NAME, account.firstName())
                 .set(accountTable.LAST_NAME, account.lastName())
@@ -132,7 +141,7 @@ public class AccountPostgresRepository implements AccountRepository {
     public Account update(Account account) {
         var record = dslContext.update(accountTable)
                 .set(accountTable.LOGIN, account.login())
-                .set(accountTable.PASSWORD, account.password())
+                .set(accountTable.PASSWORD, passwordEncoder.encode(account.password()))
                 .set(accountTable.EMAIL, account.email())
                 .set(accountTable.FIRST_NAME, account.firstName())
                 .set(accountTable.LAST_NAME, account.lastName())
