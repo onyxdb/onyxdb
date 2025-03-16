@@ -1,6 +1,9 @@
 package com.onyxdb.idm.controllers.v1;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
@@ -15,12 +18,16 @@ import com.onyxdb.idm.generated.openapi.models.AccountRolesHistoryDTO;
 import com.onyxdb.idm.generated.openapi.models.BusinessRoleDTO;
 import com.onyxdb.idm.generated.openapi.models.OrganizationUnitDTO;
 import com.onyxdb.idm.generated.openapi.models.PaginatedAccountResponse;
+import com.onyxdb.idm.generated.openapi.models.PermissionDTO;
 import com.onyxdb.idm.generated.openapi.models.RoleDTO;
+import com.onyxdb.idm.generated.openapi.models.RoleWithPermissionsDTO;
 import com.onyxdb.idm.models.Account;
 import com.onyxdb.idm.models.BusinessRole;
 import com.onyxdb.idm.models.OrganizationUnit;
 import com.onyxdb.idm.models.PaginatedResult;
+import com.onyxdb.idm.models.Permission;
 import com.onyxdb.idm.models.Role;
+import com.onyxdb.idm.models.RoleWithPermissions;
 import com.onyxdb.idm.models.clickhouse.AccountBusinessRolesHistory;
 import com.onyxdb.idm.models.clickhouse.AccountRolesHistory;
 import com.onyxdb.idm.services.AccountService;
@@ -78,6 +85,19 @@ public class AccountsController implements AccountsApi {
         List<OrganizationUnit> data = accountService.getOrganizationUnits(accountId);
         List<OrganizationUnitDTO> dataDTOs = data.stream().map(OrganizationUnit::toDTO).toList();
         return ResponseEntity.ok(dataDTOs);
+    }
+
+    @Override
+    public ResponseEntity<List<RoleWithPermissionsDTO>> getAccountPermission(UUID accountId) {
+        List<RoleWithPermissions> data = accountService.getAllPermissions(accountId);
+        List<RoleWithPermissionsDTO> dataDTOs = data.stream().map(RoleWithPermissions::toDTO).toList();
+        return ResponseEntity.ok(dataDTOs);
+    }
+
+    @Override
+    public ResponseEntity<Map<String, Map<String, Object>>> getAccountPermissionBits(UUID accountId) {
+        Map<String, Map<String, Object>> data = accountService.getAllPermissionBitsResponse(accountId);
+        return ResponseEntity.ok(data);
     }
 
     @Override

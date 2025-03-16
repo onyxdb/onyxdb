@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,9 +18,11 @@ import com.onyxdb.idm.generated.openapi.models.ProductDTO;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@Disabled
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class IdmApiIntegrationGetTest extends PostgresTests {
+//@Disabled
+//@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+class IdmApiIntegrationGetTest {
+
+    final private String apiAccessToken = "eyJhbGciOiJIUzI1NiJ9.eyJwZXJtaXNzaW9ucyI6WyJnbG9iYWwtYW55Il0sInN1YiI6ImQ3NDliYjMxLTA1NWEtNDdkNi1hZDYwLTMyYzNlZTI3NTVjYiIsImlhdCI6MTc0MTc4NTY2OCwiZXhwIjozNTg3Mjg5NjY4fQ.NJCRSpVyqNjqNAYrAQPwfyjOrSQrUSoQKbH01o9puk0";
 
     @Autowired
     private WebTestClient webTestClient;
@@ -30,6 +31,7 @@ class IdmApiIntegrationGetTest extends PostgresTests {
     public void setup() {
         this.webTestClient = WebTestClient.bindToServer()
                 .baseUrl("http://localhost:9003")
+                .defaultHeader("Authorization", "Bearer " + apiAccessToken)
                 .build();
     }
 

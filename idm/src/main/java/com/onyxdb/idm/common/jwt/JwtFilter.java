@@ -2,6 +2,8 @@ package com.onyxdb.idm.common.jwt;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import io.jsonwebtoken.ExpiredJwtException;
@@ -47,12 +49,17 @@ public class JwtFilter extends OncePerRequestFilter {
                 Account account = accountService.findById(accountUUID);
 
                 if (authService.validateToken(token, account)) {
-                    List<String> permissions = accountService.getAllPermissions(accountUUID);
+                    Map<String, Optional<Map<String, Object>>> permissions = accountService.getAllPermissionBits(accountUUID);
+
+                    List<SimpleGrantedAuthority> authorities = permissions.keySet().stream()
+                            .map(SimpleGrantedAuthority::new)
+                            .toList();
 
                     UsernamePasswordAuthenticationToken authentication =
-                            new UsernamePasswordAuthenticationToken(account, null, permissions.stream()
-                                    .map(SimpleGrantedAuthority::new)
-                                    .toList());
+                            new UsernamePasswordAuthenticationToken(account, null, authorities);
+
+                    // Прокидываем permissions как details
+                    authentication.setDetails(permissions);
 
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }

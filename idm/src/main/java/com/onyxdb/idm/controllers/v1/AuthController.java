@@ -1,7 +1,7 @@
 package com.onyxdb.idm.controllers.v1;
 
 
-import java.util.List;
+import java.util.Map;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +38,15 @@ public class AuthController implements AuthApi {
     }
 
     @Override
+    public ResponseEntity<JwtResponseDTO> generateServiceToken(AuthRequestDTO authRequestDTO) {
+        JwtResponse tokens = authService.generateServiceToken(authRequestDTO.getUsername(), authRequestDTO.getPassword());
+        JwtResponseDTO response = new JwtResponseDTO()
+                .accessToken(tokens.getAccessToken())
+                .refreshToken(tokens.getRefreshToken());
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
     public ResponseEntity<Void> logout(RefreshTokenDTO refreshTokenDTO) {
         authService.logout(refreshTokenDTO.getRefreshToken());
         return ResponseEntity.noContent().build();
@@ -59,31 +68,10 @@ public class AuthController implements AuthApi {
         Account account = SecurityContextUtil.getCurrentAccount();
         AccountDTO accountDTO = account.toDTO();
 
+        Map<String, Map<String, Object>> data = accountService.getAllPermissionBitsResponse(account.id());
         GetCurrentUser200Response response = new GetCurrentUser200Response()
                 .account(accountDTO)
-                .permissions(List.of(
-                        "web-global-domain-component-create",
-                        "web-global-domain-component-edit",
-                        "web-global-domain-component-delete",
-                        "web-global-organization-unit-create",
-                        "web-global-organization-unit-edit",
-                        "web-global-organization-unit-delete",
-                        "web-global-business-role-create",
-                        "web-global-business-role-edit",
-                        "web-global-business-role-delete",
-                        "web-global-role-create",
-                        "web-global-role-edit",
-                        "web-global-role-delete",
-                        "web-global-role-request-edit",
-                        "web-global-account-create",
-                        "web-global-account-edit",
-                        "web-global-account-delete",
-                        "web-global-product-create",
-                        "web-global-product-edit",
-                        "web-global-product-delete",
-                        "web-product-123-edit",
-                        "web-product-123-view"
-                ));
+                .permissions(data);
 
         return ResponseEntity.ok(response);
     }

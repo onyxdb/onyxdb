@@ -22,6 +22,7 @@ import com.onyxdb.idm.models.ProductTree;
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.name;
 import static org.jooq.impl.DSL.select;
+import static org.jooq.impl.DSL.table;
 import static org.jooq.impl.DSL.trueCondition;
 
 /**
@@ -115,22 +116,38 @@ public class ProductPostgresRepository implements ProductRepository {
 
     @Override
     public List<Product> findAllParentProducts(UUID productId) {
-        var parentTable = productTable.as("parent");
         var cte = name("recursive_cte").as(
                 select(productTable.fields())
                         .from(productTable)
                         .where(productTable.ID.eq(productId))
                         .unionAll(
-                                select(parentTable.fields())
-                                        .from(parentTable)
-                                        .join(name("recursive_cte"))
-                                        .on(parentTable.PARENT_ID.eq(field(name("recursive_cte", "id"), UUID.class)))
-                        )
+                                select(productTable.fields())
+                                        .from(productTable)
+                                        .join(table(name("recursive_cte")))
+                                        .on(field(name("recursive_cte", "parent_id"), org.jooq.impl.SQLDataType.UUID)
+                                                .eq(productTable.ID)))
         );
+
         return dslContext.withRecursive(cte)
                 .selectFrom(cte)
-                .orderBy(productTable.CREATED_AT)
-                .fetchInto(Product.class);
+                .fetch()
+                .map(record -> Product.fromDAO(record.into(ProductTableRecord.class)));
+//        var parentTable = productTable.as("parent");
+//        var cte = name("recursive_cte").as(
+//                select(productTable.fields())
+//                        .from(productTable)
+//                        .where(productTable.ID.eq(productId))
+//                        .unionAll(
+//                                select(parentTable.fields())
+//                                        .from(parentTable)
+//                                        .join(name("recursive_cte"))
+//                                        .on(parentTable.PARENT_ID.eq(field(name("recursive_cte", "id"), UUID.class)))
+//                        )
+//        );
+//        return dslContext.withRecursive(cte)
+//                .selectFrom(cte)
+//                .orderBy(productTable.CREATED_AT)
+//                .fetchInto(Product.class);
     }
 
     @Override

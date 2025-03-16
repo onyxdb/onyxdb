@@ -97,7 +97,6 @@ public class BusinessRolePostgresRepository implements BusinessRoleRepository {
 
         return dslContext.withRecursive(cte)
                 .selectFrom(cte)
-                .orderBy(businessRoleTable.CREATED_AT)
                 .fetch()
                 .map(record -> BusinessRole.fromDAO(record.into(BusinessRoleTableRecord.class)));
     }

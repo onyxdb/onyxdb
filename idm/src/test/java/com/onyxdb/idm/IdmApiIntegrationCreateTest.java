@@ -5,12 +5,9 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import com.onyxdb.idm.generated.openapi.models.AccountDTO;
@@ -26,10 +23,12 @@ import com.onyxdb.idm.generated.openapi.models.RoleWithPermissionsDTO;
 import static com.onyxdb.idm.TestDataFactory.createRoleRequestDTO;
 
 
-@Disabled
-@ActiveProfiles({"dev"})
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class IdmApiIntegrationCreateTest extends PostgresTests {
+//@Disabled
+//@ActiveProfiles({"dev"})
+//@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+public class IdmApiIntegrationCreateTest {
+
+    final private String apiAccessToken = "eyJhbGciOiJIUzI1NiJ9.eyJwZXJtaXNzaW9ucyI6W10sInN1YiI6ImQ3NDliYjMxLTA1NWEtNDdkNi1hZDYwLTMyYzNlZTI3NTVjYiIsImlhdCI6MTc0MTc4MzkyNCwiZXhwIjoxNzQxNzg1NzI0fQ.lME8AS0pT_yA0DMEh2ZaI6fCm_hJx5waAx_5cWY6gQ4";
 
     @Autowired
     private WebTestClient webTestClient;
@@ -38,6 +37,7 @@ public class IdmApiIntegrationCreateTest extends PostgresTests {
     public void setup() {
         this.webTestClient = WebTestClient.bindToServer()
                 .baseUrl("http://localhost:9003")
+                .defaultHeader("Authorization", "Bearer " + apiAccessToken)
                 .build();
     }
 
@@ -248,10 +248,10 @@ public class IdmApiIntegrationCreateTest extends PostgresTests {
         // 8. Создаем роли
 
         // Глобальные роли
-        RoleDTO domainComponentAdmin = TestDataFactory.createRoleDTO(null, "ADMIN", "Domain Component Admin", "Domain Component Admin", "Admin role for Domain Component", false, null, null);
-        RoleDTO businessRoleAdmin = TestDataFactory.createRoleDTO(null, "ADMIN", "Business Role Admin", "Business Role Admin", "Admin role for Business Role", false, null, null);
-        RoleDTO roleAdmin = TestDataFactory.createRoleDTO(null, "ADMIN", "Role Admin", "Role Admin", "Admin role for Role", false, null, null);
-        RoleDTO permissionAdmin = TestDataFactory.createRoleDTO(null, "ADMIN", "Permission Admin", "Permission Admin", "Admin role for Permission", false, null, null);
+        RoleDTO domainComponentAdmin = TestDataFactory.createRoleDTO(null, "ADMIN", "Domain Component Admin", "Domain Component Admin", "Admin role for Domain Component", false, "domain-component", null, null);
+        RoleDTO businessRoleAdmin = TestDataFactory.createRoleDTO(null, "ADMIN", "Business Role Admin", "Business Role Admin", "Admin role for Business Role", false, "business-role", null, null);
+        RoleDTO roleAdmin = TestDataFactory.createRoleDTO(null, "ADMIN", "Role Admin", "Role Admin", "Admin role for Role", false, "role", null, null);
+        RoleDTO permissionAdmin = TestDataFactory.createRoleDTO(null, "ADMIN", "Permission Admin", "Permission Admin", "Admin role for Permission", false, "permission", null, null);
 
         RoleWithPermissionsDTO domainComponentAdminWP = TestDataFactory.createRoleWithPermissionsDTO(domainComponentAdmin, List.of(anyDomainComponentPermission));
         RoleWithPermissionsDTO businessRoleAdminWP = TestDataFactory.createRoleWithPermissionsDTO(businessRoleAdmin, List.of(anyBusinessRolePermission));
@@ -445,9 +445,9 @@ public class IdmApiIntegrationCreateTest extends PostgresTests {
         PermissionDTO getPermission = TestDataFactory.createPermissionDTO(null, "GET", "IDM", null);
 
         // Создаем роли
-        RoleDTO viewerRole = TestDataFactory.createRoleDTO(null, "VIEWER", productName + " Viewer", productName + " Viewer", "Viewer role for " + productName, false, productId, null);
-        RoleDTO editorRole = TestDataFactory.createRoleDTO(null, "EDITOR", productName + " Editor", productName + " Editor", "Editor role for " + productName, false, productId, null);
-        RoleDTO ownerRole = TestDataFactory.createRoleDTO(null, "OWNER", productName + " Owner", productName + " Owner", "Owner role for " + productName, false, productId, null);
+        RoleDTO viewerRole = TestDataFactory.createRoleDTO(null, "VIEWER", productName + " Viewer", productName + " Viewer", "Viewer role for " + productName, false, "product", productId, null);
+        RoleDTO editorRole = TestDataFactory.createRoleDTO(null, "EDITOR", productName + " Editor", productName + " Editor", "Editor role for " + productName, false, "product", productId, null);
+        RoleDTO ownerRole = TestDataFactory.createRoleDTO(null, "OWNER", productName + " Owner", productName + " Owner", "Owner role for " + productName, false, "product", productId, null);
 
         // Создаем RoleWithPermissions
         RoleWithPermissionsDTO viewerRoleWP = TestDataFactory.createRoleWithPermissionsDTO(viewerRole, List.of(getPermission));
@@ -482,8 +482,8 @@ public class IdmApiIntegrationCreateTest extends PostgresTests {
         PermissionDTO deletePermission = TestDataFactory.createPermissionDTO(null, "DELETE", "IDM", null);
 
         // Создаем роли
-        RoleDTO adminRole = TestDataFactory.createRoleDTO(null, "ADMIN", productName + " Admin", productName + " Admin", "Admin role for " + productName, false, productId, null);
-        RoleDTO auditorRole = TestDataFactory.createRoleDTO(null, "AUDITOR", productName + " Auditor", productName + " Auditor", "Auditor role for " + productName, false, productId, null);
+        RoleDTO adminRole = TestDataFactory.createRoleDTO(null, "ADMIN", productName + " Admin", productName + " Admin", "Admin role for " + productName, false, "product", productId, null);
+        RoleDTO auditorRole = TestDataFactory.createRoleDTO(null, "AUDITOR", productName + " Auditor", productName + " Auditor", "Auditor role for " + productName, false, "product", productId, null);
 
         // Создаем RoleWithPermissions
         RoleWithPermissionsDTO adminRoleWP = TestDataFactory.createRoleWithPermissionsDTO(adminRole, List.of(getPermission, createPermission, patchPermission, deletePermission));

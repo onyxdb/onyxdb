@@ -77,6 +77,31 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
+  /api/v1/auth/service-token:
+    post:
+      summary: Обновление access токена
+      operationId: generateServiceToken
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthRequestDTO'
+      responses:
+        '200':
+          description: Успешное обновление токена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JwtResponseDTO'
+        '400':
+          description: Неверный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
   /api/v1/auth/me:
     get:
       summary: Получение информации о текущем пользователе
@@ -94,13 +119,7 @@ paths:
                   account:
                     $ref: '#/components/schemas/AccountDTO'
                   permissions:
-                    type: array
-                    items:
-                      type: string
-                #                    type: object
-                #                    additionalProperties: true
-                #                    items:
-                #                      $ref: '#/components/schemas/PermissionDTO'
+                    $ref: '#/components/schemas/PermissionsBitsDTO'
                 required:
                   - account
                   - permissions
@@ -256,6 +275,72 @@ paths:
       responses:
         '204':
           description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+  /api/v1/accounts/{accountId}/permissions:
+    get:
+      summary: Get all account Permissions
+      operationId: getAccountPermission
+      tags:
+        - Accounts
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RoleWithPermissionsDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+  /api/v1/accounts/{accountId}/permissions-bits:
+    get:
+      summary: Get all account Permissions in bits
+      operationId: getAccountPermissionBits
+      tags:
+        - Accounts
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PermissionsBitsDTO'
         '404':
           description: Not Found
           content:
@@ -2047,6 +2132,34 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFoundResponse'
+  /api/v1/products/{productId}/parents:
+    get:
+      summary: Получение родительских элементов продукта
+      operationId: getProductParents
+      tags:
+        - Products
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Успешное получение родительских элементов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductDTO'
+        '404':
+          description: Продукт не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
   /api/v1/products/{productId}/tree:
     get:
       summary: Получение дочерних элементов продукта деревом
@@ -2176,6 +2289,8 @@ components:
           type: boolean
         description:
           type: string
+        entity:
+          type: string
         productId:
           type: string
           format: uuid
@@ -2227,6 +2342,15 @@ components:
         - startPosition
         - endPosition
         - data
+
+    PermissionsBitsDTO:
+      type: object
+      additionalProperties:
+        type: object
+        nullable: true
+        additionalProperties:
+          type: object
+          nullable: true
 
     DomainComponentDTO:
       type: object
