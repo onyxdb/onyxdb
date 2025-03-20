@@ -14,7 +14,7 @@ spring:
   flyway:
     enabled: true
 server:
-  port: ${ONYXDB_MDB_HTTP_PORT:9001}
+  port: ${ONYXDB_MDB_HTTP_PORT:8080}
 
 springdoc:
   api-docs:
@@ -33,4 +33,4 @@ onyxdb-app:
     process-cluster-tasks:
       min-threads: 1
       max-threads: 5
-      polling-interval-seconds: 5
+      polling-interval-seconds: 3000

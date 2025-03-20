@@ -1,0 +1,5 @@
+kubectl -n onyxdb-demo run -i --rm --tty percona-client --image=percona/percona-server-mongodb:7.0.14-8 --restart=Never -- bash -il
+
+mongosh "mongodb+srv://databaseAdmin:T6OtTYgNg9z6sXyYkm@demo-cluster-rs0.onyxdb-demo.svc.cluster.local/admin?replicaSet=rs0&ssl=false"
+
+db.adminCommand( { replSetGetStatus: 1 } )

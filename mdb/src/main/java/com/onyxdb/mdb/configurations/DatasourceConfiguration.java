@@ -16,7 +16,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import com.onyxdb.mdb.common.MemoriousTransactionTemplate;
 
 /**
  * @author foxleren
@@ -55,5 +58,12 @@ public class DatasourceConfiguration {
                 .derive(springTransactionProvider)
                 .derive(SQLDialect.POSTGRES);
         return new DefaultDSLContext(defaultConfiguration);
+    }
+
+    @Bean
+    public MemoriousTransactionTemplate memoriousTransactionTemplate(
+            PlatformTransactionManager platformTransactionManager
+    ) {
+        return new MemoriousTransactionTemplate(platformTransactionManager);
     }
 }

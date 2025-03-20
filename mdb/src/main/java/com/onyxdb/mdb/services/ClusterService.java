@@ -41,37 +41,38 @@ public class ClusterService implements BaseClusterService {
 
     @Override
     public UUID create(UUID createdBy, ClusterToCreate clusterToCreate) {
-        var cluster = Cluster.fromClusterToCreate(clusterToCreate);
-        var clusterOperation = ClusterOperation.scheduled(
-                cluster.id(),
-                ClusterOperationType.CREATE_CLUSTER,
-                createdBy
-        );
-        List<ClusterTaskWithBlockers> clusterTasksWithBlockers = clusterTasksGenerator.generateTasks(
-                cluster.id(),
-                cluster.type(),
-                clusterOperation.id(),
-                clusterOperation.type()
-        );
-
-        List<ClusterTask> clusterTasks = new ArrayList<>(clusterTasksWithBlockers.size());
-        Map<UUID, List<UUID>> taskIdToBlockerIds = new HashMap<>();
-        for (var clusterTaskWithBlockers : clusterTasksWithBlockers) {
-            clusterTasks.add(clusterTaskWithBlockers.task());
-            taskIdToBlockerIds.put(clusterTaskWithBlockers.task().id(), clusterTaskWithBlockers.blockerIds());
-        }
-
-        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
-            @Override
-            protected void doInTransactionWithoutResult(@NonNull TransactionStatus status) {
-                clusterRepository.create(cluster);
-                clusterOperationRepository.create(clusterOperation);
-                clusterTaskRepository.createBulk(clusterTasks);
-                clusterTaskRepository.createBlockerTasksBulk(taskIdToBlockerIds);
-            }
-        });
-
-        return cluster.id();
+//        var cluster = Cluster.fromClusterToCreate(clusterToCreate);
+//        var clusterOperation = ClusterOperation.scheduled(
+//                cluster.id(),
+//                ClusterOperationType.CREATE_CLUSTER,
+//                createdBy
+//        );
+//        List<ClusterTaskWithBlockers> clusterTasksWithBlockers = clusterTasksGenerator.generateTasks(
+//                cluster.id(),
+//                cluster.type(),
+//                clusterOperation.id(),
+//                clusterOperation.type()
+//        );
+//
+//        List<ClusterTask> clusterTasks = new ArrayList<>(clusterTasksWithBlockers.size());
+//        Map<UUID, List<UUID>> taskIdToBlockerIds = new HashMap<>();
+//        for (var clusterTaskWithBlockers : clusterTasksWithBlockers) {
+//            clusterTasks.add(clusterTaskWithBlockers.task());
+//            taskIdToBlockerIds.put(clusterTaskWithBlockers.task().id(), clusterTaskWithBlockers.blockerIds());
+//        }
+//
+//        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+//            @Override
+//            protected void doInTransactionWithoutResult(@NonNull TransactionStatus status) {
+//                clusterRepository.create(cluster);
+//                clusterOperationRepository.create(clusterOperation);
+//                clusterTaskRepository.createBulk(clusterTasks);
+//                clusterTaskRepository.createBlockerTasksBulk(taskIdToBlockerIds);
+//            }
+//        });
+//
+//        return cluster.id();
+        return null;
     }
 
     @Override

@@ -16,26 +16,29 @@ import org.springframework.transaction.support.TransactionTemplate;
  * @author foxleren
  */
 public class MemoriousTransactionTemplate extends TransactionTemplate {
-    private volatile int previousPropagationBehavior = getPropagationBehavior();
+    private volatile int prevIsolation = getIsolationLevel();
 
     public MemoriousTransactionTemplate(PlatformTransactionManager transactionManager) {
         super(transactionManager);
     }
 
     @SuppressWarnings("UnusedReturnValue")
-    public <T> T execute(@NonNull TransactionCallback<T> action, int propagationBehavior) throws TransactionException {
-        setPropagation(propagationBehavior);
+    public <T> T executeWithIsolation(
+            @NonNull TransactionCallback<T> action,
+            int isolation
+    ) throws TransactionException {
+        setCachedIsolation(isolation);
         var result = execute(action);
         restoreSettings();
         return result;
     }
 
-    private synchronized void setPropagation(int propagationBehavior) {
-        previousPropagationBehavior = getPropagationBehavior();
-        setPropagationBehavior(propagationBehavior);
+    private synchronized void setCachedIsolation(int isolation) {
+        prevIsolation = getIsolationLevel();
+        setIsolationLevel(isolation);
     }
 
     private synchronized void restoreSettings() {
-        setPropagationBehavior(previousPropagationBehavior);
+        setIsolationLevel(prevIsolation);
     }
 }

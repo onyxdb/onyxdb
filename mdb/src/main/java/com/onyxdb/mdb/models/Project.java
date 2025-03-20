@@ -15,23 +15,23 @@ public record Project(
         UUID createdBy,
         UUID ownerId
 ) {
-    public ProjectsRecord toJooqProjectRecord() {
-        return new ProjectsRecord(
-                id,
-                name,
-                createdAt,
-                createdBy,
-                ownerId
-        );
-    }
-
-    public static Project fromProjectToCreate(ProjectToCreate p) {
-        return new Project(
-                UUID.randomUUID(),
-                p.name(),
-                LocalDateTime.now(),
-                p.ownerId(),
-                p.ownerId()
-        );
-    }
+//    public ProjectsRecord toJooqProjectRecord() {
+//        return new ProjectsRecord(
+//                id,
+//                name,
+//                createdAt,
+//                createdBy,
+//                ownerId
+//        );
+//    }
+//
+//    public static Project fromProjectToCreate(ProjectToCreate p) {
+//        return new Project(
+//                UUID.randomUUID(),
+//                p.name(),
+//                LocalDateTime.now(),
+//                p.ownerId(),
+//                p.ownerId()
+//        );
+//    }
 }
