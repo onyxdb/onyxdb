@@ -91,11 +91,11 @@ components:
   schemas:
     V1BadRequestResponse:
       type: object
-      required:
-        - message
       properties:
         message:
           type: string
+      required:
+        - message
     V1ListHardwarePresetsResponse:
       type: object
       properties:
@@ -136,6 +136,11 @@ components:
         ram:
           type: integer
           format: int64
+      required:
+        - id
+        - type
+        - vcpu
+        - ram
     V1UpdateHardwarePresetRequest:
       type: object
       properties:
@@ -147,6 +152,10 @@ components:
         ram:
           type: integer
           format: int64
+      required:
+        - type
+        - vcpu
+        - ram
     V1HardwarePresetType:
       type: string
       enum:
