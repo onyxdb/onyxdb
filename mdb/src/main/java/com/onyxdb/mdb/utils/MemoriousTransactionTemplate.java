@@ -1,4 +1,4 @@
-package com.onyxdb.mdb.common;
+package com.onyxdb.mdb.utils;
 
 import org.springframework.lang.NonNull;
 import org.springframework.transaction.PlatformTransactionManager;

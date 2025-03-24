@@ -6,85 +6,87 @@ servers:
   - url: http://localhost:9001
     description: localhost
 paths:
-  /api/v1/projects:
-    post:
-      summary: Create project
-      operationId: v1ProjectsCreateProject
-      tags:
-        - v1Projects
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/V1CreateProjectRequest'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/V1CreateProjectResponse'
-  /api/v1/clusters:
-    post:
-      summary: Create cluster.
-      operationId: v1ClustersCreateCluster
-      tags:
-        - v1Clusters
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/V1CreateClusterRequest'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/V1CreateClusterResponse'
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/V1BadRequestResponse'
-  /api/v1/clusters/{id}:
+  /api/v1/hardware-presets:
     get:
-      summary: Get cluster by id.
-      operationId: v1ClustersGetCluster
+      summary: Get hardware presets
+      operationId: listHardwarePresets
       tags:
-        - v1Clusters
+        - v1HardwarePresets
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/V1ListHardwarePresetsResponse'
+    post:
+      summary: Create hardware preset
+      operationId: createHardwarePreset
+      tags:
+        - v1HardwarePresets
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/V1CreateHardwarePresetRequest'
+      responses:
+        '200':
+          description: OK
+  /api/v1/hardware-presets/{hardwarePresetId}:
+    get:
+      summary: Get hardware preset by id
+      operationId: getHardwarePreset
+      tags:
+        - v1HardwarePresets
       parameters:
-        - name: id
+        - name: hardwarePresetId
           in: path
           required: true
           schema:
             type: string
-            format: uuid
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/V1GetClusterResponse'
-  /api/v1/clusters/update-project:
+                $ref: '#/components/schemas/V1HardwarePresetResponse'
     put:
-      summary: Update cluster project
-      operationId: v1ClustersUpdateProject
+      summary: Update hardware preset by id
+      operationId: updateHardwarePreset
       tags:
-        - v1Clusters
+        - v1HardwarePresets
+      parameters:
+        - name: hardwarePresetId
+          in: path
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/V1UpdateClusterProjectRequest'
+              $ref: '#/components/schemas/V1UpdateHardwarePresetRequest'
       responses:
         '200':
           description: OK
+    delete:
+      summary: Delete hardware preset by id
+      operationId: deleteHardwarePreset
+      tags:
+        - v1HardwarePresets
+      parameters:
+        - name: hardwarePresetId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+
 components:
   schemas:
     V1BadRequestResponse:
@@ -94,79 +96,60 @@ components:
       properties:
         message:
           type: string
-    V1CreateProjectRequest:
+    V1ListHardwarePresetsResponse:
       type: object
-      required:
-        - name
-        - ownerId
       properties:
-        name:
-          type: string
-          minLength: 1
-          maxLength: 64
-          example: test-project
-        ownerId:
-          type: string
-          format: uuid
-    V1CreateProjectResponse:
-      type: object
+        hardwarePresets:
+          type: array
+          items:
+            $ref: '#/components/schemas/V1HardwarePresetResponse'
       required:
-        - clusterId
-      properties:
-        clusterId:
-          type: string
-          format: uuid
-    V1CreateClusterRequest:
+        - hardwarePresets
+    V1HardwarePresetResponse:
       type: object
-      required:
-        - name
-        - projectId
-      properties:
-        name:
-          type: string
-          minLength: 1
-          maxLength: 64
-          example: test-cluster
-        projectId:
-          type: string
-          format: uuid
-    V1CreateClusterResponse:
-      type: object
-      required:
-        - clusterId
-      properties:
-        clusterId:
-          type: string
-          format: uuid
-    V1GetClusterResponse:
-      type: object
-      required:
-        - id
-        - name
-        - projectId
-        - type
       properties:
         id:
           type: string
-          format: uuid
-        name:
-          type: string
-        projectId:
-          type: string
-          format: uuid
         type:
-          type: string
-          enum:
-            - mongodb
-    V1UpdateClusterProjectRequest:
-      type: object
+          $ref: '#/components/schemas/V1HardwarePresetType'
+        vcpu:
+          type: integer
+          format: int64
+        ram:
+          type: integer
+          format: int64
       required:
-        - clusterId
-        - projectId
+        - id
+        - type
+        - vcpu
+        - ram
+    V1CreateHardwarePresetRequest:
+      type: object
       properties:
-        clusterId:
+        id:
           type: string
-          format: uuid
-        projectId:
-          type: string
-          format: uuid
+        type:
+          $ref: '#/components/schemas/V1HardwarePresetType'
+        vcpu:
+          type: integer
+          format: int64
+        ram:
+          type: integer
+          format: int64
+    V1UpdateHardwarePresetRequest:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/V1HardwarePresetType'
+        vcpu:
+          type: integer
+          format: int64
+        ram:
+          type: integer
+          format: int64
+    V1HardwarePresetType:
+      type: string
+      enum:
+        - cpu_optimized
+        - standard
+        - ram_optimized

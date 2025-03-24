@@ -1,3 +1,27 @@
+CREATE TYPE public.hardware_preset_type AS ENUM (
+    'cpu_optimized',
+    'standard',
+    'ram_optimized'
+    );
+
+CREATE TABLE public.hardware_presets
+(
+    id   varchar                     NOT NULL,
+    type public.hardware_preset_type NOT NULL,
+    vcpu bigint                      NOT NULL,
+    ram  bigint                      NOT NULL,
+    PRIMARY KEY (id)
+);
+
+INSERT INTO public.hardware_presets
+    (id, type, vcpu, ram)
+VALUES ('co-c2-r4', 'cpu_optimized', 2, 4294967296),
+       ('co-c4-r8', 'cpu_optimized', 4, 8589934592),
+       ('s-c2-r8', 'standard', 2, 4294967296),
+       ('s-c4-r8', 'standard', 4, 8589934592),
+       ('ro-c2-r16', 'ram_optimized', 2, 17179869184),
+       ('ro-c4-r32', 'ram_optimized', 4, 34359738368);
+
 CREATE TABLE public.projects
 (
     id         uuid        NOT NULL,
