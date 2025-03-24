@@ -1,11 +1,11 @@
 package com.onyxdb.mdb.models;
 
-import com.onyxdb.mdb.common.BaseStringEnum;
+import com.onyxdb.mdb.utils.StringEnum;
 
 /**
  * @author foxleren
  */
-public enum ClusterTaskType implements BaseStringEnum {
+public enum ClusterTaskType implements StringEnum {
     // MONGODB_CREATE_CLUSTER
     MONGODB_CREATE_CLUSTER_APPLY_MANIFEST("mongodb_create_cluster_apply_manifest"),
     MONGODB_CREATE_CLUSTER_SAVE_HOSTS("mongodb_create_cluster_save_hosts"),
@@ -24,6 +24,6 @@ public enum ClusterTaskType implements BaseStringEnum {
     }
 
     public static ClusterTaskType fromValue(String value) {
-        return BaseStringEnum.fromValue(ClusterTaskType.class, value);
+        return StringEnum.fromValue(ClusterTaskType.class, value);
     }
 }

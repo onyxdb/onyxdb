@@ -3,7 +3,7 @@ package com.onyxdb.mdb.exceptions;
 /**
  * @author foxleren
  */
-public class BadRequestException extends RuntimeException {
+public class BadRequestException extends MdbException {
     public BadRequestException(String message) {
         super(message);
     }

@@ -1,11 +1,11 @@
 package com.onyxdb.mdb.models;
 
-import com.onyxdb.mdb.common.BaseStringEnum;
+import com.onyxdb.mdb.utils.StringEnum;
 
 /**
  * @author foxleren
  */
-public enum ClusterOperationType implements BaseStringEnum {
+public enum ClusterOperationType implements StringEnum {
     CREATE_CLUSTER("create_cluster"),
     ;
 

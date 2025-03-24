@@ -25,13 +25,13 @@ public record Project(
         );
     }
 
-    public static Project fromProjectToCreate(ProjectToCreate p) {
-        return new Project(
-                UUID.randomUUID(),
-                p.name(),
-                LocalDateTime.now(),
-                p.ownerId(),
-                p.ownerId()
-        );
-    }
+//    public static Project fromProjectToCreate(ProjectToCreate p) {
+//        return new Project(
+//                UUID.randomUUID(),
+//                p.name(),
+//                LocalDateTime.now(),
+//                p.ownerId(),
+//                p.ownerId()
+//        );
+//    }
 }

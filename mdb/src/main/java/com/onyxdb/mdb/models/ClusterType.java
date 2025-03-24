@@ -1,12 +1,12 @@
 package com.onyxdb.mdb.models;
 
-import com.onyxdb.mdb.common.BaseStringEnum;
+import com.onyxdb.mdb.utils.StringEnum;
 
 
 /**
  * @author foxleren
  */
-public enum ClusterType implements BaseStringEnum {
+public enum ClusterType implements StringEnum {
     MONGODB("mongodb"),
     ;
 
@@ -22,6 +22,6 @@ public enum ClusterType implements BaseStringEnum {
     }
 
     public static ClusterType fromValue(String value) {
-        return BaseStringEnum.fromValue(ClusterType.class, value);
+        return StringEnum.fromValue(ClusterType.class, value);
     }
 }

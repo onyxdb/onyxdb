@@ -1,11 +1,11 @@
-package com.onyxdb.mdb.common;
+package com.onyxdb.mdb.utils;
 
 import java.util.Optional;
 
 /**
  * @author foxleren
  */
-public interface BaseStringEnum {
+public interface StringEnum {
     String value();
 
     static <E extends Enum<E>> Optional<E> fromValueO(Class<E> enumClass, Object value) {

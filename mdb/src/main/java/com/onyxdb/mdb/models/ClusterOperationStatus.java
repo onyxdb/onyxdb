@@ -1,11 +1,11 @@
 package com.onyxdb.mdb.models;
 
-import com.onyxdb.mdb.common.BaseStringEnum;
+import com.onyxdb.mdb.utils.StringEnum;
 
 /**
  * @author foxleren
  */
-public enum ClusterOperationStatus implements BaseStringEnum {
+public enum ClusterOperationStatus implements StringEnum {
     SCHEDULED("scheduled"),
     IN_PROGRESS("in_progress"),
     ERROR("error"),
