@@ -23,6 +23,21 @@ VALUES ('dev', 'standard', 0.3, 1073741824),
        ('ro-c2-r16', 'ram_optimized', 2, 17179869184),
        ('ro-c4-r32', 'ram_optimized', 4, 34359738368);
 
+CREATE TABLE public.zones
+(
+    id           varchar NOT NULL,
+    description  varchar NOT NULL,
+    selector     varchar NOT NULL,
+    is_available boolean NOT NULL DEFAULT true,
+    PRIMARY KEY (id),
+    UNIQUE (selector)
+);
+
+INSERT INTO public.zones
+    (id, description, selector)
+VALUES ('msc', 'Москва', 'msc'),
+       ('spb', 'Санкт-Петербург', 'spb');
+
 CREATE TABLE public.projects
 (
     id         uuid        NOT NULL,

@@ -1,4 +1,4 @@
-package com.onyxdb.mdb.hardwarePresets;
+package com.onyxdb.mdb.core.hardwarePresets;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +23,7 @@ public class HardwarePresetService {
         return hardwarePresetRepository.getO(id);
     }
 
-    public HardwarePreset get(String id) {
+    public HardwarePreset getOrThrow(String id) {
         return getO(id).orElseThrow(() -> new BadRequestException("Can't get hardware preset with id=" + id));
     }
 

@@ -35,16 +35,12 @@ paths:
           description: OK
   /api/v1/hardware-presets/{hardwarePresetId}:
     get:
-      summary: Get hardware preset by id
+      summary: Get hardware preset
       operationId: getHardwarePreset
       tags:
         - v1HardwarePresets
       parameters:
-        - name: hardwarePresetId
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/HardwarePresetIdPV'
       responses:
         '200':
           description: OK
@@ -53,16 +49,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/V1HardwarePresetResponse'
     put:
-      summary: Update hardware preset by id
+      summary: Update hardware preset
       operationId: updateHardwarePreset
       tags:
         - v1HardwarePresets
       parameters:
-        - name: hardwarePresetId
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/HardwarePresetIdPV'
       requestBody:
         required: true
         content:
@@ -73,20 +65,83 @@ paths:
         '200':
           description: OK
     delete:
-      summary: Delete hardware preset by id
+      summary: Delete hardware preset
       operationId: deleteHardwarePreset
       tags:
         - v1HardwarePresets
       parameters:
-        - name: hardwarePresetId
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/HardwarePresetIdPV'
       responses:
         '200':
           description: OK
-
+  /api/v1/zones:
+    get:
+      summary: Get zones
+      operationId: listZones
+      tags:
+        - v1Zones
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/V1ListZonesResponse'
+    post:
+      summary: Create zone
+      operationId: createZone
+      tags:
+        - v1Zones
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/V1CreateZoneRequest'
+      responses:
+        '200':
+          description: OK
+  /api/v1/zones/{zoneId}:
+    get:
+      summary: Get zone
+      operationId: getZone
+      tags:
+        - v1Zones
+      parameters:
+        - $ref: '#/components/parameters/ZoneIdPV'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/V1ZoneResponse'
+    put:
+      summary: Update zone
+      operationId: updateZone
+      tags:
+        - v1Zones
+      parameters:
+        - $ref: '#/components/parameters/ZoneIdPV'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/V1UpdateZoneRequest'
+      responses:
+        '200':
+          description: OK
+    delete:
+      summary: Delete zone
+      operationId: deleteZone
+      tags:
+        - v1Zones
+      parameters:
+        - $ref: '#/components/parameters/ZoneIdPV'
+      responses:
+        '200':
+          description: OK
 components:
   schemas:
     V1BadRequestResponse:
@@ -162,3 +217,67 @@ components:
         - cpu_optimized
         - standard
         - ram_optimized
+    V1ListZonesResponse:
+      type: object
+      properties:
+        zones:
+          type: array
+          items:
+            $ref: '#/components/schemas/V1ZoneResponse'
+      required:
+        - zones
+    V1ZoneResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        description:
+          type: string
+        selector:
+          type: string
+        isAvailable:
+          type: boolean
+      required:
+        - id
+        - description
+        - selector
+        - isAvailable
+    V1CreateZoneRequest:
+      type: object
+      properties:
+        id:
+          type: string
+        description:
+          type: string
+        selector:
+          type: string
+      required:
+        - id
+        - description
+        - selector
+    V1UpdateZoneRequest:
+      type: object
+      properties:
+        description:
+          type: string
+        selector:
+          type: string
+        isAvailable:
+          type: boolean
+      required:
+        - description
+        - selector
+        - isAvailable
+  parameters:
+    HardwarePresetIdPV:
+      name: hardwarePresetId
+      in: path
+      required: true
+      schema:
+        type: string
+    ZoneIdPV:
+      name: zoneId
+      in: path
+      required: true
+      schema:
+        type: string

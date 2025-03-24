@@ -1,9 +1,5 @@
 package com.onyxdb.mdb.services;
 
-import java.util.UUID;
-
-//import com.onyxdb.mdb.models.Project;
-//import com.onyxdb.mdb.models.ProjectToCreate;
 import com.onyxdb.mdb.repositories.ProjectRepository;
 
 /**
