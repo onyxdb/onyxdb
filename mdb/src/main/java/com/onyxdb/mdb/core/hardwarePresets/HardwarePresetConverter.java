@@ -1,4 +1,4 @@
-package com.onyxdb.mdb.hardwarePresets;
+package com.onyxdb.mdb.core.hardwarePresets;
 
 import java.util.List;
 

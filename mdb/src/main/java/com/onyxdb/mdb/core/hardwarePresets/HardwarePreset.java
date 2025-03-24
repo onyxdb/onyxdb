@@ -1,4 +1,4 @@
-package com.onyxdb.mdb.hardwarePresets;
+package com.onyxdb.mdb.core.hardwarePresets;
 
 /**
  * @author foxleren
