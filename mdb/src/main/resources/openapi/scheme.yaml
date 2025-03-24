@@ -113,8 +113,8 @@ components:
         type:
           $ref: '#/components/schemas/V1HardwarePresetType'
         vcpu:
-          type: integer
-          format: int64
+          type: number
+          format: double
         ram:
           type: integer
           format: int64
@@ -131,8 +131,8 @@ components:
         type:
           $ref: '#/components/schemas/V1HardwarePresetType'
         vcpu:
-          type: integer
-          format: int64
+          type: number
+          format: double
         ram:
           type: integer
           format: int64
@@ -142,8 +142,8 @@ components:
         type:
           $ref: '#/components/schemas/V1HardwarePresetType'
         vcpu:
-          type: integer
-          format: int64
+          type: number
+          format: double
         ram:
           type: integer
           format: int64

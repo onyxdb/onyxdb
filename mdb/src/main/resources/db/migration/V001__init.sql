@@ -8,14 +8,15 @@ CREATE TABLE public.hardware_presets
 (
     id   varchar                     NOT NULL,
     type public.hardware_preset_type NOT NULL,
-    vcpu bigint                      NOT NULL,
+    vcpu double precision            NOT NULL,
     ram  bigint                      NOT NULL,
     PRIMARY KEY (id)
 );
 
 INSERT INTO public.hardware_presets
     (id, type, vcpu, ram)
-VALUES ('co-c2-r4', 'cpu_optimized', 2, 4294967296),
+VALUES ('dev', 'standard', 0.3, 1073741824),
+       ('co-c2-r4', 'cpu_optimized', 2, 4294967296),
        ('co-c4-r8', 'cpu_optimized', 4, 8589934592),
        ('s-c2-r8', 'standard', 2, 4294967296),
        ('s-c4-r8', 'standard', 4, 8589934592),

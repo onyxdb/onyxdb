@@ -6,7 +6,7 @@ package com.onyxdb.mdb.hardwarePresets;
 public record HardwarePreset(
         String id,
         HardwarePresetType type,
-        long vcpu,
+        double vcpu,
         long ram
 ) {
 }
