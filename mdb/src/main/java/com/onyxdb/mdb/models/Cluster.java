@@ -3,7 +3,7 @@ package com.onyxdb.mdb.models;
 import java.util.UUID;
 
 import com.onyxdb.mdb.generated.jooq.tables.records.ClustersRecord;
-import com.onyxdb.mdb.generated.openapi.models.V1GetClusterResponse;
+//import com.onyxdb.mdb.generated.openapi.models.V1GetClusterResponse;
 
 /**
  * @author foxleren
@@ -23,14 +23,14 @@ public record Cluster(
         );
     }
 
-    public V1GetClusterResponse toV1GetClusterResponse() {
-        return new V1GetClusterResponse(
-                id,
-                name,
-                projectId,
-                V1GetClusterResponse.TypeEnum.fromValue(type.value())
-        );
-    }
+//    public V1GetClusterResponse toV1GetClusterResponse() {
+//        return new V1GetClusterResponse(
+//                id,
+//                name,
+//                projectId,
+//                V1GetClusterResponse.TypeEnum.fromValue(type.value())
+//        );
+//    }
 
     public static Cluster fromJooqClustersRecord(ClustersRecord r) {
         return new Cluster(
