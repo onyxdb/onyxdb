@@ -11,6 +11,7 @@ import com.onyxdb.mdb.generated.openapi.models.V1ClusterResourcesResponse;
 import com.onyxdb.mdb.generated.openapi.models.V1ClusterStatusResponse;
 import com.onyxdb.mdb.generated.openapi.models.V1ListMongoClustersResponse;
 import com.onyxdb.mdb.generated.openapi.models.V1MongoClusterResponse;
+import com.onyxdb.mdb.generated.openapi.models.V1MongoConfigResponse;
 import com.onyxdb.mdb.generated.openapi.models.V1MongoConfigV80Response;
 import com.onyxdb.mdb.generated.openapi.models.V1MongodV80Response;
 
@@ -28,12 +29,15 @@ public class V1ManagedMongoDbController implements V1ManagedMongoDbApi {
                     "Все хосты работают нормально, все запущенные операции были успешно выполнены."
             ),
             UUID.randomUUID(),
-            new V1MongoConfigV80Response(
-                    new V1MongodV80Response(
-                            new V1ClusterResourcesResponse(
-                                    "c2-r4",
-                                    "standard",
-                                    10737418240L
+            new V1MongoConfigResponse(
+                    "8.0",
+                    new V1MongoConfigV80Response(
+                            new V1MongodV80Response(
+                                    new V1ClusterResourcesResponse(
+                                            "c2-r4",
+                                            "standard",
+                                            10737418240L
+                                    )
                             )
                     )
             )
