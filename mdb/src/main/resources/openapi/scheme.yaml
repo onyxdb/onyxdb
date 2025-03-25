@@ -227,7 +227,40 @@ paths:
       responses:
         '200':
           description: OK
+
+  # ---------- v1ManagedMongoDb ----------
+  /api/v1/managed-mongodb/clusters:
+    get:
+      summary: Get MongoDB clusters
+      operationId: listClusters
+      tags:
+        - v1ManagedMongoDb
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/V1ListMongoClustersResponse'
+  /api/v1/managed-mongodb/clusters/{clusterId}:
+    get:
+      summary: Get MongoDB cluster
+      operationId: getCluster
+      tags:
+        - v1ManagedMongoDb
+      parameters:
+        - $ref: '#/components/parameters/ClusterIdPV'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/V1MongoClusterResponse'
+
+# ---------- components ----------
 components:
+  # ---------- schemas ----------
   schemas:
     V1BadRequestResponse:
       type: object
@@ -393,6 +426,88 @@ components:
       required:
         - name
         - description
+    V1ListMongoClustersResponse:
+      type: object
+      properties:
+        clusters:
+          type: array
+          items:
+            $ref: '#/components/schemas/V1MongoClusterResponse'
+      required:
+        - clusters
+    V1MongoClusterResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        status:
+          $ref: '#/components/schemas/V1ClusterStatusResponse'
+        projectId:
+          type: string
+          format: uuid
+        config:
+          $ref: '#/components/schemas/V1MongoConfigV8_0Response'
+      required:
+        - id
+        - name
+        - description
+        - status
+        - projectId
+        - config
+    V1ClusterStatusResponse:
+      type: object
+      properties:
+        value:
+          type: string
+        message:
+          type: string
+      required:
+        - value
+        - message
+    V1MongoConfigResponse:
+      type: object
+      properties:
+        version:
+          type: string
+        mongodbV8_0:
+          $ref: '#/components/schemas/V1MongoConfigV8_0Response'
+      required:
+        - version
+        - mongodbV8_0
+    V1MongoConfigV8_0Response:
+      type: object
+      properties:
+        mongod:
+          $ref: '#/components/schemas/V1MongodV8_0Response'
+      required:
+        - mongod
+    V1MongodV8_0Response:
+      type: object
+      properties:
+        resources:
+          $ref: '#/components/schemas/V1ClusterResourcesResponse'
+      required:
+        - resources
+    V1ClusterResourcesResponse:
+      type: object
+      properties:
+        presetId:
+          type: string
+        storageClass:
+          type: string
+        storage:
+          type: integer
+          format: int64
+      required:
+        - presetId
+        - storageClass
+        - storage
+  # ---------- parameters ----------
   parameters:
     HardwarePresetIdPV:
       name: hardwarePresetId
@@ -408,6 +523,13 @@ components:
         type: string
     ProjectIdPV:
       name: projectId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    ClusterIdPV:
+      name: clusterId
       in: path
       required: true
       schema:
