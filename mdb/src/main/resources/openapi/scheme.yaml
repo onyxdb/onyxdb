@@ -6,6 +6,7 @@ servers:
   - url: http://localhost:9001
     description: localhost
 paths:
+  # --- v1HardwarePresets ---
   /api/v1/hardware-presets:
     get:
       summary: Get hardware presets
@@ -74,6 +75,8 @@ paths:
       responses:
         '200':
           description: OK
+
+  # --- v1Zones ---
   /api/v1/zones:
     get:
       summary: Get zones
@@ -139,6 +142,88 @@ paths:
         - v1Zones
       parameters:
         - $ref: '#/components/parameters/ZoneIdPV'
+      responses:
+        '200':
+          description: OK
+
+  # --- v1Projects ---
+  /api/v1/projects:
+    get:
+      summary: Get projects
+      operationId: listProjects
+      tags:
+        - v1Projects
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/V1ListProjectsResponse'
+    post:
+      summary: Create project
+      operationId: createProject
+      tags:
+        - v1Projects
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/V1CreateProjectRequest'
+      responses:
+        '200':
+          description: OK
+  /api/v1/projects/{projectId}:
+    get:
+      summary: Get project
+      operationId: getProject
+      tags:
+        - v1Projects
+      parameters:
+        - $ref: '#/components/parameters/ProjectIdPV'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/V1ProjectResponse'
+    put:
+      summary: Update project
+      operationId: updateProject
+      tags:
+        - v1Projects
+      parameters:
+        - $ref: '#/components/parameters/ProjectIdPV'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/V1UpdateProjectRequest'
+      responses:
+        '200':
+          description: OK
+  /api/v1/projects/{projectId}/archive:
+    put:
+      summary: Archive project
+      operationId: archiveProject
+      tags:
+        - v1Projects
+      parameters:
+        - $ref: '#/components/parameters/ProjectIdPV'
+      responses:
+        '200':
+          description: OK
+  /api/v1/projects/{projectId}/unarchive:
+    put:
+      summary: Unarchive project
+      operationId: unarchiveProject
+      tags:
+        - v1Projects
+      parameters:
+        - $ref: '#/components/parameters/ProjectIdPV'
       responses:
         '200':
           description: OK
@@ -235,13 +320,10 @@ components:
           type: string
         selector:
           type: string
-        isAvailable:
-          type: boolean
       required:
         - id
         - description
         - selector
-        - isAvailable
     V1CreateZoneRequest:
       type: object
       properties:
@@ -262,12 +344,55 @@ components:
           type: string
         selector:
           type: string
-        isAvailable:
-          type: boolean
       required:
         - description
         - selector
-        - isAvailable
+    V1ListProjectsResponse:
+      type: object
+      properties:
+        projects:
+          type: array
+          items:
+            $ref: '#/components/schemas/V1ProjectResponse'
+      required:
+        - projects
+    V1ProjectResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        isArchived:
+          type: boolean
+      required:
+        - id
+        - name
+        - description
+        - isArchived
+    V1CreateProjectRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+      required:
+        - name
+        - description
+    V1UpdateProjectRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+      required:
+        - name
+        - description
   parameters:
     HardwarePresetIdPV:
       name: hardwarePresetId
@@ -281,3 +406,10 @@ components:
       required: true
       schema:
         type: string
+    ProjectIdPV:
+      name: projectId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid

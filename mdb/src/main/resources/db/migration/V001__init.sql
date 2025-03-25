@@ -25,10 +25,9 @@ VALUES ('dev', 'standard', 0.3, 1073741824),
 
 CREATE TABLE public.zones
 (
-    id           varchar NOT NULL,
-    description  varchar NOT NULL,
-    selector     varchar NOT NULL,
-    is_available boolean NOT NULL DEFAULT true,
+    id          varchar NOT NULL,
+    description varchar NOT NULL,
+    selector    varchar NOT NULL,
     PRIMARY KEY (id),
     UNIQUE (selector)
 );
@@ -40,14 +39,18 @@ VALUES ('msc', 'Москва', 'msc'),
 
 CREATE TABLE public.projects
 (
-    id         uuid        NOT NULL,
-    name       varchar(64) NOT NULL,
-    created_at timestamp   NOT NULL,
-    created_by uuid        NOT NULL,
-    owner_id   uuid        NOT NULL,
+    id          uuid    NOT NULL,
+    name        varchar NOT NULL,
+    description varchar NOT NULL,
+    is_archived boolean NOT NULL DEFAULT false,
     PRIMARY KEY (id),
     UNIQUE (name)
 );
+
+INSERT INTO projects
+VALUES ('5cb0ca1c-e6c1-47ab-b832-0074312490a3',
+        'test-project',
+        'Some description');
 
 CREATE TYPE public.cluster_type AS ENUM (
     'mongodb'
@@ -127,13 +130,6 @@ CREATE TABLE public.cluster_tasks_to_blocker_tasks
     FOREIGN KEY (blocker_task_id) REFERENCES public.cluster_tasks (id),
     PRIMARY KEY (task_id, blocker_task_id)
 );
-
-INSERT INTO projects
-VALUES ('5cb0ca1c-e6c1-47ab-b832-0074312490a3',
-        'test-project',
-        now(),
-        '66ee0ec9-1e19-4f1b-ba8e-4e817d4fa1f2',
-        '66ee0ec9-1e19-4f1b-ba8e-4e817d4fa1f2');
 
 
 INSERT INTO clusters
