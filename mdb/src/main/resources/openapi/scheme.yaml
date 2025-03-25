@@ -6,7 +6,7 @@ servers:
   - url: http://localhost:9001
     description: localhost
 paths:
-  # --- v1HardwarePresets ---
+  # ---------- v1HardwarePresets ----------
   /api/v1/hardware-presets:
     get:
       summary: Get hardware presets
@@ -76,7 +76,7 @@ paths:
         '200':
           description: OK
 
-  # --- v1Zones ---
+  # ---------- v1Zones ----------
   /api/v1/zones:
     get:
       summary: Get zones
@@ -146,7 +146,7 @@ paths:
         '200':
           description: OK
 
-  # --- v1Projects ---
+  # ---------- v1Projects ----------
   /api/v1/projects:
     get:
       summary: Get projects
@@ -242,6 +242,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/V1ListMongoClustersResponse'
+    post:
+      summary: Create MongoDB cluster
+      operationId: createCluster
+      tags:
+        - v1ManagedMongoDb
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/V1CreateMongoClusterRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/V1CreateMongoClusterResponse'
   /api/v1/managed-mongodb/clusters/{clusterId}:
     get:
       summary: Get MongoDB cluster
@@ -451,7 +469,7 @@ components:
           type: string
           format: uuid
         config:
-          $ref: '#/components/schemas/V1MongoConfigResponse'
+          $ref: '#/components/schemas/V1MongoConfig'
       required:
         - id
         - name
@@ -469,24 +487,23 @@ components:
       required:
         - value
         - message
-    V1MongoConfigResponse:
+    V1MongoConfig:
       type: object
       properties:
         version:
           type: string
         mongodbV8_0:
-          $ref: '#/components/schemas/V1MongoConfigV8_0Response'
+          $ref: '#/components/schemas/V1MongoConfigV8d0'
       required:
         - version
-        - mongodbV8_0
-    V1MongoConfigV8_0Response:
+    V1MongoConfigV8d0:
       type: object
       properties:
         mongod:
-          $ref: '#/components/schemas/V1MongodV8_0Response'
+          $ref: '#/components/schemas/V1MongodV8d0'
       required:
         - mongod
-    V1MongodV8_0Response:
+    V1MongodV8d0:
       type: object
       properties:
         resources:
@@ -507,6 +524,31 @@ components:
         - presetId
         - storageClass
         - storage
+    V1CreateMongoClusterRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        projectId:
+          type: string
+          format: uuid
+        config:
+          $ref: '#/components/schemas/V1MongoConfig'
+      required:
+        - name
+        - description
+        - projectId
+        - config
+    V1CreateMongoClusterResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+      required:
+        - id
   # ---------- parameters ----------
   parameters:
     HardwarePresetIdPV:

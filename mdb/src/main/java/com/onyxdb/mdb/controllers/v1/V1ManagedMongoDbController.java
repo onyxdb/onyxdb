@@ -9,11 +9,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.onyxdb.mdb.generated.openapi.apis.V1ManagedMongoDbApi;
 import com.onyxdb.mdb.generated.openapi.models.V1ClusterResourcesResponse;
 import com.onyxdb.mdb.generated.openapi.models.V1ClusterStatusResponse;
+import com.onyxdb.mdb.generated.openapi.models.V1CreateMongoClusterRequest;
+import com.onyxdb.mdb.generated.openapi.models.V1CreateMongoClusterResponse;
 import com.onyxdb.mdb.generated.openapi.models.V1ListMongoClustersResponse;
 import com.onyxdb.mdb.generated.openapi.models.V1MongoClusterResponse;
-import com.onyxdb.mdb.generated.openapi.models.V1MongoConfigResponse;
-import com.onyxdb.mdb.generated.openapi.models.V1MongoConfigV80Response;
-import com.onyxdb.mdb.generated.openapi.models.V1MongodV80Response;
+import com.onyxdb.mdb.generated.openapi.models.V1MongoConfig;
+import com.onyxdb.mdb.generated.openapi.models.V1MongoConfigV8d0;
+import com.onyxdb.mdb.generated.openapi.models.V1MongodV8d0;
 
 /**
  * @author foxleren
@@ -29,10 +31,11 @@ public class V1ManagedMongoDbController implements V1ManagedMongoDbApi {
                     "Все хосты работают нормально, все запущенные операции были успешно выполнены."
             ),
             UUID.randomUUID(),
-            new V1MongoConfigResponse(
-                    "8.0",
-                    new V1MongoConfigV80Response(
-                            new V1MongodV80Response(
+            new V1MongoConfig(
+                    "8.0"
+            ).mongodbV80(
+                    new V1MongoConfigV8d0(
+                            new V1MongodV8d0(
                                     new V1ClusterResourcesResponse(
                                             "c2-r4",
                                             "standard",
@@ -55,5 +58,13 @@ public class V1ManagedMongoDbController implements V1ManagedMongoDbApi {
     public ResponseEntity<V1MongoClusterResponse> getCluster(UUID clusterId) {
         return ResponseEntity.ok()
                 .body(clusterResponse);
+    }
+
+    @Override
+    public ResponseEntity<V1CreateMongoClusterResponse> createCluster(V1CreateMongoClusterRequest r) {
+        return ResponseEntity.ok()
+                .body(new V1CreateMongoClusterResponse(
+                        UUID.randomUUID()
+                ));
     }
 }
