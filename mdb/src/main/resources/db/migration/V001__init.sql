@@ -13,10 +13,8 @@ CREATE TABLE public.resource_presets
     PRIMARY KEY (id)
 );
 
-INSERT INTO public.resource_presets
-    (id, type, vcpu, ram)
-VALUES ('dev', 'standard', 0.3, 1073741824),
-       ('co-c2-r4', 'cpu_optimized', 2, 4294967296),
+INSERT INTO public.resource_presets (id, type, vcpu, ram)
+VALUES ('co-c2-r4', 'cpu_optimized', 2, 4294967296),
        ('co-c4-r8', 'cpu_optimized', 4, 8589934592),
        ('s-c2-r8', 'standard', 2, 4294967296),
        ('s-c4-r8', 'standard', 4, 8589934592),
@@ -32,11 +30,6 @@ CREATE TABLE public.zones
     UNIQUE (selector)
 );
 
-INSERT INTO public.zones
-    (id, description, selector)
-VALUES ('msc', 'Москва', 'msc'),
-       ('spb', 'Санкт-Петербург', 'spb');
-
 CREATE TABLE public.projects
 (
     id          uuid    NOT NULL,
@@ -46,11 +39,6 @@ CREATE TABLE public.projects
     PRIMARY KEY (id),
     UNIQUE (name)
 );
-
-INSERT INTO projects
-VALUES ('5cb0ca1c-e6c1-47ab-b832-0074312490a3',
-        'test-project',
-        'Some description');
 
 CREATE TYPE public.cluster_type AS ENUM (
     'mongodb'
