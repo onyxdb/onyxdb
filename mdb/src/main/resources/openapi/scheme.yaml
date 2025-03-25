@@ -451,7 +451,7 @@ components:
           type: string
           format: uuid
         config:
-          $ref: '#/components/schemas/V1MongoConfigV8_0Response'
+          $ref: '#/components/schemas/V1MongoConfigResponse'
       required:
         - id
         - name
