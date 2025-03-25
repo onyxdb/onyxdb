@@ -1,19 +1,19 @@
-CREATE TYPE public.hardware_preset_type AS ENUM (
+CREATE TYPE public.resource_preset_type AS ENUM (
     'cpu_optimized',
     'standard',
     'ram_optimized'
     );
 
-CREATE TABLE public.hardware_presets
+CREATE TABLE public.resource_presets
 (
     id   varchar                     NOT NULL,
-    type public.hardware_preset_type NOT NULL,
+    type public.resource_preset_type NOT NULL,
     vcpu double precision            NOT NULL,
     ram  bigint                      NOT NULL,
     PRIMARY KEY (id)
 );
 
-INSERT INTO public.hardware_presets
+INSERT INTO public.resource_presets
     (id, type, vcpu, ram)
 VALUES ('dev', 'standard', 0.3, 1073741824),
        ('co-c2-r4', 'cpu_optimized', 2, 4294967296),

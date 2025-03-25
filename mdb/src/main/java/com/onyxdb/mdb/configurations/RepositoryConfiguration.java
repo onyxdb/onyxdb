@@ -4,10 +4,10 @@ import org.jooq.DSLContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.onyxdb.mdb.core.hardwarePresets.HardwarePresetPostgresRepository;
-import com.onyxdb.mdb.core.hardwarePresets.HardwarePresetRepository;
 import com.onyxdb.mdb.core.projects.ProjectPostgresRepository;
 import com.onyxdb.mdb.core.projects.ProjectRepository;
+import com.onyxdb.mdb.core.resourcePresets.ResourcePresetPostgresRepository;
+import com.onyxdb.mdb.core.resourcePresets.ResourcePresetRepository;
 import com.onyxdb.mdb.core.zones.ZonePostgresRepository;
 import com.onyxdb.mdb.core.zones.ZoneRepository;
 
@@ -17,8 +17,8 @@ import com.onyxdb.mdb.core.zones.ZoneRepository;
 @Configuration
 public class RepositoryConfiguration {
     @Bean
-    public HardwarePresetRepository hardwarePresetRepository(DSLContext dslContext) {
-        return new HardwarePresetPostgresRepository(dslContext);
+    public ResourcePresetRepository resourcePresetRepository(DSLContext dslContext) {
+        return new ResourcePresetPostgresRepository(dslContext);
     }
 
     @Bean
