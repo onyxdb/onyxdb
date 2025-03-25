@@ -9,3 +9,9 @@ INSERT INTO public.projects (id, name, description)
 VALUES ('5cb0ca1c-e6c1-47ab-b832-0074312490a3',
         'test-project',
         'Some description');
+
+INSERT INTO clusters (id, name, project_id, type)
+VALUES ('062c4806-0248-4c5d-86da-e1244e172619',
+        'test-cluster',
+        '5cb0ca1c-e6c1-47ab-b832-0074312490a3',
+        'mongodb');

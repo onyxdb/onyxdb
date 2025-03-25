@@ -118,10 +118,3 @@ CREATE TABLE public.cluster_tasks_to_blocker_tasks
     FOREIGN KEY (blocker_task_id) REFERENCES public.cluster_tasks (id),
     PRIMARY KEY (task_id, blocker_task_id)
 );
-
-
-INSERT INTO clusters
-VALUES ('062c4806-0248-4c5d-86da-e1244e172619',
-        'test-cluster',
-        '5cb0ca1c-e6c1-47ab-b832-0074312490a3',
-        'mongodb');
