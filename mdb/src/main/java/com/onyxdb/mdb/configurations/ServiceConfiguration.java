@@ -5,10 +5,10 @@ import org.springframework.context.annotation.Configuration;
 
 import com.onyxdb.mdb.core.hardwarePresets.HardwarePresetRepository;
 import com.onyxdb.mdb.core.hardwarePresets.HardwarePresetService;
+import com.onyxdb.mdb.core.projects.ProjectRepository;
+import com.onyxdb.mdb.core.projects.ProjectService;
 import com.onyxdb.mdb.core.zones.ZoneRepository;
 import com.onyxdb.mdb.core.zones.ZoneService;
-import com.onyxdb.mdb.repositories.ProjectRepository;
-import com.onyxdb.mdb.services.ProjectService;
 
 /**
  * @author foxleren

@@ -6,7 +6,6 @@ package com.onyxdb.mdb.core.zones;
 public record Zone(
         String id,
         String description,
-        String selector,
-        boolean isAvailable
+        String selector
 ) {
 }

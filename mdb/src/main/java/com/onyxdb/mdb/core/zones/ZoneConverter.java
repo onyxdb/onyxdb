@@ -19,8 +19,7 @@ public final class ZoneConverter {
         return new Zone(
                 rr.getId(),
                 rr.getDescription(),
-                rr.getSelector(),
-                rr.getIsAvailable()
+                rr.getSelector()
         );
     }
 
@@ -28,8 +27,7 @@ public final class ZoneConverter {
         return new ZonesRecord(
                 z.id(),
                 z.description(),
-                z.selector(),
-                z.isAvailable()
+                z.selector()
         );
     }
 
@@ -37,8 +35,7 @@ public final class ZoneConverter {
         return new V1ZoneResponse(
                 z.id(),
                 z.description(),
-                z.selector(),
-                z.isAvailable()
+                z.selector()
         );
     }
 
@@ -54,8 +51,7 @@ public final class ZoneConverter {
         return new Zone(
                 r.getId(),
                 r.getDescription(),
-                r.getSelector(),
-                true
+                r.getSelector()
         );
     }
 
@@ -63,8 +59,7 @@ public final class ZoneConverter {
         return new Zone(
                 id,
                 r.getDescription(),
-                r.getSelector(),
-                r.getIsAvailable()
+                r.getSelector()
         );
     }
 }
