@@ -6,72 +6,72 @@ servers:
   - url: http://localhost:9001
     description: localhost
 paths:
-  # ---------- v1HardwarePresets ----------
-  /api/v1/hardware-presets:
+  # ---------- v1ResourcePresets ----------
+  /api/v1/resource-presets:
     get:
-      summary: Get hardware presets
-      operationId: listHardwarePresets
+      summary: Get resource presets
+      operationId: listResourcePresets
       tags:
-        - v1HardwarePresets
+        - v1ResourcePresets
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/V1ListHardwarePresetsResponse'
+                $ref: '#/components/schemas/V1ListResourcePresetsResponse'
     post:
-      summary: Create hardware preset
-      operationId: createHardwarePreset
+      summary: Create resource preset
+      operationId: createResourcePreset
       tags:
-        - v1HardwarePresets
+        - v1ResourcePresets
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/V1CreateHardwarePresetRequest'
+              $ref: '#/components/schemas/V1CreateResourcePresetRequest'
       responses:
         '200':
           description: OK
-  /api/v1/hardware-presets/{hardwarePresetId}:
+  /api/v1/resource-presets/{resourcePresetId}:
     get:
-      summary: Get hardware preset
-      operationId: getHardwarePreset
+      summary: Get resource preset
+      operationId: getResourcePreset
       tags:
-        - v1HardwarePresets
+        - v1ResourcePresets
       parameters:
-        - $ref: '#/components/parameters/HardwarePresetIdPV'
+        - $ref: '#/components/parameters/ResourcePresetIdPV'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/V1HardwarePresetResponse'
+                $ref: '#/components/schemas/V1ResourcePresetResponse'
     put:
-      summary: Update hardware preset
-      operationId: updateHardwarePreset
+      summary: Update resource preset
+      operationId: updateResourcePreset
       tags:
-        - v1HardwarePresets
+        - v1ResourcePresets
       parameters:
-        - $ref: '#/components/parameters/HardwarePresetIdPV'
+        - $ref: '#/components/parameters/ResourcePresetIdPV'
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/V1UpdateHardwarePresetRequest'
+              $ref: '#/components/schemas/V1UpdateResourcePresetRequest'
       responses:
         '200':
           description: OK
     delete:
-      summary: Delete hardware preset
-      operationId: deleteHardwarePreset
+      summary: Delete resource preset
+      operationId: deleteResourcePreset
       tags:
-        - v1HardwarePresets
+        - v1ResourcePresets
       parameters:
-        - $ref: '#/components/parameters/HardwarePresetIdPV'
+        - $ref: '#/components/parameters/ResourcePresetIdPV'
       responses:
         '200':
           description: OK
@@ -287,22 +287,23 @@ components:
           type: string
       required:
         - message
-    V1ListHardwarePresetsResponse:
+    # ---------- v1ResourcePresets schemas ----------
+    V1ListResourcePresetsResponse:
       type: object
       properties:
-        hardwarePresets:
+        presets:
           type: array
           items:
-            $ref: '#/components/schemas/V1HardwarePresetResponse'
+            $ref: '#/components/schemas/V1ResourcePresetResponse'
       required:
-        - hardwarePresets
-    V1HardwarePresetResponse:
+        - presets
+    V1ResourcePresetResponse:
       type: object
       properties:
         id:
           type: string
         type:
-          $ref: '#/components/schemas/V1HardwarePresetType'
+          $ref: '#/components/schemas/V1ResourcePresetType'
         vcpu:
           type: number
           format: double
@@ -314,13 +315,13 @@ components:
         - type
         - vcpu
         - ram
-    V1CreateHardwarePresetRequest:
+    V1CreateResourcePresetRequest:
       type: object
       properties:
         id:
           type: string
         type:
-          $ref: '#/components/schemas/V1HardwarePresetType'
+          $ref: '#/components/schemas/V1ResourcePresetType'
         vcpu:
           type: number
           format: double
@@ -332,11 +333,11 @@ components:
         - type
         - vcpu
         - ram
-    V1UpdateHardwarePresetRequest:
+    V1UpdateResourcePresetRequest:
       type: object
       properties:
         type:
-          $ref: '#/components/schemas/V1HardwarePresetType'
+          $ref: '#/components/schemas/V1ResourcePresetType'
         vcpu:
           type: number
           format: double
@@ -347,7 +348,7 @@ components:
         - type
         - vcpu
         - ram
-    V1HardwarePresetType:
+    V1ResourcePresetType:
       type: string
       enum:
         - cpu_optimized
@@ -551,8 +552,8 @@ components:
         - id
   # ---------- parameters ----------
   parameters:
-    HardwarePresetIdPV:
-      name: hardwarePresetId
+    ResourcePresetIdPV:
+      name: resourcePresetId
       in: path
       required: true
       schema:

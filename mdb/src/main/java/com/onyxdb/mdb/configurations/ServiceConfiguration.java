@@ -3,10 +3,10 @@ package com.onyxdb.mdb.configurations;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.onyxdb.mdb.core.hardwarePresets.HardwarePresetRepository;
-import com.onyxdb.mdb.core.hardwarePresets.HardwarePresetService;
 import com.onyxdb.mdb.core.projects.ProjectRepository;
 import com.onyxdb.mdb.core.projects.ProjectService;
+import com.onyxdb.mdb.core.resourcePresets.ResourcePresetRepository;
+import com.onyxdb.mdb.core.resourcePresets.ResourcePresetService;
 import com.onyxdb.mdb.core.zones.ZoneRepository;
 import com.onyxdb.mdb.core.zones.ZoneService;
 
@@ -16,8 +16,8 @@ import com.onyxdb.mdb.core.zones.ZoneService;
 @Configuration
 public class ServiceConfiguration {
     @Bean
-    public HardwarePresetService hardwarePresetService(HardwarePresetRepository hardwarePresetRepository) {
-        return new HardwarePresetService(hardwarePresetRepository);
+    public ResourcePresetService resourcePresetService(ResourcePresetRepository resourcePresetRepository) {
+        return new ResourcePresetService(resourcePresetRepository);
     }
 
     @Bean
