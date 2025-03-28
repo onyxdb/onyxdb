@@ -44,14 +44,32 @@ CREATE TYPE public.cluster_type AS ENUM (
     'mongodb'
     );
 
+CREATE TYPE public.cluster_version AS ENUM (
+    'mongodb_8_0'
+    );
+
 CREATE TABLE public.clusters
 (
-    id         uuid                NOT NULL,
-    name       varchar(64)         NOT NULL,
-    project_id uuid                NOT NULL,
-    type       public.cluster_type NOT NULL,
+    id          uuid                   NOT NULL,
+    name        varchar                NOT NULL,
+    description varchar                NOT NULL,
+    project_id  uuid                   NOT NULL,
+    type        public.cluster_type    NOT NULL,
+    version     public.cluster_version NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (project_id) REFERENCES projects (id)
+    FOREIGN KEY (project_id) REFERENCES public.projects (id)
+);
+
+CREATE TABLE public.mongo_8_0_configs
+(
+    cluster_id                              uuid    NOT NULL,
+    mongod_resources_preset_id              varchar NOT NULL,
+    mongod_storage_class                    varchar NOT NULL,
+    mongod_storage                          bigint  NOT NULL DEFAULT 0,
+    mongod_cfg_net_max_incoming_connections int     NOT NULL DEFAULT 0,
+    PRIMARY KEY (cluster_id),
+    FOREIGN KEY (cluster_id) REFERENCES public.clusters (id),
+    FOREIGN KEY (mongod_resources_preset_id) REFERENCES public.resource_presets (id)
 );
 
 CREATE TYPE public.cluster_operation_type AS ENUM (

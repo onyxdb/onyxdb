@@ -2,10 +2,10 @@ package com.onyxdb.mdb.processors;
 
 import org.springframework.stereotype.Component;
 
+import com.onyxdb.mdb.core.clusters.models.ClusterType;
 import com.onyxdb.mdb.exceptions.NotImplementedClusterTaskTypeException;
 import com.onyxdb.mdb.models.ClusterTask;
 import com.onyxdb.mdb.models.ClusterTaskType;
-import com.onyxdb.mdb.models.ClusterType;
 
 /**
  * @author foxleren

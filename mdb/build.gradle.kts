@@ -67,3 +67,11 @@ tasks.named(CustomTasksConfig.ONYXDB_GENERATE_ALL_CODEGEN).configure {
 tasks.compileJava {
 	dependsOn(tasks.openApiGenerate)
 }
+
+tasks.openApiGenerate {
+	dependsOn(tasks.clean)
+}
+
+tasks.generateJooq {
+	dependsOn(tasks.clean)
+}

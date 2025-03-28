@@ -1,0 +1,16 @@
+package com.onyxdb.mdb.core.clusters.models;
+
+import java.util.UUID;
+
+/**
+ * @author foxleren
+ */
+public record CreateCluster(
+        String name,
+        String description,
+        UUID projectId,
+        ClusterType type,
+        ClusterVersion version,
+        ClusterConfig config
+) {
+}

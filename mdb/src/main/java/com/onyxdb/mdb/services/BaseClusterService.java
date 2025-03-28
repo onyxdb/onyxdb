@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import com.onyxdb.mdb.models.Cluster;
+import com.onyxdb.mdb.core.clusters.models.Cluster;
 import com.onyxdb.mdb.models.ClusterOperationStatus;
 import com.onyxdb.mdb.models.ClusterTask;
 import com.onyxdb.mdb.models.ClusterTaskStatus;
