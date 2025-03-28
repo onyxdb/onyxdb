@@ -1,9 +1,12 @@
-package com.onyxdb.mdb.configurations;
+package com.onyxdb.mdb.configs;
 
 import org.jooq.DSLContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.onyxdb.mdb.core.clusters.ClusterMapper;
+import com.onyxdb.mdb.core.clusters.repositories.MongoClusterPostgresRepository;
+import com.onyxdb.mdb.core.clusters.repositories.MongoClusterRepository;
 import com.onyxdb.mdb.core.projects.ProjectPostgresRepository;
 import com.onyxdb.mdb.core.projects.ProjectRepository;
 import com.onyxdb.mdb.core.resourcePresets.ResourcePresetPostgresRepository;
@@ -29,5 +32,16 @@ public class RepositoryConfiguration {
     @Bean
     public ProjectRepository projectRepository(DSLContext dslContext) {
         return new ProjectPostgresRepository(dslContext);
+    }
+
+    @Bean
+    public MongoClusterRepository mongoClusterRepository(
+            DSLContext dslContext,
+            ClusterMapper clusterMapper
+    ) {
+        return new MongoClusterPostgresRepository(
+                dslContext,
+                clusterMapper
+        );
     }
 }

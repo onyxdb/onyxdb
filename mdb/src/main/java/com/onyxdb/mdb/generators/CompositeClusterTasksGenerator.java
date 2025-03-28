@@ -6,10 +6,10 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.onyxdb.mdb.core.clusters.models.ClusterType;
 import com.onyxdb.mdb.exceptions.InternalServerErrorException;
 import com.onyxdb.mdb.models.ClusterOperationType;
 import com.onyxdb.mdb.models.ClusterTaskWithBlockers;
-import com.onyxdb.mdb.models.ClusterType;
 
 /**
  * @author foxleren

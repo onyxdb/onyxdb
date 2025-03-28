@@ -493,7 +493,7 @@ components:
       properties:
         version:
           type: string
-        mongodbV8_0:
+        mongodbV8d0:
           $ref: '#/components/schemas/V1MongoConfigV8d0'
       required:
         - version
@@ -508,10 +508,13 @@ components:
       type: object
       properties:
         resources:
-          $ref: '#/components/schemas/V1ClusterResourcesResponse'
+          $ref: '#/components/schemas/V1ClusterResources'
+        config:
+          $ref: '#/components/schemas/V1MongodConfigV8d0'
       required:
         - resources
-    V1ClusterResourcesResponse:
+        - config
+    V1ClusterResources:
       type: object
       properties:
         presetId:
@@ -525,6 +528,21 @@ components:
         - presetId
         - storageClass
         - storage
+    V1MongodConfigV8d0:
+      type: object
+      properties:
+        net:
+          $ref: '#/components/schemas/V1MongodNetV8d0'
+      required:
+        - net
+    V1MongodNetV8d0:
+      type: object
+      properties:
+        maxIncomingConnections:
+          type: integer
+          format: int32
+      required:
+        - maxIncomingConnections
     V1CreateMongoClusterRequest:
       type: object
       properties:

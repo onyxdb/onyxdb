@@ -7,11 +7,11 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.onyxdb.mdb.core.clusters.models.ClusterType;
 import com.onyxdb.mdb.exceptions.InternalServerErrorException;
 import com.onyxdb.mdb.models.ClusterOperationStatus;
 import com.onyxdb.mdb.models.ClusterTask;
 import com.onyxdb.mdb.models.ClusterTaskStatus;
-import com.onyxdb.mdb.models.ClusterType;
 import com.onyxdb.mdb.services.BaseClusterService;
 
 /**

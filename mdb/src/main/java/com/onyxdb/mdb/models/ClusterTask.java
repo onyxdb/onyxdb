@@ -3,6 +3,7 @@ package com.onyxdb.mdb.models;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.onyxdb.mdb.core.clusters.models.ClusterType;
 import com.onyxdb.mdb.generated.jooq.tables.records.ClusterTasksRecord;
 
 /**

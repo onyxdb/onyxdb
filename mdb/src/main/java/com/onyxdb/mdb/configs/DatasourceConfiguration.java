@@ -1,4 +1,4 @@
-package com.onyxdb.mdb.configurations;
+package com.onyxdb.mdb.configs;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;

@@ -1,4 +1,4 @@
-package com.onyxdb.mdb.models;
+package com.onyxdb.mdb.core.clusters.models;
 
 import com.onyxdb.mdb.utils.StringEnum;
 
@@ -21,6 +21,7 @@ public enum ClusterType implements StringEnum {
         return value;
     }
 
+    // TODO remove
     public static ClusterType fromValue(String value) {
         return StringEnum.fromValue(ClusterType.class, value);
     }

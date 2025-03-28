@@ -10,8 +10,15 @@ VALUES ('5cb0ca1c-e6c1-47ab-b832-0074312490a3',
         'test-project',
         'Some description');
 
-INSERT INTO clusters (id, name, project_id, type)
+INSERT INTO public.clusters (id, name, description, project_id, type, version)
 VALUES ('062c4806-0248-4c5d-86da-e1244e172619',
         'test-cluster',
+        'some desc',
         '5cb0ca1c-e6c1-47ab-b832-0074312490a3',
-        'mongodb');
+        'mongodb',
+        'mongodb_8_0');
+
+INSERT INTO public.mongo_8_0_config (cluster_id, mongod_resources_preset_id, mongod_storage_class)
+VALUES ('062c4806-0248-4c5d-86da-e1244e172619',
+        'dev',
+        'standard');

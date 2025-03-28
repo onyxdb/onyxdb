@@ -3,9 +3,9 @@ package com.onyxdb.mdb.generators;
 import java.util.List;
 import java.util.UUID;
 
+import com.onyxdb.mdb.core.clusters.models.ClusterType;
 import com.onyxdb.mdb.models.ClusterOperationType;
 import com.onyxdb.mdb.models.ClusterTaskWithBlockers;
-import com.onyxdb.mdb.models.ClusterType;
 
 /**
  * @author foxleren

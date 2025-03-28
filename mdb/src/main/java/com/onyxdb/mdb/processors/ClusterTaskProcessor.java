@@ -1,7 +1,7 @@
 package com.onyxdb.mdb.processors;
 
+import com.onyxdb.mdb.core.clusters.models.ClusterType;
 import com.onyxdb.mdb.models.ClusterTask;
-import com.onyxdb.mdb.models.ClusterType;
 
 /**
  * @author foxleren

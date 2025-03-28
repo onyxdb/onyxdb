@@ -1,8 +1,12 @@
-package com.onyxdb.mdb.configurations;
+package com.onyxdb.mdb.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.support.TransactionTemplate;
 
+import com.onyxdb.mdb.core.clusters.ClusterMapper;
+import com.onyxdb.mdb.core.clusters.ClusterService;
+import com.onyxdb.mdb.core.clusters.repositories.MongoClusterRepository;
 import com.onyxdb.mdb.core.projects.ProjectRepository;
 import com.onyxdb.mdb.core.projects.ProjectService;
 import com.onyxdb.mdb.core.resourcePresets.ResourcePresetRepository;
@@ -28,5 +32,18 @@ public class ServiceConfiguration {
     @Bean
     public ProjectService projectService(ProjectRepository projectRepository) {
         return new ProjectService(projectRepository);
+    }
+
+    @Bean
+    public ClusterService clusterService(
+            ClusterMapper clusterMapper,
+            MongoClusterRepository mongoClusterRepository,
+            TransactionTemplate transactionTemplate
+    ) {
+        return new ClusterService(
+                clusterMapper,
+                mongoClusterRepository,
+                transactionTemplate
+        );
     }
 }

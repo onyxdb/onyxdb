@@ -6,12 +6,12 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.onyxdb.mdb.core.clusters.models.ClusterType;
 import com.onyxdb.mdb.exceptions.InternalServerErrorException;
 import com.onyxdb.mdb.models.ClusterOperationType;
 import com.onyxdb.mdb.models.ClusterTask;
 import com.onyxdb.mdb.models.ClusterTaskType;
 import com.onyxdb.mdb.models.ClusterTaskWithBlockers;
-import com.onyxdb.mdb.models.ClusterType;
 
 /**
  * @author foxleren
