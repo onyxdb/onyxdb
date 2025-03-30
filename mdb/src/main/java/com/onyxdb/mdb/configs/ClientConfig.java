@@ -6,7 +6,7 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.onyxdb.mdb.core.clusters.k8s.psmdb.PsmdbClient;
+import com.onyxdb.mdb.clients.psmdb.PsmdbClient;
 
 @Configuration
 public class ClientConfig {
