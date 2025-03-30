@@ -8,6 +8,10 @@ import java.util.Optional;
 public interface StringEnum {
     String value();
 
+    default boolean equalsStringEnum(StringEnum other) {
+        return value().equals(other.value());
+    }
+
     static <E extends Enum<E>> Optional<E> fromValueO(Class<E> enumClass, Object value) {
         for (E enumConstant : enumClass.getEnumConstants()) {
             if (enumConstant.toString().equalsIgnoreCase(value.toString())) {
