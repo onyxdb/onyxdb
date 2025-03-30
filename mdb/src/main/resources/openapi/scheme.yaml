@@ -491,29 +491,35 @@ components:
     V1MongoConfig:
       type: object
       properties:
-        version:
-          type: string
-        mongodbV8d0:
-          $ref: '#/components/schemas/V1MongoConfigV8d0'
-      required:
-        - version
-    V1MongoConfigV8d0:
-      type: object
-      properties:
-        mongod:
-          $ref: '#/components/schemas/V1MongodV8d0'
-      required:
-        - mongod
-    V1MongodV8d0:
-      type: object
-      properties:
+#        version:
+#          type: string
         resources:
           $ref: '#/components/schemas/V1ClusterResources'
-        config:
-          $ref: '#/components/schemas/V1MongodConfigV8d0'
+        replicas:
+          type: integer
+          format: int32
+#        mongodbV8d0:
+#          $ref: '#/components/schemas/V1MongoConfigV8d0'
       required:
         - resources
-        - config
+        - replicas
+#    V1MongoConfigV8d0:
+#      type: object
+#      properties:
+#        mongod:
+#          $ref: '#/components/schemas/V1MongodV8d0'
+#      required:
+#        - mongod
+#    V1MongodV8d0:
+#      type: object
+#      properties:
+#        resources:
+#          $ref: '#/components/schemas/V1ClusterResources'
+#        config:
+#          $ref: '#/components/schemas/V1MongodConfigV8d0'
+#      required:
+#        - resources
+#        - config
     V1ClusterResources:
       type: object
       properties:
@@ -528,21 +534,21 @@ components:
         - presetId
         - storageClass
         - storage
-    V1MongodConfigV8d0:
-      type: object
-      properties:
-        net:
-          $ref: '#/components/schemas/V1MongodNetV8d0'
-      required:
-        - net
-    V1MongodNetV8d0:
-      type: object
-      properties:
-        maxIncomingConnections:
-          type: integer
-          format: int32
-      required:
-        - maxIncomingConnections
+#    V1MongodConfigV8d0:
+#      type: object
+#      properties:
+#        net:
+#          $ref: '#/components/schemas/V1MongodNetV8d0'
+#      required:
+#        - net
+#    V1MongodNetV8d0:
+#      type: object
+#      properties:
+#        maxIncomingConnections:
+#          type: integer
+#          format: int32
+#      required:
+#        - maxIncomingConnections
     V1CreateMongoClusterRequest:
       type: object
       properties:

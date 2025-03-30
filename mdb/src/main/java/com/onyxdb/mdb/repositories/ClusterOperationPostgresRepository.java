@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
-import com.onyxdb.mdb.models.ClusterOperation;
-import com.onyxdb.mdb.models.ClusterOperationStatus;
+import com.onyxdb.mdb.core.clusters.models.ClusterOperation;
+import com.onyxdb.mdb.core.clusters.models.ClusterOperationStatus;
 
 import static com.onyxdb.mdb.generated.jooq.tables.ClusterOperations.CLUSTER_OPERATIONS;
 
@@ -21,7 +21,22 @@ public class ClusterOperationPostgresRepository implements ClusterOperationRepos
 
     @Override
     public void create(ClusterOperation operation) {
-        dslContext.executeInsert(operation.toJooqClusterOperationsRecord());
+        dslContext.insertInto(CLUSTER_OPERATIONS)
+                .columns(
+                        CLUSTER_OPERATIONS.ID,
+                        CLUSTER_OPERATIONS.CLUSTER_ID,
+                        CLUSTER_OPERATIONS.TYPE,
+                        CLUSTER_OPERATIONS.STATUS,
+                        CLUSTER_OPERATIONS.CREATED_AT
+                )
+                .values(
+                        operation.id(),
+                        operation.clusterId(),
+                        com.onyxdb.mdb.generated.jooq.enums.ClusterOperationType.valueOf(operation.type().value()),
+                        com.onyxdb.mdb.generated.jooq.enums.ClusterOperationStatus.valueOf(operation.status().value()),
+                        operation.createdAt()
+                )
+                .execute();
     }
 
     @Override

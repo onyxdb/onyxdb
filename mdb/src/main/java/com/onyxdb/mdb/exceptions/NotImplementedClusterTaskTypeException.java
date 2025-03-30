@@ -1,6 +1,6 @@
 package com.onyxdb.mdb.exceptions;
 
-import com.onyxdb.mdb.models.ClusterTaskType;
+import com.onyxdb.mdb.core.clusters.models.ClusterTaskType;
 
 /**
  * @author foxleren

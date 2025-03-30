@@ -1,4 +1,4 @@
-package com.onyxdb.mdb.models;
+package com.onyxdb.mdb.core.clusters.models;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -9,8 +9,8 @@ public record CreateCluster(
         String name,
         String description,
         UUID projectId,
+        String namespace,
         ClusterType type,
-        ClusterVersion version,
         ClusterConfig config
 ) {
 }

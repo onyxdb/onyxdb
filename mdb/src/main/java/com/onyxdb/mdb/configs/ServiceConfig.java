@@ -6,19 +6,22 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import com.onyxdb.mdb.core.clusters.ClusterMapper;
 import com.onyxdb.mdb.core.clusters.ClusterService;
-import com.onyxdb.mdb.core.clusters.repositories.MongoClusterRepository;
+import com.onyxdb.mdb.core.clusters.generators.CompositeClusterTasksGenerator;
+import com.onyxdb.mdb.core.clusters.repositories.ClusterRepository;
 import com.onyxdb.mdb.core.projects.ProjectRepository;
 import com.onyxdb.mdb.core.projects.ProjectService;
 import com.onyxdb.mdb.core.resourcePresets.ResourcePresetRepository;
 import com.onyxdb.mdb.core.resourcePresets.ResourcePresetService;
 import com.onyxdb.mdb.core.zones.ZoneRepository;
 import com.onyxdb.mdb.core.zones.ZoneService;
+import com.onyxdb.mdb.repositories.ClusterOperationRepository;
+import com.onyxdb.mdb.repositories.ClusterTaskRepository;
 
 /**
  * @author foxleren
  */
 @Configuration
-public class ServiceConfiguration {
+public class ServiceConfig {
     @Bean
     public ResourcePresetService resourcePresetService(ResourcePresetRepository resourcePresetRepository) {
         return new ResourcePresetService(resourcePresetRepository);
@@ -37,13 +40,19 @@ public class ServiceConfiguration {
     @Bean
     public ClusterService clusterService(
             ClusterMapper clusterMapper,
-            MongoClusterRepository mongoClusterRepository,
-            TransactionTemplate transactionTemplate
+            ClusterRepository clusterRepository,
+            TransactionTemplate transactionTemplate,
+            CompositeClusterTasksGenerator compositeClusterTasksGenerator,
+            ClusterOperationRepository clusterOperationRepository,
+            ClusterTaskRepository clusterTaskRepository
     ) {
         return new ClusterService(
                 clusterMapper,
-                mongoClusterRepository,
-                transactionTemplate
+                clusterRepository,
+                transactionTemplate,
+                compositeClusterTasksGenerator,
+                clusterOperationRepository,
+                clusterTaskRepository
         );
     }
 }

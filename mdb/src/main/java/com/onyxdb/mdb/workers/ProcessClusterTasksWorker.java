@@ -1,6 +1,7 @@
 package com.onyxdb.mdb.workers;
 
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -15,8 +16,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import com.onyxdb.mdb.models.ClusterTask;
-import com.onyxdb.mdb.processors.CompositeClusterTasksProcessor;
+import com.onyxdb.mdb.core.clusters.models.ClusterTask;
+import com.onyxdb.mdb.core.clusters.processors.CompositeClusterTasksProcessor;
 import com.onyxdb.mdb.services.BaseClusterService;
 
 /**
@@ -84,6 +85,8 @@ public class ProcessClusterTasksWorker implements CommandLineRunner {
     private void processTasks(ThreadPoolExecutor executor) throws InterruptedException {
         var isFirstIteration = true;
         while (true) {
+            var scheduledAt = LocalDateTime.now();
+
             if (isFirstIteration) {
                 isFirstIteration = false;
             } else {
@@ -96,7 +99,7 @@ public class ProcessClusterTasksWorker implements CommandLineRunner {
                 continue;
             }
 
-            List<ClusterTask> clusterTasks = clusterService.getTasksToProcess(freeThreads);
+            List<ClusterTask> clusterTasks = clusterService.getTasksToProcess(freeThreads, scheduledAt);
             if (clusterTasks.isEmpty()) {
                 logger.info("There are no tasks to process, waiting next iteration");
                 continue;

@@ -1,4 +1,4 @@
-package com.onyxdb.mdb.models;
+package com.onyxdb.mdb.core.clusters.models;
 
 import com.onyxdb.mdb.utils.StringEnum;
 
@@ -6,10 +6,8 @@ import com.onyxdb.mdb.utils.StringEnum;
  * @author foxleren
  */
 public enum ClusterTaskType implements StringEnum {
-    // MONGODB_CREATE_CLUSTER
-    MONGODB_CREATE_CLUSTER_APPLY_MANIFEST("mongodb_create_cluster_apply_manifest"),
-    MONGODB_CREATE_CLUSTER_SAVE_HOSTS("mongodb_create_cluster_save_hosts"),
-    MONGODB_CREATE_CLUSTER_GENERATE_GRAFANA_DASHBOARD("mongodb_create_cluster_generate_grafana_dashboard"),
+    APPLY_MANIFEST("apply_manifest"),
+    CHECK_READINESS("check_readiness"),
     ;
 
     private final String value;

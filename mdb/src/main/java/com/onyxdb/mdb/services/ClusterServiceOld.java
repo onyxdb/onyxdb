@@ -1,23 +1,24 @@
 package com.onyxdb.mdb.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import com.onyxdb.mdb.core.clusters.generators.CompositeClusterTasksGenerator;
 import com.onyxdb.mdb.core.clusters.models.Cluster;
+import com.onyxdb.mdb.core.clusters.models.ClusterOperationStatus;
+import com.onyxdb.mdb.core.clusters.models.ClusterTask;
+import com.onyxdb.mdb.core.clusters.models.ClusterTaskStatus;
 import com.onyxdb.mdb.core.clusters.repositories.ClusterRepository;
-import com.onyxdb.mdb.generators.CompositeClusterTasksGenerator;
-import com.onyxdb.mdb.models.ClusterOperationStatus;
-import com.onyxdb.mdb.models.ClusterTask;
-import com.onyxdb.mdb.models.ClusterTaskStatus;
-import com.onyxdb.mdb.models.ClusterToCreate;
 import com.onyxdb.mdb.repositories.ClusterOperationRepository;
 import com.onyxdb.mdb.repositories.ClusterTaskRepository;
 
@@ -32,42 +33,6 @@ public class ClusterServiceOld implements BaseClusterService {
     private final ClusterTaskRepository clusterTaskRepository;
     private final CompositeClusterTasksGenerator clusterTasksGenerator;
     private final TransactionTemplate transactionTemplate;
-
-    @Override
-    public UUID create(UUID createdBy, ClusterToCreate clusterToCreate) {
-//        var cluster = Cluster.fromClusterToCreate(clusterToCreate);
-//        var clusterOperation = ClusterOperation.scheduled(
-//                cluster.id(),
-//                ClusterOperationType.CREATE_CLUSTER,
-//                createdBy
-//        );
-//        List<ClusterTaskWithBlockers> clusterTasksWithBlockers = clusterTasksGenerator.generateTasks(
-//                cluster.id(),
-//                cluster.type(),
-//                clusterOperation.id(),
-//                clusterOperation.type()
-//        );
-//
-//        List<ClusterTask> clusterTasks = new ArrayList<>(clusterTasksWithBlockers.size());
-//        Map<UUID, List<UUID>> taskIdToBlockerIds = new HashMap<>();
-//        for (var clusterTaskWithBlockers : clusterTasksWithBlockers) {
-//            clusterTasks.add(clusterTaskWithBlockers.task());
-//            taskIdToBlockerIds.put(clusterTaskWithBlockers.task().id(), clusterTaskWithBlockers.blockerIds());
-//        }
-//
-//        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
-//            @Override
-//            protected void doInTransactionWithoutResult(@NonNull TransactionStatus status) {
-//                clusterRepository.create(cluster);
-//                clusterOperationRepository.create(clusterOperation);
-//                clusterTaskRepository.createBulk(clusterTasks);
-//                clusterTaskRepository.createBlockerTasksBulk(taskIdToBlockerIds);
-//            }
-//        });
-//
-//        return cluster.id();
-        return UUID.randomUUID();
-    }
 
     @Override
     public Optional<Cluster> getByIdO(UUID id) {
@@ -89,12 +54,15 @@ public class ClusterServiceOld implements BaseClusterService {
     public void updateTaskAndOperationStatus(
             UUID taskId,
             ClusterTaskStatus taskStatus,
+            @Nullable
+            Integer attemptsLeft,
             UUID operationId,
             ClusterOperationStatus operationStatus
     ) {
         transactionTemplate.execute(new TransactionCallbackWithoutResult() {
             @Override
             protected void doInTransactionWithoutResult(@NonNull TransactionStatus status) {
+                clusterTaskRepository.updateTask(taskId, taskStatus, attemptsLeft, null);
                 clusterTaskRepository.updateStatus(taskId, taskStatus);
                 clusterOperationRepository.updateStatus(operationId, operationStatus);
             }
@@ -102,8 +70,8 @@ public class ClusterServiceOld implements BaseClusterService {
     }
 
     @Override
-    public List<ClusterTask> getTasksToProcess(int limit) {
-        return clusterTaskRepository.getTasksToProcess(limit);
+    public List<ClusterTask> getTasksToProcess(int limit, LocalDateTime scheduledAt) {
+        return clusterTaskRepository.getTasksToProcess(limit, scheduledAt);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.onyxdb.mdb.generators;
+package com.onyxdb.mdb.core.clusters.generators;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -6,12 +6,12 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.onyxdb.mdb.core.clusters.models.ClusterOperationType;
+import com.onyxdb.mdb.core.clusters.models.ClusterTask;
+import com.onyxdb.mdb.core.clusters.models.ClusterTaskType;
+import com.onyxdb.mdb.core.clusters.models.ClusterTaskWithBlockers;
 import com.onyxdb.mdb.core.clusters.models.ClusterType;
 import com.onyxdb.mdb.exceptions.InternalServerErrorException;
-import com.onyxdb.mdb.models.ClusterOperationType;
-import com.onyxdb.mdb.models.ClusterTask;
-import com.onyxdb.mdb.models.ClusterTaskType;
-import com.onyxdb.mdb.models.ClusterTaskWithBlockers;
 
 /**
  * @author foxleren
@@ -49,23 +49,15 @@ public class MongoClusterTasksGenerator implements ClusterTasksGenerator {
                 clusterId,
                 operationId,
                 CLUSTER_TYPE,
-                ClusterTaskType.MONGODB_CREATE_CLUSTER_APPLY_MANIFEST,
+                ClusterTaskType.APPLY_MANIFEST,
                 now,
                 DEFAULT_RETRIES_LEFT
         );
-        var saveHostsTask = ClusterTask.scheduledMiddle(
+        var checkReadinessTask = ClusterTask.scheduledLast(
                 clusterId,
                 operationId,
                 CLUSTER_TYPE,
-                ClusterTaskType.MONGODB_CREATE_CLUSTER_SAVE_HOSTS,
-                now,
-                DEFAULT_RETRIES_LEFT
-        );
-        var generateGrafanaDashboardTask = ClusterTask.scheduledLast(
-                clusterId,
-                operationId,
-                CLUSTER_TYPE,
-                ClusterTaskType.MONGODB_CREATE_CLUSTER_GENERATE_GRAFANA_DASHBOARD,
+                ClusterTaskType.CHECK_READINESS,
                 now,
                 DEFAULT_RETRIES_LEFT
         );
@@ -73,12 +65,8 @@ public class MongoClusterTasksGenerator implements ClusterTasksGenerator {
         return List.of(
                 ClusterTaskWithBlockers.withoutBlockers(applyManifestTask),
                 new ClusterTaskWithBlockers(
-                        saveHostsTask,
+                        checkReadinessTask,
                         List.of(applyManifestTask.id())
-                ),
-                new ClusterTaskWithBlockers(
-                        generateGrafanaDashboardTask,
-                        List.of(applyManifestTask.id(), saveHostsTask.id())
                 )
         );
     }

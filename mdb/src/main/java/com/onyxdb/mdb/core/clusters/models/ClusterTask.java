@@ -1,9 +1,9 @@
-package com.onyxdb.mdb.models;
+package com.onyxdb.mdb.core.clusters.models;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import com.onyxdb.mdb.core.clusters.models.ClusterType;
 import com.onyxdb.mdb.generated.jooq.tables.records.ClusterTasksRecord;
 
 /**
@@ -23,6 +23,14 @@ public record ClusterTask(
         boolean isFirst,
         boolean isLast
 ) {
+    public boolean hasNoAttempts() {
+        return attemptsLeft == 0;
+    }
+
+    public LocalDateTime getScheduledAtWithDelay(Duration delay) {
+        return scheduledAt.plusSeconds(delay.getSeconds());
+    }
+
     public ClusterTasksRecord toJooqClusterTasksRecord() {
         return new ClusterTasksRecord(
                 id,

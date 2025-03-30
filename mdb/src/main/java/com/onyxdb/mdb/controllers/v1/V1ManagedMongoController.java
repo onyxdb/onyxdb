@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.onyxdb.mdb.core.clusters.ClusterMapper;
 import com.onyxdb.mdb.core.clusters.ClusterService;
 import com.onyxdb.mdb.core.clusters.models.CreateCluster;
-import com.onyxdb.mdb.core.clusters.validators.V1ManagedMongoApiValidator;
 import com.onyxdb.mdb.generated.openapi.apis.V1ManagedMongoDbApi;
 import com.onyxdb.mdb.generated.openapi.models.V1ClusterResources;
 import com.onyxdb.mdb.generated.openapi.models.V1ClusterStatusResponse;
@@ -18,17 +17,12 @@ import com.onyxdb.mdb.generated.openapi.models.V1CreateMongoClusterResponse;
 import com.onyxdb.mdb.generated.openapi.models.V1ListMongoClustersResponse;
 import com.onyxdb.mdb.generated.openapi.models.V1MongoClusterResponse;
 import com.onyxdb.mdb.generated.openapi.models.V1MongoConfig;
-import com.onyxdb.mdb.generated.openapi.models.V1MongoConfigV8d0;
-import com.onyxdb.mdb.generated.openapi.models.V1MongodConfigV8d0;
-import com.onyxdb.mdb.generated.openapi.models.V1MongodNetV8d0;
-import com.onyxdb.mdb.generated.openapi.models.V1MongodV8d0;
 
 /**
  * @author foxleren
  */
 @RestController
 public class V1ManagedMongoController implements V1ManagedMongoDbApi {
-    private final V1ManagedMongoApiValidator apiValidator;
     private final ClusterMapper clusterMapper;
     private final ClusterService clusterService;
 
@@ -42,31 +36,19 @@ public class V1ManagedMongoController implements V1ManagedMongoDbApi {
             ),
             UUID.randomUUID(),
             new V1MongoConfig(
-                    "8.0"
-            ).mongodbV8d0(
-                    new V1MongoConfigV8d0(
-                            new V1MongodV8d0(
-                                    new V1ClusterResources(
-                                            "c2-r4",
-                                            "standard",
-                                            10737418240L
-                                    ),
-                                    new V1MongodConfigV8d0(
-                                            new V1MongodNetV8d0(
-                                                    300
-                                            )
-                                    )
-                            )
-                    )
+                    new V1ClusterResources(
+                            "c2-r4",
+                            "standard",
+                            10737418240L
+                    ),
+                    3
             )
     );
 
     public V1ManagedMongoController(
-            V1ManagedMongoApiValidator apiValidator,
             ClusterMapper clusterMapper,
             ClusterService clusterService
     ) {
-        this.apiValidator = apiValidator;
         this.clusterMapper = clusterMapper;
         this.clusterService = clusterService;
     }
@@ -87,7 +69,6 @@ public class V1ManagedMongoController implements V1ManagedMongoDbApi {
 
     @Override
     public ResponseEntity<V1CreateMongoClusterResponse> createCluster(V1CreateMongoClusterRequest r) {
-        apiValidator.validateV1CreateMongoClusterRequest(r);
         CreateCluster createCluster = clusterMapper.v1CreateMongoClusterRequestToCreateCluster(r);
 
         UUID clusterId = clusterService.createCluster(createCluster);
