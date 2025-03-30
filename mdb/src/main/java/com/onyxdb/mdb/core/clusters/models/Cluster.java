@@ -5,13 +5,13 @@ import java.util.UUID;
 /**
  * @author foxleren
  */
+// TODO store namespace
 public record Cluster(
         UUID id,
         String name,
         String description,
         UUID projectId,
         ClusterType type,
-        ClusterVersion version,
         ClusterConfig config
 ) {
 }

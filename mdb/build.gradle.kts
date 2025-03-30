@@ -25,6 +25,9 @@ dependencies {
 
 	implementation(libs.orgJetbrains.annotations)
 
+	implementation("io.fabric8:kubernetes-client:7.1.0")
+	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+
 	testImplementation(libs.springBoot.starterTest)
 	testImplementation(libs.springBoot.starterTestcontainers)
 	testImplementation(libs.testcontainers.junitJupiter)

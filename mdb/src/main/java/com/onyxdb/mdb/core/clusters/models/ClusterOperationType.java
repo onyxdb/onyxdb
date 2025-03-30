@@ -1,4 +1,4 @@
-package com.onyxdb.mdb.models;
+package com.onyxdb.mdb.core.clusters.models;
 
 import com.onyxdb.mdb.utils.StringEnum;
 

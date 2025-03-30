@@ -1,4 +1,4 @@
-package com.onyxdb.mdb.generators;
+package com.onyxdb.mdb.core.clusters.generators;
 
 import java.util.List;
 import java.util.Map;
@@ -6,10 +6,10 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.onyxdb.mdb.core.clusters.models.ClusterOperationType;
+import com.onyxdb.mdb.core.clusters.models.ClusterTaskWithBlockers;
 import com.onyxdb.mdb.core.clusters.models.ClusterType;
 import com.onyxdb.mdb.exceptions.InternalServerErrorException;
-import com.onyxdb.mdb.models.ClusterOperationType;
-import com.onyxdb.mdb.models.ClusterTaskWithBlockers;
 
 /**
  * @author foxleren

@@ -1,5 +1,8 @@
 package com.onyxdb.mdb.core.clusters.repositories;
 
+import java.util.Optional;
+import java.util.UUID;
+
 import com.onyxdb.mdb.core.clusters.models.Cluster;
 
 /**
@@ -7,4 +10,6 @@ import com.onyxdb.mdb.core.clusters.models.Cluster;
  */
 public interface ClusterRepository {
     void createCluster(Cluster cluster);
+
+    Optional<Cluster> getClusterO(UUID clusterId);
 }

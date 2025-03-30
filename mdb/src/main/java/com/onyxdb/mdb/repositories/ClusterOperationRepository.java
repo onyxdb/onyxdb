@@ -2,8 +2,8 @@ package com.onyxdb.mdb.repositories;
 
 import java.util.UUID;
 
-import com.onyxdb.mdb.models.ClusterOperation;
-import com.onyxdb.mdb.models.ClusterOperationStatus;
+import com.onyxdb.mdb.core.clusters.models.ClusterOperation;
+import com.onyxdb.mdb.core.clusters.models.ClusterOperationStatus;
 
 /**
  * @author foxleren
