@@ -2,6 +2,7 @@ package com.onyxdb.mdb.core.clusters;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jooq.Record;
 
@@ -98,13 +99,17 @@ public class ClusterMapper {
     public Cluster fromJooqRecord(Record r) {
         ClustersRecord rr = r.into(ClustersRecord.class);
 
-        return new Cluster(
-                rr.getId(),
-                rr.getName(),
-                rr.getDescription(),
-                rr.getProjectId(),
-                ClusterType.fromValue(rr.getType().getLiteral()),
-                objectMapper.convertValue((rr.getConfig()).data(), ClusterConfig.class)
-        );
+        try {
+            return new Cluster(
+                    rr.getId(),
+                    rr.getName(),
+                    rr.getDescription(),
+                    rr.getProjectId(),
+                    ClusterType.fromValue(rr.getType().getLiteral()),
+                    objectMapper.readValue((rr.getConfig()).data(), ClusterConfig.class)
+            );
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

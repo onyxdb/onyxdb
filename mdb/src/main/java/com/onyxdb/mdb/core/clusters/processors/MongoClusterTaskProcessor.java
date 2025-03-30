@@ -38,7 +38,7 @@ public class MongoClusterTaskProcessor implements ClusterTaskProcessor {
         ClusterTaskType clusterTaskType = task.type();
         switch (clusterTaskType) {
             case APPLY_MANIFEST -> {
-                return handleApplyManifest();
+                return handleApplyManifest(task);
             }
             case CHECK_READINESS -> {
                 return handleCheckReadiness(task);
