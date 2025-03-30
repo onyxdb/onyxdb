@@ -8,12 +8,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
 
-import com.onyxdb.mdb.generators.ClusterTasksGenerator;
-import com.onyxdb.mdb.generators.CompositeClusterTasksGenerator;
-import com.onyxdb.mdb.generators.MongoClusterTasksGenerator;
-import com.onyxdb.mdb.processors.ClusterTaskProcessor;
-import com.onyxdb.mdb.processors.CompositeClusterTasksProcessor;
-import com.onyxdb.mdb.processors.MongoClusterTaskProcessor;
+import com.onyxdb.mdb.core.clusters.ClusterService;
+import com.onyxdb.mdb.core.clusters.generators.ClusterTasksGenerator;
+import com.onyxdb.mdb.core.clusters.generators.CompositeClusterTasksGenerator;
+import com.onyxdb.mdb.core.clusters.generators.MongoClusterTasksGenerator;
+import com.onyxdb.mdb.core.clusters.processors.ClusterTaskProcessor;
+import com.onyxdb.mdb.core.clusters.processors.CompositeClusterTasksProcessor;
+import com.onyxdb.mdb.core.clusters.processors.MongoClusterTaskProcessor;
 import com.onyxdb.mdb.services.BaseClusterService;
 
 /**
@@ -21,7 +22,7 @@ import com.onyxdb.mdb.services.BaseClusterService;
  */
 @Configuration
 @EnableAsync
-public class MdbContextConfiguration {
+public class MdbContextConfig {
     @Bean
     public CompositeClusterTasksGenerator compositeClusterTasksGenerator(
             MongoClusterTasksGenerator mongoClusterTasksGenerator
@@ -34,13 +35,18 @@ public class MdbContextConfiguration {
 
     @Bean
     public CompositeClusterTasksProcessor compositeClusterTasksProcessor(
-            BaseClusterService clusterService,
-            MongoClusterTaskProcessor mongoClusterOperationProcessor
+            BaseClusterService clusterServiceOld,
+            MongoClusterTaskProcessor mongoClusterOperationProcessor,
+            ClusterService clusterService
     ) {
         List<ClusterTaskProcessor> processors = List.of(
                 mongoClusterOperationProcessor
         );
-        return new CompositeClusterTasksProcessor(processors, clusterService);
+        return new CompositeClusterTasksProcessor(
+                processors,
+                clusterServiceOld,
+                clusterService
+        );
     }
 
     @Bean(name = "processClusterTasksWorkerExecutor")
