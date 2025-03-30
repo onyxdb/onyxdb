@@ -15,6 +15,7 @@ import org.springframework.transaction.support.TransactionTemplate;
  *
  * @author foxleren
  */
+// TODO delete
 public class MemoriousTransactionTemplate extends TransactionTemplate {
     private volatile int previousPropagationBehavior = getPropagationBehavior();
 

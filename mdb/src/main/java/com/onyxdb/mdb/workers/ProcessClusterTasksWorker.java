@@ -17,7 +17,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import com.onyxdb.mdb.core.clusters.processors.CompositeClusterTasksProcessor;
-import com.onyxdb.mdb.models.ClusterTask;
+import com.onyxdb.mdb.core.clusters.models.ClusterTask;
 import com.onyxdb.mdb.services.BaseClusterService;
 
 /**
