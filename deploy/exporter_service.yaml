@@ -1,16 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: demo-cluster-metrics
+  name: managed-mongodb-demo-exporter
   namespace: onyxdb
   labels:
-    app: demo-cluster-metrics
-    app.kubernetes.io/instance: demo-cluster
-    app.kubernetes.io/component: metrics
-#  annotations:
-#    prometheus.io/path: /metrics
-#    prometheus.io/port: '9216'
-#    prometheus.io/scrape: 'true'
+    app.kubernetes.io/instance: managed-mongodb-demo-exporter
 spec:
   ports:
     - name: http-metrics
@@ -18,4 +12,4 @@ spec:
       targetPort: 9216
       protocol: TCP
   selector:
-    app.kubernetes.io/instance: demo-cluster
+    app.kubernetes.io/instance: managed-mongodb-demo

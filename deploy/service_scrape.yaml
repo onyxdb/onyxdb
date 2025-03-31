@@ -1,12 +1,12 @@
 apiVersion: operator.victoriametrics.com/v1beta1
 kind: VMServiceScrape
 metadata:
-  name: demo-cluster-metrics-service-scrape
-#  labels:
+  name: managed-mongodb-demo-exporter-scrape
   namespace: onyxdb
 spec:
   endpoints:
     - port: http-metrics
+      path: /metrics
   selector:
     matchLabels:
-      app: demo-cluster-metrics
+      app.kubernetes.io/instance: managed-mongodb-demo-exporter
