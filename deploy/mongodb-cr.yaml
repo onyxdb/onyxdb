@@ -1,7 +1,7 @@
 apiVersion: psmdb.percona.com/v1
 kind: PerconaServerMongoDB
 metadata:
-  name: demo-cluster
+  name: managed-mongodb-demo
   finalizers: []
 #    - percona.com/delete-psmdb-pods-in-order
 #    - percona.com/delete-psmdb-pvc
@@ -49,7 +49,7 @@ spec:
   #    schedule: "0 2 * * *"
   #    setFCV: false
   secrets:
-    users: demo-cluster-secrets
+    users: managed-mongodb-demo-secrets
   #    encryptionKey: demo-cluster-mongodb-encryption-key
   #    ssl: my-cluster-name-ssl
   #    sslInternal: my-cluster-name-ssl-internal
@@ -179,12 +179,12 @@ spec:
             - name: EXPORTER_USER
               valueFrom:
                 secretKeyRef:
-                  name: demo-cluster-secrets
+                  name: managed-mongodb-demo-secrets
                   key: MONGODB_CLUSTER_MONITOR_USER
             - name: EXPORTER_PASS
               valueFrom:
                 secretKeyRef:
-                  name: demo-cluster-secrets
+                  name: managed-mongodb-demo-secrets
                   key: MONGODB_CLUSTER_MONITOR_PASSWORD
             - name: POD_IP
               valueFrom:
@@ -193,7 +193,7 @@ spec:
             - name: MONGODB_URI
               value: "mongodb://$(EXPORTER_USER):$(EXPORTER_PASS)@$(POD_IP):27017"
           args: [ "--discovering-mode", "--compatible-mode", "--collect-all", "--log.level=debug", "--mongodb.uri=$(MONGODB_URI)" ]
-          name: metrics
+          name: exporter
 #        - image: percona/percona-server-mongodb:7.0.14-8
 #          name: percona-client
 #          command: ["-- bash -il"]
