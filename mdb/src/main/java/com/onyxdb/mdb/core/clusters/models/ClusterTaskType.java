@@ -6,8 +6,12 @@ import com.onyxdb.mdb.utils.StringEnum;
  * @author foxleren
  */
 public enum ClusterTaskType implements StringEnum {
-    APPLY_MANIFEST("apply_manifest"),
-    CHECK_READINESS("check_readiness"),
+    MONGODB_CREATE_CLUSTER("mongodb_create_cluster"),
+    MONGODB_CHECK_CLUSTER_READINESS("mongodb_check_cluster_readiness"),
+    MONGODB_CREATE_EXPORTER_SERVICE("mongodb_create_exporter_service"),
+    MONGODB_CHECK_EXPORTER_SERVICE_READINESS("mongodb_check_exporter_service_readiness"),
+    MONGODB_CREATE_EXPORTER_SERVICE_SCRAPE("mongodb_create_exporter_service_scrape"),
+    MONGODB_CREATE_GRAFANA_DASHBOARD("mongodb_create_grafana_dashboard"),
     ;
 
     private final String value;

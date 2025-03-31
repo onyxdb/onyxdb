@@ -45,28 +45,96 @@ public class MongoClusterTasksGenerator implements ClusterTasksGenerator {
     private static List<ClusterTaskWithBlockers> getTasksForMongoCreateCluster(UUID clusterId, UUID operationId) {
         LocalDateTime now = LocalDateTime.now();
 
-        var applyManifestTask = ClusterTask.scheduledFirst(
+        var createClusterTask = ClusterTask.scheduledFirst(
                 clusterId,
                 operationId,
                 CLUSTER_TYPE,
-                ClusterTaskType.APPLY_MANIFEST,
+                ClusterTaskType.MONGODB_CREATE_CLUSTER,
                 now,
                 DEFAULT_RETRIES_LEFT
         );
-        var checkReadinessTask = ClusterTask.scheduledLast(
+        var checkClusterReadinessTask = ClusterTask.scheduledMiddle(
                 clusterId,
                 operationId,
                 CLUSTER_TYPE,
-                ClusterTaskType.CHECK_READINESS,
+                ClusterTaskType.MONGODB_CHECK_CLUSTER_READINESS,
+                now,
+                DEFAULT_RETRIES_LEFT
+        );
+        var createExporterServiceTask = ClusterTask.scheduledMiddle(
+                clusterId,
+                operationId,
+                CLUSTER_TYPE,
+                ClusterTaskType.MONGODB_CREATE_EXPORTER_SERVICE,
+                now,
+                DEFAULT_RETRIES_LEFT
+        );
+        var checkExporterReadinessTask = ClusterTask.scheduledMiddle(
+                clusterId,
+                operationId,
+                CLUSTER_TYPE,
+                ClusterTaskType.MONGODB_CHECK_EXPORTER_SERVICE_READINESS,
+                now,
+                DEFAULT_RETRIES_LEFT
+        );
+        var createExporterServiceScrape = ClusterTask.scheduledMiddle(
+                clusterId,
+                operationId,
+                CLUSTER_TYPE,
+                ClusterTaskType.MONGODB_CREATE_EXPORTER_SERVICE_SCRAPE,
+                now,
+                DEFAULT_RETRIES_LEFT
+        );
+        var createGrafanaDashboardTask = ClusterTask.scheduledLast(
+                clusterId,
+                operationId,
+                CLUSTER_TYPE,
+                ClusterTaskType.MONGODB_CREATE_GRAFANA_DASHBOARD,
                 now,
                 DEFAULT_RETRIES_LEFT
         );
 
+        // TODO validate that there is first and last tasks and there is no duplicates.
+
         return List.of(
-                ClusterTaskWithBlockers.withoutBlockers(applyManifestTask),
+                ClusterTaskWithBlockers.withoutBlockers(createClusterTask),
                 new ClusterTaskWithBlockers(
-                        checkReadinessTask,
-                        List.of(applyManifestTask.id())
+                        checkClusterReadinessTask,
+                        List.of(createClusterTask.id())
+                ),
+                new ClusterTaskWithBlockers(
+                        createExporterServiceTask,
+                        List.of(
+                                createClusterTask.id(),
+                                checkClusterReadinessTask.id()
+                        )
+                ),
+                new ClusterTaskWithBlockers(
+                        checkExporterReadinessTask,
+                        List.of(
+                                createClusterTask.id(),
+                                checkClusterReadinessTask.id(),
+                                createExporterServiceTask.id()
+                        )
+                ),
+                new ClusterTaskWithBlockers(
+                        createExporterServiceScrape,
+                        List.of(
+                                createClusterTask.id(),
+                                checkClusterReadinessTask.id(),
+                                createExporterServiceTask.id(),
+                                checkExporterReadinessTask.id()
+                        )
+                ),
+                new ClusterTaskWithBlockers(
+                        createGrafanaDashboardTask,
+                        List.of(
+                                createClusterTask.id(),
+                                checkClusterReadinessTask.id(),
+                                createExporterServiceTask.id(),
+                                checkExporterReadinessTask.id(),
+                                createExporterServiceScrape.id()
+                        )
                 )
         );
     }

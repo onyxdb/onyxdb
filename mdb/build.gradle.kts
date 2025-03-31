@@ -13,6 +13,7 @@ dependencies {
 	implementation(project(":common:postgres"))
 
 	implementation(libs.springBoot.starterWeb)
+	implementation("org.springframework.boot:spring-boot-starter-webflux:3.3.5")
 	implementation(libs.springBoot.starterLog4j2)
 	implementation(libs.springBoot.starterValidation)
 	implementation(libs.apacheCommons.commonsLang3)
@@ -27,6 +28,7 @@ dependencies {
 
 	implementation("io.fabric8:kubernetes-client:7.1.0")
 	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.18.3")
 
 	testImplementation(libs.springBoot.starterTest)
 	testImplementation(libs.springBoot.starterTestcontainers)

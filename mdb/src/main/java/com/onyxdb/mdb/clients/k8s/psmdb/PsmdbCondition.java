@@ -1,4 +1,4 @@
-package com.onyxdb.mdb.clients.psmdb;
+package com.onyxdb.mdb.clients.k8s.psmdb;
 
 import java.time.LocalDateTime;
 

@@ -11,7 +11,7 @@ import com.onyxdb.mdb.core.clusters.models.ClusterType;
  * @author foxleren
  */
 public interface ClusterTasksGenerator {
-    int DEFAULT_RETRIES_LEFT = 3;
+    int DEFAULT_RETRIES_LEFT = 5;
 
     ClusterType getClusterType();
 
