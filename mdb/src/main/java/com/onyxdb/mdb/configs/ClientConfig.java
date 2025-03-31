@@ -6,7 +6,8 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.onyxdb.mdb.clients.psmdb.PsmdbClient;
+import com.onyxdb.mdb.clients.k8s.psmdb.PsmdbClient;
+import com.onyxdb.mdb.clients.k8s.victoriametrics.VmOperatorClient;
 
 @Configuration
 public class ClientConfig {
@@ -24,5 +25,10 @@ public class ClientConfig {
                 kubernetesClient,
                 objectMapper
         );
+    }
+
+    @Bean
+    public VmOperatorClient victoriaMetricsOperatorClient(KubernetesClient kubernetesClient) {
+        return new VmOperatorClient(kubernetesClient);
     }
 }
