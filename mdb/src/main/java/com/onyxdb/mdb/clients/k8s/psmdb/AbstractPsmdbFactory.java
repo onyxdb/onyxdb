@@ -28,7 +28,6 @@ public abstract class AbstractPsmdbFactory {
 
     protected Map<String, Object> getStatusMap(GenericKubernetesResource resource) {
         Object statusObj = resource.getAdditionalProperties().getOrDefault("status", Map.of());
-
         return objectMapper.convertValue(statusObj, PROPERTY_TYPE_REF);
     }
 }
