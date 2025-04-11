@@ -20,7 +20,7 @@ public record PsmdbSpec(
         String crVersion,
         String image,
         String imagePullPolicy,
-        PmdbSecret secrets,
+        PmdbSecrets secrets,
         List<PsmdbReplset> replsets
 ) {
     public static Builder builder() {
@@ -33,7 +33,7 @@ public record PsmdbSpec(
                     "1.19.1",
                     "percona/percona-server-mongodb:7.0.15-9-multi",
                     "IfNotPresent",
-                    new PmdbSecret(PsmdbFactory.getPreparedSecretName(name)),
+                    new PmdbSecrets(PsmdbFactory.getPreparedSecretName(name)),
                     List.of(
                             new PsmdbReplset(
                                     "rs-0",
