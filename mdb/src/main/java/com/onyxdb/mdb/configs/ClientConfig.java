@@ -6,7 +6,9 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.onyxdb.mdb.clients.psmdb.PsmdbClient;
+import com.onyxdb.mdb.clients.k8s.psmdb.PsmdbExporterServiceFactory;
+import com.onyxdb.mdb.clients.k8s.psmdb.PsmdbFactory;
+import com.onyxdb.mdb.clients.k8s.victoriaMetrics.VmServiceScrapeFactory;
 
 @Configuration
 public class ClientConfig {
@@ -16,11 +18,33 @@ public class ClientConfig {
     }
 
     @Bean
-    public PsmdbClient psmdbClient(
+    public PsmdbFactory psmdbFactory(
+            ObjectMapper objectMapper,
+            KubernetesClient kubernetesClient
+    ) {
+        return new PsmdbFactory(
+                objectMapper,
+                kubernetesClient
+        );
+    }
+
+    @Bean
+    public PsmdbExporterServiceFactory psmdbExporterServiceFactory(
+            ObjectMapper objectMapper,
+            KubernetesClient kubernetesClient
+    ) {
+        return new PsmdbExporterServiceFactory(
+                objectMapper,
+                kubernetesClient
+        );
+    }
+
+    @Bean
+    public VmServiceScrapeFactory vmServiceScrapeFactory(
             KubernetesClient kubernetesClient,
             ObjectMapper objectMapper
     ) {
-        return new PsmdbClient(
+        return new VmServiceScrapeFactory(
                 kubernetesClient,
                 objectMapper
         );

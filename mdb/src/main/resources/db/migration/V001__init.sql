@@ -89,8 +89,12 @@ CREATE TYPE public.cluster_task_status AS ENUM (
     );
 
 CREATE TYPE public.cluster_task_type AS ENUM (
-    'apply_manifest',
-    'check_readiness'
+    'mongodb_create_cluster',
+    'mongodb_check_cluster_readiness',
+    'mongodb_create_exporter_service',
+    'mongodb_check_exporter_service_readiness',
+    'mongodb_create_exporter_service_scrape',
+    'mongodb_check_exporter_service_scrape_readiness'
     );
 
 CREATE TABLE public.cluster_tasks

@@ -1,0 +1,12 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMServiceScrape
+metadata:
+  name: managed-mongodb-demo-exporter-scrape
+  namespace: onyxdb
+spec:
+  endpoints:
+    - port: http-metrics
+      path: /metrics
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: managed-mongodb-demo-exporter

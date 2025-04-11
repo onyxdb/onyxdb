@@ -1,0 +1,34 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMPodScrape
+metadata:
+  name: demo-cluster-scrape
+  namespace: onyxdb
+spec:
+#  namespaceSelector:
+#    any: true
+  podMetricsEndpoints:
+    - path: /metrics
+      port: http
+#    - targetPort: 9216
+#      portNumber: 9216
+#      path: '/metrics'
+#      scheme: http
+  selector:
+    app.kubernetes.io/instance: demo-cluster
+#    matchLabels:
+#      app.kubernetes.io/instance: demo-cluster
+#      app.kubernetes.io/managed-by: percona-server-mongodb-operator
+#    endpoints:
+#      - attach_metadata: {}
+#        path: /metrics
+#        port: http
+#    namespaceSelector: {}
+#  selector:
+##      matchExpressions:
+##        - key: operator.victoriametrics.com/additional-service
+##          operator: DoesNotExist
+##    matchLabels:
+#      app.kubernetes.io/component: monitoring
+#      app.kubernetes.io/instance: example-vmagent
+#      app.kubernetes.io/name: vmagent
+#      managed-by: vm-operator

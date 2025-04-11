@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: managed-mongodb-demo-exporter
+  namespace: onyxdb
+  labels:
+    app.kubernetes.io/instance: managed-mongodb-demo-exporter
+spec:
+  ports:
+    - name: http-metrics
+      port: 9216
+      targetPort: 9216
+      protocol: TCP
+  selector:
+    app.kubernetes.io/instance: managed-mongodb-demo
