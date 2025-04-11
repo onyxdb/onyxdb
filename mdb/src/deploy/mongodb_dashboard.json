@@ -2239,7 +2239,7 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "${DASHBOARD_TITLE}",
+  "title": "Managed MongoDB by OnyxDB",
   "uid": "fb83c1b6-953f-482c-99d9-aeec370ac29a",
   "version": 9,
   "weekStart": "",
