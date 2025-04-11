@@ -6,9 +6,9 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.onyxdb.mdb.clients.grafana.GrafanaClient;
-import com.onyxdb.mdb.clients.k8s.psmdb.PsmdbClient;
-import com.onyxdb.mdb.clients.k8s.victoriametrics.VmOperatorClient;
+import com.onyxdb.mdb.clients.k8s.psmdb.PsmdbExporterServiceFactory;
+import com.onyxdb.mdb.clients.k8s.psmdb.PsmdbFactory;
+import com.onyxdb.mdb.clients.k8s.victoriaMetrics.VmServiceScrapeFactory;
 
 @Configuration
 public class ClientConfig {
@@ -18,23 +18,35 @@ public class ClientConfig {
     }
 
     @Bean
-    public PsmdbClient psmdbClient(
-            KubernetesClient kubernetesClient,
-            ObjectMapper objectMapper
+    public PsmdbFactory psmdbFactory(
+            ObjectMapper objectMapper,
+            KubernetesClient kubernetesClient
     ) {
-        return new PsmdbClient(
-                kubernetesClient,
-                objectMapper
+        return new PsmdbFactory(
+                objectMapper,
+                kubernetesClient
         );
     }
 
     @Bean
-    public VmOperatorClient victoriaMetricsOperatorClient(KubernetesClient kubernetesClient) {
-        return new VmOperatorClient(kubernetesClient);
+    public PsmdbExporterServiceFactory psmdbExporterServiceFactory(
+            ObjectMapper objectMapper,
+            KubernetesClient kubernetesClient
+    ) {
+        return new PsmdbExporterServiceFactory(
+                objectMapper,
+                kubernetesClient
+        );
     }
 
     @Bean
-    public GrafanaClient grafanaClient() {
-        return new GrafanaClient();
+    public VmServiceScrapeFactory vmServiceScrapeFactory(
+            KubernetesClient kubernetesClient,
+            ObjectMapper objectMapper
+    ) {
+        return new VmServiceScrapeFactory(
+                kubernetesClient,
+                objectMapper
+        );
     }
 }
