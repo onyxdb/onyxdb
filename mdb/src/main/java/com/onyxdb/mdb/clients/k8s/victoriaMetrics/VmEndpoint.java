@@ -2,9 +2,9 @@ package com.onyxdb.mdb.clients.k8s.victoriaMetrics;
 
 import java.util.List;
 
-public record Endpoint(
+public record VmEndpoint(
         String port,
         String path,
-        List<RelabelConfig> relabelConfigs
+        List<VmRelabelConfig> relabelConfigs
 ) {
 }

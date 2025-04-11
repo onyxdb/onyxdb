@@ -4,8 +4,8 @@ import java.util.List;
 
 import io.fabric8.kubernetes.api.model.LabelSelector;
 
-public record ServiceScrapeSpec(
+public record VmServiceScrapeSpec(
         LabelSelector selector,
-        List<Endpoint> endpoints
+        List<VmEndpoint> endpoints
 ) {
 }
