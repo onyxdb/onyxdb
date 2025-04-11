@@ -18,19 +18,16 @@ public class ServiceScrapeFactory {
         this.objectMapper = objectMapper;
     }
 
-    public GenericKubernetesResource buildResource(
-            String name,
-            ServiceScrape serviceScrape
-    ) {
-        var spec = ObjectMapperUtils.convertToMap(objectMapper, serviceScrape);
+    public GenericKubernetesResource buildResource(ServiceScrape serviceScrape) {
+        var specMap = ObjectMapperUtils.convertToMap(objectMapper, serviceScrape.spec());
 
         return new GenericKubernetesResourceBuilder()
                 .withApiVersion(API_VERSION)
                 .withKind(KIND)
                 .withNewMetadata()
-                .withName(getPreparedName(name))
+                .withName(getPreparedName(serviceScrape.name()))
                 .endMetadata()
-                .addToAdditionalProperties("spec", spec)
+                .addToAdditionalProperties("spec", specMap)
                 .build();
     }
 

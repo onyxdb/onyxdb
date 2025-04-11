@@ -15,21 +15,14 @@ public class VmOperatorClient {
         this.serviceScrapeFactory = serviceScrapeFactory;
     }
 
-    public void createServiceScrape(
-            String namespace,
-            String namePrefix,
-            ServiceScrape serviceScrape
-    ) {
-        GenericKubernetesResource cr = serviceScrapeFactory.buildResource(
-                namePrefix,
-                serviceScrape
-        );
+    public void createServiceScrape(ServiceScrape serviceScrape) {
+        GenericKubernetesResource cr = serviceScrapeFactory.buildResource(serviceScrape);
 
         kubernetesClient.genericKubernetesResources(
                         ServiceScrapeFactory.API_VERSION,
                         ServiceScrapeFactory.KIND
                 )
-                .inNamespace(namespace)
+                .inNamespace(serviceScrape.namespace())
                 .resource(cr)
                 .create();
     }
