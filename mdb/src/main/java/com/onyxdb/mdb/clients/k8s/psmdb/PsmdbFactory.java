@@ -8,29 +8,26 @@ import io.fabric8.kubernetes.client.dsl.base.ResourceDefinitionContext;
 
 import com.onyxdb.mdb.utils.ObjectMapperUtils;
 
-public class PsmdbFactory {
-    public static final String GROUP = "psmdb.percona.com";
-    public static final String VERSION = "v1";
-    public static final String API_VERSION = GROUP + "/" + VERSION;
-    public static final String KIND = "PerconaServerMongoDB";
-    public static final String PLURAL = "perconaservermongodbs";
-    public static final ResourceDefinitionContext CONTEXT = new ResourceDefinitionContext.Builder()
+public class PsmdbFactory extends AbstractPsmdbFactory {
+    private static final String GROUP = "psmdb.percona.com";
+    private static final String VERSION = "v1";
+    private static final String API_VERSION = GROUP + "/" + VERSION;
+    private static final String KIND = "PerconaServerMongoDB";
+    private static final ResourceDefinitionContext CONTEXT = new ResourceDefinitionContext.Builder()
             .withGroup(GROUP)
             .withVersion(VERSION)
             .withKind(KIND)
-            .withPlural(PLURAL)
             .withNamespaced(true)
             .build();
 
     private final KubernetesClient kubernetesClient;
-    private final ObjectMapper objectMapper;
 
     public PsmdbFactory(
-            KubernetesClient kubernetesClient,
-            ObjectMapper objectMapper
+            ObjectMapper objectMapper,
+            KubernetesClient kubernetesClient
     ) {
+        super(objectMapper);
         this.kubernetesClient = kubernetesClient;
-        this.objectMapper = objectMapper;
     }
 
     public GenericKubernetesResource getResource(String namespace, String name) {
@@ -50,6 +47,14 @@ public class PsmdbFactory {
                 .inNamespace(psmdb.namespace())
                 .resource(resource)
                 .create();
+    }
+
+    public boolean isResourceReady(String namespace, String name) {
+        GenericKubernetesResource resource = getResource(namespace, name);
+
+        return getStateO(resource)
+                .stream()
+                .anyMatch(state -> state.equals(STATE_READY_VALUE));
     }
 
     public static String getPreparedName(String name) {

@@ -6,11 +6,11 @@ import java.util.Map;
 import io.fabric8.kubernetes.api.model.EnvVarBuilder;
 import io.fabric8.kubernetes.api.model.EnvVarSourceBuilder;
 import io.fabric8.kubernetes.api.model.NodeAffinityBuilder;
+import io.fabric8.kubernetes.api.model.NodeSelectorBuilder;
 import io.fabric8.kubernetes.api.model.NodeSelectorRequirementBuilder;
 import io.fabric8.kubernetes.api.model.NodeSelectorTermBuilder;
 import io.fabric8.kubernetes.api.model.ObjectFieldSelectorBuilder;
 import io.fabric8.kubernetes.api.model.PersistentVolumeClaimSpecBuilder;
-import io.fabric8.kubernetes.api.model.PreferredSchedulingTermBuilder;
 import io.fabric8.kubernetes.api.model.Quantity;
 import io.fabric8.kubernetes.api.model.ResourceRequirementsBuilder;
 import io.fabric8.kubernetes.api.model.SecretKeySelectorBuilder;
@@ -42,9 +42,9 @@ public record PsmdbSpec(
                                             new io.fabric8.kubernetes.api.model.AffinityBuilder()
                                                     .withNodeAffinity(
                                                             new NodeAffinityBuilder()
-                                                                    .withPreferredDuringSchedulingIgnoredDuringExecution(
-                                                                            new PreferredSchedulingTermBuilder()
-                                                                                    .withPreference(
+                                                                    .withRequiredDuringSchedulingIgnoredDuringExecution(
+                                                                            new NodeSelectorBuilder()
+                                                                                    .withNodeSelectorTerms(
                                                                                             new NodeSelectorTermBuilder()
                                                                                                     .withMatchExpressions(
                                                                                                             new NodeSelectorRequirementBuilder()
