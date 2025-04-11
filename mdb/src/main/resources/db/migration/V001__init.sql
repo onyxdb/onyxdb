@@ -88,12 +88,6 @@ CREATE TYPE public.cluster_task_status AS ENUM (
     'success'
     );
 
--- MONGODB_CREATE_CLUSTER("mongodb_create_cluster"),
---     MONGODB_CHECK_CLUSTER_READINESS("mongodb_check_cluster_readiness"),
---     MONGODB_CREATE_EXPORTER_SERVICE("mongodb_create_exporter_service"),
---     MONGODB_CHECK_EXPORTER_SERVICE_READINESS("mongodb_check_exporter_service_readiness"),
---     MONGODB_CREATE_GRAFANA_DASHBOARD("mongodb_create_grafana_dashboard"),
-
 CREATE TYPE public.cluster_task_type AS ENUM (
     'mongodb_create_cluster',
     'mongodb_check_cluster_readiness',
