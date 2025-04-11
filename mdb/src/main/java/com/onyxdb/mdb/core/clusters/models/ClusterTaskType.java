@@ -11,7 +11,7 @@ public enum ClusterTaskType implements StringEnum {
     MONGODB_CREATE_EXPORTER_SERVICE("mongodb_create_exporter_service"),
     MONGODB_CHECK_EXPORTER_SERVICE_READINESS("mongodb_check_exporter_service_readiness"),
     MONGODB_CREATE_EXPORTER_SERVICE_SCRAPE("mongodb_create_exporter_service_scrape"),
-    MONGODB_CREATE_GRAFANA_DASHBOARD("mongodb_create_grafana_dashboard"),
+    MONGODB_CHECK_EXPORTER_SERVICE_SCRAPE_READINESS("mongodb_check_exporter_service_scrape_readiness"),
     ;
 
     private final String value;

@@ -89,7 +89,7 @@ public class MongoClusterTasksGenerator implements ClusterTasksGenerator {
                 clusterId,
                 operationId,
                 CLUSTER_TYPE,
-                ClusterTaskType.MONGODB_CREATE_GRAFANA_DASHBOARD,
+                ClusterTaskType.MONGODB_CHECK_EXPORTER_SERVICE_SCRAPE_READINESS,
                 now,
                 DEFAULT_RETRIES_LEFT
         );

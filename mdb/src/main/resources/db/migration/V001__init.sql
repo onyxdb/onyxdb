@@ -100,7 +100,7 @@ CREATE TYPE public.cluster_task_type AS ENUM (
     'mongodb_create_exporter_service',
     'mongodb_check_exporter_service_readiness',
     'mongodb_create_exporter_service_scrape',
-    'mongodb_create_grafana_dashboard'
+    'mongodb_check_exporter_service_scrape_readiness'
     );
 
 CREATE TABLE public.cluster_tasks

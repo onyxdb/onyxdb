@@ -3,11 +3,19 @@ package com.onyxdb.mdb.core.clusters.processors;
 import java.time.Duration;
 import java.util.List;
 
+import io.fabric8.kubernetes.api.model.LabelSelectorBuilder;
 import org.springframework.stereotype.Component;
 
-import com.onyxdb.mdb.clients.k8s.psmdb.PsmdbClient;
-import com.onyxdb.mdb.clients.k8s.victoriametrics.ServiceScrapeEndpoint;
-import com.onyxdb.mdb.clients.k8s.victoriametrics.VmOperatorClient;
+import com.onyxdb.mdb.clients.k8s.psmdb.Psmdb;
+import com.onyxdb.mdb.clients.k8s.psmdb.PsmdbExporterService;
+import com.onyxdb.mdb.clients.k8s.psmdb.PsmdbExporterServiceFactory;
+import com.onyxdb.mdb.clients.k8s.psmdb.PsmdbFactory;
+import com.onyxdb.mdb.clients.k8s.psmdb.PsmdbSpec;
+import com.onyxdb.mdb.clients.k8s.victoriaMetrics.VmEndpoint;
+import com.onyxdb.mdb.clients.k8s.victoriaMetrics.VmRelabelConfig;
+import com.onyxdb.mdb.clients.k8s.victoriaMetrics.VmServiceScrape;
+import com.onyxdb.mdb.clients.k8s.victoriaMetrics.VmServiceScrapeFactory;
+import com.onyxdb.mdb.clients.k8s.victoriaMetrics.VmServiceScrapeSpec;
 import com.onyxdb.mdb.core.clusters.ClusterService;
 import com.onyxdb.mdb.core.clusters.models.Cluster;
 import com.onyxdb.mdb.core.clusters.models.ClusterTask;
@@ -20,17 +28,22 @@ import com.onyxdb.mdb.exceptions.NotImplementedClusterTaskTypeException;
  */
 @Component
 public class MongoClusterTaskProcessor implements ClusterTaskProcessor {
-    private final PsmdbClient psmdbClient;
-    private final VmOperatorClient vmOperatorClient;
+    private static final String DEFAULT_NAMESPACE = "onyxdb";
+
+    private final PsmdbFactory psmdbFactory;
+    private final PsmdbExporterServiceFactory psmdbExporterServiceFactory;
+    private final VmServiceScrapeFactory vmServiceScrapeFactory;
     private final ClusterService clusterService;
 
     public MongoClusterTaskProcessor(
-            PsmdbClient psmdbClient,
-            VmOperatorClient vmOperatorClient,
+            PsmdbFactory psmdbFactory,
+            PsmdbExporterServiceFactory psmdbExporterServiceFactory,
+            VmServiceScrapeFactory vmServiceScrapeFactory,
             ClusterService clusterService
     ) {
-        this.psmdbClient = psmdbClient;
-        this.vmOperatorClient = vmOperatorClient;
+        this.psmdbFactory = psmdbFactory;
+        this.psmdbExporterServiceFactory = psmdbExporterServiceFactory;
+        this.vmServiceScrapeFactory = vmServiceScrapeFactory;
         this.clusterService = clusterService;
     }
 
@@ -44,7 +57,7 @@ public class MongoClusterTaskProcessor implements ClusterTaskProcessor {
         ClusterTaskType clusterTaskType = task.type();
         switch (clusterTaskType) {
             case MONGODB_CREATE_CLUSTER -> {
-                return handleApplyManifest(task);
+                return handleCreateCluster(task);
             }
             case MONGODB_CHECK_CLUSTER_READINESS -> {
                 return handleCheckReadiness(task);
@@ -58,16 +71,22 @@ public class MongoClusterTaskProcessor implements ClusterTaskProcessor {
             case MONGODB_CREATE_EXPORTER_SERVICE_SCRAPE -> {
                 return handleCreateExporterServiceScrape(task);
             }
-            case MONGODB_CREATE_GRAFANA_DASHBOARD -> {
-                return handleCreateGrafanaDashboard(task);
+            case MONGODB_CHECK_EXPORTER_SERVICE_SCRAPE_READINESS -> {
+                return handleCheckExporterServiceScrapeReadiness(task);
             }
             default -> throw new NotImplementedClusterTaskTypeException(task.type());
         }
     }
 
-    private ClusterTaskProcessingResult handleApplyManifest(ClusterTask task) {
+    private ClusterTaskProcessingResult handleCreateCluster(ClusterTask task) {
         Cluster cluster = clusterService.getCluster(task.clusterId());
-        psmdbClient.applyManifest(cluster.name());
+
+        var psmdb = new Psmdb(
+                DEFAULT_NAMESPACE,
+                cluster.name(),
+                PsmdbSpec.builder().build(cluster.name())
+        );
+        psmdbFactory.createResource(psmdb);
 
         return ClusterTaskProcessingResult.success();
     }
@@ -75,7 +94,7 @@ public class MongoClusterTaskProcessor implements ClusterTaskProcessor {
     private ClusterTaskProcessingResult handleCheckReadiness(ClusterTask task) {
         Cluster cluster = clusterService.getCluster(task.clusterId());
 
-        boolean isReady = psmdbClient.isReady(cluster.name());
+        boolean isReady = psmdbFactory.isResourceReady(DEFAULT_NAMESPACE, cluster.name());
         if (!isReady) {
             return ClusterTaskProcessingResult.scheduled(
                     task.getScheduledAtWithDelay(Duration.ofSeconds(30))
@@ -87,7 +106,10 @@ public class MongoClusterTaskProcessor implements ClusterTaskProcessor {
 
     private ClusterTaskProcessingResult handleCreateExporterService(ClusterTask task) {
         Cluster cluster = clusterService.getCluster(task.clusterId());
-        psmdbClient.createExporterService(cluster.name());
+
+        var psmdbExporterService = PsmdbExporterService.builder()
+                .build(DEFAULT_NAMESPACE, cluster.name());
+        psmdbExporterServiceFactory.createResource(psmdbExporterService);
 
         return ClusterTaskProcessingResult.success();
     }
@@ -95,7 +117,7 @@ public class MongoClusterTaskProcessor implements ClusterTaskProcessor {
     private ClusterTaskProcessingResult handleCheckExporterServiceReadiness(ClusterTask task) {
         Cluster cluster = clusterService.getCluster(task.clusterId());
 
-        boolean isReady = psmdbClient.isExporterServiceReady(cluster.name());
+        boolean isReady = psmdbExporterServiceFactory.resourceExists(DEFAULT_NAMESPACE, cluster.name());
         if (!isReady) {
             return ClusterTaskProcessingResult.scheduled(
                     task.getScheduledAtWithDelay(Duration.ofSeconds(30))
@@ -106,24 +128,53 @@ public class MongoClusterTaskProcessor implements ClusterTaskProcessor {
     }
 
     private ClusterTaskProcessingResult handleCreateExporterServiceScrape(ClusterTask task) {
-        // TODO maybe we should check if vm synced config and found new cluster
         Cluster cluster = clusterService.getCluster(task.clusterId());
 
-        vmOperatorClient.createServiceScrape(
-                psmdbClient.getExporterServiceNameByClusterName(cluster.name()),
-                psmdbClient.getExporterServiceLabelsByClusterName(cluster.name()),
-                List.of(
-                        new ServiceScrapeEndpoint(
-                                psmdbClient.getExporterServicePortName(),
-                                psmdbClient.getExporterServiceMetricsPath()
-                        )
+        // TODO use real project name
+        var vmServiceScrapeSpec = VmServiceScrapeSpec.builder()
+                .withSelector(
+                        new LabelSelectorBuilder()
+                                .withMatchLabels(PsmdbExporterServiceFactory.getLabels(cluster.name()))
+                                .build()
                 )
+                .withEndpoints(List.of(
+                        new VmEndpoint(
+                                PsmdbExporterServiceFactory.PORT_NAME,
+                                PsmdbExporterServiceFactory.PATH,
+                                List.of(
+                                        new VmRelabelConfig(
+                                                "project",
+                                                "some-project"
+                                        ),
+                                        new VmRelabelConfig(
+                                                "cluster",
+                                                cluster.name()
+                                        )
+                                )
+                        )
+                ))
+                .build();
+
+        var vmServiceScrape = new VmServiceScrape(
+                DEFAULT_NAMESPACE,
+                PsmdbExporterServiceFactory.getPreparedName(cluster.name()),
+                vmServiceScrapeSpec
         );
+        vmServiceScrapeFactory.createResource(vmServiceScrape);
 
         return ClusterTaskProcessingResult.success();
     }
 
-    private ClusterTaskProcessingResult handleCreateGrafanaDashboard(ClusterTask task) {
+    private ClusterTaskProcessingResult handleCheckExporterServiceScrapeReadiness(ClusterTask task) {
+        Cluster cluster = clusterService.getCluster(task.clusterId());
+
+        boolean isReady = psmdbExporterServiceFactory.resourceExists(DEFAULT_NAMESPACE, cluster.name());
+        if (!isReady) {
+            return ClusterTaskProcessingResult.scheduled(
+                    task.getScheduledAtWithDelay(Duration.ofSeconds(30))
+            );
+        }
+
         return ClusterTaskProcessingResult.success();
     }
 }
