@@ -1,11 +1,11 @@
-package com.onyxdb.mdb.core.clusters.models;
+package com.onyxdb.mdb.taskProcessing.models;
 
 import com.onyxdb.mdb.utils.StringEnum;
 
 /**
  * @author foxleren
  */
-public enum ClusterTaskStatus implements StringEnum {
+public enum TaskStatus implements StringEnum {
     SCHEDULED("scheduled"),
     IN_PROGRESS("in_progress"),
     ERROR("error"),
@@ -14,7 +14,7 @@ public enum ClusterTaskStatus implements StringEnum {
 
     private final String value;
 
-    ClusterTaskStatus(final String value) {
+    TaskStatus(final String value) {
         this.value = value;
     }
 
@@ -23,7 +23,7 @@ public enum ClusterTaskStatus implements StringEnum {
         return value;
     }
 
-    public static ClusterTaskStatus fromValue(String value) {
-        return StringEnum.fromValue(ClusterTaskStatus.class, value);
+    public static TaskStatus fromValue(String value) {
+        return StringEnum.fromValue(TaskStatus.class, value);
     }
 }
