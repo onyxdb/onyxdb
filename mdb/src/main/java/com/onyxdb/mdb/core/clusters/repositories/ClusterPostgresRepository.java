@@ -66,4 +66,12 @@ public class ClusterPostgresRepository implements ClusterRepository {
                 .fetchOptional()
                 .map(clusterMapper::fromJooqRecord);
     }
+
+    @Override
+    public void markClusterDeleted(UUID clusterId) {
+        dslContext.update(CLUSTERS)
+                .set(CLUSTERS.IS_DELETED, true)
+                .where(CLUSTERS.ID.eq(clusterId))
+                .execute();
+    }
 }

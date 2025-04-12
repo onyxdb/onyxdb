@@ -8,9 +8,9 @@ import java.util.UUID;
 import org.jetbrains.annotations.Nullable;
 
 import com.onyxdb.mdb.core.clusters.models.Cluster;
-import com.onyxdb.mdb.core.clusters.models.ClusterOperationStatus;
-import com.onyxdb.mdb.core.clusters.models.ClusterTask;
-import com.onyxdb.mdb.core.clusters.models.ClusterTaskStatus;
+import com.onyxdb.mdb.taskProcessing.models.OperationStatus;
+import com.onyxdb.mdb.taskProcessing.models.Task;
+import com.onyxdb.mdb.taskProcessing.models.TaskStatus;
 
 /**
  * @author foxleren
@@ -18,20 +18,20 @@ import com.onyxdb.mdb.core.clusters.models.ClusterTaskStatus;
 public interface BaseClusterService {
     Optional<Cluster> getByIdO(UUID id);
 
-    void updateTaskStatus(UUID taskId, ClusterTaskStatus taskStatus);
+    void updateTaskStatus(UUID taskId, TaskStatus taskStatus);
 
-    void updateOperationStatus(UUID operationId, ClusterOperationStatus operationStatus);
+    void updateOperationStatus(UUID operationId, OperationStatus operationStatus);
 
     void updateTaskAndOperationStatus(
             UUID taskId,
-            ClusterTaskStatus taskStatus,
+            TaskStatus taskStatus,
             @Nullable
             Integer attemptsLeft,
             UUID operationId,
-            ClusterOperationStatus operationStatus
+            OperationStatus operationStatus
     );
 
-    List<ClusterTask> getTasksToProcess(int limit, LocalDateTime scheduledAt);
+    List<Task> getTasksToProcess(int limit, LocalDateTime scheduledAt);
 
     void updateProject(UUID clusterId, UUID projectId);
 }
