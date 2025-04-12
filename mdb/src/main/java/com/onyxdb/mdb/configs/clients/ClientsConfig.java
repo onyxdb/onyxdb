@@ -1,4 +1,4 @@
-package com.onyxdb.mdb.configs;
+package com.onyxdb.mdb.configs.clients;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.fabric8.kubernetes.client.DefaultKubernetesClient;
@@ -6,45 +6,45 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.onyxdb.mdb.clients.k8s.psmdb.PsmdbExporterServiceFactory;
-import com.onyxdb.mdb.clients.k8s.psmdb.PsmdbFactory;
-import com.onyxdb.mdb.clients.k8s.victoriaMetrics.VmServiceScrapeFactory;
+import com.onyxdb.mdb.clients.k8s.psmdb.PsmdbClient;
+import com.onyxdb.mdb.clients.k8s.psmdb.PsmdbExporterServiceClient;
+import com.onyxdb.mdb.clients.k8s.victoriaMetrics.VmServiceScrapeClient;
 
 @Configuration
-public class ClientConfig {
+public class ClientsConfig {
     @Bean
     public KubernetesClient kubernetesClient() {
         return new DefaultKubernetesClient();
     }
 
     @Bean
-    public PsmdbFactory psmdbFactory(
+    public PsmdbClient psmdbClient(
             ObjectMapper objectMapper,
             KubernetesClient kubernetesClient
     ) {
-        return new PsmdbFactory(
+        return new PsmdbClient(
                 objectMapper,
                 kubernetesClient
         );
     }
 
     @Bean
-    public PsmdbExporterServiceFactory psmdbExporterServiceFactory(
+    public PsmdbExporterServiceClient psmdbExporterServiceClient(
             ObjectMapper objectMapper,
             KubernetesClient kubernetesClient
     ) {
-        return new PsmdbExporterServiceFactory(
+        return new PsmdbExporterServiceClient(
                 objectMapper,
                 kubernetesClient
         );
     }
 
     @Bean
-    public VmServiceScrapeFactory vmServiceScrapeFactory(
+    public VmServiceScrapeClient vmServiceScrapeClient(
             KubernetesClient kubernetesClient,
             ObjectMapper objectMapper
     ) {
-        return new VmServiceScrapeFactory(
+        return new VmServiceScrapeClient(
                 kubernetesClient,
                 objectMapper
         );

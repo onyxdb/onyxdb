@@ -15,8 +15,8 @@ public record PsmdbExporterService(
             return new PsmdbExporterService(
                     namespace,
                     name,
-                    PsmdbExporterServiceFactory.PORT_NAME,
-                    PsmdbExporterServiceFactory.PORT
+                    PsmdbExporterServiceClient.PORT_NAME,
+                    PsmdbExporterServiceClient.PORT
             );
         }
     }

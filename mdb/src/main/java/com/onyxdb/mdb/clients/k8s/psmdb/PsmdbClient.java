@@ -8,7 +8,7 @@ import io.fabric8.kubernetes.client.dsl.base.ResourceDefinitionContext;
 
 import com.onyxdb.mdb.utils.ObjectMapperUtils;
 
-public class PsmdbFactory extends AbstractPsmdbFactory {
+public class PsmdbClient extends AbstractPsmdbFactory {
     private static final String GROUP = "psmdb.percona.com";
     private static final String VERSION = "v1";
     private static final String API_VERSION = GROUP + "/" + VERSION;
@@ -22,7 +22,7 @@ public class PsmdbFactory extends AbstractPsmdbFactory {
 
     private final KubernetesClient kubernetesClient;
 
-    public PsmdbFactory(
+    public PsmdbClient(
             ObjectMapper objectMapper,
             KubernetesClient kubernetesClient
     ) {

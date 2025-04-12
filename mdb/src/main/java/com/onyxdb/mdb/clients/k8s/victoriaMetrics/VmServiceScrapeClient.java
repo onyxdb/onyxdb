@@ -8,7 +8,7 @@ import io.fabric8.kubernetes.client.dsl.base.ResourceDefinitionContext;
 
 import com.onyxdb.mdb.utils.ObjectMapperUtils;
 
-public class VmServiceScrapeFactory {
+public class VmServiceScrapeClient {
     private static final String GROUP = "operator.victoriametrics.com";
     private static final String VERSION = "v1beta1";
     private static final String API_VERSION = GROUP + "/" + VERSION;
@@ -23,7 +23,7 @@ public class VmServiceScrapeFactory {
     private final KubernetesClient kubernetesClient;
     private final ObjectMapper objectMapper;
 
-    public VmServiceScrapeFactory(
+    public VmServiceScrapeClient(
             KubernetesClient kubernetesClient,
             ObjectMapper objectMapper
     ) {
@@ -42,8 +42,8 @@ public class VmServiceScrapeFactory {
         GenericKubernetesResource resource = buildResource(vmServiceScrape);
 
         kubernetesClient.genericKubernetesResources(
-                        VmServiceScrapeFactory.API_VERSION,
-                        VmServiceScrapeFactory.KIND
+                        VmServiceScrapeClient.API_VERSION,
+                        VmServiceScrapeClient.KIND
                 )
                 .inNamespace(vmServiceScrape.namespace())
                 .resource(resource)
@@ -52,6 +52,18 @@ public class VmServiceScrapeFactory {
 
     public boolean resourceExists(String namespace, String name) {
         return getResource(namespace, name) != null;
+    }
+
+    public void deleteResource(VmServiceScrape vmServiceScrape) {
+        GenericKubernetesResource resource = buildResource(vmServiceScrape);
+
+        kubernetesClient.genericKubernetesResources(
+                        VmServiceScrapeClient.API_VERSION,
+                        VmServiceScrapeClient.KIND
+                )
+                .inNamespace(vmServiceScrape.namespace())
+                .resource(resource)
+                .delete();
     }
 
     public static String getPreparedName(String name) {

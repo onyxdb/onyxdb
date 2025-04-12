@@ -33,7 +33,7 @@ public record PsmdbSpec(
                     "1.19.1",
                     "percona/percona-server-mongodb:7.0.15-9-multi",
                     "IfNotPresent",
-                    new PmdbSecrets(PsmdbFactory.getPreparedSecretName(name)),
+                    new PmdbSecrets(PsmdbClient.getPreparedSecretName(name)),
                     List.of(
                             new PsmdbReplset(
                                     "rs-0",
@@ -94,7 +94,7 @@ public record PsmdbSpec(
                                                                             new EnvVarSourceBuilder()
                                                                                     .withSecretKeyRef(
                                                                                             new SecretKeySelectorBuilder()
-                                                                                                    .withName(PsmdbFactory.getPreparedSecretName(name))
+                                                                                                    .withName(PsmdbClient.getPreparedSecretName(name))
                                                                                                     .withKey("MONGODB_CLUSTER_MONITOR_USER")
                                                                                                     .build()
                                                                                     )
@@ -107,7 +107,7 @@ public record PsmdbSpec(
                                                                             new EnvVarSourceBuilder()
                                                                                     .withSecretKeyRef(
                                                                                             new SecretKeySelectorBuilder()
-                                                                                                    .withName(PsmdbFactory.getPreparedSecretName(name))
+                                                                                                    .withName(PsmdbClient.getPreparedSecretName(name))
                                                                                                     .withKey("MONGODB_CLUSTER_MONITOR_PASSWORD")
                                                                                                     .build()
                                                                                     )

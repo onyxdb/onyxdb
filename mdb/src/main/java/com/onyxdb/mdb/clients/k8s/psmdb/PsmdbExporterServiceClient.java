@@ -10,14 +10,14 @@ import io.fabric8.kubernetes.api.model.ServicePortBuilder;
 import io.fabric8.kubernetes.api.model.ServiceSpecBuilder;
 import io.fabric8.kubernetes.client.KubernetesClient;
 
-public class PsmdbExporterServiceFactory extends AbstractPsmdbFactory {
+public class PsmdbExporterServiceClient extends AbstractPsmdbFactory {
     public static final String PORT_NAME = "metrics";
     public static final int PORT = 9216;
     public static final String PATH = "/metrics";
 
     private final KubernetesClient kubernetesClient;
 
-    public PsmdbExporterServiceFactory(
+    public PsmdbExporterServiceClient(
             ObjectMapper objectMapper,
             KubernetesClient kubernetesClient
     ) {
@@ -33,7 +33,7 @@ public class PsmdbExporterServiceFactory extends AbstractPsmdbFactory {
     public boolean resourceExists(String namespace, String name) {
         return kubernetesClient.services()
                 .inNamespace(namespace)
-                .withName(PsmdbExporterServiceFactory.getPreparedName(name))
+                .withName(PsmdbExporterServiceClient.getPreparedName(name))
                 .get() != null;
     }
 
