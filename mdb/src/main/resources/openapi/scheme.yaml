@@ -275,6 +275,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/V1MongoClusterResponse'
+    delete:
+      summary: Delete MongoDB cluster
+      operationId: deleteCluster
+      tags:
+        - v1ManagedMongoDb
+      parameters:
+        - $ref: '#/components/parameters/ClusterIdPV'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/V1DeleteMongoClusterResponse'
 
 # ---------- components ----------
 components:
@@ -478,6 +492,14 @@ components:
         - status
         - projectId
         - config
+    V1DeleteMongoClusterResponse:
+      type: object
+      properties:
+        operationId:
+          type: string
+          format: uuid
+      required:
+        - operationId
     V1ClusterStatusResponse:
       type: object
       properties:
@@ -491,35 +513,35 @@ components:
     V1MongoConfig:
       type: object
       properties:
-#        version:
-#          type: string
+        #        version:
+        #          type: string
         resources:
           $ref: '#/components/schemas/V1ClusterResources'
         replicas:
           type: integer
           format: int32
-#        mongodbV8d0:
-#          $ref: '#/components/schemas/V1MongoConfigV8d0'
+      #        mongodbV8d0:
+      #          $ref: '#/components/schemas/V1MongoConfigV8d0'
       required:
         - resources
         - replicas
-#    V1MongoConfigV8d0:
-#      type: object
-#      properties:
-#        mongod:
-#          $ref: '#/components/schemas/V1MongodV8d0'
-#      required:
-#        - mongod
-#    V1MongodV8d0:
-#      type: object
-#      properties:
-#        resources:
-#          $ref: '#/components/schemas/V1ClusterResources'
-#        config:
-#          $ref: '#/components/schemas/V1MongodConfigV8d0'
-#      required:
-#        - resources
-#        - config
+    #    V1MongoConfigV8d0:
+    #      type: object
+    #      properties:
+    #        mongod:
+    #          $ref: '#/components/schemas/V1MongodV8d0'
+    #      required:
+    #        - mongod
+    #    V1MongodV8d0:
+    #      type: object
+    #      properties:
+    #        resources:
+    #          $ref: '#/components/schemas/V1ClusterResources'
+    #        config:
+    #          $ref: '#/components/schemas/V1MongodConfigV8d0'
+    #      required:
+    #        - resources
+    #        - config
     V1ClusterResources:
       type: object
       properties:
@@ -534,21 +556,21 @@ components:
         - presetId
         - storageClass
         - storage
-#    V1MongodConfigV8d0:
-#      type: object
-#      properties:
-#        net:
-#          $ref: '#/components/schemas/V1MongodNetV8d0'
-#      required:
-#        - net
-#    V1MongodNetV8d0:
-#      type: object
-#      properties:
-#        maxIncomingConnections:
-#          type: integer
-#          format: int32
-#      required:
-#        - maxIncomingConnections
+    #    V1MongodConfigV8d0:
+    #      type: object
+    #      properties:
+    #        net:
+    #          $ref: '#/components/schemas/V1MongodNetV8d0'
+    #      required:
+    #        - net
+    #    V1MongodNetV8d0:
+    #      type: object
+    #      properties:
+    #        maxIncomingConnections:
+    #          type: integer
+    #          format: int32
+    #      required:
+    #        - maxIncomingConnections
     V1CreateMongoClusterRequest:
       type: object
       properties:
