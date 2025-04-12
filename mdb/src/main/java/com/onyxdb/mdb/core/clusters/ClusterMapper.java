@@ -20,7 +20,8 @@ import com.onyxdb.mdb.generated.openapi.models.V1MongoConfig;
  * @author foxleren
  */
 public class ClusterMapper {
-    private static final String DEFAULT_NAMESPACE = "onyxdb";
+    public static final String DEFAULT_NAMESPACE = "onyxdb";
+    public static final String DEFAULT_PROJECT = "some-project";
 
     private final ObjectMapper objectMapper;
 

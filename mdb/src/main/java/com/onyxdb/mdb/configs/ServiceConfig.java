@@ -6,7 +6,6 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import com.onyxdb.mdb.core.clusters.ClusterMapper;
 import com.onyxdb.mdb.core.clusters.ClusterService;
-import com.onyxdb.mdb.core.clusters.generators.CompositeClusterTasksGenerator;
 import com.onyxdb.mdb.core.clusters.repositories.ClusterRepository;
 import com.onyxdb.mdb.core.projects.ProjectRepository;
 import com.onyxdb.mdb.core.projects.ProjectService;
@@ -14,8 +13,9 @@ import com.onyxdb.mdb.core.resourcePresets.ResourcePresetRepository;
 import com.onyxdb.mdb.core.resourcePresets.ResourcePresetService;
 import com.onyxdb.mdb.core.zones.ZoneRepository;
 import com.onyxdb.mdb.core.zones.ZoneService;
-import com.onyxdb.mdb.repositories.ClusterOperationRepository;
-import com.onyxdb.mdb.repositories.ClusterTaskRepository;
+import com.onyxdb.mdb.taskProcessing.generators.CompositeTaskGenerator;
+import com.onyxdb.mdb.taskProcessing.repositories.OperationRepository;
+import com.onyxdb.mdb.taskProcessing.repositories.TaskRepository;
 
 /**
  * @author foxleren
@@ -42,17 +42,17 @@ public class ServiceConfig {
             ClusterMapper clusterMapper,
             ClusterRepository clusterRepository,
             TransactionTemplate transactionTemplate,
-            CompositeClusterTasksGenerator compositeClusterTasksGenerator,
-            ClusterOperationRepository clusterOperationRepository,
-            ClusterTaskRepository clusterTaskRepository
+            CompositeTaskGenerator compositeTaskGenerator,
+            OperationRepository operationRepository,
+            TaskRepository taskRepository
     ) {
         return new ClusterService(
                 clusterMapper,
                 clusterRepository,
                 transactionTemplate,
-                compositeClusterTasksGenerator,
-                clusterOperationRepository,
-                clusterTaskRepository
+                compositeTaskGenerator,
+                operationRepository,
+                taskRepository
         );
     }
 }

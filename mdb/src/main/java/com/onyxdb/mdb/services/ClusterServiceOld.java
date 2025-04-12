@@ -13,14 +13,14 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import com.onyxdb.mdb.core.clusters.generators.CompositeClusterTasksGenerator;
 import com.onyxdb.mdb.core.clusters.models.Cluster;
-import com.onyxdb.mdb.core.clusters.models.ClusterOperationStatus;
-import com.onyxdb.mdb.core.clusters.models.ClusterTask;
-import com.onyxdb.mdb.core.clusters.models.ClusterTaskStatus;
 import com.onyxdb.mdb.core.clusters.repositories.ClusterRepository;
-import com.onyxdb.mdb.repositories.ClusterOperationRepository;
-import com.onyxdb.mdb.repositories.ClusterTaskRepository;
+import com.onyxdb.mdb.taskProcessing.generators.CompositeTaskGenerator;
+import com.onyxdb.mdb.taskProcessing.models.OperationStatus;
+import com.onyxdb.mdb.taskProcessing.models.Task;
+import com.onyxdb.mdb.taskProcessing.models.TaskStatus;
+import com.onyxdb.mdb.taskProcessing.repositories.OperationRepository;
+import com.onyxdb.mdb.taskProcessing.repositories.TaskRepository;
 
 /**
  * @author foxleren
@@ -29,9 +29,9 @@ import com.onyxdb.mdb.repositories.ClusterTaskRepository;
 @RequiredArgsConstructor
 public class ClusterServiceOld implements BaseClusterService {
     private final ClusterRepository clusterRepository;
-    private final ClusterOperationRepository clusterOperationRepository;
-    private final ClusterTaskRepository clusterTaskRepository;
-    private final CompositeClusterTasksGenerator clusterTasksGenerator;
+    private final OperationRepository operationRepository;
+    private final TaskRepository taskRepository;
+    private final CompositeTaskGenerator clusterTasksGenerator;
     private final TransactionTemplate transactionTemplate;
 
     @Override
@@ -41,37 +41,37 @@ public class ClusterServiceOld implements BaseClusterService {
     }
 
     @Override
-    public void updateTaskStatus(UUID taskId, ClusterTaskStatus taskStatus) {
-        clusterTaskRepository.updateStatus(taskId, taskStatus);
+    public void updateTaskStatus(UUID taskId, TaskStatus taskStatus) {
+        taskRepository.updateStatus(taskId, taskStatus);
     }
 
     @Override
-    public void updateOperationStatus(UUID operationId, ClusterOperationStatus operationStatus) {
-        clusterOperationRepository.updateStatus(operationId, operationStatus);
+    public void updateOperationStatus(UUID operationId, OperationStatus operationStatus) {
+        operationRepository.updateStatus(operationId, operationStatus);
     }
 
     @Override
     public void updateTaskAndOperationStatus(
             UUID taskId,
-            ClusterTaskStatus taskStatus,
+            TaskStatus taskStatus,
             @Nullable
             Integer attemptsLeft,
             UUID operationId,
-            ClusterOperationStatus operationStatus
+            OperationStatus operationStatus
     ) {
         transactionTemplate.execute(new TransactionCallbackWithoutResult() {
             @Override
             protected void doInTransactionWithoutResult(@NonNull TransactionStatus status) {
-                clusterTaskRepository.updateTask(taskId, taskStatus, attemptsLeft, null);
-                clusterTaskRepository.updateStatus(taskId, taskStatus);
-                clusterOperationRepository.updateStatus(operationId, operationStatus);
+                taskRepository.updateTask(taskId, taskStatus, attemptsLeft, null);
+                taskRepository.updateStatus(taskId, taskStatus);
+                operationRepository.updateStatus(operationId, operationStatus);
             }
         });
     }
 
     @Override
-    public List<ClusterTask> getTasksToProcess(int limit, LocalDateTime scheduledAt) {
-        return clusterTaskRepository.getTasksToProcess(limit, scheduledAt);
+    public List<Task> getTasksToProcess(int limit, LocalDateTime scheduledAt) {
+        return taskRepository.getTasksToProcess(limit, scheduledAt);
     }
 
     @Override

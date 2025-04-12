@@ -12,4 +12,6 @@ public interface ClusterRepository {
     void createCluster(Cluster cluster);
 
     Optional<Cluster> getClusterO(UUID clusterId);
+
+    void markClusterDeleted(UUID clusterId);
 }

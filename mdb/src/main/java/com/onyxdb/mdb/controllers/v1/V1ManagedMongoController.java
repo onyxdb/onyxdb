@@ -14,6 +14,7 @@ import com.onyxdb.mdb.generated.openapi.models.V1ClusterResources;
 import com.onyxdb.mdb.generated.openapi.models.V1ClusterStatusResponse;
 import com.onyxdb.mdb.generated.openapi.models.V1CreateMongoClusterRequest;
 import com.onyxdb.mdb.generated.openapi.models.V1CreateMongoClusterResponse;
+import com.onyxdb.mdb.generated.openapi.models.V1DeleteMongoClusterResponse;
 import com.onyxdb.mdb.generated.openapi.models.V1ListMongoClustersResponse;
 import com.onyxdb.mdb.generated.openapi.models.V1MongoClusterResponse;
 import com.onyxdb.mdb.generated.openapi.models.V1MongoConfig;
@@ -74,6 +75,15 @@ public class V1ManagedMongoController implements V1ManagedMongoDbApi {
         UUID clusterId = clusterService.createCluster(createCluster);
 
         var response = new V1CreateMongoClusterResponse(clusterId);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @Override
+    public ResponseEntity<V1DeleteMongoClusterResponse> deleteCluster(UUID clusterId) {
+        UUID operationId = UUID.randomUUID();
+//                clusterService.deleteCluster(clusterId);
+
+        var response = new V1DeleteMongoClusterResponse(operationId);
         return ResponseEntity.ok().body(response);
     }
 }
