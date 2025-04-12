@@ -22,7 +22,6 @@ import com.onyxdb.mdb.taskProcessing.processors.CompositeTaskProcessor;
 /**
  * @author foxleren
  */
-@Profile("!test")
 public class TaskProcessingWorker implements CommandLineRunner {
     private static final Logger logger = LoggerFactory.getLogger(TaskProcessingWorker.class);
 
