@@ -7,6 +7,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.support.TestPropertySourceUtils;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -19,15 +20,25 @@ public abstract class PostgresTests {
     @Container
     private static final PostgreSQLContainer<?> postgresContainer = new PostgreSQLContainer<>(
             "postgres:14.4-alpine"
-    );
+    )
+            .withDatabaseName("ao.fedorov")
+            .withUsername("ao.fedorov")
+            .withPassword("")
+            .waitingFor(Wait.forLogMessage(".*database system is ready to accept connections.*\\n", 1));
 
     @Container
-    private static final GenericContainer<?> redisContainer = new GenericContainer<>("redis:latest")
-            .withExposedPorts(6379);
+    private static final GenericContainer<?> redisContainer = new GenericContainer<>(
+            "redis:latest"
+    )
+            .withExposedPorts(6379)
+            .waitingFor(Wait.forLogMessage(".*Ready to accept connections.*\\n", 1));
 
     @Container
-    private static final GenericContainer<?> clickHouseContainer = new GenericContainer<>("yandex/clickhouse-server:latest")
-            .withExposedPorts(8123);
+    private static final GenericContainer<?> clickHouseContainer = new GenericContainer<>(
+            "yandex/clickhouse-server:latest"
+    )
+            .withExposedPorts(8123)
+            .waitingFor(Wait.forLogMessage(".*Server started.*\\n", 1));
 
     static class DataSourceInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
         @Override

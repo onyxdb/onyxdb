@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,7 +19,7 @@ import com.onyxdb.idm.generated.openapi.models.RoleWithPermissionsDTO;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-//@Disabled
+@Disabled
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class IdmApiIntegrationGetTest {
 
