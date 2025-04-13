@@ -21,6 +21,10 @@ public record ClusterConfig(
             return this;
         }
 
+//        public Builder overrideWith(ClusterConfig clusterConfig) {
+//
+//        }
+
         public Builder withReplicas(int replicas) {
             this.replicas = replicas;
             return this;

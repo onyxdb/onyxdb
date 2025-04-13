@@ -1,6 +1,7 @@
 package com.onyxdb.mdb.controllers.v1;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,7 +34,7 @@ public class v1ResourcePresetController implements V1ResourcePresetsApi {
     }
 
     @Override
-    public ResponseEntity<V1ResourcePresetResponse> getResourcePreset(String resourcePresetId) {
+    public ResponseEntity<V1ResourcePresetResponse> getResourcePreset(UUID resourcePresetId) {
         ResourcePreset resourcePreset = resourcePresetService.getOrThrow(resourcePresetId);
         var response = ResourcePresetConverter.toV1ResourcePresetResponse(resourcePreset);
         return ResponseEntity.ok().body(response);
@@ -48,7 +49,7 @@ public class v1ResourcePresetController implements V1ResourcePresetsApi {
 
     @Override
     public ResponseEntity<Void> updateResourcePreset(
-            String resourcePresetId,
+            UUID resourcePresetId,
             V1UpdateResourcePresetRequest r
     ) {
         ResourcePreset resourcePreset = ResourcePresetConverter.fromV1UpdateResourcePresetRequest(
@@ -60,7 +61,7 @@ public class v1ResourcePresetController implements V1ResourcePresetsApi {
     }
 
     @Override
-    public ResponseEntity<Void> deleteResourcePreset(String resourcePresetId) {
+    public ResponseEntity<Void> deleteResourcePreset(UUID resourcePresetId) {
         resourcePresetService.delete(resourcePresetId);
         return ResponseEntity.ok().build();
     }

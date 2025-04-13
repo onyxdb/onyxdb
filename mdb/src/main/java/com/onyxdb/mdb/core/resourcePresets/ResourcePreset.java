@@ -1,10 +1,13 @@
 package com.onyxdb.mdb.core.resourcePresets;
 
+import java.util.UUID;
+
 /**
  * @author foxleren
  */
 public record ResourcePreset(
-        String id,
+        UUID id,
+        String name,
         ResourcePresetType type,
         double vcpu,
         long ram

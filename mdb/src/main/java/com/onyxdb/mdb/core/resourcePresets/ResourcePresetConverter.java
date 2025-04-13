@@ -1,6 +1,7 @@
 package com.onyxdb.mdb.core.resourcePresets;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.jooq.Record;
 
@@ -17,7 +18,8 @@ import com.onyxdb.mdb.generated.openapi.models.V1UpdateResourcePresetRequest;
 public final class ResourcePresetConverter {
     public static ResourcePreset fromV1CreateResourcePresetRequest(V1CreateResourcePresetRequest r) {
         return new ResourcePreset(
-                r.getId(),
+                UUID.randomUUID(),
+                r.getName(),
                 ResourcePresetType.R.fromValue(r.getType().getValue()),
                 r.getVcpu(),
                 r.getRam()
@@ -27,6 +29,7 @@ public final class ResourcePresetConverter {
     public static V1ResourcePresetResponse toV1ResourcePresetResponse(ResourcePreset p) {
         return new V1ResourcePresetResponse(
                 p.id(),
+                p.name(),
                 V1ResourcePresetType.fromValue(p.type().value()),
                 p.vcpu(),
                 p.ram()
@@ -42,11 +45,12 @@ public final class ResourcePresetConverter {
     }
 
     public static ResourcePreset fromV1UpdateResourcePresetRequest(
-            String id,
+            UUID id,
             V1UpdateResourcePresetRequest r
     ) {
         return new ResourcePreset(
                 id,
+                r.getName(),
                 ResourcePresetType.R.fromValue(r.getType().getValue()),
                 r.getVcpu(),
                 r.getRam()
@@ -57,6 +61,7 @@ public final class ResourcePresetConverter {
         ResourcePresetsRecord rr = r.into(ResourcePresetsRecord.class);
         return new ResourcePreset(
                 rr.getId(),
+                rr.getName(),
                 ResourcePresetType.R.fromValue(rr.getType().getLiteral()),
                 rr.getVcpu(),
                 rr.getRam()
@@ -66,6 +71,7 @@ public final class ResourcePresetConverter {
     public static ResourcePresetsRecord toResourcePresetsRecord(ResourcePreset p) {
         return new ResourcePresetsRecord(
                 p.id(),
+                p.name(),
                 p.type().toJooq(),
                 p.vcpu(),
                 p.ram()

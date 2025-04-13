@@ -2,6 +2,7 @@ package com.onyxdb.mdb.core.resourcePresets;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.jooq.DSLContext;
 
@@ -26,7 +27,7 @@ public class ResourcePresetPostgresRepository implements ResourcePresetRepositor
     }
 
     @Override
-    public Optional<ResourcePreset> getO(String id) {
+    public Optional<ResourcePreset> getO(UUID id) {
         return dslContext.select()
                 .from(RESOURCE_PRESETS)
                 .where(RESOURCE_PRESETS.ID.eq(id))
@@ -50,7 +51,7 @@ public class ResourcePresetPostgresRepository implements ResourcePresetRepositor
     }
 
     @Override
-    public void delete(String id) {
+    public void delete(UUID id) {
         dslContext.deleteFrom(RESOURCE_PRESETS)
                 .where(RESOURCE_PRESETS.ID.eq(id))
                 .execute();

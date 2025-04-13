@@ -4,8 +4,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import com.onyxdb.mdb.core.clusters.ClusterHostService;
 import com.onyxdb.mdb.core.clusters.ClusterMapper;
 import com.onyxdb.mdb.core.clusters.ClusterService;
+import com.onyxdb.mdb.core.clusters.repositories.ClusterHostRepository;
 import com.onyxdb.mdb.core.clusters.repositories.ClusterRepository;
 import com.onyxdb.mdb.core.projects.ProjectRepository;
 import com.onyxdb.mdb.core.projects.ProjectService;
@@ -13,7 +15,9 @@ import com.onyxdb.mdb.core.resourcePresets.ResourcePresetRepository;
 import com.onyxdb.mdb.core.resourcePresets.ResourcePresetService;
 import com.onyxdb.mdb.core.zones.ZoneRepository;
 import com.onyxdb.mdb.core.zones.ZoneService;
-import com.onyxdb.mdb.taskProcessing.generators.CompositeTaskGenerator;
+import com.onyxdb.mdb.taskProcessing.generators.mongo.MongoCreateClusterTaskGenerator;
+import com.onyxdb.mdb.taskProcessing.generators.mongo.MongoDeleteClusterTaskGenerator;
+import com.onyxdb.mdb.taskProcessing.generators.mongo.MongoScaleHostsTaskGenerator;
 import com.onyxdb.mdb.taskProcessing.repositories.OperationRepository;
 import com.onyxdb.mdb.taskProcessing.repositories.TaskRepository;
 
@@ -42,17 +46,30 @@ public class ServiceConfig {
             ClusterMapper clusterMapper,
             ClusterRepository clusterRepository,
             TransactionTemplate transactionTemplate,
-            CompositeTaskGenerator compositeTaskGenerator,
+//            CompositeTaskGenerator compositeTaskGenerator,
             OperationRepository operationRepository,
-            TaskRepository taskRepository
+            TaskRepository taskRepository,
+            MongoCreateClusterTaskGenerator mongoCreateClusterTaskGenerator,
+            MongoScaleHostsTaskGenerator mongoScaleHostsTaskGenerator,
+            MongoDeleteClusterTaskGenerator mongoDeleteClusterTaskGenerator
     ) {
         return new ClusterService(
                 clusterMapper,
                 clusterRepository,
                 transactionTemplate,
-                compositeTaskGenerator,
+//                compositeTaskGenerator,
                 operationRepository,
-                taskRepository
+                taskRepository,
+                mongoCreateClusterTaskGenerator,
+                mongoScaleHostsTaskGenerator,
+                mongoDeleteClusterTaskGenerator
         );
+    }
+
+    @Bean
+    public ClusterHostService clusterHostService(
+            ClusterHostRepository clusterHostRepository
+    ) {
+        return new ClusterHostService(clusterHostRepository);
     }
 }

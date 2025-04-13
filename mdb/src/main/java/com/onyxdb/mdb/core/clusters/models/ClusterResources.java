@@ -1,10 +1,12 @@
 package com.onyxdb.mdb.core.clusters.models;
 
+import java.util.UUID;
+
 /**
  * @author foxleren
  */
 public record ClusterResources(
-        String presetId,
+        UUID presetId,
         String storageClass,
         long storage
 ) {

@@ -21,48 +21,29 @@ public class MongoCreateClusterTaskGenerator extends ClusterTaskGenerator {
                     TaskType.MONGODB_CREATE_VECTOR_CONFIG, List.of()
             ),
             Map.entry(
-                    TaskType.MONGODB_APPLY_PSMDB_CR, List.of(
+                    TaskType.MONGODB_APPLY_PSMDB, List.of(
                             TaskType.MONGODB_CREATE_VECTOR_CONFIG
                     )
             ),
             Map.entry(
-                    TaskType.MONGODB_CHECK_CLUSTER_READINESS, List.of(
+                    TaskType.MONGODB_CHECK_PSMDB_READINESS, List.of(
                             TaskType.MONGODB_CREATE_VECTOR_CONFIG,
-                            TaskType.MONGODB_APPLY_PSMDB_CR
+                            TaskType.MONGODB_APPLY_PSMDB
                     )
             ),
             Map.entry(
                     TaskType.MONGODB_CREATE_EXPORTER_SERVICE, List.of(
                             TaskType.MONGODB_CREATE_VECTOR_CONFIG,
-                            TaskType.MONGODB_APPLY_PSMDB_CR,
-                            TaskType.MONGODB_CHECK_CLUSTER_READINESS
-                    )
-            ),
-            Map.entry(
-                    TaskType.MONGODB_CHECK_EXPORTER_SERVICE_READINESS, List.of(
-                            TaskType.MONGODB_CREATE_VECTOR_CONFIG,
-                            TaskType.MONGODB_APPLY_PSMDB_CR,
-                            TaskType.MONGODB_CHECK_CLUSTER_READINESS,
-                            TaskType.MONGODB_CREATE_EXPORTER_SERVICE
+                            TaskType.MONGODB_APPLY_PSMDB,
+                            TaskType.MONGODB_CHECK_PSMDB_READINESS
                     )
             ),
             Map.entry(
                     TaskType.MONGODB_CREATE_EXPORTER_SERVICE_SCRAPE, List.of(
                             TaskType.MONGODB_CREATE_VECTOR_CONFIG,
-                            TaskType.MONGODB_APPLY_PSMDB_CR,
-                            TaskType.MONGODB_CHECK_CLUSTER_READINESS,
-                            TaskType.MONGODB_CREATE_EXPORTER_SERVICE,
-                            TaskType.MONGODB_CHECK_EXPORTER_SERVICE_READINESS
-                    )
-            ),
-            Map.entry(
-                    TaskType.MONGODB_CHECK_EXPORTER_SERVICE_SCRAPE_READINESS, List.of(
-                            TaskType.MONGODB_CREATE_VECTOR_CONFIG,
-                            TaskType.MONGODB_APPLY_PSMDB_CR,
-                            TaskType.MONGODB_CHECK_CLUSTER_READINESS,
-                            TaskType.MONGODB_CREATE_EXPORTER_SERVICE,
-                            TaskType.MONGODB_CHECK_EXPORTER_SERVICE_READINESS,
-                            TaskType.MONGODB_CREATE_EXPORTER_SERVICE_SCRAPE
+                            TaskType.MONGODB_APPLY_PSMDB,
+                            TaskType.MONGODB_CHECK_PSMDB_READINESS,
+                            TaskType.MONGODB_CREATE_EXPORTER_SERVICE
                     )
             )
     );
@@ -96,14 +77,14 @@ public class MongoCreateClusterTaskGenerator extends ClusterTaskGenerator {
                         stringPayload
                 ),
                 Task.scheduledMiddle(
-                        TaskType.MONGODB_APPLY_PSMDB_CR,
+                        TaskType.MONGODB_APPLY_PSMDB,
                         operationId,
                         now,
                         DEFAULT_RETRIES_LEFT,
                         stringPayload
                 ),
                 Task.scheduledMiddle(
-                        TaskType.MONGODB_CHECK_CLUSTER_READINESS,
+                        TaskType.MONGODB_CHECK_PSMDB_READINESS,
                         operationId,
                         now,
                         DEFAULT_RETRIES_LEFT,
@@ -116,22 +97,8 @@ public class MongoCreateClusterTaskGenerator extends ClusterTaskGenerator {
                         DEFAULT_RETRIES_LEFT,
                         stringPayload
                 ),
-                Task.scheduledMiddle(
-                        TaskType.MONGODB_CHECK_EXPORTER_SERVICE_READINESS,
-                        operationId,
-                        now,
-                        DEFAULT_RETRIES_LEFT,
-                        stringPayload
-                ),
-                Task.scheduledMiddle(
-                        TaskType.MONGODB_CREATE_EXPORTER_SERVICE_SCRAPE,
-                        operationId,
-                        now,
-                        DEFAULT_RETRIES_LEFT,
-                        stringPayload
-                ),
                 Task.scheduledLast(
-                        TaskType.MONGODB_CHECK_EXPORTER_SERVICE_SCRAPE_READINESS,
+                        TaskType.MONGODB_CREATE_EXPORTER_SERVICE_SCRAPE,
                         operationId,
                         now,
                         DEFAULT_RETRIES_LEFT,

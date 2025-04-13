@@ -6,20 +6,22 @@ CREATE TYPE public.resource_preset_type AS ENUM (
 
 CREATE TABLE public.resource_presets
 (
-    id   varchar                     NOT NULL,
+    id   uuid                        NOT NULL,
+    name varchar                     NOT NULL,
     type public.resource_preset_type NOT NULL,
     vcpu double precision            NOT NULL,
     ram  bigint                      NOT NULL,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    UNIQUE (name)
 );
 
-INSERT INTO public.resource_presets (id, type, vcpu, ram)
-VALUES ('co-c2-r4', 'cpu_optimized', 2, 4294967296),
-       ('co-c4-r8', 'cpu_optimized', 4, 8589934592),
-       ('s-c2-r8', 'standard', 2, 4294967296),
-       ('s-c4-r8', 'standard', 4, 8589934592),
-       ('ro-c2-r16', 'ram_optimized', 2, 17179869184),
-       ('ro-c4-r32', 'ram_optimized', 4, 34359738368);
+INSERT INTO public.resource_presets (id, name, type, vcpu, ram)
+VALUES (gen_random_uuid(), 'co-c2-r4', 'cpu_optimized', 2, 4294967296),
+       (gen_random_uuid(), 'co-c4-r8', 'cpu_optimized', 4, 8589934592),
+       (gen_random_uuid(), 's-c2-r8', 'standard', 2, 4294967296),
+       (gen_random_uuid(), 's-c4-r8', 'standard', 4, 8589934592),
+       (gen_random_uuid(), 'ro-c2-r16', 'ram_optimized', 2, 17179869184),
+       (gen_random_uuid(), 'ro-c4-r32', 'ram_optimized', 4, 34359738368);
 
 CREATE TABLE public.zones
 (
@@ -53,9 +55,18 @@ CREATE TABLE public.clusters
     type        public.cluster_type NOT NULL,
     config      jsonb               NOT NULL,
     is_deleted  bool                NOT NULL DEFAULT false,
+    deleted_at  timestamp,
     PRIMARY KEY (id),
     FOREIGN KEY (project_id) REFERENCES public.projects (id),
     UNIQUE (name, project_id)
+);
+
+CREATE TABLE public.cluster_hosts
+(
+    name       varchar NOT NULL,
+    cluster_id uuid    NOT NULL,
+    PRIMARY KEY (name, cluster_id),
+    FOREIGN KEY (cluster_id) REFERENCES clusters (id)
 );
 
 CREATE TYPE public.operation_type AS ENUM (
@@ -89,13 +100,15 @@ CREATE TYPE public.task_status AS ENUM (
 
 CREATE TYPE public.task_type AS ENUM (
     'mongodb_create_vector_config',
-    'mongodb_apply_psmdb_cr',
-    'mongodb_check_cluster_readiness',
+    'mongodb_apply_psmdb',
+    'mongodb_check_psmdb_readiness',
     'mongodb_create_exporter_service',
-    'mongodb_check_exporter_service_readiness',
     'mongodb_create_exporter_service_scrape',
-    'mongodb_check_exporter_service_scrape_readiness',
-    'mongodb_scale_hosts'
+    'mongodb_delete_exporter_service_scrape',
+    'mongodb_delete_exporter_service',
+    'mongodb_delete_psmdb',
+    'mongodb_check_psmdb_is_deleted',
+    'mongodb_delete_vector_config'
     );
 
 CREATE TABLE public.tasks

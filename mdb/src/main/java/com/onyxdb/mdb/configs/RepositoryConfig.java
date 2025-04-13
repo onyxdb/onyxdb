@@ -5,7 +5,10 @@ import org.jooq.DSLContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.onyxdb.mdb.core.clusters.ClusterHostMapper;
 import com.onyxdb.mdb.core.clusters.ClusterMapper;
+import com.onyxdb.mdb.core.clusters.repositories.ClusterHostPostgresRepository;
+import com.onyxdb.mdb.core.clusters.repositories.ClusterHostRepository;
 import com.onyxdb.mdb.core.clusters.repositories.ClusterPostgresRepository;
 import com.onyxdb.mdb.core.clusters.repositories.ClusterRepository;
 import com.onyxdb.mdb.core.projects.ProjectPostgresRepository;
@@ -45,6 +48,17 @@ public class RepositoryConfig {
                 dslContext,
                 clusterMapper,
                 objectMapper
+        );
+    }
+
+    @Bean
+    public ClusterHostRepository clusterHostRepository(
+            DSLContext dslContext,
+            ClusterHostMapper clusterHostMapper
+    ) {
+        return new ClusterHostPostgresRepository(
+                dslContext,
+                clusterHostMapper
         );
     }
 }
