@@ -7,6 +7,7 @@ import com.onyxdb.mdb.utils.StringEnum;
  */
 public enum TaskType implements StringEnum {
     // mongodb:create_cluster
+    MONGODB_CREATE_VECTOR_CONFIG("mongodb_create_vector_config"),
     MONGODB_CREATE_CLUSTER("mongodb_create_cluster"),
     MONGODB_CHECK_CLUSTER_READINESS("mongodb_check_cluster_readiness"),
     MONGODB_CREATE_EXPORTER_SERVICE("mongodb_create_exporter_service"),
