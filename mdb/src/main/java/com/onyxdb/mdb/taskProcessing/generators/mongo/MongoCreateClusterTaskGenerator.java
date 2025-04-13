@@ -21,27 +21,27 @@ public class MongoCreateClusterTaskGenerator extends ClusterTaskGenerator {
                     TaskType.MONGODB_CREATE_VECTOR_CONFIG, List.of()
             ),
             Map.entry(
-                    TaskType.MONGODB_CREATE_CLUSTER, List.of(
+                    TaskType.MONGODB_APPLY_PSMDB_CR, List.of(
                             TaskType.MONGODB_CREATE_VECTOR_CONFIG
                     )
             ),
             Map.entry(
                     TaskType.MONGODB_CHECK_CLUSTER_READINESS, List.of(
                             TaskType.MONGODB_CREATE_VECTOR_CONFIG,
-                            TaskType.MONGODB_CREATE_CLUSTER
+                            TaskType.MONGODB_APPLY_PSMDB_CR
                     )
             ),
             Map.entry(
                     TaskType.MONGODB_CREATE_EXPORTER_SERVICE, List.of(
                             TaskType.MONGODB_CREATE_VECTOR_CONFIG,
-                            TaskType.MONGODB_CREATE_CLUSTER,
+                            TaskType.MONGODB_APPLY_PSMDB_CR,
                             TaskType.MONGODB_CHECK_CLUSTER_READINESS
                     )
             ),
             Map.entry(
                     TaskType.MONGODB_CHECK_EXPORTER_SERVICE_READINESS, List.of(
                             TaskType.MONGODB_CREATE_VECTOR_CONFIG,
-                            TaskType.MONGODB_CREATE_CLUSTER,
+                            TaskType.MONGODB_APPLY_PSMDB_CR,
                             TaskType.MONGODB_CHECK_CLUSTER_READINESS,
                             TaskType.MONGODB_CREATE_EXPORTER_SERVICE
                     )
@@ -49,7 +49,7 @@ public class MongoCreateClusterTaskGenerator extends ClusterTaskGenerator {
             Map.entry(
                     TaskType.MONGODB_CREATE_EXPORTER_SERVICE_SCRAPE, List.of(
                             TaskType.MONGODB_CREATE_VECTOR_CONFIG,
-                            TaskType.MONGODB_CREATE_CLUSTER,
+                            TaskType.MONGODB_APPLY_PSMDB_CR,
                             TaskType.MONGODB_CHECK_CLUSTER_READINESS,
                             TaskType.MONGODB_CREATE_EXPORTER_SERVICE,
                             TaskType.MONGODB_CHECK_EXPORTER_SERVICE_READINESS
@@ -58,7 +58,7 @@ public class MongoCreateClusterTaskGenerator extends ClusterTaskGenerator {
             Map.entry(
                     TaskType.MONGODB_CHECK_EXPORTER_SERVICE_SCRAPE_READINESS, List.of(
                             TaskType.MONGODB_CREATE_VECTOR_CONFIG,
-                            TaskType.MONGODB_CREATE_CLUSTER,
+                            TaskType.MONGODB_APPLY_PSMDB_CR,
                             TaskType.MONGODB_CHECK_CLUSTER_READINESS,
                             TaskType.MONGODB_CREATE_EXPORTER_SERVICE,
                             TaskType.MONGODB_CHECK_EXPORTER_SERVICE_READINESS,
@@ -96,7 +96,7 @@ public class MongoCreateClusterTaskGenerator extends ClusterTaskGenerator {
                         stringPayload
                 ),
                 Task.scheduledMiddle(
-                        TaskType.MONGODB_CREATE_CLUSTER,
+                        TaskType.MONGODB_APPLY_PSMDB_CR,
                         operationId,
                         now,
                         DEFAULT_RETRIES_LEFT,

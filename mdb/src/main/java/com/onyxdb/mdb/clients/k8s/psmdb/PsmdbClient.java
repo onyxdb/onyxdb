@@ -45,16 +45,21 @@ public class PsmdbClient extends AbstractPsmdbFactory {
                 .get();
     }
 
-    public void createResource(Psmdb psmdb) {
+    public void applyPsmdbCr(
+            String namespace,
+            String cluster,
+            int replsetSize
+    ) {
         String resource = templateProvider.buildPsmdbCr(
-                getPsmdbName(psmdb.name()),
-                getSecretName(psmdb.name()),
-                getVectorConfigMapName(psmdb.name())
+                getPsmdbName(cluster),
+                getSecretName(cluster),
+                replsetSize,
+                getVectorConfigMapName(cluster)
         );
 
         kubernetesClient.resource(resource)
-                .inNamespace(psmdb.namespace())
-                .create();
+                .inNamespace(namespace)
+                .serverSideApply();
     }
 
     public boolean isResourceReady(String namespace, String name) {

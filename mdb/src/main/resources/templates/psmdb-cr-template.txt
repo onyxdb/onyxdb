@@ -7,13 +7,15 @@ spec:
   crVersion: 1.19.1
   image: percona/percona-server-mongodb:7.0.15-9-multi
   imagePullPolicy: IfNotPresent
+  unsafeFlags:
+    replsetSize: true
   upgradeOptions:
     apply: disabled
   secrets:
     users: [[${SECRETS_USERS_NAME}]]
   replsets:
-    - name: rs0
-      size: 3
+    - name: rs01
+      size: [[${REPLESET_SIZE}]]
       configuration: |
         systemLog:
           path: /data/db/mongod.log

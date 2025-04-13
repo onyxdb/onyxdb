@@ -7,6 +7,7 @@ import com.onyxdb.mdb.utils.StringEnum;
  */
 public enum OperationType implements StringEnum {
     MONGODB_CREATE_CLUSTER("mongodb_create_cluster"),
+    MONGODB_SCALE_HOSTS("mongodb_scale_hosts"),
     MONGODB_DELETE_CLUSTER("mongodb_delete_cluster"),
     ;
 
