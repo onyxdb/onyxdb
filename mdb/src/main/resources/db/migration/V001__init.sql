@@ -60,6 +60,7 @@ CREATE TABLE public.clusters
 
 CREATE TYPE public.operation_type AS ENUM (
     'mongodb_create_cluster',
+    'mongodb_scale_hosts',
     'mongodb_delete_cluster'
     );
 
@@ -88,12 +89,13 @@ CREATE TYPE public.task_status AS ENUM (
 
 CREATE TYPE public.task_type AS ENUM (
     'mongodb_create_vector_config',
-    'mongodb_create_cluster',
+    'mongodb_apply_psmdb_cr',
     'mongodb_check_cluster_readiness',
     'mongodb_create_exporter_service',
     'mongodb_check_exporter_service_readiness',
     'mongodb_create_exporter_service_scrape',
-    'mongodb_check_exporter_service_scrape_readiness'
+    'mongodb_check_exporter_service_scrape_readiness',
+    'mongodb_scale_hosts'
     );
 
 CREATE TABLE public.tasks

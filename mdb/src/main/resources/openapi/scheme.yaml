@@ -289,7 +289,41 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/V1DeleteMongoClusterResponse'
-
+  /api/v1/managed-mongodb/clusters/{clusterId}/hosts:
+    get:
+      summary: Get MongoDB hosts
+      operationId: listHosts
+      tags:
+        - v1ManagedMongoDb
+      parameters:
+        - $ref: '#/components/parameters/ClusterIdPV'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/V1MongoListHostsResponse'
+    put:
+      summary: Scale MongoDB hosts
+      operationId: scaleHosts
+      tags:
+        - v1ManagedMongoDb
+      parameters:
+        - $ref: '#/components/parameters/ClusterIdPV'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/V1MongoScaleHostsRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/V1ScheduledOperationResponse'
 # ---------- components ----------
 components:
   # ---------- schemas ----------
@@ -589,6 +623,37 @@ components:
         - projectId
         - config
     V1CreateMongoClusterResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+      required:
+        - id
+    V1MongoListHostsResponse:
+      type: object
+      properties:
+        hosts:
+          type: array
+          items:
+            $ref: '#/components/schemas/V1MongoHost'
+      required:
+        - hosts
+    V1MongoHost:
+      type: object
+      properties:
+        name:
+          type: string
+      required:
+        - name
+    V1MongoScaleHostsRequest:
+      type: object
+      properties:
+        replicas:
+          type: integer
+      required:
+        - replicas
+    V1ScheduledOperationResponse:
       type: object
       properties:
         id:

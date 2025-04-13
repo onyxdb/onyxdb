@@ -15,10 +15,10 @@ import com.onyxdb.mdb.services.BaseClusterService;
 import com.onyxdb.mdb.taskProcessing.models.TaskType;
 import com.onyxdb.mdb.taskProcessing.processors.CompositeTaskProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.TaskProcessor;
+import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoApplyPsmdbCrTaskProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCheckClusterReadinessProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCheckExporterServiceReadinessProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCheckExporterServiceScrapeReadinessTaskProcessor;
-import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCreateClusterTaskProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCreateExporterServiceProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCreateExporterServiceScrapeTaskProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCreateVectorConfigTaskProcessor;
@@ -39,12 +39,12 @@ public class TaskProcessorsConfig {
     }
 
     @Bean
-    public MongoCreateClusterTaskProcessor mongoCreateClusterTaskProcessor(
+    public MongoApplyPsmdbCrTaskProcessor mongoApplyPsmdbCrTaskProcessor(
             ObjectMapper objectMapper,
             ClusterService clusterService,
             PsmdbClient psmdbClient
     ) {
-        return new MongoCreateClusterTaskProcessor(
+        return new MongoApplyPsmdbCrTaskProcessor(
                 objectMapper,
                 clusterService,
                 psmdbClient
@@ -139,7 +139,7 @@ public class TaskProcessorsConfig {
             BaseClusterService clusterServiceOld,
             ClusterService clusterService,
             MongoCreateVectorConfigTaskProcessor mongoCreateVectorConfigTaskProcessor,
-            MongoCreateClusterTaskProcessor mongoCreateClusterTaskProcessor,
+            MongoApplyPsmdbCrTaskProcessor mongoApplyPsmdbCrTaskProcessor,
             MongoCheckClusterReadinessProcessor mongoCheckClusterReadinessProcessor,
             MongoCreateExporterServiceProcessor mongoCreateExporterServiceProcessor,
             MongoCheckExporterServiceReadinessProcessor mongoCheckExporterServiceReadinessProcessor,
@@ -152,8 +152,8 @@ public class TaskProcessorsConfig {
                         mongoCreateVectorConfigTaskProcessor
                 ),
                 Map.entry(
-                        TaskType.MONGODB_CREATE_CLUSTER,
-                        mongoCreateClusterTaskProcessor
+                        TaskType.MONGODB_APPLY_PSMDB_CR,
+                        mongoApplyPsmdbCrTaskProcessor
                 ),
                 Map.entry(
                         TaskType.MONGODB_CHECK_CLUSTER_READINESS,

@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import com.onyxdb.mdb.core.clusters.models.Cluster;
+import com.onyxdb.mdb.core.clusters.models.ClusterConfig;
 
 /**
  * @author foxleren
@@ -14,4 +15,6 @@ public interface ClusterRepository {
     Optional<Cluster> getClusterO(UUID clusterId);
 
     void markClusterDeleted(UUID clusterId);
+
+    void updateClusterConfig(UUID clusterId, ClusterConfig config);
 }

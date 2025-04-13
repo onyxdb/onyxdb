@@ -35,12 +35,14 @@ public class TemplateProvider {
     public String buildPsmdbCr(
             String metadataName,
             String secretsUsersName,
+            int replsetSize,
             String vectorConfigName
     ) {
         Context context = new Context();
         context.setVariables(Map.ofEntries(
                 Map.entry("METADATA_NAME", metadataName),
                 Map.entry("SECRETS_USERS_NAME", secretsUsersName),
+                Map.entry("REPLESET_SIZE", replsetSize),
                 Map.entry("VECTOR_CONFIG_NAME", vectorConfigName)
         ));
 

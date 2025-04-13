@@ -10,6 +10,7 @@ import org.jooq.JSONB;
 
 import com.onyxdb.mdb.core.clusters.ClusterMapper;
 import com.onyxdb.mdb.core.clusters.models.Cluster;
+import com.onyxdb.mdb.core.clusters.models.ClusterConfig;
 
 import static com.onyxdb.mdb.generated.jooq.Tables.CLUSTERS;
 
@@ -73,5 +74,17 @@ public class ClusterPostgresRepository implements ClusterRepository {
                 .set(CLUSTERS.IS_DELETED, true)
                 .where(CLUSTERS.ID.eq(clusterId))
                 .execute();
+    }
+
+    @Override
+    public void updateClusterConfig(UUID clusterId, ClusterConfig config) {
+        try {
+            dslContext.update(CLUSTERS)
+                    .set(CLUSTERS.CONFIG, JSONB.jsonb(objectMapper.writeValueAsString(config)))
+                    .where(CLUSTERS.ID.eq(clusterId))
+                    .execute();
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -18,6 +18,10 @@ import com.onyxdb.mdb.generated.openapi.models.V1DeleteMongoClusterResponse;
 import com.onyxdb.mdb.generated.openapi.models.V1ListMongoClustersResponse;
 import com.onyxdb.mdb.generated.openapi.models.V1MongoClusterResponse;
 import com.onyxdb.mdb.generated.openapi.models.V1MongoConfig;
+import com.onyxdb.mdb.generated.openapi.models.V1MongoHost;
+import com.onyxdb.mdb.generated.openapi.models.V1MongoListHostsResponse;
+import com.onyxdb.mdb.generated.openapi.models.V1MongoScaleHostsRequest;
+import com.onyxdb.mdb.generated.openapi.models.V1ScheduledOperationResponse;
 
 /**
  * @author foxleren
@@ -85,5 +89,31 @@ public class V1ManagedMongoController implements V1ManagedMongoDbApi {
 
         var response = new V1DeleteMongoClusterResponse(operationId);
         return ResponseEntity.ok().body(response);
+    }
+
+    @Override
+    public ResponseEntity<V1MongoListHostsResponse> listHosts(UUID clusterId) {
+        return ResponseEntity.ok()
+                .body(new V1MongoListHostsResponse(
+                        List.of(
+                                new V1MongoHost(
+                                        "host-0"
+                                ),
+                                new V1MongoHost(
+                                        "host-1"
+                                ),
+                                new V1MongoHost(
+                                        "host-2"
+                                )
+                        )
+                ));
+    }
+
+    @Override
+    public ResponseEntity<V1ScheduledOperationResponse> scaleHosts(UUID clusterId, V1MongoScaleHostsRequest rq) {
+        UUID operationId = clusterService.scaleHosts(clusterId, rq.getReplicas());
+
+        return ResponseEntity.ok()
+                .body(new V1ScheduledOperationResponse(operationId));
     }
 }

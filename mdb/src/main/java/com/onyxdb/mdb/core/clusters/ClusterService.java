@@ -8,8 +8,10 @@ import java.util.UUID;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import com.onyxdb.mdb.core.clusters.models.Cluster;
+import com.onyxdb.mdb.core.clusters.models.ClusterConfig;
 import com.onyxdb.mdb.core.clusters.models.CreateCluster;
 import com.onyxdb.mdb.core.clusters.repositories.ClusterRepository;
+import com.onyxdb.mdb.taskProcessing.TaskProcessingUtils;
 import com.onyxdb.mdb.taskProcessing.generators.CompositeTaskGenerator;
 import com.onyxdb.mdb.taskProcessing.models.Operation;
 import com.onyxdb.mdb.taskProcessing.models.OperationType;
@@ -56,9 +58,7 @@ public class ClusterService {
                 operation.type(),
                 cluster.id()
         );
-        List<Task> tasks = tasksWithBlockers.stream()
-                .map(TaskWithBlockers::task)
-                .toList();
+        List<Task> tasks = TaskProcessingUtils.getTasksFromTasksWithBlockers(tasksWithBlockers);
 
 
         transactionTemplate.executeWithoutResult(status -> {
@@ -91,6 +91,31 @@ public class ClusterService {
                 attemptsLeft,
                 scheduledAt
         );
+    }
+
+    public UUID scaleHosts(UUID clusterId, int replicas) {
+        Cluster cluster = getCluster(clusterId);
+
+        var updatedConfig = ClusterConfig.builder().copyFrom(cluster.config())
+                .withReplicas(replicas)
+                .build();
+        clusterRepository.updateClusterConfig(clusterId, updatedConfig);
+
+        var operation = Operation.scheduled(OperationType.MONGODB_SCALE_HOSTS);
+        List<TaskWithBlockers> tasksWithBlockers = compositeTaskGenerator.generateClusterTasks(
+                operation.id(),
+                operation.type(),
+                clusterId
+        );
+        List<Task> tasks = TaskProcessingUtils.getTasksFromTasksWithBlockers(tasksWithBlockers);
+
+        transactionTemplate.executeWithoutResult(status -> {
+            operationRepository.create(operation);
+            taskRepository.createBulk(tasks);
+            taskRepository.createBlockerTasksBulk(tasksWithBlockers);
+        });
+
+        return operation.id();
     }
 
 //    public UUID deleteCluster(UUID clusterId) {

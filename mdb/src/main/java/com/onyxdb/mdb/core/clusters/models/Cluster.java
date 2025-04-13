@@ -6,6 +6,7 @@ import java.util.UUID;
  * @author foxleren
  */
 // TODO store namespace
+// TODO add status
 public record Cluster(
         UUID id,
         String name,
