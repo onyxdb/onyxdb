@@ -38,3 +38,5 @@ onyxdb-app:
       min-threads: 1
       max-threads: 5
       polling-interval-seconds: 5
+  victoria-logs:
+    base-url: http://vlogs-demo.onyxdb.svc.cluster.local:9428

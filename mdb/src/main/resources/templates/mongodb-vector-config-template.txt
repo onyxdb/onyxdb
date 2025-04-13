@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: [[${metadata_name}]]
+  name: [[${METADATA_NAME}]]
 data:
   vector.yaml: |
     sources:
@@ -16,15 +16,15 @@ data:
         inputs:
           - mongod_logs
         source: |-
-          .onyxdb_project = [[${onyxdb_project}]]
-          .onyxdb_cluster = [[${onyxdb_cluster}]]
+          .onyxdb_project = [[${ONYXDB_PROJECT}]]
+          .onyxdb_cluster = [[${ONYXDB_CLUSTER}]]
 
     sinks:
       vlogs:
         inputs:
           - enriched_mongod_logs
         type: http
-        uri: [[${vlogs_url}]]/insert/jsonline?_stream_fields=host,container_name&_msg_field=message&_time_field=timestamp
+        uri: [[${VLOGS_BASE_URL}]]/insert/jsonline?_stream_fields=host,container_name&_msg_field=message&_time_field=timestamp
         compression: gzip
         encoding:
           codec: json
