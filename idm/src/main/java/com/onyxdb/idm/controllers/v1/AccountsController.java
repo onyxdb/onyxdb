@@ -1,9 +1,7 @@
 package com.onyxdb.idm.controllers.v1;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
@@ -18,14 +16,12 @@ import com.onyxdb.idm.generated.openapi.models.AccountRolesHistoryDTO;
 import com.onyxdb.idm.generated.openapi.models.BusinessRoleDTO;
 import com.onyxdb.idm.generated.openapi.models.OrganizationUnitDTO;
 import com.onyxdb.idm.generated.openapi.models.PaginatedAccountResponse;
-import com.onyxdb.idm.generated.openapi.models.PermissionDTO;
 import com.onyxdb.idm.generated.openapi.models.RoleDTO;
 import com.onyxdb.idm.generated.openapi.models.RoleWithPermissionsDTO;
 import com.onyxdb.idm.models.Account;
 import com.onyxdb.idm.models.BusinessRole;
 import com.onyxdb.idm.models.OrganizationUnit;
 import com.onyxdb.idm.models.PaginatedResult;
-import com.onyxdb.idm.models.Permission;
 import com.onyxdb.idm.models.Role;
 import com.onyxdb.idm.models.RoleWithPermissions;
 import com.onyxdb.idm.models.clickhouse.AccountBusinessRolesHistory;

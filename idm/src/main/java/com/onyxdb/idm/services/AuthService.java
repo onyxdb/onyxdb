@@ -26,8 +26,6 @@ import org.springframework.web.server.ResponseStatusException;
 import com.onyxdb.idm.models.Account;
 import com.onyxdb.idm.models.redis.RefreshToken;
 import com.onyxdb.idm.repositories.AccountRepository;
-import com.onyxdb.idm.repositories.RoleRepository;
-import com.onyxdb.idm.services.jwt.JwtProvider;
 import com.onyxdb.idm.services.jwt.JwtResponse;
 
 /**

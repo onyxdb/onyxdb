@@ -217,12 +217,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFoundResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
     put:
       summary: Update an account by ID
       operationId: updateAccount
@@ -281,12 +275,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFoundResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
   /api/v1/accounts/{accountId}/permissions:
     get:
       summary: Get all account Permissions
@@ -315,12 +303,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFoundResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
   /api/v1/accounts/{accountId}/permissions-bits:
     get:
       summary: Get all account Permissions in bits
@@ -347,12 +329,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFoundResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
   /api/v1/accounts/{accountId}/roles:
     get:
       summary: Get account roles
@@ -375,12 +351,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/RoleDTO'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
   /api/v1/accounts/{accountId}/roles-history:
     get:
       summary: Get account roles History
@@ -514,12 +484,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/AccountBusinessRolesHistoryDTO'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
   /api/v1/accounts/{accountId}/business-roles/{businessRoleId}:
     post:
       summary: Add business role to account link
@@ -619,12 +583,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/DomainComponentDTO'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
     post:
       summary: Create a new domain component
       operationId: createDomainComponent
@@ -675,12 +633,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFoundResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
     put:
       summary: Update a domain component by ID
       operationId: updateDomainComponent
@@ -739,12 +691,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFoundResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
   /api/v1/domain-components/{dcId}/tree:
     get:
       summary: Get a domain component tree
@@ -771,15 +717,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFoundResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
   /api/v1/domain-components/{dcId}/organization-units/roots:
     get:
-      summary: Получение корневых элементов organization-unit
+      summary: Getting the root elements of the organization-unit
       operationId: getDomainComponentRootsOrganizationUnits
       tags:
         - Domain Components
@@ -792,7 +732,7 @@ paths:
             format: uuid
       responses:
         '200':
-          description: Успешное получение корневых элементов
+          description: Successful acquisition of root elements
           content:
             application/json:
               schema:
@@ -800,7 +740,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/OrganizationUnitDTO'
         '404':
-          description: Organization Unit не найден
+          description: Domain Component not found
           content:
             application/json:
               schema:
@@ -1240,12 +1180,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFoundResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
     put:
       summary: Update a role by ID
       operationId: updateRole
@@ -1304,12 +1238,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFoundResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
   /api/v1/roles/{roleId}/permissions:
     get:
       summary: Get role permission
@@ -1330,6 +1258,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RoleWithPermissionsDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+  /api/v1/roles/{roleId}/history:
+    get:
+      summary: Get role history
+      operationId: getRoleHistory
+      tags:
+        - Roles
+      parameters:
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleHistoryDTO'
         '404':
           description: Not Found
           content:
@@ -1371,7 +1325,7 @@ paths:
                 $ref: '#/components/schemas/BadRequestResponse'
   /api/v1/permissions/check:
     get:
-      summary: Проверка наличия доступа у текущего пользователя
+      summary: Checking if the current user has access
       operationId: checkPermission
       tags:
         - Permissions
@@ -1389,7 +1343,7 @@ paths:
             format: uuid
       responses:
         '200':
-          description: Успешная проверка доступа
+          description: Successful access verification
           content:
             application/json:
               schema:
@@ -1398,7 +1352,7 @@ paths:
                   hasAccess:
                     type: boolean
         '401':
-          description: Пользователь не авторизован
+          description: The user is not logged in
           content:
             application/json:
               schema:
@@ -1435,12 +1389,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaginatedBusinessRoleResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
     post:
       summary: Create a new business role
       operationId: createBusinessRole
@@ -1491,12 +1439,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFoundResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
     put:
       summary: Update a business role by ID
       operationId: updateBusinessRole
@@ -1623,12 +1565,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFoundResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
   /api/v1/business-roles/{businessRoleId}/roles:
     get:
       summary: Get business role roles
@@ -1657,12 +1593,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFoundResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
   /api/v1/business-roles/{businessRoleId}/roles/{roleId}:
     post:
       summary: Add role to the business role link
@@ -1824,12 +1754,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFoundResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
     put:
       summary: Update a role request by ID
       operationId: updateRoleRequest
@@ -1936,12 +1860,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaginatedProductResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
     post:
       summary: Create a new product
       operationId: createProduct
@@ -1968,46 +1886,34 @@ paths:
                 $ref: '#/components/schemas/BadRequestResponse'
   /api/v1/products-roots:
     get:
-      summary: Получение корневых элементов продуктов
+      summary: Obtaining the root elements of products
       operationId: getProductsRoots
       tags:
         - Products
       responses:
         '200':
-          description: Успешное получение корневых элементов
+          description: Successful acquisition of root elements
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/ProductDTO'
-        '404':
-          description: Продукт не найден
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundResponse'
   /api/v1/products-tree:
     get:
-      summary: Получение дочерних элементов всех продуктов деревом
+      summary: Getting child elements of all products by a tree
       operationId: getAllProductTree
       tags:
         - Products
       responses:
         '200':
-          description: Успешное получение деревьев элементов
+          description: Successful acquisition of element trees
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/ProductTreeDTO'
-        '404':
-          description: Продукт не найден
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundResponse'
   /api/v1/products/{productId}:
     get:
       summary: Get a product by ID
@@ -2034,12 +1940,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFoundResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
     put:
       summary: Update a product by ID
       operationId: updateProduct
@@ -2098,15 +1998,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFoundResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
   /api/v1/products/{productId}/children:
     get:
-      summary: Получение дочерних элементов продукта
+      summary: Getting child elements of a product
       operationId: getProductChildren
       tags:
         - Products
@@ -2119,22 +2013,16 @@ paths:
             format: uuid
       responses:
         '200':
-          description: Успешное получение дочерних элементов
+          description: Successful receipt of child elements
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/ProductDTO'
-        '404':
-          description: Продукт не найден
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundResponse'
   /api/v1/products/{productId}/parents:
     get:
-      summary: Получение родительских элементов продукта
+      summary: Getting the parent elements of a product
       operationId: getProductParents
       tags:
         - Products
@@ -2147,22 +2035,16 @@ paths:
             format: uuid
       responses:
         '200':
-          description: Успешное получение родительских элементов
+          description: Successful receipt of parent elements
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/ProductDTO'
-        '404':
-          description: Продукт не найден
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundResponse'
   /api/v1/products/{productId}/tree:
     get:
-      summary: Получение дочерних элементов продукта деревом
+      summary: Getting child elements of a product by a tree
       operationId: getProductTree
       tags:
         - Products
@@ -2180,17 +2062,11 @@ paths:
             type: integer
       responses:
         '200':
-          description: Успешное получение дочерних элементов
+          description: Successful receipt of child elements
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProductTreeDTO'
-        '404':
-          description: Продукт не найден
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundResponse'
 
 components:
   securitySchemes:
@@ -2314,7 +2190,6 @@ components:
       type: object
       properties:
         role:
-          type: object
           $ref: '#/components/schemas/RoleDTO'
         permissions:
           type: array
@@ -2458,7 +2333,6 @@ components:
           items:
             $ref: '#/components/schemas/OrganizationTreeDTO'
         unit:
-          type: object
           $ref: '#/components/schemas/OrganizationUnitDTO'
       required:
         - unit
@@ -2468,7 +2342,6 @@ components:
       type: object
       properties:
         item:
-          type: object
           $ref: '#/components/schemas/DomainComponentDTO'
         children:
           type: array
@@ -2530,7 +2403,6 @@ components:
       type: object
       properties:
         item:
-          type: object
           $ref: '#/components/schemas/ProductDTO'
         children:
           type: array
@@ -2655,6 +2527,26 @@ components:
         - account_id
         - business_role_id
         - status
+        - createdAt
+
+    RoleHistoryDTO:
+      type: object
+      properties:
+        record_id:
+          type: string
+          format: uuid
+        role_id:
+          type: string
+          format: uuid
+        difference:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - record_id
+        - role_id
+        - difference
         - createdAt
 
     AuthRequestDTO:
