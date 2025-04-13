@@ -2190,7 +2190,6 @@ components:
       type: object
       properties:
         role:
-          type: object
           $ref: '#/components/schemas/RoleDTO'
         permissions:
           type: array
@@ -2334,7 +2333,6 @@ components:
           items:
             $ref: '#/components/schemas/OrganizationTreeDTO'
         unit:
-          type: object
           $ref: '#/components/schemas/OrganizationUnitDTO'
       required:
         - unit
@@ -2344,7 +2342,6 @@ components:
       type: object
       properties:
         item:
-          type: object
           $ref: '#/components/schemas/DomainComponentDTO'
         children:
           type: array
@@ -2406,7 +2403,6 @@ components:
       type: object
       properties:
         item:
-          type: object
           $ref: '#/components/schemas/ProductDTO'
         children:
           type: array
@@ -2531,6 +2527,26 @@ components:
         - account_id
         - business_role_id
         - status
+        - createdAt
+
+    RoleHistoryDTO:
+      type: object
+      properties:
+        record_id:
+          type: string
+          format: uuid
+        role_id:
+          type: string
+          format: uuid
+        difference:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - record_id
+        - role_id
+        - difference
         - createdAt
 
     AuthRequestDTO:
