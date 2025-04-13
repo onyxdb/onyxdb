@@ -11,7 +11,6 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Async;
 
 import com.onyxdb.mdb.configs.taskProcessing.TaskProcessingConfig;

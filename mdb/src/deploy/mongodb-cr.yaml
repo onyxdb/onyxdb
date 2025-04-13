@@ -43,9 +43,9 @@ spec:
   #  multiCluster:
   #    enabled: true
   #    DNSSuffix: svc.clusterset.local
-  #  upgradeOptions:
+  upgradeOptions:
   #    versionServiceEndpoint: https://check.percona.com
-  #    apply: disabled
+    apply: disabled
   #    schedule: "0 2 * * *"
   #    setFCV: false
   secrets:
@@ -100,7 +100,7 @@ spec:
       #    # for more configuration fields refer to https://docs.mongodb.com/manual/reference/configuration-options/
       configuration: |
         systemLog:
-          path: /var/log/mongo/mongod.log
+          path: /data/db/mongod.log
           destination: file
           logAppend: true
       #      storage:
@@ -194,6 +194,37 @@ spec:
               value: "mongodb://$(EXPORTER_USER):$(EXPORTER_PASS)@$(POD_IP):27017"
           args: [ "--discovering-mode", "--compatible-mode", "--collect-all", "--log.level=debug", "--mongodb.uri=$(MONGODB_URI)" ]
           name: exporter
+        - name: vector
+          image: timberio/vector:0.31.0-debian
+          command: ["vector"]
+          args: ["--config=/etc/vector/vector.yaml"]
+          workingDir: /data/db
+          volumeMounts:
+            - name: sidecar-vector-config-volume
+              mountPath: "/etc/vector"
+            - mountPath: /data/db
+              name: mongod-data
+
+#        - image: busybox
+#          command: [ "/bin/sh" ]
+#          args: [ "-c", "mkdir -p /var/log/mongo && touch /var/log/mongo/mongod.log" ]
+#          command:
+#            - sh
+#            - -c
+#            - |
+#              mkdir -p /var/log/mongo && \
+#              touch /var/log/mongo/mongod.log
+#          command: ["/bin/bash"]
+#          args: ["-c", "mkdir", "-p", "/var/log/mongo", "&&", "touch", "/var/log/mongo/mongod.log"]
+#          name: rs-sidecar-1
+#          volumeMounts:
+#            - mountPath: /mongod-data
+#              name: mongod-data
+      sidecarVolumes:
+        - name: sidecar-vector-config-volume
+          configMap:
+            name: sidecar-vector-config
+
 #        - image: percona/percona-server-mongodb:7.0.14-8
 #          name: percona-client
 #          command: ["-- bash -il"]
@@ -202,8 +233,8 @@ spec:
 #          name: percona-mongodb-exporter
       #    sidecars:
       #    - image: busybox
-      #      command: ["/bin/sh"]
-      #      args: ["-c", "while true; do echo echo $(date -u) 'test' >> /dev/null; sleep 5;done"]
+#            command: ["/bin/sh"]
+#            args: ["-c", "while true; do echo echo $(date -u) 'test' >> /dev/null; sleep 5;done"]
       #      name: rs-sidecar-1
       #      volumeMounts:
       #        - mountPath: /volume1

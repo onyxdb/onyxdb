@@ -21,9 +21,23 @@ import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCheckExporterServiceS
 import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCreateClusterTaskProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCreateExporterServiceProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCreateExporterServiceScrapeTaskProcessor;
+import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCreateVectorConfigTaskProcessor;
 
 @Configuration
 public class TaskProcessorsConfig {
+    @Bean
+    public MongoCreateVectorConfigTaskProcessor mongoCreateVectorConfig(
+            ObjectMapper objectMapper,
+            ClusterService clusterService,
+            PsmdbClient psmdbClient
+    ) {
+        return new MongoCreateVectorConfigTaskProcessor(
+                objectMapper,
+                clusterService,
+                psmdbClient
+        );
+    }
+
     @Bean
     public MongoCreateClusterTaskProcessor mongoCreateClusterTaskProcessor(
             ObjectMapper objectMapper,
@@ -124,6 +138,7 @@ public class TaskProcessorsConfig {
     public CompositeTaskProcessor compositeTaskProcessor(
             BaseClusterService clusterServiceOld,
             ClusterService clusterService,
+            MongoCreateVectorConfigTaskProcessor mongoCreateVectorConfigTaskProcessor,
             MongoCreateClusterTaskProcessor mongoCreateClusterTaskProcessor,
             MongoCheckClusterReadinessProcessor mongoCheckClusterReadinessProcessor,
             MongoCreateExporterServiceProcessor mongoCreateExporterServiceProcessor,
@@ -132,6 +147,10 @@ public class TaskProcessorsConfig {
             MongoCheckExporterServiceScrapeReadinessTaskProcessor mongoCheckExporterServiceScrapeReadinessTaskProcessor
     ) {
         Map<TaskType, TaskProcessor<?>> taskTypeToTaskProcessors = Map.ofEntries(
+                Map.entry(
+                        TaskType.MONGODB_CREATE_VECTOR_CONFIG,
+                        mongoCreateVectorConfigTaskProcessor
+                ),
                 Map.entry(
                         TaskType.MONGODB_CREATE_CLUSTER,
                         mongoCreateClusterTaskProcessor

@@ -10,6 +10,7 @@ public record PsmdbReplset(
         PsmdbAffinity affinity,
         ResourceRequirements resources,
         PsmdbVolumeSpec volumeSpec,
-        List<PsmdbSidecar> sidecars
+        List<PsmdbSidecar> sidecars,
+        String configuration
 ) {
 }

@@ -18,21 +18,29 @@ public class MongoCreateClusterTaskGenerator extends ClusterTaskGenerator {
     // TODO don't repeat blockers for each task
     private static final Map<TaskType, List<TaskType>> TASK_TYPE_TO_BLOCKER_TASK_TYPES = Map.ofEntries(
             Map.entry(
-                    TaskType.MONGODB_CREATE_CLUSTER, List.of()
+                    TaskType.MONGODB_CREATE_VECTOR_CONFIG, List.of()
+            ),
+            Map.entry(
+                    TaskType.MONGODB_CREATE_CLUSTER, List.of(
+                            TaskType.MONGODB_CREATE_VECTOR_CONFIG
+                    )
             ),
             Map.entry(
                     TaskType.MONGODB_CHECK_CLUSTER_READINESS, List.of(
+                            TaskType.MONGODB_CREATE_VECTOR_CONFIG,
                             TaskType.MONGODB_CREATE_CLUSTER
                     )
             ),
             Map.entry(
                     TaskType.MONGODB_CREATE_EXPORTER_SERVICE, List.of(
+                            TaskType.MONGODB_CREATE_VECTOR_CONFIG,
                             TaskType.MONGODB_CREATE_CLUSTER,
                             TaskType.MONGODB_CHECK_CLUSTER_READINESS
                     )
             ),
             Map.entry(
                     TaskType.MONGODB_CHECK_EXPORTER_SERVICE_READINESS, List.of(
+                            TaskType.MONGODB_CREATE_VECTOR_CONFIG,
                             TaskType.MONGODB_CREATE_CLUSTER,
                             TaskType.MONGODB_CHECK_CLUSTER_READINESS,
                             TaskType.MONGODB_CREATE_EXPORTER_SERVICE
@@ -40,6 +48,7 @@ public class MongoCreateClusterTaskGenerator extends ClusterTaskGenerator {
             ),
             Map.entry(
                     TaskType.MONGODB_CREATE_EXPORTER_SERVICE_SCRAPE, List.of(
+                            TaskType.MONGODB_CREATE_VECTOR_CONFIG,
                             TaskType.MONGODB_CREATE_CLUSTER,
                             TaskType.MONGODB_CHECK_CLUSTER_READINESS,
                             TaskType.MONGODB_CREATE_EXPORTER_SERVICE,
@@ -48,6 +57,7 @@ public class MongoCreateClusterTaskGenerator extends ClusterTaskGenerator {
             ),
             Map.entry(
                     TaskType.MONGODB_CHECK_EXPORTER_SERVICE_SCRAPE_READINESS, List.of(
+                            TaskType.MONGODB_CREATE_VECTOR_CONFIG,
                             TaskType.MONGODB_CREATE_CLUSTER,
                             TaskType.MONGODB_CHECK_CLUSTER_READINESS,
                             TaskType.MONGODB_CREATE_EXPORTER_SERVICE,
@@ -79,6 +89,13 @@ public class MongoCreateClusterTaskGenerator extends ClusterTaskGenerator {
 
         List<Task> tasks = List.of(
                 Task.scheduledFirst(
+                        TaskType.MONGODB_CREATE_VECTOR_CONFIG,
+                        operationId,
+                        now,
+                        DEFAULT_RETRIES_LEFT,
+                        stringPayload
+                ),
+                Task.scheduledMiddle(
                         TaskType.MONGODB_CREATE_CLUSTER,
                         operationId,
                         now,

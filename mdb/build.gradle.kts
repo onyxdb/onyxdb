@@ -16,6 +16,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-webflux:3.3.5")
 	implementation(libs.springBoot.starterLog4j2)
 	implementation(libs.springBoot.starterValidation)
+	implementation("org.springframework.boot:spring-boot-starter-thymeleaf:3.3.5")
 	implementation(libs.apacheCommons.commonsLang3)
 	implementation(libs.springDoc.springdocOpenapiStarterWebmvcUi)
 

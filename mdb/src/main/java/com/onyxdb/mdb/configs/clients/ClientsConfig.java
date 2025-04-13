@@ -3,12 +3,15 @@ package com.onyxdb.mdb.configs.clients;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.onyxdb.mdb.clients.k8s.psmdb.PsmdbClient;
 import com.onyxdb.mdb.clients.k8s.psmdb.PsmdbExporterServiceClient;
+import com.onyxdb.mdb.clients.k8s.victoriaLogs.VictoriaLogsClient;
 import com.onyxdb.mdb.clients.k8s.victoriaMetrics.VmServiceScrapeClient;
+import com.onyxdb.mdb.utils.TemplateProvider;
 
 @Configuration
 public class ClientsConfig {
@@ -18,13 +21,25 @@ public class ClientsConfig {
     }
 
     @Bean
+    public VictoriaLogsClient victoriaLogsClient(
+            @Value("${onyxdb-app.victoria-logs.base-url}")
+            String baseUrl
+    ) {
+        return new VictoriaLogsClient(baseUrl);
+    }
+
+    @Bean
     public PsmdbClient psmdbClient(
             ObjectMapper objectMapper,
-            KubernetesClient kubernetesClient
+            KubernetesClient kubernetesClient,
+            TemplateProvider templateProvider,
+            VictoriaLogsClient victoriaLogsClient
     ) {
         return new PsmdbClient(
                 objectMapper,
-                kubernetesClient
+                kubernetesClient,
+                templateProvider,
+                victoriaLogsClient
         );
     }
 

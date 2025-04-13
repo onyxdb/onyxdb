@@ -6,7 +6,9 @@ import io.fabric8.kubernetes.api.model.GenericKubernetesResourceBuilder;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.dsl.base.ResourceDefinitionContext;
 
+import com.onyxdb.mdb.clients.k8s.victoriaLogs.VictoriaLogsClient;
 import com.onyxdb.mdb.utils.ObjectMapperUtils;
+import com.onyxdb.mdb.utils.TemplateProvider;
 
 public class PsmdbClient extends AbstractPsmdbFactory {
     private static final String GROUP = "psmdb.percona.com";
@@ -21,31 +23,37 @@ public class PsmdbClient extends AbstractPsmdbFactory {
             .build();
 
     private final KubernetesClient kubernetesClient;
+    private final TemplateProvider templateProvider;
+    private final VictoriaLogsClient victoriaLogsClient;
 
     public PsmdbClient(
             ObjectMapper objectMapper,
-            KubernetesClient kubernetesClient
+            KubernetesClient kubernetesClient,
+            TemplateProvider templateProvider,
+            VictoriaLogsClient victoriaLogsClient
     ) {
         super(objectMapper);
         this.kubernetesClient = kubernetesClient;
+        this.templateProvider = templateProvider;
+        this.victoriaLogsClient = victoriaLogsClient;
     }
 
     public GenericKubernetesResource getResource(String namespace, String name) {
         return kubernetesClient.genericKubernetesResources(CONTEXT)
                 .inNamespace(namespace)
-                .withName(getPreparedName(name))
+                .withName(getPsmdbName(name))
                 .get();
     }
 
     public void createResource(Psmdb psmdb) {
-        GenericKubernetesResource resource = buildResource(psmdb);
+        String resource = templateProvider.buildPsmdbCr(
+                getPsmdbName(psmdb.name()),
+                getSecretName(psmdb.name()),
+                getVectorConfigMapName(psmdb.name())
+        );
 
-        kubernetesClient.genericKubernetesResources(
-                        API_VERSION,
-                        KIND
-                )
+        kubernetesClient.resource(resource)
                 .inNamespace(psmdb.namespace())
-                .resource(resource)
                 .create();
     }
 
@@ -57,12 +65,32 @@ public class PsmdbClient extends AbstractPsmdbFactory {
                 .anyMatch(state -> state.equals(STATE_READY_VALUE));
     }
 
-    public static String getPreparedName(String name) {
-        return String.format("managed-mongodb-%s", name);
+    public void createVectorConfig(
+            String namespace,
+            String project,
+            String cluster
+    ) {
+        String resource = templateProvider.buildMongoVectorConfigMapManifest(
+                getVectorConfigMapName(cluster),
+                project,
+                cluster,
+                victoriaLogsClient.getBaseUrl()
+        );
+        kubernetesClient.resource(resource)
+                .inNamespace(namespace)
+                .serverSideApply();
     }
 
-    public static String getPreparedSecretName(String name) {
-        return String.format("managed-mongodb-%s-secrets", name);
+    public static String getPsmdbName(String cluster) {
+        return String.format("managed-mongodb-%s", cluster);
+    }
+
+    public static String getSecretName(String cluster) {
+        return String.format("managed-mongodb-%s-secrets", cluster);
+    }
+
+    public static String getVectorConfigMapName(String cluster) {
+        return String.format("managed-mongodb-%s-vector-config", cluster);
     }
 
     private GenericKubernetesResource buildResource(Psmdb psmdb) {
@@ -72,7 +100,7 @@ public class PsmdbClient extends AbstractPsmdbFactory {
                 .withApiVersion(API_VERSION)
                 .withKind(KIND)
                 .withNewMetadata()
-                .withName(getPreparedName(psmdb.name()))
+                .withName(getPsmdbName(psmdb.name()))
                 .endMetadata()
                 .addToAdditionalProperties("spec", specMap)
                 .build();
