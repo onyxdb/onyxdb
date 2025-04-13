@@ -16,8 +16,8 @@ data:
         inputs:
           - mongod_logs
         source: |-
-          .onyxdb_project = [[${ONYXDB_PROJECT}]]
-          .onyxdb_cluster = [[${ONYXDB_CLUSTER}]]
+          .onyxdb_project = "[[${ONYXDB_PROJECT}]]"
+          .onyxdb_cluster = "[[${ONYXDB_CLUSTER}]]"
 
     sinks:
       vlogs:

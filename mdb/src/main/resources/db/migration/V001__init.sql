@@ -87,6 +87,7 @@ CREATE TYPE public.task_status AS ENUM (
     );
 
 CREATE TYPE public.task_type AS ENUM (
+    'mongodb_create_vector_config',
     'mongodb_create_cluster',
     'mongodb_check_cluster_readiness',
     'mongodb_create_exporter_service',

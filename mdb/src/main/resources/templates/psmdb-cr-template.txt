@@ -1,0 +1,87 @@
+apiVersion: psmdb.percona.com/v1
+kind: PerconaServerMongoDB
+metadata:
+  name: [[${METADATA_NAME}]]
+  finalizers: []
+spec:
+  crVersion: 1.19.1
+  image: percona/percona-server-mongodb:7.0.15-9-multi
+  imagePullPolicy: IfNotPresent
+  upgradeOptions:
+    apply: disabled
+  secrets:
+    users: [[${SECRETS_USERS_NAME}]]
+  replsets:
+    - name: rs0
+      size: 3
+      configuration: |
+        systemLog:
+          path: /data/db/mongod.log
+          destination: file
+          logAppend: true
+      affinity:
+        advanced:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+                - matchExpressions:
+                    - key: kubernetes.io/hostname
+                      operator: In
+                      values:
+                        - minikube
+      sidecars:
+        - image: percona/mongodb_exporter:0.40
+          env:
+            - name: EXPORTER_USER
+              valueFrom:
+                secretKeyRef:
+                  name: [[${SECRETS_USERS_NAME}]]
+                  key: MONGODB_CLUSTER_MONITOR_USER
+            - name: EXPORTER_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: [[${SECRETS_USERS_NAME}]]
+                  key: MONGODB_CLUSTER_MONITOR_PASSWORD
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: MONGODB_URI
+              value: "mongodb://$(EXPORTER_USER):$(EXPORTER_PASS)@$(POD_IP):27017"
+          args:
+            - "--discovering-mode"
+            - "--compatible-mode"
+            - "--collect-all"
+            - "--log.level=debug"
+            - "--mongodb.uri=$(MONGODB_URI)"
+          name: exporter
+        - name: vector
+          image: timberio/vector:0.31.0-debian
+          command:
+            - "vector"
+          args:
+            - "--config=/etc/vector/vector.yaml"
+          workingDir: /data/db
+          volumeMounts:
+            - name: vector-config-volume
+              mountPath: "/etc/vector"
+            - mountPath: /data/db
+              name: mongod-data
+      sidecarVolumes:
+        - name: vector-config-volume
+          configMap:
+            name: [[${VECTOR_CONFIG_NAME}]]
+      resources:
+        limits:
+          cpu: "300m"
+          memory: "0.5G"
+        requests:
+          cpu: "300m"
+          memory: "0.5G"
+      volumeSpec:
+        persistentVolumeClaim:
+          resources:
+            requests:
+              storage: 1Gi
+  sharding:
+    enabled: false
