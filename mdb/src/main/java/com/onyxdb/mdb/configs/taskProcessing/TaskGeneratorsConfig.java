@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import com.onyxdb.mdb.taskProcessing.generators.ClusterTaskGenerator;
 import com.onyxdb.mdb.taskProcessing.generators.CompositeTaskGenerator;
 import com.onyxdb.mdb.taskProcessing.generators.mongo.MongoCreateClusterTaskGenerator;
+import com.onyxdb.mdb.taskProcessing.generators.mongo.MongoDeleteClusterTaskGenerator;
 import com.onyxdb.mdb.taskProcessing.generators.mongo.MongoScaleHostsTaskGenerator;
 import com.onyxdb.mdb.taskProcessing.models.OperationType;
 
@@ -17,6 +18,11 @@ public class TaskGeneratorsConfig {
     @Bean
     public MongoCreateClusterTaskGenerator mongoCreateClusterTaskGenerator(ObjectMapper objectMapper) {
         return new MongoCreateClusterTaskGenerator(objectMapper);
+    }
+
+    @Bean
+    public MongoDeleteClusterTaskGenerator mongoDeleteClusterTaskGenerator(ObjectMapper objectMapper) {
+        return new MongoDeleteClusterTaskGenerator(objectMapper);
     }
 
     @Bean

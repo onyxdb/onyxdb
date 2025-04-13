@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.onyxdb.mdb.core.clusters.ClusterMapper;
 import com.onyxdb.mdb.core.clusters.ClusterService;
 import com.onyxdb.mdb.core.clusters.models.CreateCluster;
+import com.onyxdb.mdb.core.clusters.models.UpdateCluster;
 import com.onyxdb.mdb.generated.openapi.apis.V1ManagedMongoDbApi;
 import com.onyxdb.mdb.generated.openapi.models.V1ClusterResources;
 import com.onyxdb.mdb.generated.openapi.models.V1ClusterStatusResponse;
@@ -21,6 +22,7 @@ import com.onyxdb.mdb.generated.openapi.models.V1MongoConfig;
 import com.onyxdb.mdb.generated.openapi.models.V1MongoHost;
 import com.onyxdb.mdb.generated.openapi.models.V1MongoListHostsResponse;
 import com.onyxdb.mdb.generated.openapi.models.V1MongoScaleHostsRequest;
+import com.onyxdb.mdb.generated.openapi.models.V1MongoUpdateClusterRequest;
 import com.onyxdb.mdb.generated.openapi.models.V1ScheduledOperationResponse;
 
 /**
@@ -42,7 +44,7 @@ public class V1ManagedMongoController implements V1ManagedMongoDbApi {
             UUID.randomUUID(),
             new V1MongoConfig(
                     new V1ClusterResources(
-                            "c2-r4",
+                            UUID.randomUUID(),
                             "standard",
                             10737418240L
                     ),
@@ -84,8 +86,7 @@ public class V1ManagedMongoController implements V1ManagedMongoDbApi {
 
     @Override
     public ResponseEntity<V1DeleteMongoClusterResponse> deleteCluster(UUID clusterId) {
-        UUID operationId = UUID.randomUUID();
-//                clusterService.deleteCluster(clusterId);
+        UUID operationId = clusterService.deleteCluster(clusterId);
 
         var response = new V1DeleteMongoClusterResponse(operationId);
         return ResponseEntity.ok().body(response);
@@ -112,6 +113,21 @@ public class V1ManagedMongoController implements V1ManagedMongoDbApi {
     @Override
     public ResponseEntity<V1ScheduledOperationResponse> scaleHosts(UUID clusterId, V1MongoScaleHostsRequest rq) {
         UUID operationId = clusterService.scaleHosts(clusterId, rq.getReplicas());
+
+        return ResponseEntity.ok()
+                .body(new V1ScheduledOperationResponse(operationId));
+    }
+
+    @Override
+    public ResponseEntity<V1ScheduledOperationResponse> updateCluster(
+            UUID clusterId,
+            V1MongoUpdateClusterRequest rq
+    ) {
+        UpdateCluster updateCluster = clusterMapper.v1MongoUpdateClusterRequestToUpdateCluster(
+                clusterId,
+                rq
+        );
+        UUID operationId = clusterService.updateCluster(updateCluster);
 
         return ResponseEntity.ok()
                 .body(new V1ScheduledOperationResponse(operationId));

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.onyxdb.mdb.core.clusters.ClusterHostMapper;
 import com.onyxdb.mdb.core.clusters.ClusterMapper;
 
 /**
@@ -25,5 +26,10 @@ public class MapperConfig {
     @Bean
     public ClusterMapper clusterMapper(ObjectMapper objectMapper) {
         return new ClusterMapper(objectMapper);
+    }
+
+    @Bean
+    public ClusterHostMapper clusterHostMapper() {
+        return new ClusterHostMapper();
     }
 }

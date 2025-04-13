@@ -10,18 +10,23 @@ import com.onyxdb.mdb.clients.k8s.psmdb.PsmdbClient;
 import com.onyxdb.mdb.clients.k8s.psmdb.PsmdbExporterServiceClient;
 import com.onyxdb.mdb.clients.k8s.victoriaMetrics.VmServiceScrapeClient;
 import com.onyxdb.mdb.clients.k8s.victoriaMetrics.adapters.MongoExporterServiceScrapeAdapter;
+import com.onyxdb.mdb.core.clusters.ClusterHostService;
 import com.onyxdb.mdb.core.clusters.ClusterService;
+import com.onyxdb.mdb.core.resourcePresets.ResourcePresetService;
 import com.onyxdb.mdb.services.BaseClusterService;
 import com.onyxdb.mdb.taskProcessing.models.TaskType;
 import com.onyxdb.mdb.taskProcessing.processors.CompositeTaskProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.TaskProcessor;
-import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoApplyPsmdbCrTaskProcessor;
-import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCheckClusterReadinessProcessor;
-import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCheckExporterServiceReadinessProcessor;
-import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCheckExporterServiceScrapeReadinessTaskProcessor;
+import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoApplyPsmdbTaskProcessor;
+import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCheckPsmdbIsDeletedProcessor;
+import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCheckPsmdbReadinessProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCreateExporterServiceProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCreateExporterServiceScrapeTaskProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCreateVectorConfigTaskProcessor;
+import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoDeleteExporterServiceProcessor;
+import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoDeleteExporterServiceScrapeTaskProcessor;
+import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoDeletePsmdbTaskProcessor;
+import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoDeleteVectorConfigTaskProcessor;
 
 @Configuration
 public class TaskProcessorsConfig {
@@ -39,28 +44,32 @@ public class TaskProcessorsConfig {
     }
 
     @Bean
-    public MongoApplyPsmdbCrTaskProcessor mongoApplyPsmdbCrTaskProcessor(
+    public MongoApplyPsmdbTaskProcessor mongoApplyPsmdbCrTaskProcessor(
             ObjectMapper objectMapper,
             ClusterService clusterService,
-            PsmdbClient psmdbClient
+            PsmdbClient psmdbClient,
+            ResourcePresetService resourcePresetService
     ) {
-        return new MongoApplyPsmdbCrTaskProcessor(
+        return new MongoApplyPsmdbTaskProcessor(
                 objectMapper,
                 clusterService,
-                psmdbClient
+                psmdbClient,
+                resourcePresetService
         );
     }
 
     @Bean
-    public MongoCheckClusterReadinessProcessor mongoCheckClusterReadinessProcessor(
+    public MongoCheckPsmdbReadinessProcessor mongoCheckClusterReadinessProcessor(
             ObjectMapper objectMapper,
             ClusterService clusterService,
-            PsmdbClient psmdbClient
+            PsmdbClient psmdbClient,
+            ClusterHostService clusterHostService
     ) {
-        return new MongoCheckClusterReadinessProcessor(
+        return new MongoCheckPsmdbReadinessProcessor(
                 objectMapper,
                 clusterService,
-                psmdbClient
+                psmdbClient,
+                clusterHostService
         );
     }
 
@@ -71,19 +80,6 @@ public class TaskProcessorsConfig {
             PsmdbExporterServiceClient psmdbExporterServiceClient
     ) {
         return new MongoCreateExporterServiceProcessor(
-                objectMapper,
-                clusterService,
-                psmdbExporterServiceClient
-        );
-    }
-
-    @Bean
-    public MongoCheckExporterServiceReadinessProcessor mongoCheckExporterServiceReadinessProcessor(
-            ObjectMapper objectMapper,
-            ClusterService clusterService,
-            PsmdbExporterServiceClient psmdbExporterServiceClient
-    ) {
-        return new MongoCheckExporterServiceReadinessProcessor(
                 objectMapper,
                 clusterService,
                 psmdbExporterServiceClient
@@ -106,45 +102,86 @@ public class TaskProcessorsConfig {
     }
 
     @Bean
-    public MongoCheckExporterServiceScrapeReadinessTaskProcessor mongoCheckExporterServiceScrapeReadinessTaskProcessor(
+    public MongoDeleteExporterServiceScrapeTaskProcessor mongoDeleteExporterServiceScrapeTaskProcessor(
             ObjectMapper objectMapper,
             ClusterService clusterService,
-            VmServiceScrapeClient vmServiceScrapeClient
+            VmServiceScrapeClient vmServiceScrapeClient,
+            MongoExporterServiceScrapeAdapter mongoExporterServiceScrapeAdapter
     ) {
-        return new MongoCheckExporterServiceScrapeReadinessTaskProcessor(
+        return new MongoDeleteExporterServiceScrapeTaskProcessor(
                 objectMapper,
                 clusterService,
-                vmServiceScrapeClient
+                vmServiceScrapeClient,
+                mongoExporterServiceScrapeAdapter
         );
     }
 
-//    @Bean
-//    public MongoDeleteExporterServiceScrapeTaskProcessor mongoDeleteExporterServiceScrapeTaskProcessor(
-//            ObjectMapper objectMapper,
-//            ClusterService clusterService,
-//            VmServiceScrapeClient vmServiceScrapeClient,
-//            MongoExporterServiceScrapeAdapter mongoExporterServiceScrapeAdapter
-//    ) {
-//        return new MongoDeleteExporterServiceScrapeTaskProcessor(
-//                objectMapper,
-//                clusterService,
-//                vmServiceScrapeClient,
-//                mongoExporterServiceScrapeAdapter
-//        );
-//    }
+    @Bean
+    public MongoDeleteExporterServiceProcessor mongoDeleteExporterServiceProcessor(
+            ObjectMapper objectMapper,
+            ClusterService clusterService,
+            PsmdbExporterServiceClient psmdbExporterServiceClient
+    ) {
+        return new MongoDeleteExporterServiceProcessor(
+                objectMapper,
+                clusterService,
+                psmdbExporterServiceClient
+        );
+    }
 
+    @Bean
+    public MongoDeletePsmdbTaskProcessor mongoDeletePsmdbTaskProcessor(
+            ObjectMapper objectMapper,
+            ClusterService clusterService,
+            PsmdbClient psmdbClient
+    ) {
+        return new MongoDeletePsmdbTaskProcessor(
+                objectMapper,
+                clusterService,
+                psmdbClient
+        );
+    }
+
+    @Bean
+    public MongoCheckPsmdbIsDeletedProcessor mongoCheckPsmdbIsDeletedProcessor(
+            ObjectMapper objectMapper,
+            ClusterService clusterService,
+            PsmdbClient psmdbClient
+    ) {
+        return new MongoCheckPsmdbIsDeletedProcessor(
+                objectMapper,
+                clusterService,
+                psmdbClient
+        );
+    }
+
+    @Bean
+    public MongoDeleteVectorConfigTaskProcessor mongoDeleteVectorConfigTaskProcessor(
+            ObjectMapper objectMapper,
+            ClusterService clusterService,
+            PsmdbClient psmdbClient
+    ) {
+        return new MongoDeleteVectorConfigTaskProcessor(
+                objectMapper,
+                clusterService,
+                psmdbClient
+        );
+    }
 
     @Bean
     public CompositeTaskProcessor compositeTaskProcessor(
             BaseClusterService clusterServiceOld,
             ClusterService clusterService,
             MongoCreateVectorConfigTaskProcessor mongoCreateVectorConfigTaskProcessor,
-            MongoApplyPsmdbCrTaskProcessor mongoApplyPsmdbCrTaskProcessor,
-            MongoCheckClusterReadinessProcessor mongoCheckClusterReadinessProcessor,
+            MongoApplyPsmdbTaskProcessor mongoApplyPsmdbTaskProcessor,
+            MongoCheckPsmdbReadinessProcessor mongoCheckPsmdbReadinessProcessor,
             MongoCreateExporterServiceProcessor mongoCreateExporterServiceProcessor,
-            MongoCheckExporterServiceReadinessProcessor mongoCheckExporterServiceReadinessProcessor,
             MongoCreateExporterServiceScrapeTaskProcessor mongoCreateExporterServiceScrapeTaskProcessor,
-            MongoCheckExporterServiceScrapeReadinessTaskProcessor mongoCheckExporterServiceScrapeReadinessTaskProcessor
+            MongoDeleteExporterServiceScrapeTaskProcessor mongoDeleteExporterServiceScrapeTaskProcessor,
+            MongoDeleteExporterServiceProcessor mongoDeleteExporterServiceProcessor,
+            MongoDeletePsmdbTaskProcessor mongoDeletePsmdbTaskProcessor,
+            MongoCheckPsmdbIsDeletedProcessor mongoCheckPsmdbIsDeletedProcessor,
+            MongoDeleteVectorConfigTaskProcessor mongoDeleteVectorConfigTaskProcessor
     ) {
         Map<TaskType, TaskProcessor<?>> taskTypeToTaskProcessors = Map.ofEntries(
                 Map.entry(
@@ -152,28 +189,40 @@ public class TaskProcessorsConfig {
                         mongoCreateVectorConfigTaskProcessor
                 ),
                 Map.entry(
-                        TaskType.MONGODB_APPLY_PSMDB_CR,
-                        mongoApplyPsmdbCrTaskProcessor
+                        TaskType.MONGODB_APPLY_PSMDB,
+                        mongoApplyPsmdbTaskProcessor
                 ),
                 Map.entry(
-                        TaskType.MONGODB_CHECK_CLUSTER_READINESS,
-                        mongoCheckClusterReadinessProcessor
+                        TaskType.MONGODB_CHECK_PSMDB_READINESS,
+                        mongoCheckPsmdbReadinessProcessor
                 ),
                 Map.entry(
                         TaskType.MONGODB_CREATE_EXPORTER_SERVICE,
                         mongoCreateExporterServiceProcessor
                 ),
                 Map.entry(
-                        TaskType.MONGODB_CHECK_EXPORTER_SERVICE_READINESS,
-                        mongoCheckExporterServiceReadinessProcessor
-                ),
-                Map.entry(
                         TaskType.MONGODB_CREATE_EXPORTER_SERVICE_SCRAPE,
                         mongoCreateExporterServiceScrapeTaskProcessor
                 ),
                 Map.entry(
-                        TaskType.MONGODB_CHECK_EXPORTER_SERVICE_SCRAPE_READINESS,
-                        mongoCheckExporterServiceScrapeReadinessTaskProcessor
+                        TaskType.MONGODB_DELETE_EXPORTER_SERVICE_SCRAPE,
+                        mongoDeleteExporterServiceScrapeTaskProcessor
+                ),
+                Map.entry(
+                        TaskType.MONGODB_DELETE_EXPORTER_SERVICE,
+                        mongoDeleteExporterServiceProcessor
+                ),
+                Map.entry(
+                        TaskType.MONGODB_DELETE_PSMDB,
+                        mongoDeletePsmdbTaskProcessor
+                ),
+                Map.entry(
+                        TaskType.MONGODB_CHECK_PSMDB_IS_DELETED,
+                        mongoCheckPsmdbIsDeletedProcessor
+                ),
+                Map.entry(
+                        TaskType.MONGODB_DELETE_VECTOR_CONFIG,
+                        mongoDeleteVectorConfigTaskProcessor
                 )
         );
 

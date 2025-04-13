@@ -13,9 +13,10 @@ spec:
     apply: disabled
   secrets:
     users: [[${SECRETS_USERS_NAME}]]
+  enableVolumeExpansion: true
   replsets:
-    - name: rs01
-      size: [[${REPLESET_SIZE}]]
+    - name: [[${REPLSET_NAME}]]
+      size: [[${REPLSET_SIZE}]]
       configuration: |
         systemLog:
           path: /data/db/mongod.log
@@ -75,13 +76,14 @@ spec:
             name: [[${VECTOR_CONFIG_NAME}]]
       resources:
         limits:
-          cpu: "300m"
-          memory: "0.5G"
+          cpu: "[[${MONGOD_CPU}]]"
+          memory: "[[${MONGOD_MEMORY}]]"
         requests:
-          cpu: "300m"
-          memory: "0.5G"
+          cpu: "[[${MONGOD_CPU}]]"
+          memory: "[[${MONGOD_MEMORY}]]"
       volumeSpec:
         persistentVolumeClaim:
+          storageClassName: standard
           resources:
             requests:
               storage: 1Gi

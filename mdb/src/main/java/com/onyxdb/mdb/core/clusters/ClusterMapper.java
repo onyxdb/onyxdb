@@ -11,10 +11,12 @@ import com.onyxdb.mdb.core.clusters.models.ClusterConfig;
 import com.onyxdb.mdb.core.clusters.models.ClusterResources;
 import com.onyxdb.mdb.core.clusters.models.ClusterType;
 import com.onyxdb.mdb.core.clusters.models.CreateCluster;
+import com.onyxdb.mdb.core.clusters.models.UpdateCluster;
 import com.onyxdb.mdb.generated.jooq.tables.records.ClustersRecord;
 import com.onyxdb.mdb.generated.openapi.models.V1ClusterResources;
 import com.onyxdb.mdb.generated.openapi.models.V1CreateMongoClusterRequest;
 import com.onyxdb.mdb.generated.openapi.models.V1MongoConfig;
+import com.onyxdb.mdb.generated.openapi.models.V1MongoUpdateClusterRequest;
 
 /**
  * @author foxleren
@@ -45,6 +47,21 @@ public class ClusterMapper {
 //                ClusterConfig.builder()
 //                        .withMongoV8d0(v1MongoConfigV8d0ToMongoV8d0Config(v1MongoConfig.getMongodbV8d0()))
 //                        .build()
+        );
+    }
+
+    public UpdateCluster v1MongoUpdateClusterRequestToUpdateCluster(
+            UUID clusterId,
+            V1MongoUpdateClusterRequest r
+    ) {
+        V1MongoConfig v1MongoConfig = r.getConfig();
+        return new UpdateCluster(
+                clusterId,
+                r.getName(),
+                new ClusterConfig(
+                        v1ClusterResourcesToClusterResources(v1MongoConfig.getResources()),
+                        v1MongoConfig.getReplicas()
+                )
         );
     }
 

@@ -2,6 +2,7 @@ package com.onyxdb.mdb.core.resourcePresets;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import com.onyxdb.mdb.exceptions.BadRequestException;
 
@@ -19,11 +20,11 @@ public class ResourcePresetService {
         return resourcePresetRepository.list();
     }
 
-    public Optional<ResourcePreset> getO(String id) {
+    public Optional<ResourcePreset> getO(UUID id) {
         return resourcePresetRepository.getO(id);
     }
 
-    public ResourcePreset getOrThrow(String id) {
+    public ResourcePreset getOrThrow(UUID id) {
         return getO(id).orElseThrow(() -> new BadRequestException("Can't get resource preset with id=" + id));
     }
 
@@ -35,7 +36,7 @@ public class ResourcePresetService {
         resourcePresetRepository.update(resourcePreset);
     }
 
-    public void delete(String id) {
+    public void delete(UUID id) {
         resourcePresetRepository.delete(id);
     }
 }

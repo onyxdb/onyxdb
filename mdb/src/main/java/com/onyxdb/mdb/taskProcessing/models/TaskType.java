@@ -6,22 +6,17 @@ import com.onyxdb.mdb.utils.StringEnum;
  * @author foxleren
  */
 public enum TaskType implements StringEnum {
-    // mongodb:create_cluster
     MONGODB_CREATE_VECTOR_CONFIG("mongodb_create_vector_config"),
-    MONGODB_APPLY_PSMDB_CR("mongodb_apply_psmdb_cr"),
-    MONGODB_CHECK_CLUSTER_READINESS("mongodb_check_cluster_readiness"),
+    MONGODB_APPLY_PSMDB("mongodb_apply_psmdb"),
+    MONGODB_CHECK_PSMDB_READINESS("mongodb_check_psmdb_readiness"),
     MONGODB_CREATE_EXPORTER_SERVICE("mongodb_create_exporter_service"),
-    MONGODB_CHECK_EXPORTER_SERVICE_READINESS("mongodb_check_exporter_service_readiness"),
     MONGODB_CREATE_EXPORTER_SERVICE_SCRAPE("mongodb_create_exporter_service_scrape"),
-    MONGODB_CHECK_EXPORTER_SERVICE_SCRAPE_READINESS("mongodb_check_exporter_service_scrape_readiness"),
 
-    // mongodb:delete_cluster
     MONGODB_DELETE_EXPORTER_SERVICE_SCRAPE("mongodb_delete_exporter_service_scrape"),
-    MONGODB_CHECK_EXPORTER_SERVICE_SCRAPE_IS_DELETED("mongodb_check_exporter_service_scrape_is_deleted"),
     MONGODB_DELETE_EXPORTER_SERVICE("mongodb_delete_exporter_service"),
-    MONGODB_CHECK_EXPORTER_SERVICE_IS_DELETED("mongodb_check_exporter_service_is_deleted"),
-    MONGODB_DELETE_CLUSTER("mongodb_delete_cluster"),
-    MONGODB_CHECK_CLUSTER_IS_DELETED("mongodb_check_cluster_is_deleted"),
+    MONGODB_DELETE_PSMDB("mongodb_delete_psmdb"),
+    MONGODB_CHECK_PSMDB_IS_DELETED("mongodb_check_psmdb_is_deleted"),
+    MONGODB_DELETE_VECTOR_CONFIG("mongodb_delete_vector_config"),
     ;
 
     private final String value;

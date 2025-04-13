@@ -275,6 +275,26 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/V1MongoClusterResponse'
+    put:
+      summary: Update MongoDB cluster
+      operationId: updateCluster
+      tags:
+        - v1ManagedMongoDb
+      parameters:
+        - $ref: '#/components/parameters/ClusterIdPV'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/V1MongoUpdateClusterRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/V1ScheduledOperationResponse'
     delete:
       summary: Delete MongoDB cluster
       operationId: deleteCluster
@@ -339,16 +359,19 @@ components:
     V1ListResourcePresetsResponse:
       type: object
       properties:
-        presets:
+        resourcePresets:
           type: array
           items:
             $ref: '#/components/schemas/V1ResourcePresetResponse'
       required:
-        - presets
+        - resourcePresets
     V1ResourcePresetResponse:
       type: object
       properties:
         id:
+          type: string
+          format: uuid
+        name:
           type: string
         type:
           $ref: '#/components/schemas/V1ResourcePresetType'
@@ -360,13 +383,14 @@ components:
           format: int64
       required:
         - id
+        - name
         - type
         - vcpu
         - ram
     V1CreateResourcePresetRequest:
       type: object
       properties:
-        id:
+        name:
           type: string
         type:
           $ref: '#/components/schemas/V1ResourcePresetType'
@@ -377,13 +401,15 @@ components:
           type: integer
           format: int64
       required:
-        - id
+        - name
         - type
         - vcpu
         - ram
     V1UpdateResourcePresetRequest:
       type: object
       properties:
+        name:
+          type: string
         type:
           $ref: '#/components/schemas/V1ResourcePresetType'
         vcpu:
@@ -393,6 +419,7 @@ components:
           type: integer
           format: int64
       required:
+        - name
         - type
         - vcpu
         - ram
@@ -581,6 +608,7 @@ components:
       properties:
         presetId:
           type: string
+          format: uuid
         storageClass:
           type: string
         storage:
@@ -661,6 +689,17 @@ components:
           format: uuid
       required:
         - id
+    V1MongoUpdateClusterRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        config:
+          $ref: '#/components/schemas/V1MongoConfig'
+      required:
+        - name
+        - description
+        - config
   # ---------- parameters ----------
   parameters:
     ResourcePresetIdPV:
@@ -669,6 +708,7 @@ components:
       required: true
       schema:
         type: string
+        format: uuid
     ZoneIdPV:
       name: zoneId
       in: path

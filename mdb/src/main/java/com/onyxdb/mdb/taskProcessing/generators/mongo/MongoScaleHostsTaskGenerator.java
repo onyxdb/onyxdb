@@ -20,10 +20,10 @@ public class MongoScaleHostsTaskGenerator extends ClusterTaskGenerator {
     // TODO don't repeat blockers for each task
     private static final Map<TaskType, List<TaskType>> TASK_TYPE_TO_BLOCKER_TASK_TYPES = Map.ofEntries(
             Map.entry(
-                    TaskType.MONGODB_APPLY_PSMDB_CR, List.of()
+                    TaskType.MONGODB_APPLY_PSMDB, List.of()
             ),
             Map.entry(
-                    TaskType.MONGODB_CHECK_CLUSTER_READINESS, List.of()
+                    TaskType.MONGODB_CHECK_PSMDB_READINESS, List.of()
             )
     );
 
@@ -49,7 +49,7 @@ public class MongoScaleHostsTaskGenerator extends ClusterTaskGenerator {
 
         List<Task> tasks = List.of(
                 Task.scheduledFirst(
-                        TaskType.MONGODB_APPLY_PSMDB_CR,
+                        TaskType.MONGODB_APPLY_PSMDB,
                         operationId,
                         now,
                         DEFAULT_RETRIES_LEFT,
@@ -57,7 +57,7 @@ public class MongoScaleHostsTaskGenerator extends ClusterTaskGenerator {
                 ),
                 // TODO Support smart calculations for next task start
                 Task.scheduledLast(
-                        TaskType.MONGODB_CHECK_CLUSTER_READINESS,
+                        TaskType.MONGODB_CHECK_PSMDB_READINESS,
                         operationId,
                         now.plus(Duration.ofSeconds(30)),
                         DEFAULT_RETRIES_LEFT,

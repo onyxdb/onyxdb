@@ -30,6 +30,11 @@ public class PsmdbExporterServiceClient extends AbstractPsmdbFactory {
         kubernetesClient.resource(service).create();
     }
 
+    public void deleteResource(PsmdbExporterService psmdbExporterService) {
+        Service service = buildService(psmdbExporterService);
+        kubernetesClient.resource(service).delete();
+    }
+
     public boolean resourceExists(String namespace, String name) {
         return kubernetesClient.services()
                 .inNamespace(namespace)
