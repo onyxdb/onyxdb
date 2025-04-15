@@ -8,9 +8,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.onyxdb.mdb.core.clusters.ClusterMapper;
 import com.onyxdb.mdb.core.clusters.ClusterService;
+import com.onyxdb.mdb.core.clusters.HostService;
+import com.onyxdb.mdb.core.clusters.mappers.HostMapper;
 import com.onyxdb.mdb.core.clusters.models.CreateCluster;
+import com.onyxdb.mdb.core.clusters.models.MongoHost;
 import com.onyxdb.mdb.core.clusters.models.UpdateCluster;
 import com.onyxdb.mdb.generated.openapi.apis.V1ManagedMongoDbApi;
+import com.onyxdb.mdb.generated.openapi.models.MongoListHostsResponse;
+import com.onyxdb.mdb.generated.openapi.models.UpdateMongoHostsRequest;
 import com.onyxdb.mdb.generated.openapi.models.V1ClusterResources;
 import com.onyxdb.mdb.generated.openapi.models.V1ClusterStatusResponse;
 import com.onyxdb.mdb.generated.openapi.models.V1CreateMongoClusterRequest;
@@ -19,9 +24,6 @@ import com.onyxdb.mdb.generated.openapi.models.V1DeleteMongoClusterResponse;
 import com.onyxdb.mdb.generated.openapi.models.V1ListMongoClustersResponse;
 import com.onyxdb.mdb.generated.openapi.models.V1MongoClusterResponse;
 import com.onyxdb.mdb.generated.openapi.models.V1MongoConfig;
-import com.onyxdb.mdb.generated.openapi.models.V1MongoHost;
-import com.onyxdb.mdb.generated.openapi.models.V1MongoListHostsResponse;
-import com.onyxdb.mdb.generated.openapi.models.V1MongoScaleHostsRequest;
 import com.onyxdb.mdb.generated.openapi.models.V1MongoUpdateClusterRequest;
 import com.onyxdb.mdb.generated.openapi.models.V1ScheduledOperationResponse;
 
@@ -32,6 +34,8 @@ import com.onyxdb.mdb.generated.openapi.models.V1ScheduledOperationResponse;
 public class V1ManagedMongoController implements V1ManagedMongoDbApi {
     private final ClusterMapper clusterMapper;
     private final ClusterService clusterService;
+    private final HostMapper hostMapper;
+    private final HostService hostService;
 
     private static final V1MongoClusterResponse clusterResponse = new V1MongoClusterResponse(
             UUID.randomUUID(),
@@ -54,10 +58,14 @@ public class V1ManagedMongoController implements V1ManagedMongoDbApi {
 
     public V1ManagedMongoController(
             ClusterMapper clusterMapper,
-            ClusterService clusterService
+            ClusterService clusterService,
+            HostMapper hostMapper,
+            HostService hostService
     ) {
         this.clusterMapper = clusterMapper;
         this.clusterService = clusterService;
+        this.hostMapper = hostMapper;
+        this.hostService = hostService;
     }
 
     @Override
@@ -92,31 +100,13 @@ public class V1ManagedMongoController implements V1ManagedMongoDbApi {
         return ResponseEntity.ok().body(response);
     }
 
-    @Override
-    public ResponseEntity<V1MongoListHostsResponse> listHosts(UUID clusterId) {
-        return ResponseEntity.ok()
-                .body(new V1MongoListHostsResponse(
-                        List.of(
-                                new V1MongoHost(
-                                        "host-0"
-                                ),
-                                new V1MongoHost(
-                                        "host-1"
-                                ),
-                                new V1MongoHost(
-                                        "host-2"
-                                )
-                        )
-                ));
-    }
-
-    @Override
-    public ResponseEntity<V1ScheduledOperationResponse> scaleHosts(UUID clusterId, V1MongoScaleHostsRequest rq) {
-        UUID operationId = clusterService.scaleHosts(clusterId, rq.getReplicas());
-
-        return ResponseEntity.ok()
-                .body(new V1ScheduledOperationResponse(operationId));
-    }
+//    @Override
+//    public ResponseEntity<V1ScheduledOperationResponse> scaleHosts(UUID clusterId, V1MongoScaleHostsRequest rq) {
+//        UUID operationId = clusterService.scaleHosts(clusterId, rq.getReplicas());
+//
+//        return ResponseEntity.ok()
+//                .body(new V1ScheduledOperationResponse(operationId));
+//    }
 
     @Override
     public ResponseEntity<V1ScheduledOperationResponse> updateCluster(
@@ -131,5 +121,24 @@ public class V1ManagedMongoController implements V1ManagedMongoDbApi {
 
         return ResponseEntity.ok()
                 .body(new V1ScheduledOperationResponse(operationId));
+    }
+
+    @Override
+    public ResponseEntity<MongoListHostsResponse> listHosts(UUID clusterId) {
+        var mappedMongoHosts = hostService.listMongoHosts(clusterId)
+                .stream()
+                .map(hostMapper::map)
+                .toList();
+
+        return ResponseEntity.ok()
+                .body(new MongoListHostsResponse(mappedMongoHosts));
+    }
+
+    @Override
+    public ResponseEntity<Void> updateHosts(UpdateMongoHostsRequest rq) {
+        List<MongoHost> mongoHosts = hostMapper.map(rq);
+        hostService.updateMongoHosts(mongoHosts);
+
+        return ResponseEntity.ok().build();
     }
 }

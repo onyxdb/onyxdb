@@ -10,8 +10,8 @@ import com.onyxdb.mdb.clients.k8s.psmdb.PsmdbClient;
 import com.onyxdb.mdb.clients.k8s.psmdb.PsmdbExporterServiceClient;
 import com.onyxdb.mdb.clients.k8s.victoriaMetrics.VmServiceScrapeClient;
 import com.onyxdb.mdb.clients.k8s.victoriaMetrics.adapters.MongoExporterServiceScrapeAdapter;
-import com.onyxdb.mdb.core.clusters.ClusterHostService;
 import com.onyxdb.mdb.core.clusters.ClusterService;
+import com.onyxdb.mdb.core.clusters.HostService;
 import com.onyxdb.mdb.core.resourcePresets.ResourcePresetService;
 import com.onyxdb.mdb.services.BaseClusterService;
 import com.onyxdb.mdb.taskProcessing.models.TaskType;
@@ -63,13 +63,13 @@ public class TaskProcessorsConfig {
             ObjectMapper objectMapper,
             ClusterService clusterService,
             PsmdbClient psmdbClient,
-            ClusterHostService clusterHostService
+            HostService hostService
     ) {
         return new MongoCheckPsmdbReadinessProcessor(
                 objectMapper,
                 clusterService,
                 psmdbClient,
-                clusterHostService
+                hostService
         );
     }
 

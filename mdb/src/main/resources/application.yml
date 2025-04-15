@@ -32,6 +32,11 @@ logging:
       jooq:
         Constants: off
 
+onyxdb:
+  redis:
+    host: localhost
+    port: 6379
+
 onyxdb-app:
   workers:
     process-cluster-tasks:

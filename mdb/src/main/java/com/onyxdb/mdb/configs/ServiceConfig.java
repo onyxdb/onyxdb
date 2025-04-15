@@ -4,11 +4,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import com.onyxdb.mdb.core.clusters.ClusterHostService;
 import com.onyxdb.mdb.core.clusters.ClusterMapper;
 import com.onyxdb.mdb.core.clusters.ClusterService;
-import com.onyxdb.mdb.core.clusters.repositories.ClusterHostRepository;
+import com.onyxdb.mdb.core.clusters.HostService;
+import com.onyxdb.mdb.core.clusters.mappers.HostMapper;
 import com.onyxdb.mdb.core.clusters.repositories.ClusterRepository;
+import com.onyxdb.mdb.core.clusters.repositories.EnrichedHostRepository;
+import com.onyxdb.mdb.core.clusters.repositories.HostRepository;
 import com.onyxdb.mdb.core.projects.ProjectRepository;
 import com.onyxdb.mdb.core.projects.ProjectService;
 import com.onyxdb.mdb.core.resourcePresets.ResourcePresetRepository;
@@ -67,9 +69,15 @@ public class ServiceConfig {
     }
 
     @Bean
-    public ClusterHostService clusterHostService(
-            ClusterHostRepository clusterHostRepository
+    public HostService hostService(
+            HostRepository hostRepository,
+            EnrichedHostRepository enrichedHostRepository,
+            HostMapper hostMapper
     ) {
-        return new ClusterHostService(clusterHostRepository);
+        return new HostService(
+                hostRepository,
+                enrichedHostRepository,
+                hostMapper
+        );
     }
 }

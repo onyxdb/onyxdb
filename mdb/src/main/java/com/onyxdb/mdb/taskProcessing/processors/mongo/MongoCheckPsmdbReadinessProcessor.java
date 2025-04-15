@@ -6,10 +6,10 @@ import java.util.List;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.onyxdb.mdb.clients.k8s.psmdb.PsmdbClient;
-import com.onyxdb.mdb.core.clusters.ClusterHostService;
 import com.onyxdb.mdb.core.clusters.ClusterService;
+import com.onyxdb.mdb.core.clusters.HostService;
 import com.onyxdb.mdb.core.clusters.models.Cluster;
-import com.onyxdb.mdb.core.clusters.models.ClusterHost;
+import com.onyxdb.mdb.core.clusters.models.Host;
 import com.onyxdb.mdb.taskProcessing.models.Task;
 import com.onyxdb.mdb.taskProcessing.models.TaskProcessingResult;
 import com.onyxdb.mdb.taskProcessing.models.TaskType;
@@ -21,17 +21,17 @@ import static com.onyxdb.mdb.core.clusters.ClusterMapper.DEFAULT_PROJECT;
 
 public class MongoCheckPsmdbReadinessProcessor extends ClusterTaskProcessor {
     private final PsmdbClient psmdbClient;
-    private final ClusterHostService clusterHostService;
+    private final HostService hostService;
 
     public MongoCheckPsmdbReadinessProcessor(
             ObjectMapper objectMapper,
             ClusterService clusterService,
             PsmdbClient psmdbClient,
-            ClusterHostService clusterHostService
+            HostService hostService
     ) {
         super(objectMapper, clusterService);
         this.psmdbClient = psmdbClient;
-        this.clusterHostService = clusterHostService;
+        this.hostService = hostService;
     }
 
     @Override
@@ -50,12 +50,12 @@ public class MongoCheckPsmdbReadinessProcessor extends ClusterTaskProcessor {
             );
         }
 
-        List<ClusterHost> hosts = psmdbClient.getPsmdbPods(DEFAULT_NAMESPACE, DEFAULT_PROJECT, cluster.name())
+        List<Host> hosts = psmdbClient.getPsmdbPods(DEFAULT_NAMESPACE, DEFAULT_PROJECT, cluster.name())
                 .stream()
-                .map(podName -> new ClusterHost(podName, cluster.id()))
+                .map(podName -> new Host(podName, cluster.id()))
                 .toList();
 
-        clusterHostService.upsertHosts(hosts);
+        hostService.createHosts(hosts);
 
         return TaskProcessingResult.success();
     }

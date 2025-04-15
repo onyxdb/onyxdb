@@ -309,7 +309,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/V1DeleteMongoClusterResponse'
-  /api/v1/managed-mongodb/clusters/{clusterId}/hosts:
+  /api/managed-mongodb/v1/clusters/{clusterId}/hosts:
     get:
       summary: Get MongoDB hosts
       operationId: listHosts
@@ -323,27 +323,43 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/V1MongoListHostsResponse'
+                $ref: '#/components/schemas/MongoListHostsResponse'
+#    put:
+#      summary: Scale MongoDB hosts
+#      operationId: scaleHosts
+#      tags:
+#        - v1ManagedMongoDb
+#      parameters:
+#        - $ref: '#/components/parameters/ClusterIdPV'
+#      requestBody:
+#        required: true
+#        content:
+#          application/json:
+#            schema:
+#              $ref: '#/components/schemas/V1MongoScaleHostsRequest'
+#      responses:
+#        '200':
+#          description: OK
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/V1ScheduledOperationResponse'
+#  /api/managed-mongodb/v1/hosts:
+  /api/managed-mongodb/v1/clusters/hosts:
     put:
-      summary: Scale MongoDB hosts
-      operationId: scaleHosts
+      summary: Update MongoDB hosts
+      operationId: updateHosts
       tags:
         - v1ManagedMongoDb
-      parameters:
-        - $ref: '#/components/parameters/ClusterIdPV'
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/V1MongoScaleHostsRequest'
+              $ref: '#/components/schemas/UpdateMongoHostsRequest'
       responses:
         '200':
           description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/V1ScheduledOperationResponse'
 # ---------- components ----------
 components:
   # ---------- schemas ----------
@@ -658,22 +674,15 @@ components:
           format: uuid
       required:
         - id
-    V1MongoListHostsResponse:
+    MongoListHostsResponse:
       type: object
       properties:
         hosts:
           type: array
           items:
-            $ref: '#/components/schemas/V1MongoHost'
+            $ref: '#/components/schemas/MongoHost'
       required:
         - hosts
-    V1MongoHost:
-      type: object
-      properties:
-        name:
-          type: string
-      required:
-        - name
     V1MongoScaleHostsRequest:
       type: object
       properties:
@@ -700,6 +709,50 @@ components:
         - name
         - description
         - config
+    UpdateMongoHostsRequest:
+      type: object
+      properties:
+        hosts:
+          type: array
+          items:
+            $ref: '#/components/schemas/MongoHost'
+    MongoHost:
+      type: object
+      properties:
+        name:
+          type: string
+        clusterId:
+          type: string
+          format: uuid
+        type:
+          $ref: '#/components/schemas/MongoHostType'
+        status:
+          $ref: '#/components/schemas/MongoHostStatus'
+        role:
+          $ref: '#/components/schemas/MongoHostRole'
+      required:
+        - name
+        - clusterId
+        - type
+        - status
+        - role
+    MongoHostType:
+      type: string
+      enum:
+        - unknown
+        - mongod
+    MongoHostStatus:
+      type: string
+      enum:
+        - unknown
+        - alive
+        - dead
+    MongoHostRole:
+      type: string
+      enum:
+        - unknown
+        - primary
+        - secondary
   # ---------- parameters ----------
   parameters:
     ResourcePresetIdPV:

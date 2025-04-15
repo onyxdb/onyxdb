@@ -30,4 +30,8 @@ public class StringEnumResolver<T extends Enum<T> & StringEnum> {
                 String.format("Can't convert value=%s to enum=%s", value, enumClass.getName())
         ));
     }
+
+    public T fromValueOrDefault(String value, T defaultEnum) {
+        return fromValueO(value).orElse(defaultEnum);
+    }
 }

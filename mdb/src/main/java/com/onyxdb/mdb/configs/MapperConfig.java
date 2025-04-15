@@ -7,8 +7,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.onyxdb.mdb.core.clusters.ClusterHostMapper;
 import com.onyxdb.mdb.core.clusters.ClusterMapper;
+import com.onyxdb.mdb.core.clusters.mappers.HostMapper;
 
 /**
  * @author foxleren
@@ -29,7 +29,7 @@ public class MapperConfig {
     }
 
     @Bean
-    public ClusterHostMapper clusterHostMapper() {
-        return new ClusterHostMapper();
+    public HostMapper hostMapper() {
+        return new HostMapper();
     }
 }
