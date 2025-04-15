@@ -4,13 +4,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jooq.DSLContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import redis.clients.jedis.JedisPool;
 
-import com.onyxdb.mdb.core.clusters.ClusterHostMapper;
 import com.onyxdb.mdb.core.clusters.ClusterMapper;
-import com.onyxdb.mdb.core.clusters.repositories.ClusterHostPostgresRepository;
-import com.onyxdb.mdb.core.clusters.repositories.ClusterHostRepository;
+import com.onyxdb.mdb.core.clusters.mappers.HostMapper;
 import com.onyxdb.mdb.core.clusters.repositories.ClusterPostgresRepository;
 import com.onyxdb.mdb.core.clusters.repositories.ClusterRepository;
+import com.onyxdb.mdb.core.clusters.repositories.EnrichedHostRedisRepository;
+import com.onyxdb.mdb.core.clusters.repositories.EnrichedHostRepository;
+import com.onyxdb.mdb.core.clusters.repositories.HostPostgresRepository;
+import com.onyxdb.mdb.core.clusters.repositories.HostRepository;
 import com.onyxdb.mdb.core.projects.ProjectPostgresRepository;
 import com.onyxdb.mdb.core.projects.ProjectRepository;
 import com.onyxdb.mdb.core.resourcePresets.ResourcePresetPostgresRepository;
@@ -52,13 +55,24 @@ public class RepositoryConfig {
     }
 
     @Bean
-    public ClusterHostRepository clusterHostRepository(
+    public HostRepository hostRepository(
             DSLContext dslContext,
-            ClusterHostMapper clusterHostMapper
+            HostMapper hostMapper
     ) {
-        return new ClusterHostPostgresRepository(
+        return new HostPostgresRepository(
                 dslContext,
-                clusterHostMapper
+                hostMapper
+        );
+    }
+
+    @Bean
+    public EnrichedHostRepository enrichedHostRepository(
+            JedisPool jedisPool,
+            ObjectMapper objectMapper
+    ) {
+        return new EnrichedHostRedisRepository(
+                jedisPool,
+                objectMapper
         );
     }
 }
