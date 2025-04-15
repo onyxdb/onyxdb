@@ -13,6 +13,7 @@ import com.onyxdb.idm.models.PaginatedResult;
 import com.onyxdb.idm.models.Permission;
 import com.onyxdb.idm.models.Role;
 import com.onyxdb.idm.models.RoleWithPermissions;
+import com.onyxdb.idm.models.clickhouse.RoleHistory;
 import com.onyxdb.idm.repositories.RoleRepository;
 
 /**
@@ -100,5 +101,9 @@ public class RoleService {
         Role role = findById(roleId);
         List<Permission> permissions = roleRepository.getPermissions(roleId);
         return new RoleWithPermissions(role, permissions);
+    }
+
+    public RoleHistory getRoleHistory(UUID roleId) {
+        return null;
     }
 }
