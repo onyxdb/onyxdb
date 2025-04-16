@@ -25,22 +25,41 @@ public class MongoDeleteClusterTaskGenerator extends ClusterTaskGenerator {
                     )
             ),
             Map.entry(
-                    TaskType.MONGODB_DELETE_PSMDB, List.of(
+                    TaskType.MONGODB_DELETE_ONYXDB_AGENT, List.of(
                             TaskType.MONGODB_DELETE_EXPORTER_SERVICE_SCRAPE,
                             TaskType.MONGODB_DELETE_EXPORTER_SERVICE
                     )
             ),
             Map.entry(
+                    TaskType.MONGODB_CHECK_ONYXDB_AGENT_IS_DELETED, List.of(
+                            TaskType.MONGODB_DELETE_EXPORTER_SERVICE_SCRAPE,
+                            TaskType.MONGODB_DELETE_EXPORTER_SERVICE,
+                            TaskType.MONGODB_DELETE_ONYXDB_AGENT
+                    )
+            ),
+            Map.entry(
+                    TaskType.MONGODB_DELETE_PSMDB, List.of(
+                            TaskType.MONGODB_DELETE_EXPORTER_SERVICE_SCRAPE,
+                            TaskType.MONGODB_DELETE_EXPORTER_SERVICE,
+                            TaskType.MONGODB_DELETE_ONYXDB_AGENT,
+                            TaskType.MONGODB_CHECK_ONYXDB_AGENT_IS_DELETED
+                    )
+            ),
+            Map.entry(
                     TaskType.MONGODB_CHECK_PSMDB_IS_DELETED, List.of(
                             TaskType.MONGODB_DELETE_EXPORTER_SERVICE_SCRAPE,
-                            TaskType.MONGODB_DELETE_EXPORTER_SERVICE
+                            TaskType.MONGODB_DELETE_EXPORTER_SERVICE,
+                            TaskType.MONGODB_DELETE_ONYXDB_AGENT,
+                            TaskType.MONGODB_CHECK_ONYXDB_AGENT_IS_DELETED
                     )
             ),
             Map.entry(
                     TaskType.MONGODB_DELETE_VECTOR_CONFIG, List.of(
                             TaskType.MONGODB_DELETE_EXPORTER_SERVICE_SCRAPE,
                             TaskType.MONGODB_DELETE_EXPORTER_SERVICE,
-                            TaskType.MONGODB_CHECK_PSMDB_IS_DELETED
+                            TaskType.MONGODB_CHECK_PSMDB_IS_DELETED,
+                            TaskType.MONGODB_DELETE_ONYXDB_AGENT,
+                            TaskType.MONGODB_CHECK_ONYXDB_AGENT_IS_DELETED
                     )
             )
     );
@@ -74,6 +93,20 @@ public class MongoDeleteClusterTaskGenerator extends ClusterTaskGenerator {
                 ),
                 Task.scheduledMiddle(
                         TaskType.MONGODB_DELETE_EXPORTER_SERVICE,
+                        operationId,
+                        now,
+                        DEFAULT_RETRIES_LEFT,
+                        stringPayload
+                ),
+                Task.scheduledMiddle(
+                        TaskType.MONGODB_DELETE_ONYXDB_AGENT,
+                        operationId,
+                        now,
+                        DEFAULT_RETRIES_LEFT,
+                        stringPayload
+                ),
+                Task.scheduledMiddle(
+                        TaskType.MONGODB_CHECK_ONYXDB_AGENT_IS_DELETED,
                         operationId,
                         now,
                         DEFAULT_RETRIES_LEFT,

@@ -13,10 +13,10 @@ import com.onyxdb.mdb.taskProcessing.processors.ClusterTaskProcessor;
 
 import static com.onyxdb.mdb.core.clusters.ClusterMapper.DEFAULT_PROJECT;
 
-public class MongoCreateOnyxdbAgentTaskProcessor extends ClusterTaskProcessor {
+public class MongoApplyOnyxdbAgentTaskProcessor extends ClusterTaskProcessor {
     private final KubernetesAdapter kubernetesAdapter;
 
-    public MongoCreateOnyxdbAgentTaskProcessor(
+    public MongoApplyOnyxdbAgentTaskProcessor(
             ObjectMapper objectMapper,
             ClusterService clusterService,
             KubernetesAdapter kubernetesAdapter

@@ -13,7 +13,7 @@ spec:
     apply: disabled
   secrets:
     users: [[${SECRETS_USERS_NAME}]]
-  enableVolumeExpansion: false
+  enableVolumeExpansion: true
   replsets:
     - name: [[${REPLSET_NAME}]]
       size: [[${REPLSET_SIZE}]]
@@ -76,13 +76,14 @@ spec:
             name: [[${VECTOR_CONFIG_NAME}]]
       resources:
         limits:
-          cpu: "0.3"
-          memory: "0.5Gi"
+          cpu: "[[${MONGOD_CPU}]]"
+          memory: "[[${MONGOD_MEMORY}]]"
         requests:
-          cpu: "0.3"
-          memory: "0.5Gi"
+          cpu: "[[${MONGOD_CPU}]]"
+          memory: "[[${MONGOD_MEMORY}]]"
       volumeSpec:
         persistentVolumeClaim:
+          storageClassName: standard
           resources:
             requests:
               storage: 1Gi

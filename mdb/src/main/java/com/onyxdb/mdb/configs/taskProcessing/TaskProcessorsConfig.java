@@ -19,14 +19,17 @@ import com.onyxdb.mdb.taskProcessing.models.TaskType;
 import com.onyxdb.mdb.taskProcessing.processors.CompositeTaskProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.TaskProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoApplyPsmdbTaskProcessor;
+import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCheckOnyxdbAgentIsDeletedTaskProcessor;
+import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCheckOnyxdbAgentReadinessTaskProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCheckPsmdbIsDeletedProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCheckPsmdbReadinessProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCreateExporterServiceProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCreateExporterServiceScrapeTaskProcessor;
-import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCreateOnyxdbAgentTaskProcessor;
+import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoApplyOnyxdbAgentTaskProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCreateVectorConfigTaskProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoDeleteExporterServiceProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoDeleteExporterServiceScrapeTaskProcessor;
+import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoDeleteOnyxdbAgentTaskProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoDeletePsmdbTaskProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoDeleteVectorConfigTaskProcessor;
 
@@ -171,12 +174,51 @@ public class TaskProcessorsConfig {
     }
 
     @Bean
-    public MongoCreateOnyxdbAgentTaskProcessor mongoCreateOnyxdbAgentTaskProcessor(
+    public MongoApplyOnyxdbAgentTaskProcessor mongoCreateOnyxdbAgentTaskProcessor(
             ObjectMapper objectMapper,
             ClusterService clusterService,
             KubernetesAdapter kubernetesAdapter
     ) {
-        return new MongoCreateOnyxdbAgentTaskProcessor(
+        return new MongoApplyOnyxdbAgentTaskProcessor(
+                objectMapper,
+                clusterService,
+                kubernetesAdapter
+        );
+    }
+
+    @Bean
+    public MongoCheckOnyxdbAgentReadinessTaskProcessor mongoCheckOnyxdbAgentReadinessTaskProcessor(
+            ObjectMapper objectMapper,
+            ClusterService clusterService,
+            KubernetesAdapter kubernetesAdapter
+    ) {
+        return new MongoCheckOnyxdbAgentReadinessTaskProcessor(
+                objectMapper,
+                clusterService,
+                kubernetesAdapter
+        );
+    }
+
+    @Bean
+    public MongoDeleteOnyxdbAgentTaskProcessor mongoDeleteOnyxdbAgentTaskProcessor(
+            ObjectMapper objectMapper,
+            ClusterService clusterService,
+            KubernetesAdapter kubernetesAdapter
+    ) {
+        return new MongoDeleteOnyxdbAgentTaskProcessor(
+                objectMapper,
+                clusterService,
+                kubernetesAdapter
+        );
+    }
+
+    @Bean
+    public MongoCheckOnyxdbAgentIsDeletedTaskProcessor mongoCheckOnyxdbAgentIsDeletedTaskProcessor(
+            ObjectMapper objectMapper,
+            ClusterService clusterService,
+            KubernetesAdapter kubernetesAdapter
+    ) {
+        return new MongoCheckOnyxdbAgentIsDeletedTaskProcessor(
                 objectMapper,
                 clusterService,
                 kubernetesAdapter
@@ -190,14 +232,17 @@ public class TaskProcessorsConfig {
             MongoCreateVectorConfigTaskProcessor mongoCreateVectorConfigTaskProcessor,
             MongoApplyPsmdbTaskProcessor mongoApplyPsmdbTaskProcessor,
             MongoCheckPsmdbReadinessProcessor mongoCheckPsmdbReadinessProcessor,
-            MongoCreateOnyxdbAgentTaskProcessor mongoCreateOnyxdbAgentTaskProcessor,
+            MongoApplyOnyxdbAgentTaskProcessor mongoApplyOnyxdbAgentTaskProcessor,
+            MongoCheckOnyxdbAgentReadinessTaskProcessor mongoCheckOnyxdbAgentReadinessTaskProcessor,
             MongoCreateExporterServiceProcessor mongoCreateExporterServiceProcessor,
             MongoCreateExporterServiceScrapeTaskProcessor mongoCreateExporterServiceScrapeTaskProcessor,
             MongoDeleteExporterServiceScrapeTaskProcessor mongoDeleteExporterServiceScrapeTaskProcessor,
             MongoDeleteExporterServiceProcessor mongoDeleteExporterServiceProcessor,
             MongoDeletePsmdbTaskProcessor mongoDeletePsmdbTaskProcessor,
             MongoCheckPsmdbIsDeletedProcessor mongoCheckPsmdbIsDeletedProcessor,
-            MongoDeleteVectorConfigTaskProcessor mongoDeleteVectorConfigTaskProcessor
+            MongoDeleteVectorConfigTaskProcessor mongoDeleteVectorConfigTaskProcessor,
+            MongoDeleteOnyxdbAgentTaskProcessor mongoDeleteOnyxdbAgentTaskProcessor,
+            MongoCheckOnyxdbAgentIsDeletedTaskProcessor mongoCheckOnyxdbAgentIsDeletedTaskProcessor
     ) {
         Map<TaskType, TaskProcessor<?>> taskTypeToTaskProcessors = Map.ofEntries(
                 Map.entry(
@@ -214,7 +259,11 @@ public class TaskProcessorsConfig {
                 ),
                 Map.entry(
                         TaskType.MONGODB_APPLY_ONYXDB_AGENT,
-                        mongoCreateOnyxdbAgentTaskProcessor
+                        mongoApplyOnyxdbAgentTaskProcessor
+                ),
+                Map.entry(
+                        TaskType.MONGODB_CHECK_ONYXDB_AGENT_READINESS,
+                        mongoCheckOnyxdbAgentReadinessTaskProcessor
                 ),
                 Map.entry(
                         TaskType.MONGODB_CREATE_EXPORTER_SERVICE,
@@ -243,6 +292,14 @@ public class TaskProcessorsConfig {
                 Map.entry(
                         TaskType.MONGODB_DELETE_VECTOR_CONFIG,
                         mongoDeleteVectorConfigTaskProcessor
+                ),
+                Map.entry(
+                        TaskType.MONGODB_DELETE_ONYXDB_AGENT,
+                        mongoDeleteOnyxdbAgentTaskProcessor
+                ),
+                Map.entry(
+                        TaskType.MONGODB_CHECK_ONYXDB_AGENT_IS_DELETED,
+                        mongoCheckOnyxdbAgentIsDeletedTaskProcessor
                 )
         );
 

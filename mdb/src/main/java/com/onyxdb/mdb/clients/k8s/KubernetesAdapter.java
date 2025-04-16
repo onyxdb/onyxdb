@@ -42,6 +42,60 @@ public class KubernetesAdapter {
                 .serverSideApply();
     }
 
+    public boolean isOnyxdbAgentReady(
+            String project,
+            UUID clusterId,
+            String clusterName
+    ) {
+        String resource = templateProvider.buildOnyxdbAgent(
+                getOnyxdbAgentName(clusterName, project),
+                onyxdbBaseUrl,
+                clusterId,
+                PsmdbClient.getSecretName(project, clusterName),
+                PsmdbClient.getPsmdbRsServiceName(project, clusterName)
+        );
+
+        return kubernetesClient.resource(resource)
+                .inNamespace(DEFAULT_NAMESPACE)
+                .isReady();
+    }
+
+    public void deleteOnyxdbAgent(
+            String project,
+            UUID clusterId,
+            String clusterName
+    ) {
+        String resource = templateProvider.buildOnyxdbAgent(
+                getOnyxdbAgentName(clusterName, project),
+                onyxdbBaseUrl,
+                clusterId,
+                PsmdbClient.getSecretName(project, clusterName),
+                PsmdbClient.getPsmdbRsServiceName(project, clusterName)
+        );
+
+        kubernetesClient.resource(resource)
+                .inNamespace(DEFAULT_NAMESPACE)
+                .delete();
+    }
+
+    public boolean onyxdbAgentExists(
+            String project,
+            UUID clusterId,
+            String clusterName
+    ) {
+        String resource = templateProvider.buildOnyxdbAgent(
+                getOnyxdbAgentName(clusterName, project),
+                onyxdbBaseUrl,
+                clusterId,
+                PsmdbClient.getSecretName(project, clusterName),
+                PsmdbClient.getPsmdbRsServiceName(project, clusterName)
+        );
+
+        return kubernetesClient.resource(resource)
+                .inNamespace(DEFAULT_NAMESPACE)
+                .get() != null;
+    }
+
     public static String getOnyxdbAgentName(String cluster, String project) {
         return String.format("%s-%s-mongo-agent", cluster, project);
     }
