@@ -2,15 +2,15 @@ package com.onyxdb.mdb.utils;
 
 import java.math.BigDecimal;
 import java.util.Map;
+import java.util.UUID;
 
 import io.fabric8.kubernetes.api.model.Quantity;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
-public class TemplateProvider {
-    private static final String MONGO_VECTOR_CONFIG_MAP_TEMPLATE_PATH = "mongo-vector-config-map-template.txt";
-    private static final String PSMDB_CR_TEMPLATE_PATH = "psmdb-cr-template.txt";
+import static com.onyxdb.mdb.core.clusters.ClusterMapper.DEFAULT_NAMESPACE;
 
+public class TemplateProvider {
     private final SpringTemplateEngine templateEngine;
 
     public TemplateProvider(SpringTemplateEngine templateEngine) {
@@ -31,7 +31,7 @@ public class TemplateProvider {
                 Map.entry("VLOGS_BASE_URL", vlogsBaseUrl)
         ));
 
-        return templateEngine.process(MONGO_VECTOR_CONFIG_MAP_TEMPLATE_PATH, context);
+        return templateEngine.process("mongo-vector-config-map-template.yaml.txt", context);
     }
 
     public String buildPsmdbCr(
@@ -56,6 +56,26 @@ public class TemplateProvider {
                 Map.entry("MONGOD_MEMORY", mongodMemory)
         ));
 
-        return templateEngine.process(PSMDB_CR_TEMPLATE_PATH, context);
+        return templateEngine.process("psmdb-cr-template.yaml.txt", context);
+    }
+
+    public String buildOnyxdbAgent(
+            String metadataName,
+            String onyxdbBaseUrl,
+            UUID clusterId,
+            String secretsUsersName,
+            String rsServiceName
+    ) {
+        Context context = new Context();
+        context.setVariables(Map.ofEntries(
+                Map.entry("METADATA_NAME", metadataName),
+                Map.entry("ONYXDB_BASE_URL", onyxdbBaseUrl),
+                Map.entry("CLUSTER_ID", clusterId),
+                Map.entry("SECRETS_USERS_NAME", secretsUsersName),
+                Map.entry("REPLSET_SERVICE", rsServiceName),
+                Map.entry("NAMESPACE", DEFAULT_NAMESPACE)
+        ));
+
+        return templateEngine.process("onyxdb-agent.yaml.txt", context);
     }
 }

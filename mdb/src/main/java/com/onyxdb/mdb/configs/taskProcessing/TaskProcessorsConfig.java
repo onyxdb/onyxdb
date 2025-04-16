@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.onyxdb.mdb.clients.k8s.KubernetesAdapter;
 import com.onyxdb.mdb.clients.k8s.psmdb.PsmdbClient;
 import com.onyxdb.mdb.clients.k8s.psmdb.PsmdbExporterServiceClient;
 import com.onyxdb.mdb.clients.k8s.victoriaMetrics.VmServiceScrapeClient;
@@ -22,6 +23,7 @@ import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCheckPsmdbIsDeletedPr
 import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCheckPsmdbReadinessProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCreateExporterServiceProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCreateExporterServiceScrapeTaskProcessor;
+import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCreateOnyxdbAgentTaskProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCreateVectorConfigTaskProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoDeleteExporterServiceProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoDeleteExporterServiceScrapeTaskProcessor;
@@ -169,12 +171,26 @@ public class TaskProcessorsConfig {
     }
 
     @Bean
+    public MongoCreateOnyxdbAgentTaskProcessor mongoCreateOnyxdbAgentTaskProcessor(
+            ObjectMapper objectMapper,
+            ClusterService clusterService,
+            KubernetesAdapter kubernetesAdapter
+    ) {
+        return new MongoCreateOnyxdbAgentTaskProcessor(
+                objectMapper,
+                clusterService,
+                kubernetesAdapter
+        );
+    }
+
+    @Bean
     public CompositeTaskProcessor compositeTaskProcessor(
             BaseClusterService clusterServiceOld,
             ClusterService clusterService,
             MongoCreateVectorConfigTaskProcessor mongoCreateVectorConfigTaskProcessor,
             MongoApplyPsmdbTaskProcessor mongoApplyPsmdbTaskProcessor,
             MongoCheckPsmdbReadinessProcessor mongoCheckPsmdbReadinessProcessor,
+            MongoCreateOnyxdbAgentTaskProcessor mongoCreateOnyxdbAgentTaskProcessor,
             MongoCreateExporterServiceProcessor mongoCreateExporterServiceProcessor,
             MongoCreateExporterServiceScrapeTaskProcessor mongoCreateExporterServiceScrapeTaskProcessor,
             MongoDeleteExporterServiceScrapeTaskProcessor mongoDeleteExporterServiceScrapeTaskProcessor,
@@ -195,6 +211,10 @@ public class TaskProcessorsConfig {
                 Map.entry(
                         TaskType.MONGODB_CHECK_PSMDB_READINESS,
                         mongoCheckPsmdbReadinessProcessor
+                ),
+                Map.entry(
+                        TaskType.MONGODB_APPLY_ONYXDB_AGENT,
+                        mongoCreateOnyxdbAgentTaskProcessor
                 ),
                 Map.entry(
                         TaskType.MONGODB_CREATE_EXPORTER_SERVICE,

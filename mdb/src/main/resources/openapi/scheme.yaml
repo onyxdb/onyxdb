@@ -345,7 +345,7 @@ paths:
 #              schema:
 #                $ref: '#/components/schemas/V1ScheduledOperationResponse'
 #  /api/managed-mongodb/v1/hosts:
-  /api/managed-mongodb/v1/clusters/hosts:
+  /api/internal/managed-mongodb/v1/clusters/hosts:
     put:
       summary: Update MongoDB hosts
       operationId: updateHosts

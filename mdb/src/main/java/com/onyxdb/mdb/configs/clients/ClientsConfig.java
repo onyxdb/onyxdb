@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
+import com.onyxdb.mdb.clients.k8s.KubernetesAdapter;
 import com.onyxdb.mdb.clients.k8s.psmdb.PsmdbClient;
 import com.onyxdb.mdb.clients.k8s.psmdb.PsmdbExporterServiceClient;
 import com.onyxdb.mdb.clients.k8s.victoriaLogs.VictoriaLogsClient;
@@ -20,6 +21,20 @@ public class ClientsConfig {
     @Bean
     public KubernetesClient kubernetesClient() {
         return new DefaultKubernetesClient();
+    }
+
+    @Bean
+    public KubernetesAdapter kubernetesAdapter(
+            KubernetesClient kubernetesClient,
+            TemplateProvider templateProvider,
+            @Value("${onyxdb.base-url}")
+            String onyxdbBaseUrl
+    ) {
+        return new KubernetesAdapter(
+                kubernetesClient,
+                templateProvider,
+                onyxdbBaseUrl
+        );
     }
 
     @Bean

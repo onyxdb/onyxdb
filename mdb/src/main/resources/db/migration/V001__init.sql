@@ -102,6 +102,7 @@ CREATE TYPE public.task_type AS ENUM (
     'mongodb_create_vector_config',
     'mongodb_apply_psmdb',
     'mongodb_check_psmdb_readiness',
+    'mongodb_apply_onyxdb_agent',
     'mongodb_create_exporter_service',
     'mongodb_create_exporter_service_scrape',
     'mongodb_delete_exporter_service_scrape',

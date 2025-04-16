@@ -9,6 +9,7 @@ public enum TaskType implements StringEnum {
     MONGODB_CREATE_VECTOR_CONFIG("mongodb_create_vector_config"),
     MONGODB_APPLY_PSMDB("mongodb_apply_psmdb"),
     MONGODB_CHECK_PSMDB_READINESS("mongodb_check_psmdb_readiness"),
+    MONGODB_APPLY_ONYXDB_AGENT("mongodb_apply_onyxdb_agent"),
     MONGODB_CREATE_EXPORTER_SERVICE("mongodb_create_exporter_service"),
     MONGODB_CREATE_EXPORTER_SERVICE_SCRAPE("mongodb_create_exporter_service_scrape"),
 
