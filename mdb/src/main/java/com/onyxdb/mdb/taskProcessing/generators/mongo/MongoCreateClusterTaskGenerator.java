@@ -32,10 +32,27 @@ public class MongoCreateClusterTaskGenerator extends ClusterTaskGenerator {
                     )
             ),
             Map.entry(
-                    TaskType.MONGODB_CREATE_EXPORTER_SERVICE, List.of(
+                    TaskType.MONGODB_APPLY_ONYXDB_AGENT, List.of(
                             TaskType.MONGODB_CREATE_VECTOR_CONFIG,
                             TaskType.MONGODB_APPLY_PSMDB,
                             TaskType.MONGODB_CHECK_PSMDB_READINESS
+                    )
+            ),
+            Map.entry(
+                    TaskType.MONGODB_CHECK_ONYXDB_AGENT_READINESS, List.of(
+                            TaskType.MONGODB_CREATE_VECTOR_CONFIG,
+                            TaskType.MONGODB_APPLY_PSMDB,
+                            TaskType.MONGODB_CHECK_PSMDB_READINESS,
+                            TaskType.MONGODB_APPLY_ONYXDB_AGENT
+                    )
+            ),
+            Map.entry(
+                    TaskType.MONGODB_CREATE_EXPORTER_SERVICE, List.of(
+                            TaskType.MONGODB_CREATE_VECTOR_CONFIG,
+                            TaskType.MONGODB_APPLY_PSMDB,
+                            TaskType.MONGODB_CHECK_PSMDB_READINESS,
+                            TaskType.MONGODB_APPLY_ONYXDB_AGENT,
+                            TaskType.MONGODB_CHECK_ONYXDB_AGENT_READINESS
                     )
             ),
             Map.entry(
@@ -43,6 +60,8 @@ public class MongoCreateClusterTaskGenerator extends ClusterTaskGenerator {
                             TaskType.MONGODB_CREATE_VECTOR_CONFIG,
                             TaskType.MONGODB_APPLY_PSMDB,
                             TaskType.MONGODB_CHECK_PSMDB_READINESS,
+                            TaskType.MONGODB_APPLY_ONYXDB_AGENT,
+                            TaskType.MONGODB_CHECK_ONYXDB_AGENT_READINESS,
                             TaskType.MONGODB_CREATE_EXPORTER_SERVICE
                     )
             )
@@ -85,6 +104,20 @@ public class MongoCreateClusterTaskGenerator extends ClusterTaskGenerator {
                 ),
                 Task.scheduledMiddle(
                         TaskType.MONGODB_CHECK_PSMDB_READINESS,
+                        operationId,
+                        now,
+                        DEFAULT_RETRIES_LEFT,
+                        stringPayload
+                ),
+                Task.scheduledMiddle(
+                        TaskType.MONGODB_APPLY_ONYXDB_AGENT,
+                        operationId,
+                        now,
+                        DEFAULT_RETRIES_LEFT,
+                        stringPayload
+                ),
+                Task.scheduledMiddle(
+                        TaskType.MONGODB_CHECK_ONYXDB_AGENT_READINESS,
                         operationId,
                         now,
                         DEFAULT_RETRIES_LEFT,

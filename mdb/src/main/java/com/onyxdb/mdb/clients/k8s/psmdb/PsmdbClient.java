@@ -28,7 +28,7 @@ public class PsmdbClient extends AbstractPsmdbFactory {
     private final TemplateProvider templateProvider;
     private final VictoriaLogsClient victoriaLogsClient;
 
-    private static final String REPLSET_NAME = "rs01";
+    private static final String REPLSET_NAME = "rs0";
 
     public PsmdbClient(
             ObjectMapper objectMapper,
@@ -142,15 +142,19 @@ public class PsmdbClient extends AbstractPsmdbFactory {
     }
 
     public static String getPsmdbName(String project, String cluster) {
-        return String.format("managed-mongodb-%s-%s", project, cluster);
+        return String.format("%s-%s-mongo", cluster, project);
+    }
+
+    public static String getPsmdbRsServiceName(String project, String cluster) {
+        return String.format("%s-%s-mongo-rs0", cluster, project);
     }
 
     public static String getSecretName(String project, String cluster) {
-        return String.format("managed-mongodb-%s-%s-secrets", project, cluster);
+        return String.format("%s-%s-mongo-users", cluster, project);
     }
 
     public static String getVectorConfigMapName(String project, String cluster) {
-        return String.format("managed-mongodb-%s-%s-vector-config", project, cluster);
+        return String.format("%s-%s-mongo-vector", cluster, project);
     }
 
 //    public static List<String> getPsmdbPods(String cluster, ) {

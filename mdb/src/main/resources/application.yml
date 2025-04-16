@@ -33,6 +33,7 @@ logging:
         Constants: off
 
 onyxdb:
+  base-url: http://host.minikube.internal:9001
   redis:
     host: localhost
     port: 6379

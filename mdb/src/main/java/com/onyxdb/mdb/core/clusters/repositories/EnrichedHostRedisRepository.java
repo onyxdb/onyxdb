@@ -1,5 +1,6 @@
 package com.onyxdb.mdb.core.clusters.repositories;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -26,6 +27,10 @@ public class EnrichedHostRedisRepository implements EnrichedHostRepository {
 
     @Override
     public List<EnrichedHost> listEnrichedHosts(UUID clusterId, List<String> hosts) {
+        if (hosts.isEmpty()) {
+            return new ArrayList<>();
+        }
+
         try (Jedis jedis = jedisPool.getResource()) {
             List<String> keys = hosts.stream().map(h -> buildKey(clusterId, h)).toList();
             List<String> stringEnrichedHosts = jedis.mget(keys.toArray(new String[0]))
