@@ -31,7 +31,7 @@ public class TemplateProvider {
                 Map.entry("VLOGS_BASE_URL", vlogsBaseUrl)
         ));
 
-        return templateEngine.process("mongo-vector-config-map-template.yaml.txt", context);
+        return templateEngine.process("mongo-vector-config-map.yaml.txt", context);
     }
 
     public String buildPsmdbCr(
@@ -56,7 +56,7 @@ public class TemplateProvider {
                 Map.entry("MONGOD_MEMORY", mongodMemory)
         ));
 
-        return templateEngine.process("psmdb-cr-template.yaml.txt", context);
+        return templateEngine.process("psmdb-cr.yaml.txt", context);
     }
 
     public String buildOnyxdbAgent(
