@@ -509,12 +509,16 @@ components:
           type: string
         description:
           type: string
+        productId:
+          type: string
+          format: uuid
         isArchived:
           type: boolean
       required:
         - id
         - name
         - description
+        - productId
         - isArchived
     V1CreateProjectRequest:
       type: object
@@ -523,9 +527,13 @@ components:
           type: string
         description:
           type: string
+        productId:
+          type: string
+          format: uuid
       required:
         - name
         - description
+        - productId
     V1UpdateProjectRequest:
       type: object
       properties:

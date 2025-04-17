@@ -9,6 +9,7 @@ public record Project(
         UUID id,
         String name,
         String description,
+        UUID productId,
         boolean isArchived
 ) {
 }
