@@ -21,6 +21,7 @@ public final class ProjectConverter {
                 rr.getId(),
                 rr.getName(),
                 rr.getDescription(),
+                rr.getProductId(),
                 rr.getIsArchived()
         );
     }
@@ -30,6 +31,7 @@ public final class ProjectConverter {
                 p.id(),
                 p.name(),
                 p.description(),
+                p.productId(),
                 p.isArchived()
         );
     }
@@ -39,6 +41,7 @@ public final class ProjectConverter {
                 p.id(),
                 p.name(),
                 p.description(),
+                p.productId(),
                 p.isArchived()
         );
     }
@@ -56,6 +59,7 @@ public final class ProjectConverter {
                 UUID.randomUUID(),
                 r.getName(),
                 r.getDescription(),
+                r.getProductId(),
                 false
         );
     }

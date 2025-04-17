@@ -37,6 +37,7 @@ CREATE TABLE public.projects
     id          uuid    NOT NULL,
     name        varchar NOT NULL,
     description varchar NOT NULL,
+    product_id  uuid    NOT NULL,
     is_archived boolean NOT NULL DEFAULT false,
     PRIMARY KEY (id),
     UNIQUE (name)
