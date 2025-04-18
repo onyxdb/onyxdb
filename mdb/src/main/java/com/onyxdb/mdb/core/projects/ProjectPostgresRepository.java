@@ -5,6 +5,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.jooq.DSLContext;
+import org.jooq.exception.DataAccessException;
+
+import com.onyxdb.mdb.exceptions.BadRequestException;
+import com.onyxdb.mdb.generated.jooq.Keys;
+import com.onyxdb.mdb.utils.PsqlUtils;
 
 import static com.onyxdb.mdb.generated.jooq.Tables.PROJECTS;
 
@@ -37,9 +42,20 @@ public class ProjectPostgresRepository implements ProjectRepository {
 
     @Override
     public void create(Project project) {
-        dslContext.insertInto(PROJECTS)
-                .set(ProjectConverter.toJooqProjectsRecord(project))
-                .execute();
+        try {
+            dslContext.insertInto(PROJECTS)
+                    .set(ProjectConverter.toJooqProjectsRecord(project))
+                    .execute();
+        } catch (DataAccessException e) {
+            PsqlUtils.handleDataAccessEx(
+                    e,
+                    PROJECTS,
+                    Keys.PROJECTS_NAME_KEY,
+                    () -> new BadRequestException("Project name already exists")
+            );
+
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
