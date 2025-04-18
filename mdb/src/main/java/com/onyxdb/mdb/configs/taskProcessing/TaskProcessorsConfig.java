@@ -18,6 +18,7 @@ import com.onyxdb.mdb.services.BaseClusterService;
 import com.onyxdb.mdb.taskProcessing.models.TaskType;
 import com.onyxdb.mdb.taskProcessing.processors.CompositeTaskProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.TaskProcessor;
+import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoApplyOnyxdbAgentTaskProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoApplyPsmdbTaskProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCheckOnyxdbAgentIsDeletedTaskProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCheckOnyxdbAgentReadinessTaskProcessor;
@@ -25,7 +26,6 @@ import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCheckPsmdbIsDeletedPr
 import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCheckPsmdbReadinessProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCreateExporterServiceProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCreateExporterServiceScrapeTaskProcessor;
-import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoApplyOnyxdbAgentTaskProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoCreateVectorConfigTaskProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoDeleteExporterServiceProcessor;
 import com.onyxdb.mdb.taskProcessing.processors.mongo.MongoDeleteExporterServiceScrapeTaskProcessor;

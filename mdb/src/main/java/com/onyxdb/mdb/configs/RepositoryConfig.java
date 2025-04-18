@@ -7,9 +7,12 @@ import org.springframework.context.annotation.Configuration;
 import redis.clients.jedis.JedisPool;
 
 import com.onyxdb.mdb.core.clusters.ClusterMapper;
+import com.onyxdb.mdb.core.clusters.mappers.DatabaseMapper;
 import com.onyxdb.mdb.core.clusters.mappers.HostMapper;
 import com.onyxdb.mdb.core.clusters.repositories.ClusterPostgresRepository;
 import com.onyxdb.mdb.core.clusters.repositories.ClusterRepository;
+import com.onyxdb.mdb.core.clusters.repositories.DatabasePostgresRepository;
+import com.onyxdb.mdb.core.clusters.repositories.DatabaseRepository;
 import com.onyxdb.mdb.core.clusters.repositories.EnrichedHostRedisRepository;
 import com.onyxdb.mdb.core.clusters.repositories.EnrichedHostRepository;
 import com.onyxdb.mdb.core.clusters.repositories.HostPostgresRepository;
@@ -74,5 +77,10 @@ public class RepositoryConfig {
                 jedisPool,
                 objectMapper
         );
+    }
+
+    @Bean
+    public DatabaseRepository databaseRepository(DSLContext dslContext, DatabaseMapper databaseMapper) {
+        return new DatabasePostgresRepository(dslContext, databaseMapper);
     }
 }

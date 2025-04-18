@@ -2,9 +2,9 @@ package com.onyxdb.mdb.core.clusters.models;
 
 import java.util.UUID;
 
-// TODO delete and use Host
-public record ClusterHost(
+public record DatabaseToCreate(
         String name,
-        UUID clusterId
+        UUID clusterId,
+        UUID createdBy
 ) {
 }

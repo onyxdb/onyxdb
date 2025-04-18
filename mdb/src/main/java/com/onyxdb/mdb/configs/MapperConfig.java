@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.onyxdb.mdb.core.clusters.ClusterMapper;
+import com.onyxdb.mdb.core.clusters.mappers.DatabaseMapper;
 import com.onyxdb.mdb.core.clusters.mappers.HostMapper;
 
 /**
@@ -31,5 +32,10 @@ public class MapperConfig {
     @Bean
     public HostMapper hostMapper() {
         return new HostMapper();
+    }
+
+    @Bean
+    public DatabaseMapper databaseMapper() {
+        return new DatabaseMapper();
     }
 }
