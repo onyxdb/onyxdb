@@ -54,7 +54,7 @@ public class ProjectPostgresRepository implements ProjectRepository {
                     () -> new BadRequestException("Project name already exists")
             );
 
-            throw new RuntimeException(e);
+            throw e;
         }
     }
 
