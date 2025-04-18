@@ -9,8 +9,6 @@ import org.jooq.exception.DataAccessException;
 
 import com.onyxdb.mdb.core.clusters.mappers.DatabaseMapper;
 import com.onyxdb.mdb.core.clusters.models.Database;
-import com.onyxdb.mdb.core.projects.Project;
-import com.onyxdb.mdb.core.projects.ProjectConverter;
 import com.onyxdb.mdb.exceptions.BadRequestException;
 import com.onyxdb.mdb.generated.jooq.Keys;
 import com.onyxdb.mdb.generated.jooq.tables.records.DatabasesRecord;
@@ -18,7 +16,6 @@ import com.onyxdb.mdb.utils.PsqlUtils;
 import com.onyxdb.mdb.utils.TimeUtils;
 
 import static com.onyxdb.mdb.generated.jooq.Tables.DATABASES;
-import static com.onyxdb.mdb.generated.jooq.Tables.PROJECTS;
 
 public class DatabasePostgresRepository implements DatabaseRepository {
     private final DSLContext dslContext;

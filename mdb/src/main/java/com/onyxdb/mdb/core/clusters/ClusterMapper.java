@@ -14,7 +14,9 @@ import com.onyxdb.mdb.core.clusters.models.CreateCluster;
 import com.onyxdb.mdb.core.clusters.models.UpdateCluster;
 import com.onyxdb.mdb.generated.jooq.tables.records.ClustersRecord;
 import com.onyxdb.mdb.generated.openapi.models.V1ClusterResources;
+import com.onyxdb.mdb.generated.openapi.models.V1ClusterStatusResponse;
 import com.onyxdb.mdb.generated.openapi.models.V1CreateMongoClusterRequest;
+import com.onyxdb.mdb.generated.openapi.models.V1MongoClusterResponse;
 import com.onyxdb.mdb.generated.openapi.models.V1MongoConfig;
 import com.onyxdb.mdb.generated.openapi.models.V1MongoUpdateClusterRequest;
 
@@ -129,5 +131,34 @@ public class ClusterMapper {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public V1MongoClusterResponse map(Cluster c) {
+        return new V1MongoClusterResponse(
+                c.id(),
+                c.name(),
+                c.description(),
+                new V1ClusterStatusResponse(
+                        "alive",
+                        "Все хосты работают нормально, все запущенные операции были успешно выполнены."
+                ),
+                c.projectId(),
+                map(c.config())
+        );
+    }
+
+    public V1MongoConfig map(ClusterConfig c) {
+        return new V1MongoConfig(
+                map(c.resources()),
+                c.replicas()
+        );
+    }
+
+    public V1ClusterResources map(ClusterResources r) {
+        return new V1ClusterResources(
+                r.presetId(),
+                r.storageClass(),
+                r.storage()
+        );
     }
 }

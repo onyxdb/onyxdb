@@ -11,6 +11,7 @@ import com.onyxdb.mdb.core.clusters.ClusterService;
 import com.onyxdb.mdb.core.clusters.HostService;
 import com.onyxdb.mdb.core.clusters.mappers.DatabaseMapper;
 import com.onyxdb.mdb.core.clusters.mappers.HostMapper;
+import com.onyxdb.mdb.core.clusters.models.Cluster;
 import com.onyxdb.mdb.core.clusters.models.CreateCluster;
 import com.onyxdb.mdb.core.clusters.models.Database;
 import com.onyxdb.mdb.core.clusters.models.DatabaseToCreate;
@@ -21,14 +22,11 @@ import com.onyxdb.mdb.generated.openapi.models.CreateMongoDatabaseRequest;
 import com.onyxdb.mdb.generated.openapi.models.ListMongoDatabasesResponse;
 import com.onyxdb.mdb.generated.openapi.models.MongoListHostsResponse;
 import com.onyxdb.mdb.generated.openapi.models.UpdateMongoHostsRequest;
-import com.onyxdb.mdb.generated.openapi.models.V1ClusterResources;
-import com.onyxdb.mdb.generated.openapi.models.V1ClusterStatusResponse;
 import com.onyxdb.mdb.generated.openapi.models.V1CreateMongoClusterRequest;
 import com.onyxdb.mdb.generated.openapi.models.V1CreateMongoClusterResponse;
 import com.onyxdb.mdb.generated.openapi.models.V1DeleteMongoClusterResponse;
 import com.onyxdb.mdb.generated.openapi.models.V1ListMongoClustersResponse;
 import com.onyxdb.mdb.generated.openapi.models.V1MongoClusterResponse;
-import com.onyxdb.mdb.generated.openapi.models.V1MongoConfig;
 import com.onyxdb.mdb.generated.openapi.models.V1MongoUpdateClusterRequest;
 import com.onyxdb.mdb.generated.openapi.models.V1ScheduledOperationResponse;
 
@@ -42,25 +40,6 @@ public class V1ManagedMongoController implements V1ManagedMongoDbApi {
     private final HostMapper hostMapper;
     private final HostService hostService;
     private final DatabaseMapper databaseMapper;
-
-    private static final V1MongoClusterResponse clusterResponse = new V1MongoClusterResponse(
-            UUID.randomUUID(),
-            "demo-cluster",
-            "Some desc",
-            new V1ClusterStatusResponse(
-                    "alive",
-                    "Все хосты работают нормально, все запущенные операции были успешно выполнены."
-            ),
-            UUID.randomUUID(),
-            new V1MongoConfig(
-                    new V1ClusterResources(
-                            UUID.randomUUID(),
-                            "standard",
-                            10737418240L
-                    ),
-                    3
-            )
-    );
 
     public V1ManagedMongoController(
             ClusterMapper clusterMapper,
@@ -78,16 +57,20 @@ public class V1ManagedMongoController implements V1ManagedMongoDbApi {
 
     @Override
     public ResponseEntity<V1ListMongoClustersResponse> listClusters() {
-        return ResponseEntity.ok()
-                .body(new V1ListMongoClustersResponse(
-                        List.of(clusterResponse)
-                ));
+        List<Cluster> clusters = clusterService.listClusters();
+        var response = new V1ListMongoClustersResponse(
+                clusters.stream().map(clusterMapper::map).toList()
+        );
+
+        return ResponseEntity.ok().body(response);
     }
 
     @Override
     public ResponseEntity<V1MongoClusterResponse> getCluster(UUID clusterId) {
-        return ResponseEntity.ok()
-                .body(clusterResponse);
+        Cluster cluster = clusterService.getCluster(clusterId);
+        var response = clusterMapper.map(cluster);
+
+        return ResponseEntity.ok().body(response);
     }
 
     @Override
