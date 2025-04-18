@@ -69,6 +69,10 @@ public class ClusterService {
         this.databaseMapper = databaseMapper;
     }
 
+    public List<Cluster> listClusters() {
+        return clusterRepository.listClusters();
+    }
+
     public UUID createCluster(CreateCluster createCluster) {
         Cluster cluster = clusterMapper.createClusterToCluster(createCluster);
 

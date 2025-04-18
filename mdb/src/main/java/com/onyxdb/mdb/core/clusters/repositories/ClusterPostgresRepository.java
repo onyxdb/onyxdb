@@ -1,5 +1,6 @@
 package com.onyxdb.mdb.core.clusters.repositories;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -32,6 +33,14 @@ public class ClusterPostgresRepository implements ClusterRepository {
         this.dslContext = dslContext;
         this.clusterMapper = clusterMapper;
         this.objectMapper = objectMapper;
+    }
+
+    @Override
+    public List<Cluster> listClusters() {
+        return dslContext.select()
+                .from(CLUSTERS)
+                .where(CLUSTERS.IS_DELETED.eq(false))
+                .fetch(clusterMapper::fromJooqRecord);
     }
 
     @Override

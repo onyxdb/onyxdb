@@ -396,8 +396,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/V1ScheduledOperationResponse'
-
-
+#  /api/managed-mongodb/v1/clusters/{clusterId}/users:
+#    get:
+#      summary: List MongoDB users
+#      operationId: listUsers
+#      tags:
+#        - v1ManagedMongoDb
+#      parameters:
+#        - $ref: '#/components/parameters/ClusterIdPV'
+#      responses:
+#        '200':
+#          description: OK
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/ListMongoUsersResponse'
   /api/internal/managed-mongodb/v1/clusters/hosts:
     put:
       summary: Update MongoDB hosts
@@ -866,6 +879,8 @@ components:
         - isDeleted
         - deletedAt
         - deletedBy
+#    ListMongoUsersResponse:
+#      type: object
   # ---------- parameters ----------
   parameters:
     ResourcePresetIdPV:
