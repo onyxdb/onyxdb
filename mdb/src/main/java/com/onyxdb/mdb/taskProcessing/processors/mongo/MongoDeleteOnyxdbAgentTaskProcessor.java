@@ -3,7 +3,6 @@ package com.onyxdb.mdb.taskProcessing.processors.mongo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.onyxdb.mdb.clients.k8s.KubernetesAdapter;
-import com.onyxdb.mdb.clients.k8s.psmdb.PsmdbClient;
 import com.onyxdb.mdb.core.clusters.ClusterService;
 import com.onyxdb.mdb.core.clusters.models.Cluster;
 import com.onyxdb.mdb.taskProcessing.models.Task;
@@ -12,7 +11,6 @@ import com.onyxdb.mdb.taskProcessing.models.TaskType;
 import com.onyxdb.mdb.taskProcessing.models.payloads.ClusterTaskPayload;
 import com.onyxdb.mdb.taskProcessing.processors.ClusterTaskProcessor;
 
-import static com.onyxdb.mdb.core.clusters.ClusterMapper.DEFAULT_NAMESPACE;
 import static com.onyxdb.mdb.core.clusters.ClusterMapper.DEFAULT_PROJECT;
 
 public class MongoDeleteOnyxdbAgentTaskProcessor extends ClusterTaskProcessor {

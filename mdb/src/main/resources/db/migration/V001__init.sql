@@ -70,6 +70,20 @@ CREATE TABLE public.cluster_hosts
     FOREIGN KEY (cluster_id) REFERENCES clusters (id)
 );
 
+CREATE TABLE public.databases
+(
+    id         uuid      NOT NULL,
+    name       varchar   NOT NULL,
+    cluster_id uuid      NOT NULL,
+    created_at timestamp NOT NULL,
+    created_by uuid NOT NULL,
+    is_deleted bool      NOT NULL,
+    deleted_at timestamp,
+    deleted_by uuid,
+    PRIMARY KEY (id),
+    UNIQUE (name, cluster_id)
+);
+
 CREATE TYPE public.operation_type AS ENUM (
     'mongodb_create_cluster',
     'mongodb_scale_hosts',

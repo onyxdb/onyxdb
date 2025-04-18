@@ -7,8 +7,10 @@ import org.springframework.transaction.support.TransactionTemplate;
 import com.onyxdb.mdb.core.clusters.ClusterMapper;
 import com.onyxdb.mdb.core.clusters.ClusterService;
 import com.onyxdb.mdb.core.clusters.HostService;
+import com.onyxdb.mdb.core.clusters.mappers.DatabaseMapper;
 import com.onyxdb.mdb.core.clusters.mappers.HostMapper;
 import com.onyxdb.mdb.core.clusters.repositories.ClusterRepository;
+import com.onyxdb.mdb.core.clusters.repositories.DatabaseRepository;
 import com.onyxdb.mdb.core.clusters.repositories.EnrichedHostRepository;
 import com.onyxdb.mdb.core.clusters.repositories.HostRepository;
 import com.onyxdb.mdb.core.projects.ProjectRepository;
@@ -53,7 +55,9 @@ public class ServiceConfig {
             TaskRepository taskRepository,
             MongoCreateClusterTaskGenerator mongoCreateClusterTaskGenerator,
             MongoScaleHostsTaskGenerator mongoScaleHostsTaskGenerator,
-            MongoDeleteClusterTaskGenerator mongoDeleteClusterTaskGenerator
+            MongoDeleteClusterTaskGenerator mongoDeleteClusterTaskGenerator,
+            DatabaseRepository databaseRepository,
+            DatabaseMapper databaseMapper
     ) {
         return new ClusterService(
                 clusterMapper,
@@ -64,7 +68,9 @@ public class ServiceConfig {
                 taskRepository,
                 mongoCreateClusterTaskGenerator,
                 mongoScaleHostsTaskGenerator,
-                mongoDeleteClusterTaskGenerator
+                mongoDeleteClusterTaskGenerator,
+                databaseRepository,
+                databaseMapper
         );
     }
 

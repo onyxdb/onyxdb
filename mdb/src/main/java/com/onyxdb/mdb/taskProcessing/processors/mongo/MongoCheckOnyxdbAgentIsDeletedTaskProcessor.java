@@ -13,7 +13,6 @@ import com.onyxdb.mdb.taskProcessing.models.TaskType;
 import com.onyxdb.mdb.taskProcessing.models.payloads.ClusterTaskPayload;
 import com.onyxdb.mdb.taskProcessing.processors.ClusterTaskProcessor;
 
-import static com.onyxdb.mdb.core.clusters.ClusterMapper.DEFAULT_NAMESPACE;
 import static com.onyxdb.mdb.core.clusters.ClusterMapper.DEFAULT_PROJECT;
 
 public class MongoCheckOnyxdbAgentIsDeletedTaskProcessor extends ClusterTaskProcessor {
