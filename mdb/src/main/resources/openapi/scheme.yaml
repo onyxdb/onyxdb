@@ -396,12 +396,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/V1ScheduledOperationResponse'
+  # ---------- Managed MongoDB users -----------------------------------------------------------------------------------
   /api/managed-mongodb/v1/clusters/{clusterId}/users:
     get:
-      summary: List MongoDB users
+      summary: List MongoDB users in cluster
       operationId: listUsers
       tags:
-        - v1ManagedMongoDb
+        - Managed MongoDB users
       parameters:
         - $ref: '#/components/parameters/ClusterIdPV'
       responses:
@@ -412,10 +413,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/ListMongoUsersResponse'
     post:
-      summary: Create MongoDB user
+      summary: Create MongoDB user in cluster
       operationId: createUser
       tags:
-        - v1ManagedMongoDb
+        - Managed MongoDB users
       parameters:
         - $ref: '#/components/parameters/ClusterIdPV'
       requestBody:
@@ -436,7 +437,7 @@ paths:
       summary: Get MongoDB user
       operationId: getUser
       tags:
-        - v1ManagedMongoDb
+        - Managed MongoDB users
       parameters:
         - $ref: '#/components/parameters/UserIdPV'
       responses:
@@ -450,7 +451,7 @@ paths:
       summary: Delete MongoDB user
       operationId: deleteUser
       tags:
-        - v1ManagedMongoDb
+        - Managed MongoDB users
       parameters:
         - $ref: '#/components/parameters/UserIdPV'
       responses:

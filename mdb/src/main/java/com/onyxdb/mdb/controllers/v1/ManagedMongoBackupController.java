@@ -14,7 +14,7 @@ import com.onyxdb.mdb.generated.openapi.models.V1ScheduledOperationResponse;
 import com.onyxdb.mdb.utils.TimeUtils;
 
 @RestController
-public class ManagedMongoDbBackupController implements ManagedMongoDbBackupsApi {
+public class ManagedMongoBackupController implements ManagedMongoDbBackupsApi {
     @Override
     public ResponseEntity<ListMongoBackupsResponse> listBackups(UUID clusterId) {
         return ResponseEntity.ok(new ListMongoBackupsResponse(

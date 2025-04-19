@@ -18,15 +18,10 @@ import com.onyxdb.mdb.core.clusters.models.Database;
 import com.onyxdb.mdb.core.clusters.models.DatabaseToCreate;
 import com.onyxdb.mdb.core.clusters.models.MongoHost;
 import com.onyxdb.mdb.core.clusters.models.UpdateCluster;
-import com.onyxdb.mdb.core.clusters.models.User;
-import com.onyxdb.mdb.core.clusters.models.UserToCreate;
 import com.onyxdb.mdb.generated.openapi.apis.V1ManagedMongoDbApi;
 import com.onyxdb.mdb.generated.openapi.models.CreateMongoDatabaseRequest;
 import com.onyxdb.mdb.generated.openapi.models.ListMongoDatabasesResponse;
-import com.onyxdb.mdb.generated.openapi.models.ListMongoUsersResponse;
 import com.onyxdb.mdb.generated.openapi.models.MongoListHostsResponse;
-import com.onyxdb.mdb.generated.openapi.models.MongoUser;
-import com.onyxdb.mdb.generated.openapi.models.MongoUserToCreate;
 import com.onyxdb.mdb.generated.openapi.models.UpdateMongoHostsRequest;
 import com.onyxdb.mdb.generated.openapi.models.V1CreateMongoClusterRequest;
 import com.onyxdb.mdb.generated.openapi.models.V1CreateMongoClusterResponse;
@@ -164,42 +159,6 @@ public class V1ManagedMongoController implements V1ManagedMongoDbApi {
     @Override
     public ResponseEntity<V1ScheduledOperationResponse> deleteDatabase(UUID clusterId, UUID databaseId) {
         UUID operationId = clusterService.deleteDatabase(clusterId, databaseId);
-
-        return ResponseEntity.ok()
-                .body(new V1ScheduledOperationResponse(operationId));
-    }
-
-    @Override
-    public ResponseEntity<ListMongoUsersResponse> listUsers(UUID clusterId) {
-        List<User> users = clusterService.listUsers(clusterId);
-        var response = new ListMongoUsersResponse(
-                users.stream().map(userMapper::map).toList()
-        );
-
-        return ResponseEntity.ok().body(response);
-    }
-
-    @Override
-    public ResponseEntity<MongoUser> getUser(UUID userId) {
-        User user = clusterService.getUser(userId);
-        return ResponseEntity.ok().body(userMapper.map(user));
-    }
-
-    @Override
-    public ResponseEntity<V1ScheduledOperationResponse> createUser(
-            UUID clusterId,
-            MongoUserToCreate mongoUserToCreate
-    ) {
-        UserToCreate userToCreate = userMapper.map(clusterId, mongoUserToCreate);
-        UUID operationId = clusterService.createUser(userToCreate);
-
-        return ResponseEntity.ok()
-                .body(new V1ScheduledOperationResponse(operationId));
-    }
-
-    @Override
-    public ResponseEntity<V1ScheduledOperationResponse> deleteUser(UUID userId) {
-        UUID operationId = clusterService.deleteUser(userId);
 
         return ResponseEntity.ok()
                 .body(new V1ScheduledOperationResponse(operationId));
