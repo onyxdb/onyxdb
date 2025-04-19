@@ -324,27 +324,27 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MongoListHostsResponse'
-#    put:
-#      summary: Scale MongoDB hosts
-#      operationId: scaleHosts
-#      tags:
-#        - v1ManagedMongoDb
-#      parameters:
-#        - $ref: '#/components/parameters/ClusterIdPV'
-#      requestBody:
-#        required: true
-#        content:
-#          application/json:
-#            schema:
-#              $ref: '#/components/schemas/V1MongoScaleHostsRequest'
-#      responses:
-#        '200':
-#          description: OK
-#          content:
-#            application/json:
-#              schema:
-#                $ref: '#/components/schemas/V1ScheduledOperationResponse'
-#  /api/managed-mongodb/v1/hosts:
+  #    put:
+  #      summary: Scale MongoDB hosts
+  #      operationId: scaleHosts
+  #      tags:
+  #        - v1ManagedMongoDb
+  #      parameters:
+  #        - $ref: '#/components/parameters/ClusterIdPV'
+  #      requestBody:
+  #        required: true
+  #        content:
+  #          application/json:
+  #            schema:
+  #              $ref: '#/components/schemas/V1MongoScaleHostsRequest'
+  #      responses:
+  #        '200':
+  #          description: OK
+  #          content:
+  #            application/json:
+  #              schema:
+  #                $ref: '#/components/schemas/V1ScheduledOperationResponse'
+  #  /api/managed-mongodb/v1/hosts:
   /api/managed-mongodb/v1/clusters/{clusterId}/databases:
     get:
       summary: List MongoDB databases
@@ -460,6 +460,70 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/V1ScheduledOperationResponse'
+  # ---------- Managed MongoDB backups ---------------------------------------------------------------------------------
+  /api/managed-mongodb/v1/clusters/{clusterId}/backups:
+    get:
+      summary: List backups of MongoDB cluster
+      operationId: listBackups
+      tags:
+        - Managed MongoDB backups
+      parameters:
+        - $ref: '#/components/parameters/ClusterIdPV'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListMongoBackupsResponse'
+    post:
+      summary: Create backup of MongoDB cluster
+      operationId: createBackup
+      tags:
+        - Managed MongoDB backups
+      parameters:
+        - $ref: '#/components/parameters/ClusterIdPV'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/V1ScheduledOperationResponse'
+  /api/managed-mongodb/v1/clusters/{clusterId}/backups/{backupName}:
+    delete:
+      summary: Delete backup of MongoDB cluster
+      operationId: deleteBackup
+      tags:
+        - Managed MongoDB backups
+      parameters:
+        - $ref: '#/components/parameters/ClusterIdPV'
+        - $ref: '#/components/parameters/BackupNamePV'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/V1ScheduledOperationResponse'
+  /api/managed-mongodb/v1/clusters/{clusterId}/backups/{backupName}/restore:
+    post:
+      summary: Restore MongoDB cluster from backup
+      operationId: restoreFromBackup
+      tags:
+        - Managed MongoDB backups
+      parameters:
+        - $ref: '#/components/parameters/ClusterIdPV'
+        - $ref: '#/components/parameters/BackupNamePV'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/V1ScheduledOperationResponse'
+
+
   /api/internal/managed-mongodb/v1/clusters/hosts:
     put:
       summary: Update MongoDB hosts
@@ -1044,6 +1108,42 @@ components:
       required:
         - databaseId
         - roles
+    ListMongoBackupsResponse:
+      type: object
+      properties:
+        backups:
+          type: array
+          items:
+            $ref: '#/components/schemas/MongoBackup'
+      required:
+        - backups
+    MongoBackup:
+      type: object
+      properties:
+        name:
+          type: string
+        clusterId:
+          type: string
+          format: uuid
+        type:
+          $ref: '#/components/schemas/BackupType'
+        startedAt:
+          type: string
+          format: date-time
+        finishedAt:
+          type: string
+          format: date-time
+      required:
+        - name
+        - clusterId
+        - type
+        - startedAt
+        - finishedAt
+    BackupType:
+      type: string
+      enum:
+        - automated
+        - manual
   # ---------- parameters ----------
   parameters:
     ResourcePresetIdPV:
@@ -1087,3 +1187,9 @@ components:
       schema:
         type: string
         format: uuid
+    BackupNamePV:
+      name: backupName
+      in: path
+      required: true
+      schema:
+        type: string
