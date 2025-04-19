@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: onyxdb-ingress-nginx
+  namespace: onyxdb-infra
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+#    cert-manager.io/cluster-issuer: "yc-clusterissuer"
+spec:
+  rules:
+    - host: minio.onyxdb.com.local
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: minio
+                port:
+                  number: 30009
+          - path: /web
+            pathType: Prefix
+            backend:
+              service:
+                name: minio
+                port:
+                  number: 31009

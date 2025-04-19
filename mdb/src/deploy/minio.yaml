@@ -1,0 +1,116 @@
+# Deploys a new Namespace for the MinIO Pod
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: minio # Change this value if you want a different namespace name
+#  labels:
+#    name: minio-dev # Change this value to match metadata.name
+---
+# Deploys a new MinIO Pod into the metadata.namespace Kubernetes namespace
+#
+# The `spec.containers[0].args` contains the command run on the pod
+# The `/data` directory corresponds to the `spec.containers[0].volumeMounts[0].mountPath`
+# That mount path corresponds to a Kubernetes HostPath which binds `/data` to a local drive or volume on the worker node where the pod runs
+#
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: minio-pvc
+  namespace: minio
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app.kubernetes.io/instance: minio
+  name: minio
+  namespace: minio # Change this value to match the namespace metadata.name
+spec:
+  containers:
+  - name: minio
+    image: quay.io/minio/minio:latest
+    command:
+      - minio
+    args:
+      - server
+      - /data
+      - --address
+      - ":30009"
+      - --console-address
+      - ":31009"
+    ports:
+      - containerPort: 30009
+      - containerPort: 31009
+#        hostPort: 9000
+#    - minio server /data --address :9000 --console-address :9090
+#    ports:
+#      - name: http-api
+#        containerPort: 30009
+#      - name: http-web
+#        containerPort: 31009
+    volumeMounts:
+    - mountPath: /data
+      name: minio-pv # Corresponds to the `spec.volumes` Persistent Volume
+#  nodeSelector:
+#    kubernetes.io/hostname: kubealpha.local # Specify a node label associated to the Worker Node on which you want to deploy the pod.
+    env:
+      - name: MINIO_STORAGE_USE_HTTPS
+        value: "false"
+      - name: MINIO_BROWSER_REDIRECT_URL
+        value: "http://minio.onyxdb.com.local"
+#      - name: MINIO_DOMAIN
+#        value: minio.onyxdb.com
+  volumes:
+    - name: minio-pv
+      persistentVolumeClaim:
+        claimName: minio-pvc
+#  volumes:
+#  - name: localvolume
+#    hostPath: # MinIO generally recommends using locally-attached volumes
+#      path: /mnt/disk1/data # Specify a path to a local drive or volume on the Kubernetes worker node
+#      type: DirectoryOrCreate # The path to the last directory must exist
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio
+  namespace: minio
+#  labels:
+#    app.kubernetes.io/instance: managed-mongodb-demo-exporter
+spec:
+  ports:
+    - name: http-api
+      port: 30009
+      targetPort: 30009
+    - name: http-web
+      port: 31009
+      targetPort: 31009
+  selector:
+    app.kubernetes.io/instance: minio
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: minio
+  namespace: onyxdb-infra
+spec:
+  type: ExternalName
+  externalName: minio.minio.svc.cluster.local
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: minio
+  namespace: onyxdb
+spec:
+  type: ExternalName
+  externalName: minio.minio.svc.cluster.local
