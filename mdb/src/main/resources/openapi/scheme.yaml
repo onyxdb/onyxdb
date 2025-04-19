@@ -146,13 +146,13 @@ paths:
 #        '200':
 #          description: OK
 
-  # ---------- v1Projects ----------
-  /api/v1/projects:
+  # ---------- Projects ----------
+  /api/projects/v1:
     get:
-      summary: Get projects
+      summary: List projects
       operationId: listProjects
       tags:
-        - v1Projects
+        - Projects
       responses:
         '200':
           description: OK
@@ -164,7 +164,7 @@ paths:
       summary: Create project
       operationId: createProject
       tags:
-        - v1Projects
+        - Projects
       requestBody:
         required: true
         content:
@@ -174,12 +174,12 @@ paths:
       responses:
         '200':
           description: OK
-  /api/v1/projects/{projectId}:
+  /api/projects/v1/{projectId}:
     get:
       summary: Get project
       operationId: getProject
       tags:
-        - v1Projects
+        - Projects
       parameters:
         - $ref: '#/components/parameters/ProjectIdPV'
       responses:
@@ -193,7 +193,7 @@ paths:
       summary: Update project
       operationId: updateProject
       tags:
-        - v1Projects
+        - Projects
       parameters:
         - $ref: '#/components/parameters/ProjectIdPV'
       requestBody:
@@ -205,23 +205,23 @@ paths:
       responses:
         '200':
           description: OK
-  /api/v1/projects/{projectId}/archive:
+  /api/projects/v1/{projectId}/archive:
     put:
       summary: Archive project
       operationId: archiveProject
       tags:
-        - v1Projects
+        - Projects
       parameters:
         - $ref: '#/components/parameters/ProjectIdPV'
       responses:
         '200':
           description: OK
-  /api/v1/projects/{projectId}/unarchive:
+  /api/projects/v1/{projectId}/unarchive:
     put:
       summary: Unarchive project
       operationId: unarchiveProject
       tags:
-        - v1Projects
+        - Projects
       parameters:
         - $ref: '#/components/parameters/ProjectIdPV'
       responses:
