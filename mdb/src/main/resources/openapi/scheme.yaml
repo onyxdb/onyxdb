@@ -396,21 +396,70 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/V1ScheduledOperationResponse'
-#  /api/managed-mongodb/v1/clusters/{clusterId}/users:
-#    get:
-#      summary: List MongoDB users
-#      operationId: listUsers
-#      tags:
-#        - v1ManagedMongoDb
-#      parameters:
-#        - $ref: '#/components/parameters/ClusterIdPV'
-#      responses:
-#        '200':
-#          description: OK
-#          content:
-#            application/json:
-#              schema:
-#                $ref: '#/components/schemas/ListMongoUsersResponse'
+  /api/managed-mongodb/v1/clusters/{clusterId}/users:
+    get:
+      summary: List MongoDB users
+      operationId: listUsers
+      tags:
+        - v1ManagedMongoDb
+      parameters:
+        - $ref: '#/components/parameters/ClusterIdPV'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListMongoUsersResponse'
+    post:
+      summary: Create MongoDB user
+      operationId: createUser
+      tags:
+        - v1ManagedMongoDb
+      parameters:
+        - $ref: '#/components/parameters/ClusterIdPV'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MongoUserToCreate'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/V1ScheduledOperationResponse'
+  /api/managed-mongodb/v1/clusters/users/{userId}:
+    get:
+      summary: Get MongoDB user
+      operationId: getUser
+      tags:
+        - v1ManagedMongoDb
+      parameters:
+        - $ref: '#/components/parameters/UserIdPV'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MongoUser'
+    delete:
+      summary: Delete MongoDB user
+      operationId: deleteUser
+      tags:
+        - v1ManagedMongoDb
+      parameters:
+        - $ref: '#/components/parameters/UserIdPV'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/V1ScheduledOperationResponse'
   /api/internal/managed-mongodb/v1/clusters/hosts:
     put:
       summary: Update MongoDB hosts
@@ -879,8 +928,122 @@ components:
         - isDeleted
         - deletedAt
         - deletedBy
-#    ListMongoUsersResponse:
-#      type: object
+    ListMongoUsersResponse:
+      type: object
+      properties:
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/MongoUser'
+      required:
+        - users
+    MongoUser:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        clusterId:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+          format: uuid
+        isDeleted:
+          type: boolean
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+        deletedBy:
+          type: string
+          format: uuid
+          nullable: true
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/MongoPermission'
+      required:
+        - id
+        - name
+        - clusterId
+        - createdAt
+        - createdBy
+        - isDeleted
+        - deletedAt
+        - deletedBy
+        - permissions
+    MongoPermission:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        databaseId:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+          format: uuid
+        isDeleted:
+          type: boolean
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+        deletedBy:
+          type: string
+          format: uuid
+          nullable: true
+        roles:
+          type: array
+          items:
+            type: string
+      required:
+        - id
+        - databaseId
+        - createdAt
+        - createdBy
+        - isDeleted
+        - deletedAt
+        - deletedBy
+        - roles
+    MongoUserToCreate:
+      type: object
+      properties:
+        name:
+          type: string
+        password:
+          type: string
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/MongoPermissionToCreate'
+      required:
+        - name
+        - password
+        - permissions
+    MongoPermissionToCreate:
+      type: object
+      properties:
+        databaseId:
+          type: string
+          format: uuid
+        roles:
+          type: array
+          items:
+            type: string
+      required:
+        - databaseId
+        - roles
   # ---------- parameters ----------
   parameters:
     ResourcePresetIdPV:
@@ -912,6 +1075,13 @@ components:
         format: uuid
     DatabaseIdPV:
       name: databaseId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    UserIdPV:
+      name: userId
       in: path
       required: true
       schema:

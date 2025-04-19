@@ -76,12 +76,45 @@ CREATE TABLE public.databases
     name       varchar   NOT NULL,
     cluster_id uuid      NOT NULL,
     created_at timestamp NOT NULL,
-    created_by uuid NOT NULL,
+    created_by uuid      NOT NULL,
     is_deleted bool      NOT NULL,
     deleted_at timestamp,
     deleted_by uuid,
     PRIMARY KEY (id),
+    FOREIGN KEY (cluster_id) REFERENCES public.clusters (id),
     UNIQUE (name, cluster_id)
+);
+
+CREATE TABLE public.users
+(
+    id         uuid      NOT NULL,
+    name       varchar   NOT NULL,
+    cluster_id uuid      NOT NULL,
+    created_at timestamp NOT NULL,
+    created_by uuid      NOT NULL,
+    is_deleted bool      NOT NULL,
+    deleted_at timestamp,
+    deleted_by uuid,
+    PRIMARY KEY (id)
+);
+
+CREATE UNIQUE INDEX users_name_cluster_id_uniq_idx ON public.users (name, cluster_id) WHERE (users.is_deleted = false);
+
+CREATE TABLE public.permissions
+(
+    id          uuid      NOT NULL,
+    user_id     uuid      NOT NULL,
+    database_id uuid      NOT NULL,
+    created_at  timestamp NOT NULL,
+    created_by  uuid      NOT NULL,
+    is_deleted  bool      NOT NULL,
+    deleted_at  timestamp,
+    deleted_by  uuid,
+    data        jsonb     NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (user_id) REFERENCES public.users (id),
+    FOREIGN KEY (database_id) REFERENCES public.databases (id),
+    UNIQUE (user_id, database_id)
 );
 
 CREATE TYPE public.operation_type AS ENUM (

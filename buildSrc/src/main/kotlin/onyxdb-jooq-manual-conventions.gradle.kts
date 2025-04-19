@@ -59,7 +59,7 @@ jooq {
                     database.apply {
                         name = "org.jooq.meta.postgres.PostgresDatabase"
                         inputSchema = "public"
-                        isIncludeIndexes = false
+                        isIncludeIndexes = true
                         excludes = "flyway.*"
                     }
                     target.apply {

@@ -8,14 +8,18 @@ import java.util.UUID;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import com.onyxdb.mdb.core.clusters.mappers.DatabaseMapper;
+import com.onyxdb.mdb.core.clusters.mappers.UserMapper;
 import com.onyxdb.mdb.core.clusters.models.Cluster;
 import com.onyxdb.mdb.core.clusters.models.ClusterConfig;
 import com.onyxdb.mdb.core.clusters.models.CreateCluster;
 import com.onyxdb.mdb.core.clusters.models.Database;
 import com.onyxdb.mdb.core.clusters.models.DatabaseToCreate;
 import com.onyxdb.mdb.core.clusters.models.UpdateCluster;
+import com.onyxdb.mdb.core.clusters.models.User;
+import com.onyxdb.mdb.core.clusters.models.UserToCreate;
 import com.onyxdb.mdb.core.clusters.repositories.ClusterRepository;
 import com.onyxdb.mdb.core.clusters.repositories.DatabaseRepository;
+import com.onyxdb.mdb.core.clusters.repositories.UserRepository;
 import com.onyxdb.mdb.exceptions.BadRequestException;
 import com.onyxdb.mdb.taskProcessing.TaskProcessingUtils;
 import com.onyxdb.mdb.taskProcessing.generators.mongo.MongoCreateClusterTaskGenerator;
@@ -44,6 +48,8 @@ public class ClusterService {
     private final MongoDeleteClusterTaskGenerator mongoDeleteClusterTaskGenerator;
     private final DatabaseRepository databaseRepository;
     private final DatabaseMapper databaseMapper;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     public ClusterService(
             ClusterMapper clusterMapper,
@@ -55,7 +61,9 @@ public class ClusterService {
             MongoScaleHostsTaskGenerator mongoScaleHostsTaskGenerator,
             MongoDeleteClusterTaskGenerator mongoDeleteClusterTaskGenerator,
             DatabaseRepository databaseRepository,
-            DatabaseMapper databaseMapper
+            DatabaseMapper databaseMapper,
+            UserRepository userRepository,
+            UserMapper userMapper
     ) {
         this.clusterMapper = clusterMapper;
         this.clusterRepository = clusterRepository;
@@ -67,6 +75,8 @@ public class ClusterService {
         this.mongoDeleteClusterTaskGenerator = mongoDeleteClusterTaskGenerator;
         this.databaseRepository = databaseRepository;
         this.databaseMapper = databaseMapper;
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
     }
 
     public List<Cluster> listClusters() {
@@ -198,6 +208,39 @@ public class ClusterService {
                 )));
 
         databaseRepository.markDatabaseAsDeleted(clusterId, databaseId);
+        return UUID.randomUUID();
+    }
+
+    public List<User> listUsers(UUID clusterId) {
+        return userRepository.listUsers(clusterId, null);
+    }
+
+    public User getUser(UUID userId) {
+        return userRepository.getUserO(userId)
+                .orElseThrow(() -> new BadRequestException(String.format(
+                        "Can't find user with id '%s'", userId
+                )));
+    }
+
+    public UUID createUser(UserToCreate userToCreate) {
+        User user = userMapper.map(userToCreate);
+
+        transactionTemplate.executeWithoutResult(status -> {
+            userRepository.createUser(user);
+            userRepository.createPermissions(user.permissions());
+        });
+
+        return UUID.randomUUID();
+    }
+
+    public UUID deleteUser(UUID userId) {
+        getUser(userId);
+
+        transactionTemplate.executeWithoutResult(status -> {
+            userRepository.markUserAsDeleted(userId);
+            userRepository.markPermissionsAsDeleted(userId);
+        });
+
         return UUID.randomUUID();
     }
 }

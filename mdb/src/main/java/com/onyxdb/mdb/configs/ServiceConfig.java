@@ -9,10 +9,12 @@ import com.onyxdb.mdb.core.clusters.ClusterService;
 import com.onyxdb.mdb.core.clusters.HostService;
 import com.onyxdb.mdb.core.clusters.mappers.DatabaseMapper;
 import com.onyxdb.mdb.core.clusters.mappers.HostMapper;
+import com.onyxdb.mdb.core.clusters.mappers.UserMapper;
 import com.onyxdb.mdb.core.clusters.repositories.ClusterRepository;
 import com.onyxdb.mdb.core.clusters.repositories.DatabaseRepository;
 import com.onyxdb.mdb.core.clusters.repositories.EnrichedHostRepository;
 import com.onyxdb.mdb.core.clusters.repositories.HostRepository;
+import com.onyxdb.mdb.core.clusters.repositories.UserRepository;
 import com.onyxdb.mdb.core.projects.ProjectRepository;
 import com.onyxdb.mdb.core.projects.ProjectService;
 import com.onyxdb.mdb.core.resourcePresets.ResourcePresetRepository;
@@ -57,7 +59,9 @@ public class ServiceConfig {
             MongoScaleHostsTaskGenerator mongoScaleHostsTaskGenerator,
             MongoDeleteClusterTaskGenerator mongoDeleteClusterTaskGenerator,
             DatabaseRepository databaseRepository,
-            DatabaseMapper databaseMapper
+            DatabaseMapper databaseMapper,
+            UserRepository userRepository,
+            UserMapper userMapper
     ) {
         return new ClusterService(
                 clusterMapper,
@@ -70,7 +74,9 @@ public class ServiceConfig {
                 mongoScaleHostsTaskGenerator,
                 mongoDeleteClusterTaskGenerator,
                 databaseRepository,
-                databaseMapper
+                databaseMapper,
+                userRepository,
+                userMapper
         );
     }
 
