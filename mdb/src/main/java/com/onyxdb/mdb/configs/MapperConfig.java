@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import com.onyxdb.mdb.core.clusters.ClusterMapper;
 import com.onyxdb.mdb.core.clusters.mappers.DatabaseMapper;
 import com.onyxdb.mdb.core.clusters.mappers.HostMapper;
+import com.onyxdb.mdb.core.clusters.mappers.UserMapper;
 
 /**
  * @author foxleren
@@ -37,5 +38,10 @@ public class MapperConfig {
     @Bean
     public DatabaseMapper databaseMapper() {
         return new DatabaseMapper();
+    }
+
+    @Bean
+    public UserMapper userMapper(ObjectMapper objectMapper) {
+        return new UserMapper(objectMapper);
     }
 }
