@@ -524,14 +524,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/V1ScheduledOperationResponse'
-
-
-  /api/internal/managed-mongodb/v1/clusters/hosts:
+  # ---------- Managed MongoDB internals -------------------------------------------------------------------------------
+  /api/managed-mongodb/v1/internal/hosts:
     put:
       summary: Update MongoDB hosts
       operationId: updateHosts
       tags:
-        - v1ManagedMongoDb
+        - Managed MongoDB internals
       requestBody:
         required: true
         content:
@@ -541,9 +540,9 @@ paths:
       responses:
         '200':
           description: OK
-# ---------- components ----------
+# ---------- components ------------------------------------------------------------------------------------------------
 components:
-  # ---------- schemas ----------
+  # ---------- schemas -------------------------------------------------------------------------------------------------
   schemas:
     V1BadRequestResponse:
       type: object
@@ -1146,7 +1145,7 @@ components:
       enum:
         - automated
         - manual
-  # ---------- parameters ----------
+  # ---------- parameters ----------------------------------------------------------------------------------------------
   parameters:
     ResourcePresetIdPV:
       name: resourcePresetId
