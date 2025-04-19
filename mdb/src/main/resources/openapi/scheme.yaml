@@ -345,12 +345,13 @@ paths:
   #              schema:
   #                $ref: '#/components/schemas/V1ScheduledOperationResponse'
   #  /api/managed-mongodb/v1/hosts:
+  # ---------- Managed MongoDB databases -------------------------------------------------------------------------------
   /api/managed-mongodb/v1/clusters/{clusterId}/databases:
     get:
       summary: List MongoDB databases
       operationId: listDatabases
       tags:
-        - v1ManagedMongoDb
+        - Managed MongoDB databases
       parameters:
         - $ref: '#/components/parameters/ClusterIdPV'
       responses:
@@ -364,7 +365,7 @@ paths:
       summary: Create MongoDB database
       operationId: createDatabase
       tags:
-        - v1ManagedMongoDb
+        - Managed MongoDB databases
       parameters:
         - $ref: '#/components/parameters/ClusterIdPV'
       requestBody:
@@ -385,7 +386,7 @@ paths:
       summary: Delete MongoDB database
       operationId: deleteDatabase
       tags:
-        - v1ManagedMongoDb
+        - Managed MongoDB databases
       parameters:
         - $ref: '#/components/parameters/ClusterIdPV'
         - $ref: '#/components/parameters/DatabaseIdPV'
