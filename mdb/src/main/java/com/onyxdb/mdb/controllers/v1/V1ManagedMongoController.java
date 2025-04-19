@@ -14,11 +14,9 @@ import com.onyxdb.mdb.core.clusters.mappers.HostMapper;
 import com.onyxdb.mdb.core.clusters.mappers.UserMapper;
 import com.onyxdb.mdb.core.clusters.models.Cluster;
 import com.onyxdb.mdb.core.clusters.models.CreateCluster;
-import com.onyxdb.mdb.core.clusters.models.MongoHost;
 import com.onyxdb.mdb.core.clusters.models.UpdateCluster;
 import com.onyxdb.mdb.generated.openapi.apis.V1ManagedMongoDbApi;
 import com.onyxdb.mdb.generated.openapi.models.MongoListHostsResponse;
-import com.onyxdb.mdb.generated.openapi.models.UpdateMongoHostsRequest;
 import com.onyxdb.mdb.generated.openapi.models.V1CreateMongoClusterRequest;
 import com.onyxdb.mdb.generated.openapi.models.V1CreateMongoClusterResponse;
 import com.onyxdb.mdb.generated.openapi.models.V1DeleteMongoClusterResponse;
@@ -122,13 +120,5 @@ public class V1ManagedMongoController implements V1ManagedMongoDbApi {
 
         return ResponseEntity.ok()
                 .body(new MongoListHostsResponse(mappedMongoHosts));
-    }
-
-    @Override
-    public ResponseEntity<Void> updateHosts(UpdateMongoHostsRequest rq) {
-        List<MongoHost> mongoHosts = hostMapper.map(rq);
-        hostService.updateMongoHosts(mongoHosts);
-
-        return ResponseEntity.ok().build();
     }
 }
