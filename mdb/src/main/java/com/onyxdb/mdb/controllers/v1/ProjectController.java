@@ -8,10 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.onyxdb.mdb.core.projects.Project;
 import com.onyxdb.mdb.core.projects.ProjectConverter;
-import com.onyxdb.mdb.core.projects.ProjectRepository;
 import com.onyxdb.mdb.core.projects.ProjectService;
 import com.onyxdb.mdb.core.projects.UpdateProject;
-import com.onyxdb.mdb.generated.openapi.apis.V1ProjectsApi;
+import com.onyxdb.mdb.generated.openapi.apis.ProjectsApi;
 import com.onyxdb.mdb.generated.openapi.models.V1CreateProjectRequest;
 import com.onyxdb.mdb.generated.openapi.models.V1ListProjectsResponse;
 import com.onyxdb.mdb.generated.openapi.models.V1ProjectResponse;
@@ -21,13 +20,11 @@ import com.onyxdb.mdb.generated.openapi.models.V1UpdateProjectRequest;
  * @author foxleren
  */
 @RestController
-public class V1ProjectController implements V1ProjectsApi {
+public class ProjectController implements ProjectsApi {
     private final ProjectService projectService;
-    private final ProjectRepository projectRepository;
 
-    public V1ProjectController(ProjectService projectService, ProjectRepository projectRepository) {
+    public ProjectController(ProjectService projectService) {
         this.projectService = projectService;
-        this.projectRepository = projectRepository;
     }
 
     @Override
