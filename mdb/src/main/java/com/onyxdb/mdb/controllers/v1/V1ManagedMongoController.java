@@ -14,13 +14,9 @@ import com.onyxdb.mdb.core.clusters.mappers.HostMapper;
 import com.onyxdb.mdb.core.clusters.mappers.UserMapper;
 import com.onyxdb.mdb.core.clusters.models.Cluster;
 import com.onyxdb.mdb.core.clusters.models.CreateCluster;
-import com.onyxdb.mdb.core.clusters.models.Database;
-import com.onyxdb.mdb.core.clusters.models.DatabaseToCreate;
 import com.onyxdb.mdb.core.clusters.models.MongoHost;
 import com.onyxdb.mdb.core.clusters.models.UpdateCluster;
 import com.onyxdb.mdb.generated.openapi.apis.V1ManagedMongoDbApi;
-import com.onyxdb.mdb.generated.openapi.models.CreateMongoDatabaseRequest;
-import com.onyxdb.mdb.generated.openapi.models.ListMongoDatabasesResponse;
 import com.onyxdb.mdb.generated.openapi.models.MongoListHostsResponse;
 import com.onyxdb.mdb.generated.openapi.models.UpdateMongoHostsRequest;
 import com.onyxdb.mdb.generated.openapi.models.V1CreateMongoClusterRequest;
@@ -134,33 +130,5 @@ public class V1ManagedMongoController implements V1ManagedMongoDbApi {
         hostService.updateMongoHosts(mongoHosts);
 
         return ResponseEntity.ok().build();
-    }
-
-    @Override
-    public ResponseEntity<ListMongoDatabasesResponse> listDatabases(UUID clusterId) {
-        List<Database> databases = clusterService.listDatabases(clusterId);
-        var response = new ListMongoDatabasesResponse(
-                databases.stream().map(databaseMapper::mapToMongoDatabase).toList()
-        );
-
-        return ResponseEntity.ok()
-                .body(response);
-    }
-
-    @Override
-    public ResponseEntity<V1ScheduledOperationResponse> createDatabase(UUID clusterId, CreateMongoDatabaseRequest rq) {
-        DatabaseToCreate databaseToCreate = databaseMapper.map(clusterId, rq);
-        UUID operationId = clusterService.createDatabase(databaseToCreate);
-
-        return ResponseEntity.ok()
-                .body(new V1ScheduledOperationResponse(operationId));
-    }
-
-    @Override
-    public ResponseEntity<V1ScheduledOperationResponse> deleteDatabase(UUID clusterId, UUID databaseId) {
-        UUID operationId = clusterService.deleteDatabase(clusterId, databaseId);
-
-        return ResponseEntity.ok()
-                .body(new V1ScheduledOperationResponse(operationId));
     }
 }
