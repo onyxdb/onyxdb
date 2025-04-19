@@ -77,74 +77,74 @@ paths:
           description: OK
 
   # ---------- v1Zones ----------
-  /api/v1/zones:
-    get:
-      summary: Get zones
-      operationId: listZones
-      tags:
-        - v1Zones
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/V1ListZonesResponse'
-    post:
-      summary: Create zone
-      operationId: createZone
-      tags:
-        - v1Zones
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/V1CreateZoneRequest'
-      responses:
-        '200':
-          description: OK
-  /api/v1/zones/{zoneId}:
-    get:
-      summary: Get zone
-      operationId: getZone
-      tags:
-        - v1Zones
-      parameters:
-        - $ref: '#/components/parameters/ZoneIdPV'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/V1ZoneResponse'
-    put:
-      summary: Update zone
-      operationId: updateZone
-      tags:
-        - v1Zones
-      parameters:
-        - $ref: '#/components/parameters/ZoneIdPV'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/V1UpdateZoneRequest'
-      responses:
-        '200':
-          description: OK
-    delete:
-      summary: Delete zone
-      operationId: deleteZone
-      tags:
-        - v1Zones
-      parameters:
-        - $ref: '#/components/parameters/ZoneIdPV'
-      responses:
-        '200':
-          description: OK
+#  /api/v1/zones:
+#    get:
+#      summary: Get zones
+#      operationId: listZones
+#      tags:
+#        - v1Zones
+#      responses:
+#        '200':
+#          description: OK
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/V1ListZonesResponse'
+#    post:
+#      summary: Create zone
+#      operationId: createZone
+#      tags:
+#        - v1Zones
+#      requestBody:
+#        required: true
+#        content:
+#          application/json:
+#            schema:
+#              $ref: '#/components/schemas/V1CreateZoneRequest'
+#      responses:
+#        '200':
+#          description: OK
+#  /api/v1/zones/{zoneId}:
+#    get:
+#      summary: Get zone
+#      operationId: getZone
+#      tags:
+#        - v1Zones
+#      parameters:
+#        - $ref: '#/components/parameters/ZoneIdPV'
+#      responses:
+#        '200':
+#          description: OK
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/V1ZoneResponse'
+#    put:
+#      summary: Update zone
+#      operationId: updateZone
+#      tags:
+#        - v1Zones
+#      parameters:
+#        - $ref: '#/components/parameters/ZoneIdPV'
+#      requestBody:
+#        required: true
+#        content:
+#          application/json:
+#            schema:
+#              $ref: '#/components/schemas/V1UpdateZoneRequest'
+#      responses:
+#        '200':
+#          description: OK
+#    delete:
+#      summary: Delete zone
+#      operationId: deleteZone
+#      tags:
+#        - v1Zones
+#      parameters:
+#        - $ref: '#/components/parameters/ZoneIdPV'
+#      responses:
+#        '200':
+#          description: OK
 
   # ---------- v1Projects ----------
   /api/v1/projects:
