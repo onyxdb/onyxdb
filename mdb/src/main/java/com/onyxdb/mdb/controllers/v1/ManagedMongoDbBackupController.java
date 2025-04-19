@@ -38,6 +38,11 @@ public class ManagedMongoDbBackupController implements ManagedMongoDbBackupsApi 
     }
 
     @Override
+    public ResponseEntity<V1ScheduledOperationResponse> createBackup(UUID clusterId) {
+        return ResponseEntity.ok(new V1ScheduledOperationResponse(UUID.randomUUID()));
+    }
+
+    @Override
     public ResponseEntity<V1ScheduledOperationResponse> deleteBackup(UUID clusterId, String backupName) {
         return ResponseEntity.ok(new V1ScheduledOperationResponse(UUID.randomUUID()));
     }

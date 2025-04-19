@@ -463,7 +463,7 @@ paths:
   # ---------- Managed MongoDB backups ---------------------------------------------------------------------------------
   /api/managed-mongodb/v1/clusters/{clusterId}/backups:
     get:
-      summary: List MongoDB backups for cluster
+      summary: List backups of MongoDB cluster
       operationId: listBackups
       tags:
         - Managed MongoDB backups
@@ -476,6 +476,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ListMongoBackupsResponse'
+    post:
+      summary: Create backup of MongoDB cluster
+      operationId: createBackup
+      tags:
+        - Managed MongoDB backups
+      parameters:
+        - $ref: '#/components/parameters/ClusterIdPV'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/V1ScheduledOperationResponse'
   /api/managed-mongodb/v1/clusters/{clusterId}/backups/{backupName}:
     delete:
       summary: Delete backup of MongoDB cluster
