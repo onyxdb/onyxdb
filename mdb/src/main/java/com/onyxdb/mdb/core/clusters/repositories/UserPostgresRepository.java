@@ -130,7 +130,7 @@ public class UserPostgresRepository implements UserRepository {
             PsqlUtils.handleDataAccessEx(
                     e,
                     USERS,
-                    Indexes.USERS_NAME_CLUSTER_ID_IDX,
+                    Indexes.USERS_NAME_CLUSTER_ID_UNIQ_IDX,
                     () -> new BadRequestException(String.format(
                             "User with name '%s' already exists",
                             user.name()
