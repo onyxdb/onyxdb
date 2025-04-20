@@ -398,6 +398,19 @@ paths:
               schema:
                 $ref: '#/components/schemas/V1ScheduledOperationResponse'
   # ---------- Managed MongoDB users -----------------------------------------------------------------------------------
+  /api/managed-mongodb/v1/users/roles:
+    get:
+      summary: List available MongoDB roles
+      operationId: listRoles
+      tags:
+        - Managed MongoDB users
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListMongoRolesResponse'
   /api/managed-mongodb/v1/clusters/{clusterId}/users:
     get:
       summary: List MongoDB users in cluster
@@ -1145,6 +1158,15 @@ components:
       enum:
         - automated
         - manual
+    ListMongoRolesResponse:
+      type: object
+      properties:
+        roles:
+          type: array
+          items:
+            type: string
+      required:
+        - roles
   # ---------- parameters ----------------------------------------------------------------------------------------------
   parameters:
     ResourcePresetIdPV:
