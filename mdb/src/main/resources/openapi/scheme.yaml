@@ -862,11 +862,34 @@ components:
           format: uuid
         config:
           $ref: '#/components/schemas/V1MongoConfig'
+        database:
+          $ref: '#/components/schemas/InitMongoDatabase'
+        user:
+          $ref: '#/components/schemas/InitMongoUser'
       required:
         - name
         - description
         - projectId
         - config
+        - database
+        - user
+    InitMongoDatabase:
+      type: object
+      properties:
+        name:
+          type: string
+      required:
+        - name
+    InitMongoUser:
+      type: object
+      properties:
+        name:
+          type: string
+        password:
+          type: string
+      required:
+        - name
+        - password
     V1CreateMongoClusterResponse:
       type: object
       properties:
