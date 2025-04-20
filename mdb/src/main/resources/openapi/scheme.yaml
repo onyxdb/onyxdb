@@ -553,6 +553,54 @@ paths:
       responses:
         '200':
           description: OK
+  # ---------- Quotas --------------------------------------------------------------------------------------------------
+  /api/quotas/managed-mongodb/simulateUsage:
+    post:
+      summary: Simulate quota usage for MongoDB cluster
+      operationId: simulateMongoDbUsage
+      tags:
+        - Managed quotas
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SimulateMongoDBQuotaUsageRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimulateMongoDBQuotaUsageResponse'
+#  /api/quotas/mdb:
+#    get:
+#      summary: List MDB quotas
+#      operationId: listQuotas
+#      tags:
+#        - Managed quotas
+#      responses:
+#        '200':
+#          description: OK
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/ListQuotasResponse'
+#  /api/quotas/mdb/{quotaId}:
+#    get:
+#      summary: Get MDB quota
+#      operationId: getQuota
+#      tags:
+#        - Managed quotas
+#      parameters:
+#        - $ref: '#/components/parameters/QuotaIdPV'
+#      responses:
+#        '200':
+#          description: OK
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/Quota'
 # ---------- components ------------------------------------------------------------------------------------------------
 components:
   # ---------- schemas -------------------------------------------------------------------------------------------------
@@ -1190,6 +1238,68 @@ components:
             type: string
       required:
         - roles
+    ListQuotasResponse:
+      type: object
+      properties:
+        quotas:
+          type: array
+          items:
+            $ref: '#/components/schemas/Quota'
+      required:
+        - quotas
+    Quota:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        resourceType:
+          $ref: '#/components/schemas/ResourceType'
+        limit:
+          type: integer
+          format: int64
+        allocation:
+          type: integer
+          format: int64
+        free:
+          type: integer
+          format: int64
+      required:
+        - id
+        - resourceType
+        - limit
+        - allocation
+        - free
+    ResourceType:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        displayName:
+          type: string
+      required:
+        - id
+        - name
+        - displayName
+    SimulateMongoDBQuotaUsageRequest:
+      type: object
+      properties:
+        config:
+          $ref: '#/components/schemas/V1MongoConfig'
+      required:
+        - config
+    SimulateMongoDBQuotaUsageResponse:
+      type: object
+      properties:
+        quotas:
+          type: array
+          items:
+            $ref: '#/components/schemas/Quota'
+      required:
+        - quotas
   # ---------- parameters ----------------------------------------------------------------------------------------------
   parameters:
     ResourcePresetIdPV:
@@ -1239,3 +1349,10 @@ components:
       required: true
       schema:
         type: string
+    QuotaIdPV:
+      name: quotaId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
