@@ -1,5 +1,6 @@
 package com.onyxdb.mdb.controllers.v1;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -8,9 +9,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.onyxdb.mdb.core.clusters.ClusterService;
 import com.onyxdb.mdb.core.clusters.mappers.UserMapper;
+import com.onyxdb.mdb.core.clusters.models.MongoRole;
 import com.onyxdb.mdb.core.clusters.models.User;
 import com.onyxdb.mdb.core.clusters.models.UserToCreate;
 import com.onyxdb.mdb.generated.openapi.apis.ManagedMongoDbUsersApi;
+import com.onyxdb.mdb.generated.openapi.models.ListMongoRolesResponse;
 import com.onyxdb.mdb.generated.openapi.models.ListMongoUsersResponse;
 import com.onyxdb.mdb.generated.openapi.models.MongoUser;
 import com.onyxdb.mdb.generated.openapi.models.MongoUserToCreate;
@@ -40,6 +43,13 @@ public class ManagedMongoUserController implements ManagedMongoDbUsersApi {
     public ResponseEntity<MongoUser> getUser(UUID userId) {
         User user = clusterService.getUser(userId);
         return ResponseEntity.ok().body(userMapper.map(user));
+    }
+
+    @Override
+    public ResponseEntity<ListMongoRolesResponse> listRoles() {
+        return ResponseEntity.ok(new ListMongoRolesResponse(
+                Arrays.stream(MongoRole.values()).map(MongoRole::value).toList()
+        ));
     }
 
     @Override
