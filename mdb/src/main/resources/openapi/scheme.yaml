@@ -554,12 +554,25 @@ paths:
         '200':
           description: OK
   # ---------- Quotas --------------------------------------------------------------------------------------------------
-  /api/quotas/managed-mongodb/simulateUsage:
-    post:
-      summary: Simulate quota usage for MongoDB cluster
-      operationId: simulateMongoDbUsage
+  /api/quotas/mdb/resources:
+    get:
+      summary: List MDB resources
+      operationId: listResources
       tags:
-        - Managed quotas
+        - MDB quotas
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListMdbResourcesRequest'
+  /api/quotas/mdb/managed-mongodb/simulate-usage:
+    get:
+      summary: Simulate quotas usage for MongoDB cluster
+      operationId: simulateMongoDbQuotasUsage
+      tags:
+        - MDB quotas
       requestBody:
         required: true
         content:
@@ -573,34 +586,70 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SimulateMongoDBQuotaUsageResponse'
-#  /api/quotas/mdb:
-#    get:
-#      summary: List MDB quotas
-#      operationId: listQuotas
-#      tags:
-#        - Managed quotas
-#      responses:
-#        '200':
-#          description: OK
-#          content:
-#            application/json:
-#              schema:
-#                $ref: '#/components/schemas/ListQuotasResponse'
-#  /api/quotas/mdb/{quotaId}:
-#    get:
-#      summary: Get MDB quota
-#      operationId: getQuota
-#      tags:
-#        - Managed quotas
-#      parameters:
-#        - $ref: '#/components/parameters/QuotaIdPV'
-#      responses:
-#        '200':
-#          description: OK
-#          content:
-#            application/json:
-#              schema:
-#                $ref: '#/components/schemas/Quota'
+  /api/quotas/mdb/by-product:
+    get:
+      summary: List MDB quotas by product
+      operationId: listQuotasByProduct
+      tags:
+        - MDB quotas
+      parameters:
+        - $ref: '#/components/parameters/QuotaIdRQP'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListQuotasResponse'
+  /api/quotas/mdb/upload-to-products:
+    put:
+      summary: Upload MDB quotas to multiple products
+      operationId: uploadQuotasToProducts
+      tags:
+        - MDB quotas
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UploadQuotasToProductsRequest'
+      responses:
+        '200':
+          description: OK
+  /api/quotas/mdb/exchange-between-products:
+    put:
+      summary: Exchange MDB quotas between products
+      operationId: exchangeQuotasBetweenProducts
+      tags:
+        - MDB quotas
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExchangeQuotasBetweenProductsRequest'
+      responses:
+        '200':
+          description: OK
+  /api/quotas/mdb/simulate-exchange-between-products:
+    get:
+      summary: Simulate MDB quotas exchange between products
+      operationId: simulateQuotasExchangeBetweenProducts
+      tags:
+        - MDB quotas
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExchangeQuotasBetweenProductsRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimulateQuotasExchangeBetweenProductsResponse'
 # ---------- components ------------------------------------------------------------------------------------------------
 components:
   # ---------- schemas -------------------------------------------------------------------------------------------------
@@ -1253,8 +1302,9 @@ components:
         id:
           type: string
           format: uuid
-        resourceType:
-          $ref: '#/components/schemas/ResourceType'
+        resourceId:
+          type: string
+          format: uuid
         limit:
           type: integer
           format: int64
@@ -1266,11 +1316,11 @@ components:
           format: int64
       required:
         - id
-        - resourceType
+        - resourceId
         - limit
         - allocation
         - free
-    ResourceType:
+    Resource:
       type: object
       properties:
         id:
@@ -1300,6 +1350,76 @@ components:
             $ref: '#/components/schemas/Quota'
       required:
         - quotas
+    UploadQuotasToProductsRequest:
+      type: object
+      properties:
+        products:
+          $ref: '#/components/schemas/ProductQuotas'
+    ProductQuotas:
+      type: object
+      properties:
+        productId:
+          type: string
+          format: uuid
+        quotas:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuotaToExchange'
+      required:
+        - productId
+        - quotas
+    QuotaToExchange:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        resourceId:
+          type: string
+          format: uuid
+        limit:
+          type: integer
+          format: int64
+      required:
+        - id
+        - resourceId
+        - limit
+    ExchangeQuotasBetweenProductsRequest:
+      type: object
+      properties:
+        fromProductId:
+          type: string
+          format: uuid
+        toProductId:
+          type: string
+          format: uuid
+        quotas:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuotaToExchange'
+      required:
+        - fromProductId
+        - toProductId
+        - quotas
+    SimulateQuotasExchangeBetweenProductsResponse:
+      type: object
+      properties:
+        fromProduct:
+          $ref: '#/components/schemas/ProductQuotas'
+        toProduct:
+          $ref: '#/components/schemas/ProductQuotas'
+      required:
+        - fromProduct
+        - toProduct
+    ListMdbResourcesRequest:
+      type: object
+      properties:
+        resources:
+          type: array
+          items:
+            $ref: '#/components/schemas/Resource'
+      required:
+        - resources
   # ---------- parameters ----------------------------------------------------------------------------------------------
   parameters:
     ResourcePresetIdPV:
@@ -1352,6 +1472,13 @@ components:
     QuotaIdPV:
       name: quotaId
       in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    QuotaIdRQP:
+      name: productId
+      in: query
       required: true
       schema:
         type: string
