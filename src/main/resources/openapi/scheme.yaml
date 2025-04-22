@@ -553,7 +553,7 @@ paths:
       responses:
         '200':
           description: OK
-  # ---------- Quotas --------------------------------------------------------------------------------------------------
+  # ---------- MDB Quotas ----------------------------------------------------------------------------------------------
   /api/quotas/mdb/by-products:
     get:
       summary: List MDB quotas by products
@@ -650,6 +650,34 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SimulateMongoDBQuotasUsageResponse'
+  # ---------- Billing -------------------------------------------------------------------------------------------------
+  /api/billing/product-quota-usage-report:
+    get:
+      summary: Get product quota usage report
+      operationId: getProductQuotaUsageReport
+      tags:
+        - Billing
+      parameters:
+        - $ref: '#/components/parameters/ProductIdRQP'
+        - name: starDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProductQuotaUsageReportResponseOA'
 # ---------- components ------------------------------------------------------------------------------------------------
 components:
   # ---------- schemas -------------------------------------------------------------------------------------------------
@@ -1460,6 +1488,42 @@ components:
             $ref: '#/components/schemas/Resource'
       required:
         - resources
+    GetProductQuotaUsageReportResponseOA:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductQuotaUsageReportItemOA'
+      required:
+        - items
+    ProductQuotaUsageReportItemOA:
+      type: object
+      properties:
+        productId:
+          type: string
+          format: uuid
+        quotaProvider:
+          type: string
+        limit:
+          type: integer
+          format: int64
+        usage:
+          type: integer
+          format: int64
+        free:
+          type: integer
+          format: int64
+        timestamp:
+          type: integer
+          format: int64
+      required:
+        - productId
+        - quotaProvider
+        - limit
+        - usage
+        - free
+        - timestamp
   # ---------- parameters ----------------------------------------------------------------------------------------------
   parameters:
     ResourcePresetIdPV:
@@ -1517,7 +1581,7 @@ components:
         type: string
         format: uuid
     ProductIdRQP:
-      name: productIds
+      name: productId
       in: query
       required: true
       schema:

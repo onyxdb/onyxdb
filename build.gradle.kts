@@ -33,6 +33,8 @@ dependencies {
 	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.18.3")
 
 	implementation("redis.clients:jedis:5.2.0")
+	implementation("com.clickhouse:clickhouse-jdbc:0.7.1")
+	implementation("org.lz4:lz4-java:1.8.0")
 
 	testImplementation(libs.springBoot.starterTest)
 	testImplementation(libs.springBoot.starterTestcontainers)

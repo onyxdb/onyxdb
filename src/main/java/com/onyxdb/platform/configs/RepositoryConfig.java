@@ -2,10 +2,14 @@ package com.onyxdb.platform.configs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jooq.DSLContext;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 import redis.clients.jedis.JedisPool;
 
+import com.onyxdb.platform.billing.BillingClickhouseRepository;
+import com.onyxdb.platform.billing.BillingRepository;
 import com.onyxdb.platform.core.clusters.ClusterMapper;
 import com.onyxdb.platform.core.clusters.mappers.DatabaseMapper;
 import com.onyxdb.platform.core.clusters.mappers.HostMapper;
@@ -127,5 +131,13 @@ public class RepositoryConfig {
                 quotaMapper,
                 resourceMapper
         );
+    }
+
+    @Bean
+    public BillingRepository billingRepository(
+            @Qualifier(DatasourceConfig.CLICKHOUSE_JDBC_TEMPLATE_BEAN)
+            JdbcTemplate jdbcTemplate
+    ) {
+        return new BillingClickhouseRepository(jdbcTemplate);
     }
 }
