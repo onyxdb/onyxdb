@@ -3,112 +3,131 @@ package com.onyxdb.mdb.controllers;
 import java.util.List;
 import java.util.UUID;
 
+import org.jetbrains.annotations.Nullable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.onyxdb.mdb.core.clusters.ClusterMapper;
+import com.onyxdb.mdb.core.clusters.models.ClusterConfig;
 import com.onyxdb.mdb.generated.openapi.apis.MdbQuotasApi;
-import com.onyxdb.mdb.generated.openapi.models.ExchangeQuotasBetweenProductsRequest;
-import com.onyxdb.mdb.generated.openapi.models.ListMdbResourcesRequest;
-import com.onyxdb.mdb.generated.openapi.models.ListQuotasResponse;
-import com.onyxdb.mdb.generated.openapi.models.ProductQuotas;
-import com.onyxdb.mdb.generated.openapi.models.Quota;
-import com.onyxdb.mdb.generated.openapi.models.QuotaToExchange;
-import com.onyxdb.mdb.generated.openapi.models.Resource;
-import com.onyxdb.mdb.generated.openapi.models.SimulateMongoDBQuotaUsageRequest;
-import com.onyxdb.mdb.generated.openapi.models.SimulateMongoDBQuotaUsageResponse;
-import com.onyxdb.mdb.generated.openapi.models.SimulateQuotasExchangeBetweenProductsResponse;
+import com.onyxdb.mdb.generated.openapi.models.ListQuotasByProductsResponse;
+import com.onyxdb.mdb.generated.openapi.models.ListResourcesResponse;
+import com.onyxdb.mdb.generated.openapi.models.SimulateMongoDBQuotasUsageRequest;
+import com.onyxdb.mdb.generated.openapi.models.SimulateMongoDBQuotasUsageResponse;
+import com.onyxdb.mdb.generated.openapi.models.SimulateTransferQuotasBetweenProductsResponse;
+import com.onyxdb.mdb.generated.openapi.models.TransferQuotasBetweenProductsRequest;
 import com.onyxdb.mdb.generated.openapi.models.UploadQuotasToProductsRequest;
+import com.onyxdb.mdb.quotas.EnrichedProductQuota;
+import com.onyxdb.mdb.quotas.ProductQuotaToUpload;
+import com.onyxdb.mdb.quotas.QuotaFilter;
+import com.onyxdb.mdb.quotas.QuotaMapper;
+import com.onyxdb.mdb.quotas.QuotaService;
+import com.onyxdb.mdb.quotas.QuotaToTransfer;
+import com.onyxdb.mdb.quotas.SimulateTransferQuotasBetweenProductsResult;
+import com.onyxdb.mdb.resources.Resource;
+import com.onyxdb.mdb.resources.ResourceFilter;
+import com.onyxdb.mdb.resources.ResourceMapper;
+import com.onyxdb.mdb.resources.ResourceService;
 
 @RestController
 public class MdbQuotaController implements MdbQuotasApi {
-    private static final Quota CPU_QUOTA = new Quota(
-            UUID.randomUUID(),
-            UUID.randomUUID(),
-            1L,
-            0L,
-            1L
-    );
-    private static final Quota RAM_QUOTA = new Quota(
-            UUID.randomUUID(),
-            UUID.randomUUID(),
-            1L,
-            0L,
-            1L
-    );
-    private static final QuotaToExchange CPU_TO_EXCHANGE = new QuotaToExchange(
-            UUID.randomUUID(),
-            UUID.randomUUID(),
-            1L
-    );
-    private static final QuotaToExchange RAM_TO_EXCHANGE = new QuotaToExchange(
-            UUID.randomUUID(),
-            UUID.randomUUID(),
-            1L
-    );
+    private final ResourceService resourceService;
+    private final ResourceMapper resourceMapper;
+    private final QuotaService quotaService;
+    private final QuotaMapper quotaMapper;
+    private final ClusterMapper clusterMapper;
+
+    public MdbQuotaController(
+            ResourceService resourceService,
+            ResourceMapper resourceMapper,
+            QuotaService quotaService,
+            QuotaMapper quotaMapper,
+            ClusterMapper clusterMapper
+    ) {
+        this.resourceService = resourceService;
+        this.resourceMapper = resourceMapper;
+        this.quotaService = quotaService;
+        this.quotaMapper = quotaMapper;
+        this.clusterMapper = clusterMapper;
+    }
 
     @Override
-    public ResponseEntity<Void> exchangeQuotasBetweenProducts(ExchangeQuotasBetweenProductsRequest rq) {
+    public ResponseEntity<ListQuotasByProductsResponse> listQuotasByProducts(
+            @Nullable
+            List<UUID> productIds
+    ) {
+        QuotaFilter filter = QuotaFilter.builder()
+                .withProductIds(productIds)
+                .build();
+        List<EnrichedProductQuota> quotas = quotaService.listProductQuotas(filter);
+
+        var response = new ListQuotasByProductsResponse(
+                quotaMapper.mapToProductQuotasListResponse(quotas, resourceMapper)
+        );
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public ResponseEntity<Void> transferQuotasBetweenProducts(TransferQuotasBetweenProductsRequest rq) {
+        List<QuotaToTransfer> quotas = rq.getQuotas().stream().map(quotaMapper::mapToQuotaExchange).toList();
+        quotaService.transferQuotasBetweenProducts(
+                rq.getSrcProductId(),
+                rq.getDstProductId(),
+                quotas
+        );
+
         return ResponseEntity.ok().build();
     }
 
     @Override
-    public ResponseEntity<ListQuotasResponse> listQuotasByProduct(UUID productId) {
-        return ResponseEntity.ok(
-                new ListQuotasResponse(
-                        List.of(CPU_QUOTA, RAM_QUOTA)
-                )
-        );
-    }
-
-    @Override
-    public ResponseEntity<ListMdbResourcesRequest> listResources() {
-        return ResponseEntity.ok(
-                new ListMdbResourcesRequest(
-                        List.of(
-                                new Resource(
-                                        UUID.randomUUID(),
-                                        "vcpu",
-                                        "Количество vCPU"
-                                ),
-                                new Resource(
-                                        UUID.randomUUID(),
-                                        "ram",
-                                        "Объем оперативной памяти"
-                                )
-                        )
-                )
-        );
-    }
-
-    @Override
-    public ResponseEntity<SimulateMongoDBQuotaUsageResponse> simulateMongoDbQuotasUsage(
-            SimulateMongoDBQuotaUsageRequest rq
+    public ResponseEntity<SimulateTransferQuotasBetweenProductsResponse> simulateTransferQuotasBetweenProducts(
+            TransferQuotasBetweenProductsRequest rq
     ) {
+        SimulateTransferQuotasBetweenProductsResult result = quotaService.simulateTransferQuotasBetweenProducts(
+                rq.getSrcProductId(),
+                rq.getDstProductId(),
+                rq.getQuotas().stream().map(quotaMapper::mapToQuotaExchange).toList()
+        );
+
         return ResponseEntity.ok(
-                new SimulateMongoDBQuotaUsageResponse(
-                        List.of(CPU_QUOTA, RAM_QUOTA)
+                new SimulateTransferQuotasBetweenProductsResponse(
+                        quotaMapper.mapToProductQuotasListResponse(rq.getSrcProductId(), result.srcQuotas(), resourceMapper),
+                        quotaMapper.mapToProductQuotasListResponse(rq.getDstProductId(), result.dstQuotas(), resourceMapper)
                 )
         );
     }
 
     @Override
-    public ResponseEntity<SimulateQuotasExchangeBetweenProductsResponse> simulateQuotasExchangeBetweenProducts(ExchangeQuotasBetweenProductsRequest exchangeQuotasBetweenProductsRequest) {
-        return ResponseEntity.ok(
-                new SimulateQuotasExchangeBetweenProductsResponse(
-                        new ProductQuotas(
-                                UUID.randomUUID(),
-                                List.of(CPU_TO_EXCHANGE, RAM_TO_EXCHANGE)
-                        ),
-                        new ProductQuotas(
-                                UUID.randomUUID(),
-                                List.of(CPU_TO_EXCHANGE, RAM_TO_EXCHANGE)
-                        )
-                )
+    public ResponseEntity<ListResourcesResponse> listResources() {
+        List<Resource> resources = resourceService.listResources(ResourceFilter.empty());
+
+        var response = new ListResourcesResponse(
+                resources.stream().map(resourceMapper::map).toList()
         );
+        return ResponseEntity.ok(response);
     }
 
     @Override
-    public ResponseEntity<Void> uploadQuotasToProducts(UploadQuotasToProductsRequest uploadQuotasToProductsRequest) {
+    public ResponseEntity<SimulateMongoDBQuotasUsageResponse> simulateMongoDbQuotasUsage(
+            SimulateMongoDBQuotasUsageRequest rq
+    ) {
+        ClusterConfig clusterConfig = clusterMapper.mapToClusterConfig(rq.getConfig());
+        List<EnrichedProductQuota> simulatedQuotas = quotaService.simulateMongoDbQuotasUsage(
+                rq.getProjectId(),
+                clusterConfig
+        );
+
+        var response = new SimulateMongoDBQuotasUsageResponse(
+                simulatedQuotas.stream().map(q -> quotaMapper.mapToQuotaResponse(q, resourceMapper)).toList()
+        );
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public ResponseEntity<Void> uploadQuotasToProducts(UploadQuotasToProductsRequest rq) {
+        List<ProductQuotaToUpload> quotas = quotaMapper.map(rq);
+        quotaService.uploadProductQuotas(quotas);
+
         return ResponseEntity.ok().build();
     }
 }

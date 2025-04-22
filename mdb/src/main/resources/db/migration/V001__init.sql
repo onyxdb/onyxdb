@@ -16,12 +16,12 @@ CREATE TABLE public.resource_presets
 );
 
 INSERT INTO public.resource_presets (id, name, type, vcpu, ram)
-VALUES (gen_random_uuid(), 'co-c2-r4', 'cpu_optimized', 2, 4294967296),
-       (gen_random_uuid(), 'co-c4-r8', 'cpu_optimized', 4, 8589934592),
-       (gen_random_uuid(), 's-c2-r8', 'standard', 2, 4294967296),
-       (gen_random_uuid(), 's-c4-r8', 'standard', 4, 8589934592),
-       (gen_random_uuid(), 'ro-c2-r16', 'ram_optimized', 2, 17179869184),
-       (gen_random_uuid(), 'ro-c4-r32', 'ram_optimized', 4, 34359738368);
+VALUES ('4eaec494-f935-46eb-8a5e-c8e54afa9869', 'co-c2-r4', 'cpu_optimized', 2, 4294967296),
+       ('00551fb9-f935-43e7-a597-565221818b79', 'co-c4-r8', 'cpu_optimized', 4, 8589934592),
+       ('853ec99d-8b5e-469b-94eb-41a88d244223', 's-c2-r4', 'standard', 2, 4294967296),
+       ('06445eb3-e1d9-4b0b-a567-fdff5cdf619a', 's-c4-r8', 'standard', 4, 8589934592),
+       ('c42ba25e-8206-4395-9bf9-5835e6267dac', 'ro-c2-r16', 'ram_optimized', 2, 17179869184),
+       ('05195d23-5385-4887-b1ec-5f7d5b315d5c', 'ro-c4-r32', 'ram_optimized', 4, 34359738368);
 
 CREATE TABLE public.zones
 (
@@ -188,3 +188,82 @@ CREATE TABLE public.tasks_to_blocker_tasks
     FOREIGN KEY (blocker_task_id) REFERENCES public.tasks (id),
     PRIMARY KEY (task_id, blocker_task_id)
 );
+
+CREATE TYPE public.resource_type AS ENUM (
+    'unknown',
+    'vcpu',
+    'ram'
+    );
+
+CREATE TYPE public.quota_provider AS ENUM (
+    'mdb'
+    );
+
+CREATE TABLE public.resources
+(
+    id          uuid                  NOT NULL,
+    name        varchar               NOT NULL,
+    description varchar               NOT NULL,
+    type        public.resource_type  NOT NULL,
+    provider    public.quota_provider NOT NULL,
+    PRIMARY KEY (id),
+    UNIQUE (type, provider)
+);
+
+INSERT INTO public.resources (id, name, description, type, provider)
+VALUES ('a162cf17-0320-42be-b4e2-9b2e91070916',
+        'vCPU',
+        'Количество vCPU',
+        'vcpu',
+        'mdb'),
+       ('070dc19a-4000-4035-94a7-fe389df8fb1b',
+        'RAM',
+        'Объем оперативной памяти',
+        'ram',
+        'mdb');
+
+CREATE TABLE public.products
+(
+    id   uuid    NOT NULL,
+    name varchar NOT NULL,
+    PRIMARY KEY (id)
+);
+
+INSERT INTO public.products (id, name)
+VALUES ('a4ea283e-b3aa-43dd-9e64-d6c68d0af96f', 'Product 1'),
+       ('a3e1fcde-aa38-4029-9370-9b320d81d01e', 'Product 2');
+
+CREATE TABLE public.product_quotas
+(
+    product_id  uuid   NOT NULL,
+    resource_id uuid   NOT NULL,
+    "limit"     bigint NOT NULL,
+    allocation  bigint NOT NULL,
+    free        bigint NOT NULL,
+    PRIMARY KEY (product_id, resource_id),
+    FOREIGN KEY (product_id) REFERENCES public.products (id),
+    FOREIGN KEY (resource_id) REFERENCES public.resources (id)
+);
+
+INSERT INTO public.product_quotas(product_id, resource_id, "limit", allocation, free)
+VALUES ('a4ea283e-b3aa-43dd-9e64-d6c68d0af96f',
+        'a162cf17-0320-42be-b4e2-9b2e91070916',
+        10,
+        5,
+        5),
+       ('a3e1fcde-aa38-4029-9370-9b320d81d01e',
+        'a162cf17-0320-42be-b4e2-9b2e91070916',
+        5,
+        2,
+        3),
+       ('a4ea283e-b3aa-43dd-9e64-d6c68d0af96f',
+        '070dc19a-4000-4035-94a7-fe389df8fb1b',
+        10,
+        5,
+        5)
+--        ('a3e1fcde-aa38-4029-9370-9b320d81d01e',
+--         '070dc19a-4000-4035-94a7-fe389df8fb1b',
+--         5,
+--         2,
+--         3)
+;

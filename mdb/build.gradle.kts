@@ -24,6 +24,7 @@ dependencies {
 	implementation(libs.swaggerCoreV3.swaggerAnnotations)
 	implementation(libs.javaxAnnotation.annotionApi)
 	implementation(libs.javaxValidation.validationApi)
+	implementation("javax.validation:validation-api:2.0.0.Final")
 
 	implementation(libs.orgJetbrains.annotations)
 
