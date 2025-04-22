@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.onyxdb.platform.billing.BillingMapper;
 import com.onyxdb.platform.core.clusters.ClusterMapper;
 import com.onyxdb.platform.core.clusters.mappers.DatabaseMapper;
 import com.onyxdb.platform.core.clusters.mappers.HostMapper;
@@ -55,5 +56,10 @@ public class MapperConfig {
     @Bean
     public QuotaMapper quotaMapper() {
         return new QuotaMapper();
+    }
+
+    @Bean
+    public BillingMapper billingMapper() {
+        return new BillingMapper();
     }
 }

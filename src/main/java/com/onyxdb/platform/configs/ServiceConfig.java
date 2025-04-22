@@ -4,6 +4,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import com.onyxdb.platform.billing.BillingRepository;
+import com.onyxdb.platform.billing.BillingService;
 import com.onyxdb.platform.core.clusters.ClusterMapper;
 import com.onyxdb.platform.core.clusters.ClusterService;
 import com.onyxdb.platform.core.clusters.HostService;
@@ -120,5 +122,10 @@ public class ServiceConfig {
                 resourceService,
                 projectService
         );
+    }
+
+    @Bean
+    public BillingService billingService(BillingRepository billingRepository) {
+        return new BillingService(billingRepository);
     }
 }

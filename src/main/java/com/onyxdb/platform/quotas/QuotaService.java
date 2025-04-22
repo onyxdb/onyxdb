@@ -190,9 +190,6 @@ public class QuotaService {
                 EnrichedProductQuota.empty(productId, ramResource)
         );
 
-        System.err.println("vcpu: " + vcpuQuota);
-        System.err.println("ram: " + ramQuota);
-
         return List.of(
                 vcpuQuota.addUsage(Double.valueOf(Math.ceil(preset.vcpu())).longValue() * clusterConfig.replicas()),
                 ramQuota.addUsage(Double.valueOf(Math.ceil(preset.ram())).longValue()  * clusterConfig.replicas())
