@@ -6,7 +6,7 @@ import com.onyxdb.platform.generated.openapi.models.ProductQuotaUsageReportItemO
 import com.onyxdb.platform.quotas.QuotaProvider;
 
 public class BillingMapper {
-    public ProductQuotaUsageReportItemOA toProductQuotaUsageReportItemOA(UsageReportItem i) {
+    public ProductQuotaUsageReportItemOA toProductQuotaUsageReportItemOA(ProductQuotaUsageReportItem i) {
         return new ProductQuotaUsageReportItemOA(
                 i.productId(),
                 QuotaProvider.MDB.value(),

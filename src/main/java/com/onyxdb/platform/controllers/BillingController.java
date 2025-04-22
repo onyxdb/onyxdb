@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.onyxdb.platform.billing.BillingMapper;
 import com.onyxdb.platform.billing.BillingService;
-import com.onyxdb.platform.billing.UsageReportItem;
+import com.onyxdb.platform.billing.ProductQuotaUsageReportItem;
 import com.onyxdb.platform.generated.openapi.apis.BillingApi;
 import com.onyxdb.platform.generated.openapi.models.GetProductQuotaUsageReportResponseOA;
 
@@ -32,7 +32,7 @@ public class BillingController implements BillingApi {
             LocalDate starDate,
             LocalDate endDate
     ) {
-        List<UsageReportItem> reportItems = billingService.getUsageReportByProduct(
+        List<ProductQuotaUsageReportItem> reportItems = billingService.getUsageReportByProduct(
                 productId,
                 starDate,
                 endDate

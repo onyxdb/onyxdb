@@ -1,6 +1,10 @@
 spring:
   application:
     name: onyxdb
+  task:
+    scheduling:
+      pool:
+        size: 5
 
 server:
   port: 9001
@@ -30,6 +34,11 @@ onyxdb:
     url: jdbc:clickhouse://localhost:8123/onyxdb
     username: ""
     password: ""
+  tasks:
+    collect-product-quota-usage:
+      fixed-rate: PT5S
+      lock-at-least-for: 5s
+      lock-at-most-for: 5s
 
 onyxdb-app:
   workers:
