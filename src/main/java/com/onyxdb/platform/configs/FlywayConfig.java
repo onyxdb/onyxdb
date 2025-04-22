@@ -16,7 +16,7 @@ public class FlywayConfig {
     ) {
         Flyway flyway = Flyway.configure()
                 .dataSource(dataSource)
-                .locations("db/postgres-migrations")
+                .locations("db/migrations/postgres")
                 .load();
 
         flyway.migrate();
@@ -31,7 +31,7 @@ public class FlywayConfig {
     ) {
         Flyway flyway = Flyway.configure()
                 .dataSource(dataSource)
-                .locations("db/clickhouse-migrations")
+                .locations("db/migrations/clickhouse")
                 .load();
 
         flyway.migrate();

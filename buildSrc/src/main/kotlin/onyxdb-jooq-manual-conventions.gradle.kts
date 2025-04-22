@@ -35,7 +35,7 @@ val psqlContainer: PostgreSQLContainer<Nothing>? =
 
 flyway {
     locations = arrayOf(
-        "filesystem:" + projectDir.absolutePath + "/src/main/resources/db/postgres-migrations"
+        "filesystem:" + projectDir.absolutePath + "/src/main/resources/db/migrations/postgres"
     )
     url = psqlContainer?.jdbcUrl
     user = psqlContainer?.username

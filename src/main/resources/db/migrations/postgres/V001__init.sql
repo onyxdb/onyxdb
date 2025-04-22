@@ -267,3 +267,12 @@ VALUES ('a4ea283e-b3aa-43dd-9e64-d6c68d0af96f',
 --         2,
 --         3)
 ;
+
+CREATE TABLE public.shedlock
+(
+    name       VARCHAR(64),
+    lock_until TIMESTAMP(3) NULL,
+    locked_at  TIMESTAMP(3) NULL,
+    locked_by  VARCHAR(255),
+    PRIMARY KEY (name)
+);
