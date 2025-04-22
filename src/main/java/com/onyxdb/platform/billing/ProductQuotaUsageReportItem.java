@@ -5,6 +5,7 @@ import java.util.UUID;
 
 public record ProductQuotaUsageReportItem(
         UUID productId,
+        UUID resourceId,
         long limit,
         long usage,
         long free,
