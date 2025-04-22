@@ -1,9 +1,9 @@
 spring:
   application:
-    name: onyxdb-mdb
+    name: onyxdb
 
 server:
-  port: ${ONYXDB_MDB_HTTP_PORT:9001}
+  port: 9001
 
 springdoc:
   api-docs:
