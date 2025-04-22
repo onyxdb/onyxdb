@@ -1,7 +1,6 @@
-rootProject.name = "onyxdb"
+rootProject.name = "platform"
 
 include(":common")
 include(":common:postgres")
 
-include(":mdb")
 include(":idm")
