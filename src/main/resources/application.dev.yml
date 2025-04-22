@@ -1,6 +1,6 @@
 spring:
   application:
-    name: onyxdb-mdb
+    name: onyxdb
 
 server:
   port: 9001
