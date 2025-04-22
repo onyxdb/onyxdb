@@ -21,13 +21,15 @@ onyxdb:
   base-url: http://host.minikube.internal:9001
   postgres:
     url: postgresql://localhost:5432/onyxdb
-    username: postgres
+    username: username
     password: password
   redis:
     host: localhost
     port: 6379
   clickhouse:
     url: jdbc:clickhouse://localhost:8123/onyxdb
+    username: username
+    password: password
 
 onyxdb-app:
   workers:

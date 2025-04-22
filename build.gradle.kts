@@ -48,6 +48,7 @@ dependencies {
 	testImplementation(libs.springBoot.starterTestcontainers)
 	testImplementation(libs.testcontainers.junitJupiter)
 	testImplementation(libs.testcontainers.postgresql)
+	testImplementation("org.testcontainers:clickhouse:1.20.6")
 }
 
 openApiGenerate {

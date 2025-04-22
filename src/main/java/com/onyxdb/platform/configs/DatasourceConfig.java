@@ -1,6 +1,7 @@
 package com.onyxdb.platform.configs;
 
 import java.sql.SQLException;
+import java.util.Properties;
 
 import javax.sql.DataSource;
 
@@ -64,9 +65,17 @@ public class DatasourceConfig {
     @Bean(CLICKHOUSE_DATASOURCE_BEAN)
     public DataSource clickhouseDataSource(
             @Value("${onyxdb.clickhouse.url}")
-            String url
+            String url,
+            @Value("${onyxdb.clickhouse.username}")
+            String username,
+            @Value("${onyxdb.clickhouse.password}")
+            String password
     ) throws SQLException {
-        return new ClickHouseDataSource(url);
+        Properties properties = new Properties();
+        properties.put("user", username);
+        properties.put("password", password);
+
+        return new ClickHouseDataSource(url, properties);
     }
 
     @Bean
