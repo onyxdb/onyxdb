@@ -6,4 +6,6 @@ CREATE TABLE onyxdb.billing_quotas_usage
     usage          Int64,
     free           Int64,
     ts             DateTime
-) ENGINE = MergeTree ORDER BY (product_id, quota_provider, ts);
+)
+    ENGINE = MergeTree
+        ORDER BY (product_id, quota_provider, ts);

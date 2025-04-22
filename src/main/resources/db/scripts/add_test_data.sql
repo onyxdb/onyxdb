@@ -1,6 +1,6 @@
-INSERT INTO public.zones (id, description, selector)
-VALUES ('msc', 'Москва', 'msc'),
-       ('spb', 'Санкт-Петербург', 'spb');
+-- INSERT INTO public.zones (id, description, selector)
+-- VALUES ('msc', 'Москва', 'msc'),
+--        ('spb', 'Санкт-Петербург', 'spb');
 
 INSERT INTO public.resource_presets (id, name, type, vcpu, ram)
 VALUES ('c92712a0-d344-4b1a-91fb-b27469b72bf5', 'dev', 'standard', 0.3, 1073741824);

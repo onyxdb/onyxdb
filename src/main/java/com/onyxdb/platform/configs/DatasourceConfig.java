@@ -1,25 +1,28 @@
 package com.onyxdb.platform.configs;
 
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
 import com.clickhouse.jdbc.ClickHouseDataSource;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DataSourceConnectionProvider;
 import org.jooq.impl.DefaultConfiguration;
 import org.jooq.impl.DefaultDSLContext;
+import org.jooq.impl.DefaultExecuteListenerProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.jooq.SpringTransactionProvider;
+import org.springframework.boot.autoconfigure.jooq.ExceptionTranslatorExecuteListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.support.TransactionTemplate;
 
 /**
  * @author foxleren
@@ -27,40 +30,35 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableTransactionManagement
 public class DatasourceConfig {
+    public static final String POSTGRES_DATASOURCE_BEAN = "postgresDataSource";
+    public static final String CLICKHOUSE_DATASOURCE_BEAN = "clickhouseDataSource";
+    public static final String POSTGRES_TRANSACTION_TEMPLATE_BEAN = "postgresTransactionTemplate";
     public static final String CLICKHOUSE_JDBC_TEMPLATE_BEAN = "clickhouseJdbcTemplate";
-    private static final String CLICKHOUSE_DATASOURCE_BEAN = "clickhouseDataSource";
 
-    @Bean
-    public DataSourceTransactionManager dataSourceTransactionManager(DataSource dataSource) {
-        return new DataSourceTransactionManager(dataSource);
-    }
-
-    @Bean
-    public DataSourceConnectionProvider dataSourceConnectionProvider(DataSource dataSource) {
-        return new DataSourceConnectionProvider(new TransactionAwareDataSourceProxy(dataSource));
-    }
-
-    @Bean
-    public SpringTransactionProvider springTransactionProvider(
-            DataSourceTransactionManager dataSourceTransactionManager
+    @Bean(POSTGRES_DATASOURCE_BEAN)
+    public DataSource postgresDataSource(
+            @Value("${onyxdb.postgres.url}")
+            String url,
+            @Value("${onyxdb.postgres.username}")
+            String username,
+            @Value("${onyxdb.postgres.password}")
+            String password
     ) {
-        return new SpringTransactionProvider(dataSourceTransactionManager);
+        HikariConfig config = new HikariConfig();
+        config.setDriverClassName("org.postgresql.Driver");
+        config.setJdbcUrl("jdbc:postgresql://localhost/onyxdb");
+        config.setUsername(username);
+        config.setPassword(password);
+
+        return new HikariDataSource(config);
     }
 
-    @Bean
-    public DSLContext dsl(
-            DataSourceConnectionProvider dataSourceConnectionProvider,
-            SpringTransactionProvider springTransactionProvider,
-            @Value("${spring.datasource.url}") String url,
-            @Value("${spring.datasource.username}") String username,
-            @Value("${spring.datasource.password}") String password
-    ) throws SQLException {
-        org.jooq.Configuration defaultConfiguration = new DefaultConfiguration()
-                .derive(DriverManager.getConnection(url, username, password))
-                .derive(dataSourceConnectionProvider)
-                .derive(springTransactionProvider)
-                .derive(SQLDialect.POSTGRES);
-        return new DefaultDSLContext(defaultConfiguration);
+    @Bean(POSTGRES_TRANSACTION_TEMPLATE_BEAN)
+    public TransactionTemplate transactionTemplate(
+            @Qualifier(POSTGRES_DATASOURCE_BEAN)
+            DataSource dataSource
+    ) {
+        return new TransactionTemplate(new DataSourceTransactionManager(dataSource));
     }
 
     @Bean(CLICKHOUSE_DATASOURCE_BEAN)
@@ -69,6 +67,19 @@ public class DatasourceConfig {
             String url
     ) throws SQLException {
         return new ClickHouseDataSource(url);
+    }
+
+    @Bean
+    public DSLContext dsl(
+            @Qualifier(POSTGRES_DATASOURCE_BEAN)
+            DataSource dataSource
+    ) {
+        org.jooq.Configuration defaultConfiguration = new DefaultConfiguration()
+                .set(new DataSourceConnectionProvider(new TransactionAwareDataSourceProxy(dataSource)))
+                .set(new DefaultExecuteListenerProvider(ExceptionTranslatorExecuteListener.DEFAULT))
+                .set(SQLDialect.POSTGRES);
+
+        return new DefaultDSLContext(defaultConfiguration);
     }
 
     @Bean(CLICKHOUSE_JDBC_TEMPLATE_BEAN)
