@@ -11,6 +11,7 @@ import org.jooq.JSONB;
 
 import com.onyxdb.idm.generated.jooq.tables.records.ProductTableRecord;
 import com.onyxdb.idm.generated.openapi.models.ProductDTO;
+import com.onyxdb.idm.generated.openapi.models.ProductDTOGet;
 
 /**
  * @author ArtemFed
@@ -60,8 +61,8 @@ public record Product(
         );
     }
 
-    public ProductDTO toDTO() {
-        return new ProductDTO()
+    public ProductDTOGet toDTO() {
+        return new ProductDTOGet()
                 .id(id)
                 .name(name)
                 .description(description)
