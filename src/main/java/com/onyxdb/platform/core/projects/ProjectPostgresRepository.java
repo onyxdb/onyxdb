@@ -28,7 +28,7 @@ public class ProjectPostgresRepository implements ProjectRepository {
         return dslContext.select()
                 .from(PROJECTS)
                 .fetch()
-                .map(ProjectConverter::fromJooqRecord);
+                .map(ProjectMapper::fromJooqRecord);
     }
 
     @Override
@@ -37,14 +37,14 @@ public class ProjectPostgresRepository implements ProjectRepository {
                 .from(PROJECTS)
                 .where(PROJECTS.ID.eq(id))
                 .fetchOptional()
-                .map(ProjectConverter::fromJooqRecord);
+                .map(ProjectMapper::fromJooqRecord);
     }
 
     @Override
     public void create(Project project) {
         try {
             dslContext.insertInto(PROJECTS)
-                    .set(ProjectConverter.toJooqProjectsRecord(project))
+                    .set(ProjectMapper.toJooqProjectsRecord(project))
                     .execute();
         } catch (DataAccessException e) {
             PsqlUtils.handleDataAccessEx(

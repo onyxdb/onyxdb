@@ -1491,11 +1491,23 @@ components:
     GetProductQuotaUsageReportResponseOA:
       type: object
       properties:
+        resources:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductQuotaUsageByResourceOA'
+      required:
+        - resources
+    ProductQuotaUsageByResourceOA:
+      type: object
+      properties:
+        resource:
+          $ref: '#/components/schemas/Resource'
         items:
           type: array
           items:
             $ref: '#/components/schemas/ProductQuotaUsageReportItemOA'
       required:
+        - resource
         - items
     ProductQuotaUsageReportItemOA:
       type: object

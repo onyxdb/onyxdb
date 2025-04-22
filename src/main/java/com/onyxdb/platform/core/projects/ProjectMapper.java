@@ -14,7 +14,7 @@ import com.onyxdb.platform.generated.openapi.models.V1UpdateProjectRequest;
 /**
  * @author foxleren
  */
-public final class ProjectConverter {
+public final class ProjectMapper {
     public static Project fromJooqRecord(Record r) {
         ProjectsRecord rr = r.into(ProjectsRecord.class);
         return new Project(
@@ -49,7 +49,7 @@ public final class ProjectConverter {
     public static V1ListProjectsResponse toV1ListProjectsResponse(List<Project> p) {
         return new V1ListProjectsResponse(
                 p.stream()
-                        .map(ProjectConverter::toV1ProjectResponse)
+                        .map(ProjectMapper::toV1ProjectResponse)
                         .toList()
         );
     }

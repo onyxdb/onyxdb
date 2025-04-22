@@ -25,20 +25,20 @@ onyxdb:
   base-url: http://host.minikube.internal:9001
   postgres:
     url: jdbc:postgresql://localhost/onyxdb
-    username: username
+    username: postgres
     password: password
   redis:
     host: localhost
     port: 6379
   clickhouse:
     url: jdbc:clickhouse://localhost:8123/onyxdb
-    username: username
-    password: password
+    username: ""
+    password: ""
   tasks:
     collect-product-quota-usage:
-      fixed-rate: PT15M
-      lock-at-least-for: 14m
-      lock-at-most-for: 14m
+      fixed-rate: PT5S
+      lock-at-least-for: 5s
+      lock-at-most-for: 5s
 
 onyxdb-app:
   workers:

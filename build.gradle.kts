@@ -41,6 +41,7 @@ dependencies {
 	implementation("org.lz4:lz4-java:1.8.0")
 	implementation("org.flywaydb:flyway-database-clickhouse:10.16.3")
 
+	// schedlock
 	implementation("net.javacrumbs.shedlock:shedlock-spring:6.3.1")
 	implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:6.3.1")
 
