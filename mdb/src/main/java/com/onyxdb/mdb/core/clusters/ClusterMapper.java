@@ -41,14 +41,18 @@ public class ClusterMapper {
                 r.getProjectId(),
                 DEFAULT_NAMESPACE,
                 ClusterType.MONGODB,
-                new ClusterConfig(
-                        v1ClusterResourcesToClusterResources(v1MongoConfig.getResources()),
-                        v1MongoConfig.getReplicas()
-                )
+                mapToClusterConfig(v1MongoConfig)
 //                ClusterVersion.fromStringVersionWithDots(ClusterType.MONGODB, v1MongoConfig.getVersion()),
 //                ClusterConfig.builder()
 //                        .withMongoV8d0(v1MongoConfigV8d0ToMongoV8d0Config(v1MongoConfig.getMongodbV8d0()))
 //                        .build()
+        );
+    }
+
+    public ClusterConfig mapToClusterConfig(V1MongoConfig c) {
+        return new ClusterConfig(
+                v1ClusterResourcesToClusterResources(c.getResources()),
+                c.getReplicas()
         );
     }
 

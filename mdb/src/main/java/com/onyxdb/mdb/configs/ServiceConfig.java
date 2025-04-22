@@ -21,6 +21,11 @@ import com.onyxdb.mdb.core.resourcePresets.ResourcePresetRepository;
 import com.onyxdb.mdb.core.resourcePresets.ResourcePresetService;
 import com.onyxdb.mdb.core.zones.ZoneRepository;
 import com.onyxdb.mdb.core.zones.ZoneService;
+import com.onyxdb.mdb.quotas.QuotaMapper;
+import com.onyxdb.mdb.quotas.QuotaRepository;
+import com.onyxdb.mdb.quotas.QuotaService;
+import com.onyxdb.mdb.resources.ResourceRepository;
+import com.onyxdb.mdb.resources.ResourceService;
 import com.onyxdb.mdb.taskProcessing.generators.mongo.MongoCreateClusterTaskGenerator;
 import com.onyxdb.mdb.taskProcessing.generators.mongo.MongoDeleteClusterTaskGenerator;
 import com.onyxdb.mdb.taskProcessing.generators.mongo.MongoScaleHostsTaskGenerator;
@@ -90,6 +95,30 @@ public class ServiceConfig {
                 hostRepository,
                 enrichedHostRepository,
                 hostMapper
+        );
+    }
+
+    @Bean
+    public ResourceService resourceService(ResourceRepository resourceRepository) {
+        return new ResourceService(resourceRepository);
+    }
+
+    @Bean
+    public QuotaService quotaService(
+            QuotaRepository quotaRepository,
+            TransactionTemplate transactionTemplate,
+            QuotaMapper quotaMapper,
+            ResourcePresetService resourcePresetService,
+            ResourceService resourceService,
+            ProjectService projectService
+    ) {
+        return new QuotaService(
+                quotaRepository,
+                transactionTemplate,
+                quotaMapper,
+                resourcePresetService,
+                resourceService,
+                projectService
         );
     }
 }

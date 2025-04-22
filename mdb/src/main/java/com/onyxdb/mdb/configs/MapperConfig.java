@@ -11,6 +11,8 @@ import com.onyxdb.mdb.core.clusters.ClusterMapper;
 import com.onyxdb.mdb.core.clusters.mappers.DatabaseMapper;
 import com.onyxdb.mdb.core.clusters.mappers.HostMapper;
 import com.onyxdb.mdb.core.clusters.mappers.UserMapper;
+import com.onyxdb.mdb.quotas.QuotaMapper;
+import com.onyxdb.mdb.resources.ResourceMapper;
 
 /**
  * @author foxleren
@@ -43,5 +45,15 @@ public class MapperConfig {
     @Bean
     public UserMapper userMapper(ObjectMapper objectMapper) {
         return new UserMapper(objectMapper);
+    }
+
+    @Bean
+    public ResourceMapper resourceMapper() {
+        return new ResourceMapper();
+    }
+
+    @Bean
+    public QuotaMapper quotaMapper() {
+        return new QuotaMapper();
     }
 }
