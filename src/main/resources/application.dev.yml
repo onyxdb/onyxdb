@@ -3,7 +3,7 @@ spring:
     name: onyxdb-mdb
 
 server:
-  port: ${ONYXDB_MDB_HTTP_PORT:9001}
+  port: 9001
 
 springdoc:
   api-docs:
@@ -21,15 +21,15 @@ onyxdb:
   base-url: http://host.minikube.internal:9001
   postgres:
     url: jdbc:postgresql://localhost/onyxdb
-    username: username
+    username: postgres
     password: password
   redis:
     host: localhost
     port: 6379
   clickhouse:
     url: jdbc:clickhouse://localhost:8123/onyxdb
-    username: username
-    password: password
+    username: ""
+    password: ""
 
 onyxdb-app:
   workers:

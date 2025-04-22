@@ -47,7 +47,7 @@ public class DatasourceConfig {
     ) {
         HikariConfig config = new HikariConfig();
         config.setDriverClassName("org.postgresql.Driver");
-        config.setJdbcUrl("jdbc:postgresql://localhost/onyxdb");
+        config.setJdbcUrl(url);
         config.setUsername(username);
         config.setPassword(password);
 
