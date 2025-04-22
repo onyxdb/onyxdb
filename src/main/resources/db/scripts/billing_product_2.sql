@@ -1,4 +1,4 @@
-INSERT INTO billing_quotas_usage (product_id, quota_provider, limit, usage, free, ts) VALUES
+INSERT INTO onyxdb.billing_quotas_usage (product_id, quota_provider, limit, usage, free, ts) VALUES
 ('a4ea283e-b3aa-43dd-9e64-d6c68d0af96f', 'mdb', 1088, 525, 563, '2025-04-01 16:11:37'),
 ('a4ea283e-b3aa-43dd-9e64-d6c68d0af96f', 'mdb', 998, 425, 573, '2025-04-01 15:41:52'),
 ('a4ea283e-b3aa-43dd-9e64-d6c68d0af96f', 'mdb', 807, 697, 110, '2025-04-01 05:00:10'),

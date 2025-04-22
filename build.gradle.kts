@@ -33,8 +33,14 @@ dependencies {
 	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.18.3")
 
 	implementation("redis.clients:jedis:5.2.0")
+
+	// clickhouse
 	implementation("com.clickhouse:clickhouse-jdbc:0.7.1")
 	implementation("org.lz4:lz4-java:1.8.0")
+	implementation("org.flywaydb:flyway-database-clickhouse:10.16.3")
+
+	implementation("net.javacrumbs.shedlock:shedlock-spring:6.3.1")
+	implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:6.3.1")
 
 	testImplementation(libs.springBoot.starterTest)
 	testImplementation(libs.springBoot.starterTestcontainers)
@@ -80,9 +86,9 @@ tasks.compileJava {
 }
 
 tasks.openApiGenerate {
-	dependsOn(tasks.clean)
+//	dependsOn(tasks.clean)
 }
 
 tasks.generateJooq {
-	dependsOn(tasks.clean)
+//	dependsOn(tasks.clean)
 }

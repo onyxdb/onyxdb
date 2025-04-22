@@ -14,7 +14,7 @@ public class BillingClickhouseRepository implements BillingRepository {
                 avg(limit) AS avg_limit,
                 avg(usage) AS avg_usage,
                 avg(free) AS avg_free
-            FROM billing_quotas_usage
+            FROM onyxdb.billing_quotas_usage
             WHERE ts BETWEEN toDate(?) AND toDate(?)
             AND product_id = ?
             GROUP BY day
