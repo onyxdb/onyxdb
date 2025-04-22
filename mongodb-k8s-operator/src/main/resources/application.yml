@@ -1,3 +1,0 @@
-spring:
-  application:
-    name: mongodb-k8s-operator
