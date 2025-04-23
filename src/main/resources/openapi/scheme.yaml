@@ -686,7 +686,7 @@ paths:
         - Billing
       parameters:
         - $ref: '#/components/parameters/ProductIdRQP'
-        - name: starDate
+        - name: startDate
           in: query
           required: true
           schema:
