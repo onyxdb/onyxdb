@@ -9,7 +9,7 @@ import com.onyxdb.platform.utils.StringEnumResolver;
 public enum OperationStatus implements StringEnum {
     // TODO may be remove scheduled?
     SCHEDULED("scheduled", "Scheduled"),
-    IN_PROGRESS("in_progress", "In Progress"),
+    IN_PROGRESS("in_progress", "In progress"),
     ERROR("error", "Error"),
     SUCCESS("success", "Success"),
     ;
