@@ -117,26 +117,17 @@ CREATE TABLE public.permissions
     UNIQUE (user_id, database_id)
 );
 
-CREATE TYPE public.operation_type AS ENUM (
-    'mongodb_create_cluster',
-    'mongodb_scale_hosts',
-    'mongodb_delete_cluster'
-    );
-
-CREATE TYPE public.operation_status AS ENUM (
-    'scheduled',
-    'in_progress',
-    'error',
-    'success'
-    );
-
 CREATE TABLE public.operations
 (
-    id         uuid                    NOT NULL,
-    type       public.operation_type   NOT NULL,
-    status     public.operation_status NOT NULL,
-    created_at timestamp               NOT NULL,
-    PRIMARY KEY (id)
+    id         uuid      NOT NULL,
+    type       varchar   NOT NULL,
+    status     varchar   NOT NULL,
+    created_at timestamp NOT NULL,
+    created_by uuid      NOT NULL,
+    updated_at timestamp NOT NULL,
+    cluster_id uuid,
+    PRIMARY KEY (id),
+    FOREIGN KEY (cluster_id) REFERENCES public.clusters (id)
 );
 
 CREATE TYPE public.task_status AS ENUM (

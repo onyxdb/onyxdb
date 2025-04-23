@@ -141,4 +141,59 @@ public record Task(
                 payload
         );
     }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private UUID id;
+        private TaskType type;
+        private TaskStatus status;
+        private UUID operationId;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+        private LocalDateTime scheduledAt;
+        private int attemptsLeft;
+        private boolean isFirst;
+        private boolean isLast;
+        private String payload;
+
+        public Builder copy(Task task) {
+            this.id = task.id;
+            this.type = task.type;
+            this.status = task.status;
+            this.operationId = task.operationId;
+            this.createdAt = task.createdAt;
+            this.updatedAt = task.updatedAt;
+            this.scheduledAt = task.scheduledAt;
+            this.attemptsLeft = task.attemptsLeft;
+            this.isFirst = task.isFirst;
+            this.isLast = task.isLast;
+            this.payload = task.payload;
+
+            return this;
+        }
+
+        public Builder withStatus(TaskStatus status) {
+            this.status = status;
+            return this;
+        }
+
+        public Task build() {
+            return new Task(
+                    id,
+                    type,
+                    status,
+                    operationId,
+                    createdAt,
+                    updatedAt,
+                    scheduledAt,
+                    attemptsLeft,
+                    isFirst,
+                    isLast,
+                    payload
+            );
+        }
+    }
 }

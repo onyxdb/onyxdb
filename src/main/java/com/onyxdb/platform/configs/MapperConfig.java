@@ -12,6 +12,7 @@ import com.onyxdb.platform.core.clusters.ClusterMapper;
 import com.onyxdb.platform.core.clusters.mappers.DatabaseMapper;
 import com.onyxdb.platform.core.clusters.mappers.HostMapper;
 import com.onyxdb.platform.core.clusters.mappers.UserMapper;
+import com.onyxdb.platform.operations.OperationMapper;
 import com.onyxdb.platform.quotas.QuotaMapper;
 import com.onyxdb.platform.resources.ResourceMapper;
 
@@ -61,5 +62,10 @@ public class MapperConfig {
     @Bean
     public BillingMapper billingMapper() {
         return new BillingMapper();
+    }
+
+    @Bean
+    public OperationMapper operationMapper() {
+        return new OperationMapper();
     }
 }
