@@ -78,4 +78,42 @@ public class TemplateProvider {
 
         return templateEngine.process("onyxdb-agent.yaml.txt", context);
     }
+
+    public String buildPsmdbExporterService(
+            String metadataName,
+            String portName,
+            int portNumber,
+            String selectorInstanceLabel
+    ) {
+        Context context = new Context();
+        context.setVariables(Map.ofEntries(
+                Map.entry("METADATA_NAME", metadataName),
+                Map.entry("SELECTOR_INSTANCE_LABEL", selectorInstanceLabel),
+                Map.entry("PORT_NAME", portName),
+                Map.entry("PORT_NUMBER", portNumber)
+        ));
+
+        return templateEngine.process("psmdb-exporter-service.yaml.txt", context);
+    }
+
+    public String buildPsmdbExporterServiceScrape(
+            String metadataName,
+            String endpointPortName,
+            String endpointPath,
+            String project,
+            String cluster,
+            String selectorInstanceLabel
+    ) {
+        Context context = new Context();
+        context.setVariables(Map.ofEntries(
+                Map.entry("METADATA_NAME", metadataName),
+                Map.entry("ENDPOINT_PORT_NAME", endpointPortName),
+                Map.entry("ENDPOINT_PATH", endpointPath),
+                Map.entry("ONYXDB_PROJECT", project),
+                Map.entry("ONYXDB_CLUSTER", cluster),
+                Map.entry("SELECTOR_INSTANCE_LABEL", selectorInstanceLabel)
+        ));
+
+        return templateEngine.process("psmdb-exporter-service-scrape.yaml.txt", context);
+    }
 }

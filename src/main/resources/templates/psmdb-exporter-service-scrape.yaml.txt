@@ -1,0 +1,18 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMServiceScrape
+metadata:
+  name: [[${METADATA_NAME}]]
+spec:
+  endpoints:
+    - port: [[${ENDPOINT_PORT_NAME}]]
+      path: [[${ENDPOINT_PATH}]]
+      metricRelabelConfigs:
+        - action: replace
+          targetLabel: onyxdb_project
+          replacement: [[${ONYXDB_PROJECT}]]
+        - action: replace
+          targetLabel: onyxdb_cluster
+          replacement: [[${ONYXDB_CLUSTER}]]
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: [[${SELECTOR_INSTANCE_LABEL}]]

@@ -12,6 +12,7 @@ import redis.clients.jedis.JedisPoolConfig;
 import com.onyxdb.platform.clients.k8s.KubernetesAdapter;
 import com.onyxdb.platform.clients.k8s.psmdb.PsmdbClient;
 import com.onyxdb.platform.clients.k8s.psmdb.PsmdbExporterServiceClient;
+import com.onyxdb.platform.clients.k8s.psmdb.PsmdbExporterServiceScrapeClient;
 import com.onyxdb.platform.clients.k8s.victoriaLogs.VictoriaLogsClient;
 import com.onyxdb.platform.clients.k8s.victoriaMetrics.VmServiceScrapeClient;
 import com.onyxdb.platform.utils.TemplateProvider;
@@ -39,7 +40,7 @@ public class ClientsConfig {
 
     @Bean
     public VictoriaLogsClient victoriaLogsClient(
-            @Value("${onyxdb-app.victoria-logs.base-url}")
+            @Value("${onyxdb.victoria-logs.base-url}")
             String baseUrl
     ) {
         return new VictoriaLogsClient(baseUrl);
@@ -63,11 +64,13 @@ public class ClientsConfig {
     @Bean
     public PsmdbExporterServiceClient psmdbExporterServiceClient(
             ObjectMapper objectMapper,
-            KubernetesClient kubernetesClient
+            KubernetesClient kubernetesClient,
+            TemplateProvider templateProvider
     ) {
         return new PsmdbExporterServiceClient(
                 objectMapper,
-                kubernetesClient
+                kubernetesClient,
+                templateProvider
         );
     }
 
@@ -99,5 +102,16 @@ public class ClientsConfig {
             int port
     ) {
         return new JedisPool(config, host, port);
+    }
+
+    @Bean
+    public PsmdbExporterServiceScrapeClient psmdbExporterServiceScrapeClient(
+            KubernetesClient kubernetesClient,
+            TemplateProvider templateProvider
+    ) {
+        return new PsmdbExporterServiceScrapeClient(
+                kubernetesClient,
+                templateProvider
+        );
     }
 }

@@ -2,7 +2,6 @@ package com.onyxdb.platform.taskProcessing.processors.mongo;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import com.onyxdb.platform.clients.k8s.psmdb.PsmdbExporterService;
 import com.onyxdb.platform.clients.k8s.psmdb.PsmdbExporterServiceClient;
 import com.onyxdb.platform.core.clusters.ClusterService;
 import com.onyxdb.platform.core.clusters.models.Cluster;
@@ -13,6 +12,7 @@ import com.onyxdb.platform.taskProcessing.models.payloads.ClusterTaskPayload;
 import com.onyxdb.platform.taskProcessing.processors.ClusterTaskProcessor;
 
 import static com.onyxdb.platform.core.clusters.ClusterMapper.DEFAULT_NAMESPACE;
+import static com.onyxdb.platform.core.clusters.ClusterMapper.DEFAULT_PROJECT;
 
 public class MongoCreateExporterServiceProcessor extends ClusterTaskProcessor {
     private final PsmdbExporterServiceClient psmdbExporterServiceClient;
@@ -35,9 +35,11 @@ public class MongoCreateExporterServiceProcessor extends ClusterTaskProcessor {
     protected TaskProcessingResult internalProcess(Task task, ClusterTaskPayload payload) {
         Cluster cluster = clusterService.getCluster(payload.clusterId());
 
-        var psmdbExporterService = PsmdbExporterService.builder()
-                .build(DEFAULT_NAMESPACE, cluster.name());
-        psmdbExporterServiceClient.createResource(psmdbExporterService);
+        psmdbExporterServiceClient.applyPsmdbExporterService(
+                DEFAULT_NAMESPACE,
+                DEFAULT_PROJECT,
+                cluster.name()
+        );
 
         return TaskProcessingResult.success();
     }
