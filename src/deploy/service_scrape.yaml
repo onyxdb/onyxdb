@@ -7,6 +7,13 @@ spec:
   endpoints:
     - port: http-metrics
       path: /metrics
+      metricRelabelConfigs:
+        - action: replace
+          targetLabel: onyxdb_project
+          replacement: sandbox
+        - action: replace
+          targetLabel: onyxdb_cluster
+          replacement: test-2
   selector:
     matchLabels:
       app.kubernetes.io/instance: managed-mongodb-demo-exporter
