@@ -1,19 +1,18 @@
 apiVersion: operator.victoriametrics.com/v1beta1
 kind: VMServiceScrape
 metadata:
-  name: managed-mongodb-demo-exporter-scrape
-  namespace: onyxdb
+  name: [[${METADATA_NAME}]]
 spec:
   endpoints:
-    - port: http-metrics
-      path: /metrics
+    - port: [[${ENDPOINT_PORT_NAME}]]
+      path: [[${ENDPOINT_PATH}]]
       metricRelabelConfigs:
         - action: replace
           targetLabel: onyxdb_project
-          replacement: sandbox
+          replacement: [[${ONYXDB_PROJECT}]]
         - action: replace
           targetLabel: onyxdb_cluster
-          replacement: test-2
+          replacement: [[${ONYXDB_CLUSTER}]]
   selector:
     matchLabels:
-      app.kubernetes.io/instance: managed-mongodb-demo-exporter
+      app.kubernetes.io/instance: [[${SELECTOR_INSTANCE_LABEL}]]

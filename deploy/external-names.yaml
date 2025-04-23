@@ -1,0 +1,23 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: onyxdb-grafana
+  namespace: onyxdb-ingress
+spec:
+  type: ExternalName
+  externalName: grafana.onyxdb-grafana.svc.cluster.local
+  ports:
+    - port: 3000
+      targetPort: 3000
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: onyxdb-vlogs
+  namespace: onyxdb-ingress
+spec:
+  type: ExternalName
+  externalName: vlogs-onyxdb.onyxdb-vm.svc.cluster.local
+  ports:
+    - port: 9428
+      targetPort: 9428

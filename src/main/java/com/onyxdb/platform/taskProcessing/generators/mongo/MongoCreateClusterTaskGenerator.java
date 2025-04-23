@@ -106,7 +106,7 @@ public class MongoCreateClusterTaskGenerator extends ClusterTaskGenerator {
                         TaskType.MONGODB_CHECK_PSMDB_READINESS,
                         operationId,
                         now,
-                        DEFAULT_RETRIES_LEFT,
+                        DEFAULT_RETRIES_LEFT + 5,
                         stringPayload
                 ),
                 Task.scheduledMiddle(

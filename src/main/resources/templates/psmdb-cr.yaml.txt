@@ -5,7 +5,7 @@ metadata:
   finalizers: []
 spec:
   crVersion: 1.19.1
-  image: percona/percona-server-mongodb:7.0.15-9-multi
+  image: percona/percona-server-mongodb:8.0.4-1-multi
   imagePullPolicy: IfNotPresent
   unsafeFlags:
     replsetSize: true
@@ -13,7 +13,7 @@ spec:
     apply: disabled
   secrets:
     users: [[${SECRETS_USERS_NAME}]]
-  enableVolumeExpansion: true
+  enableVolumeExpansion: false
   replsets:
     - name: [[${REPLSET_NAME}]]
       size: [[${REPLSET_SIZE}]]
@@ -28,29 +28,29 @@ spec:
             requiredDuringSchedulingIgnoredDuringExecution:
               nodeSelectorTerms:
                 - matchExpressions:
-                    - key: kubernetes.io/hostname
+                    - key: kubernetes.io/os
                       operator: In
                       values:
-                        - minikube
+                        - linux
       sidecars:
-        - image: percona/mongodb_exporter:0.40
+        - image: percona/mongodb_exporter:0.44
           env:
             - name: EXPORTER_USER
               valueFrom:
                 secretKeyRef:
                   name: [[${SECRETS_USERS_NAME}]]
-                  key: MONGODB_CLUSTER_MONITOR_USER
-            - name: EXPORTER_PASS
+                  key: MONGODB_DATABASE_ADMIN_USER
+            - name: EXPORTER_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: [[${SECRETS_USERS_NAME}]]
-                  key: MONGODB_CLUSTER_MONITOR_PASSWORD
+                  key: MONGODB_DATABASE_ADMIN_PASSWORD
             - name: POD_IP
               valueFrom:
                 fieldRef:
                   fieldPath: status.podIP
             - name: MONGODB_URI
-              value: "mongodb://$(EXPORTER_USER):$(EXPORTER_PASS)@$(POD_IP):27017"
+              value: "mongodb://$(EXPORTER_USER):$(EXPORTER_PASSWORD)@$(POD_IP):27017"
           args:
             - "--discovering-mode"
             - "--compatible-mode"
@@ -83,7 +83,6 @@ spec:
           memory: "[[${MONGOD_MEMORY}]]"
       volumeSpec:
         persistentVolumeClaim:
-          storageClassName: standard
           resources:
             requests:
               storage: 1Gi

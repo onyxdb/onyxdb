@@ -2,7 +2,7 @@ package com.onyxdb.platform.taskProcessing.processors.mongo;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import com.onyxdb.platform.clients.k8s.victoriaMetrics.VmServiceScrape;
+import com.onyxdb.platform.clients.k8s.psmdb.PsmdbExporterServiceScrapeClient;
 import com.onyxdb.platform.clients.k8s.victoriaMetrics.VmServiceScrapeClient;
 import com.onyxdb.platform.clients.k8s.victoriaMetrics.adapters.MongoExporterServiceScrapeAdapter;
 import com.onyxdb.platform.core.clusters.ClusterService;
@@ -19,16 +19,18 @@ import static com.onyxdb.platform.core.clusters.ClusterMapper.DEFAULT_PROJECT;
 public class MongoDeleteExporterServiceScrapeTaskProcessor extends ClusterTaskProcessor {
     private final VmServiceScrapeClient vmServiceScrapeClient;
     private final MongoExporterServiceScrapeAdapter mongoExporterServiceScrapeAdapter;
+    private final PsmdbExporterServiceScrapeClient psmdbExporterServiceScrapeClient;
 
     public MongoDeleteExporterServiceScrapeTaskProcessor(
             ObjectMapper objectMapper,
             ClusterService clusterService,
             VmServiceScrapeClient vmServiceScrapeClient,
-            MongoExporterServiceScrapeAdapter mongoExporterServiceScrapeAdapter
+            MongoExporterServiceScrapeAdapter mongoExporterServiceScrapeAdapter, PsmdbExporterServiceScrapeClient psmdbExporterServiceScrapeClient
     ) {
         super(objectMapper, clusterService);
         this.vmServiceScrapeClient = vmServiceScrapeClient;
         this.mongoExporterServiceScrapeAdapter = mongoExporterServiceScrapeAdapter;
+        this.psmdbExporterServiceScrapeClient = psmdbExporterServiceScrapeClient;
     }
 
     public TaskType getTaskType() {
@@ -39,12 +41,11 @@ public class MongoDeleteExporterServiceScrapeTaskProcessor extends ClusterTaskPr
     public TaskProcessingResult internalProcess(Task task, ClusterTaskPayload payload) {
         Cluster cluster = clusterService.getCluster(payload.clusterId());
 
-        VmServiceScrape vmServiceScrape = mongoExporterServiceScrapeAdapter.buildVmServiceScrape(
+        psmdbExporterServiceScrapeClient.deletePsmdbExporterServiceScrape(
                 DEFAULT_NAMESPACE,
                 DEFAULT_PROJECT,
                 cluster.name()
         );
-        vmServiceScrapeClient.deleteResource(vmServiceScrape);
 
         return TaskProcessingResult.success();
     }

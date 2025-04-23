@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import com.onyxdb.platform.clients.k8s.KubernetesAdapter;
 import com.onyxdb.platform.clients.k8s.psmdb.PsmdbClient;
 import com.onyxdb.platform.clients.k8s.psmdb.PsmdbExporterServiceClient;
+import com.onyxdb.platform.clients.k8s.psmdb.PsmdbExporterServiceScrapeClient;
 import com.onyxdb.platform.clients.k8s.victoriaMetrics.VmServiceScrapeClient;
 import com.onyxdb.platform.clients.k8s.victoriaMetrics.adapters.MongoExporterServiceScrapeAdapter;
 import com.onyxdb.platform.core.clusters.ClusterService;
@@ -96,13 +97,15 @@ public class TaskProcessorsConfig {
             ObjectMapper objectMapper,
             ClusterService clusterService,
             VmServiceScrapeClient vmServiceScrapeClient,
-            MongoExporterServiceScrapeAdapter mongoExporterServiceScrapeAdapter
+            MongoExporterServiceScrapeAdapter mongoExporterServiceScrapeAdapter,
+            PsmdbExporterServiceScrapeClient psmdbExporterServiceScrapeClient
     ) {
         return new MongoCreateExporterServiceScrapeTaskProcessor(
                 objectMapper,
                 clusterService,
                 vmServiceScrapeClient,
-                mongoExporterServiceScrapeAdapter
+                mongoExporterServiceScrapeAdapter,
+                psmdbExporterServiceScrapeClient
         );
     }
 
@@ -111,13 +114,15 @@ public class TaskProcessorsConfig {
             ObjectMapper objectMapper,
             ClusterService clusterService,
             VmServiceScrapeClient vmServiceScrapeClient,
-            MongoExporterServiceScrapeAdapter mongoExporterServiceScrapeAdapter
+            MongoExporterServiceScrapeAdapter mongoExporterServiceScrapeAdapter,
+            PsmdbExporterServiceScrapeClient psmdbExporterServiceScrapeClient
     ) {
         return new MongoDeleteExporterServiceScrapeTaskProcessor(
                 objectMapper,
                 clusterService,
                 vmServiceScrapeClient,
-                mongoExporterServiceScrapeAdapter
+                mongoExporterServiceScrapeAdapter,
+                psmdbExporterServiceScrapeClient
         );
     }
 

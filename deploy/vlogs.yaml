@@ -1,8 +1,13 @@
 apiVersion: operator.victoriametrics.com/v1beta1
 kind: VLogs
 metadata:
-  name: demo
+  name: onyxdb
+  namespace: onyxdb-vm
 spec:
+#  image:
+#    repository: victoriametrics/victoria-logs
+#    tag: v1.4.0
+#    pullPolicy: Always
   retentionPeriod: "24h"
   removePvcAfterDelete: true
   storage:

@@ -34,6 +34,8 @@ onyxdb:
     url: jdbc:clickhouse://localhost:8123/onyxdb
     username: username
     password: password
+  victoria-logs:
+    base-url: http://vls-victoria-logs-single-server.onyxdb.svc.cluster.local:9428
   tasks:
     collect-product-quota-usage:
       fixed-rate: PT15M
@@ -46,5 +48,3 @@ onyxdb-app:
       min-threads: 1
       max-threads: 5
       polling-interval-seconds: 5
-  victoria-logs:
-    base-url: http://vlogs-demo.onyxdb.svc.cluster.local:9428
