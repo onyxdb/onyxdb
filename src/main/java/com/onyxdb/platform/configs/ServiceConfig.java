@@ -23,6 +23,7 @@ import com.onyxdb.platform.core.resourcePresets.ResourcePresetRepository;
 import com.onyxdb.platform.core.resourcePresets.ResourcePresetService;
 import com.onyxdb.platform.core.zones.ZoneRepository;
 import com.onyxdb.platform.core.zones.ZoneService;
+import com.onyxdb.platform.operations.OperationService;
 import com.onyxdb.platform.quotas.QuotaMapper;
 import com.onyxdb.platform.quotas.QuotaRepository;
 import com.onyxdb.platform.quotas.QuotaService;
@@ -127,5 +128,18 @@ public class ServiceConfig {
     @Bean
     public BillingService billingService(BillingRepository billingRepository) {
         return new BillingService(billingRepository);
+    }
+
+    @Bean
+    public OperationService operationService(
+            OperationRepository operationRepository,
+            TaskRepository taskRepository,
+            TransactionTemplate transactionTemplate
+    ) {
+        return new OperationService(
+                operationRepository,
+                taskRepository,
+                transactionTemplate
+        );
     }
 }

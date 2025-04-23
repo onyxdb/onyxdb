@@ -1,21 +1,31 @@
 package com.onyxdb.platform.taskProcessing.models;
 
 import com.onyxdb.platform.utils.StringEnum;
+import com.onyxdb.platform.utils.StringEnumResolver;
 
 /**
  * @author foxleren
  */
 public enum OperationStatus implements StringEnum {
-    SCHEDULED("scheduled"),
-    IN_PROGRESS("in_progress"),
-    ERROR("error"),
-    SUCCESS("success"),
+    // TODO may be remove scheduled?
+    SCHEDULED("scheduled", "Scheduled"),
+    IN_PROGRESS("in_progress", "In Progress"),
+    ERROR("error", "Error"),
+    SUCCESS("success", "Success"),
     ;
 
-    private final String value;
+    public static final StringEnumResolver<OperationStatus> R = new StringEnumResolver<>(OperationStatus.class);
 
-    OperationStatus(final String value) {
+    private final String value;
+    private final String displayValue;
+
+    OperationStatus(String value, String displayValue) {
         this.value = value;
+        this.displayValue = displayValue;
+    }
+
+    public String getDisplayValue() {
+        return displayValue;
     }
 
     @Override

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import com.onyxdb.platform.generated.jooq.tables.records.TasksRecord;
 import com.onyxdb.platform.generated.jooq.tables.records.TasksToBlockerTasksRecord;
+import com.onyxdb.platform.operations.TaskFilter;
 import com.onyxdb.platform.taskProcessing.models.Task;
 import com.onyxdb.platform.taskProcessing.models.TaskStatus;
 import com.onyxdb.platform.taskProcessing.models.TaskWithBlockers;
@@ -126,5 +127,19 @@ public class TaskPostgresRepository implements TaskRepository {
             updateSetMoreStep = updateSetMoreStep.set(TASKS.SCHEDULED_AT, scheduledAt);
         }
         updateSetMoreStep.where(TASKS.ID.eq(id)).execute();
+    }
+
+    @Override
+    public List<Task> listTasks(TaskFilter filter) {
+        return dslContext.select()
+                .from(TASKS)
+                .where(filter.buildCondition())
+                .fetch(r -> Task.fromJooqClusterTasksRecord(r.into(TasksRecord.class)));
+    }
+
+    @Override
+    public void updateTasks(List<Task> tasks) {
+        var records = tasks.stream().map(Task::toJooqClusterTasksRecord).toList();
+        dslContext.batchUpdate(records).execute();
     }
 }

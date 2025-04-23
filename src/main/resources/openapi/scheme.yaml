@@ -650,6 +650,33 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SimulateMongoDBQuotasUsageResponse'
+  # ---------- Operations ----------------------------------------------------------------------------------------------
+  /api/operations:
+    get:
+      summary: List operations
+      operationId: listOperations
+      tags:
+        - Operations
+      parameters:
+        - $ref: '#/components/parameters/ClusterIdOQP'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOperationsResponseOA'
+  /api/operations/{operationId}/restart:
+    put:
+      summary: Restart operation
+      operationId: restartOperation
+      tags:
+        - Operations
+      parameters:
+        - $ref: '#/components/parameters/OperationIdPV'
+      responses:
+        '200':
+          description: OK
   # ---------- Billing -------------------------------------------------------------------------------------------------
   /api/billing/product-quota-usage-report:
     get:
@@ -1536,6 +1563,64 @@ components:
         - usage
         - free
         - timestamp
+    ListOperationsResponseOA:
+      type: object
+      properties:
+        operations:
+          type: array
+          items:
+            $ref: '#/components/schemas/OperationOA'
+      required:
+        - operations
+    OperationOA:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          $ref: '#/components/schemas/OperationTypeOA'
+        status:
+          $ref: '#/components/schemas/OperationStatusOA'
+        createdAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+          format: uuid
+        updatedAt:
+          type: string
+          format: date-time
+        isRestartAllowed:
+          type: boolean
+      required:
+        - id
+        - type
+        - status
+        - createdAt
+        - createdBy
+        - updatedAt
+        - isRestartAllowed
+    OperationTypeOA:
+      type: object
+      properties:
+        value:
+          type: string
+        displayValue:
+          type: string
+      required:
+        - value
+        - displayValue
+    OperationStatusOA:
+      type: object
+      properties:
+        value:
+          type: string
+        displayValue:
+          type: string
+      required:
+        - value
+        - displayValue
   # ---------- parameters ----------------------------------------------------------------------------------------------
   parameters:
     ResourcePresetIdPV:
@@ -1562,6 +1647,13 @@ components:
       name: clusterId
       in: path
       required: true
+      schema:
+        type: string
+        format: uuid
+    ClusterIdOQP:
+      name: clusterId
+      in: query
+      required: false
       schema:
         type: string
         format: uuid
@@ -1608,3 +1700,10 @@ components:
         items:
           type: string
           format: uuid
+    OperationIdPV:
+      name: operationId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid

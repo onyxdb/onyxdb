@@ -87,7 +87,7 @@ public class ClusterService {
         Cluster cluster = clusterMapper.createClusterToCluster(createCluster);
 
         // TODO create table cluster_id to operation_id
-        var operation = Operation.scheduled(OperationType.MONGODB_CREATE_CLUSTER);
+        var operation = Operation.scheduled(OperationType.MONGODB_CREATE_CLUSTER, cluster.id());
         List<TaskWithBlockers> tasksWithBlockers = mongoCreateClusterTaskGenerator.generateTasks(
                 operation.id(),
                 new ClusterTaskPayload(cluster.id())
@@ -135,7 +135,7 @@ public class ClusterService {
                 .withReplicas(replicas)
                 .build();
 
-        var operation = Operation.scheduled(OperationType.MONGODB_SCALE_HOSTS);
+        var operation = Operation.scheduled(OperationType.MONGODB_SCALE_HOSTS, cluster.id());
         List<TaskWithBlockers> tasksWithBlockers = mongoCreateClusterTaskGenerator.generateTasks(
                 operation.id(),
                 new ClusterTaskPayload(cluster.id())
@@ -152,7 +152,7 @@ public class ClusterService {
     public UUID updateCluster(UpdateCluster updateCluster) {
         validateClusterExistence(updateCluster.id());
 
-        var operation = Operation.scheduled(OperationType.MONGODB_SCALE_HOSTS);
+        var operation = Operation.scheduled(OperationType.MONGODB_SCALE_HOSTS, updateCluster.id());
 //        List<TaskWithBlockers> tasksWithBlockers = mongoDeleteClusterTaskGenerator.generateClusterTasks(
 //                operation.id(),
 //                operation.type(),
@@ -171,7 +171,7 @@ public class ClusterService {
     public UUID deleteCluster(UUID clusterId) {
         Cluster cluster = getCluster(clusterId);
 
-        var operation = Operation.scheduled(OperationType.MONGODB_DELETE_CLUSTER);
+        var operation = Operation.scheduled(OperationType.MONGODB_DELETE_CLUSTER, cluster.id());
         List<TaskWithBlockers> tasksWithBlockers = mongoDeleteClusterTaskGenerator.generateTasks(
                 operation.id(),
                 new ClusterTaskPayload(cluster.id())

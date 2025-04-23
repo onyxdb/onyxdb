@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.jetbrains.annotations.Nullable;
 
+import com.onyxdb.platform.operations.TaskFilter;
 import com.onyxdb.platform.taskProcessing.models.Task;
 import com.onyxdb.platform.taskProcessing.models.TaskStatus;
 import com.onyxdb.platform.taskProcessing.models.TaskWithBlockers;
@@ -33,4 +34,8 @@ public interface TaskRepository {
             @Nullable
             LocalDateTime scheduledAt
     );
+
+    List<Task> listTasks(TaskFilter filter);
+
+    void updateTasks(List<Task> tasks);
 }
