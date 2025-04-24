@@ -11,6 +11,6 @@ public class ClusterNotFoundException extends BadRequestException {
     }
 
     public ClusterNotFoundException(UUID id) {
-        super(String.format("Cluster is not found; id=%s", id));
+        super(String.format("Cluster with '%s' is not found", id));
     }
 }
