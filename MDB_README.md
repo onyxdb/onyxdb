@@ -5,6 +5,7 @@
 ### Create namespace in Minikube
 
 ```shell
+minikube start
 minikube create ns onyxdb
 kubectl config set-context --current --namespace onyxdb
 ```
@@ -23,7 +24,15 @@ kubectl apply --server-side -f https://raw.githubusercontent.com/percona/percona
 ```shell
 helm repo add vm https://victoriametrics.github.io/helm-charts/
 helm install vmoperator vm/victoria-metrics-operator
-kubectl apply -f ./mdb/src/deploy/vm-cluster.yaml
+kubectl apply -f ./src/deploy/vm-cluster.yaml
+```
+
+### Deploy Grafana
+
+[Гайд](https://docs.victoriametrics.com/guides/getting-started-with-vm-operator/#)
+```shell
+kubectl apply -f ./src/deploy/grafana.yaml
+kubectl apply -f ./src/deploy/grafana-config.yaml
 ```
 
 Не забыть поставить агент по гайду!!!
