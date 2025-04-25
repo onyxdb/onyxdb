@@ -19,10 +19,10 @@ spec:
     spec:
       containers:
         - name: agent
-          image: foxleren/onyxdb-agent:master-c25a282
+          image: foxleren/onyxdb-agent:master-9d6b3be
           imagePullPolicy: Always
           ports:
-            - containerPort: 9002
+            - containerPort: 9004
           env:
             - name: ONYXDB_MDB__BASE_URL
               value: [[${ONYXDB_BASE_URL}]]
