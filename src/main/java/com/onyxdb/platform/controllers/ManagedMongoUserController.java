@@ -4,11 +4,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.onyxdb.platform.core.clusters.ClusterService;
-import com.onyxdb.platform.core.clusters.mappers.UserMapper;
+import com.onyxdb.platform.mdb.users.UserMapper;
 import com.onyxdb.platform.core.clusters.models.MongoRole;
 import com.onyxdb.platform.core.clusters.models.User;
 import com.onyxdb.platform.core.clusters.models.UserToCreate;
@@ -18,20 +18,17 @@ import com.onyxdb.platform.generated.openapi.models.ListMongoUsersResponse;
 import com.onyxdb.platform.generated.openapi.models.MongoUser;
 import com.onyxdb.platform.generated.openapi.models.MongoUserToCreate;
 import com.onyxdb.platform.generated.openapi.models.V1ScheduledOperationResponse;
+import com.onyxdb.platform.mdb.users.UserService;
 
 @RestController
+@RequiredArgsConstructor
 public class ManagedMongoUserController implements ManagedMongoDbUsersApi {
-    private final ClusterService clusterService;
+    private final UserService userService;
     private final UserMapper userMapper;
-
-    public ManagedMongoUserController(ClusterService clusterService, UserMapper userMapper) {
-        this.clusterService = clusterService;
-        this.userMapper = userMapper;
-    }
 
     @Override
     public ResponseEntity<ListMongoUsersResponse> listUsers(UUID clusterId) {
-        List<User> users = clusterService.listUsers(clusterId);
+        List<User> users = userService.listUsers(clusterId);
         var response = new ListMongoUsersResponse(
                 users.stream().map(userMapper::map).toList()
         );
@@ -41,7 +38,7 @@ public class ManagedMongoUserController implements ManagedMongoDbUsersApi {
 
     @Override
     public ResponseEntity<MongoUser> getUser(UUID userId) {
-        User user = clusterService.getUser(userId);
+        User user = userService.getUser(userId);
         return ResponseEntity.ok().body(userMapper.map(user));
     }
 
@@ -58,7 +55,7 @@ public class ManagedMongoUserController implements ManagedMongoDbUsersApi {
             MongoUserToCreate mongoUserToCreate
     ) {
         UserToCreate userToCreate = userMapper.map(clusterId, mongoUserToCreate);
-        UUID operationId = clusterService.createUser(userToCreate);
+        UUID operationId = userService.createUser(userToCreate);
 
         return ResponseEntity.ok()
                 .body(new V1ScheduledOperationResponse(operationId));
@@ -66,7 +63,7 @@ public class ManagedMongoUserController implements ManagedMongoDbUsersApi {
 
     @Override
     public ResponseEntity<V1ScheduledOperationResponse> deleteUser(UUID userId) {
-        UUID operationId = clusterService.deleteUser(userId);
+        UUID operationId = userService.deleteUser(userId);
 
         return ResponseEntity.ok()
                 .body(new V1ScheduledOperationResponse(operationId));

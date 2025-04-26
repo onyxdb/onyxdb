@@ -1,6 +1,6 @@
 package com.onyxdb.platform.exceptions;
 
-import com.onyxdb.platform.taskProcessing.models.TaskType;
+import com.onyxdb.platform.processing.models.TaskType;
 
 public class ClusterTaskNotFoundException extends RuntimeException {
     public ClusterTaskNotFoundException(TaskType taskType) {

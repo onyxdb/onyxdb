@@ -8,9 +8,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import com.onyxdb.platform.processing.repositories.TaskRepository;
 import com.onyxdb.platform.services.BaseClusterService;
-import com.onyxdb.platform.taskProcessing.TaskProcessingWorker;
-import com.onyxdb.platform.taskProcessing.processors.CompositeTaskProcessor;
+import com.onyxdb.platform.processing.TaskProcessingWorker;
+import com.onyxdb.platform.processing.consumers.CompositeTaskProcessor;
 
 @Configuration
 public class TaskProcessingConfig {
@@ -31,14 +32,16 @@ public class TaskProcessingConfig {
             @Value("${onyxdb-app.workers.process-cluster-tasks.polling-interval-seconds}")
             int pollingIntervalSeconds,
             CompositeTaskProcessor compositeTaskProcessor,
-            BaseClusterService clusterService
+            BaseClusterService clusterService,
+            TaskRepository taskRepository
     ) {
         return new TaskProcessingWorker(
                 minThreads,
                 maxThreads,
                 pollingIntervalSeconds,
                 compositeTaskProcessor,
-                clusterService
+                clusterService,
+                taskRepository
         );
     }
 }

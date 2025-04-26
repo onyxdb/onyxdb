@@ -51,7 +51,7 @@ public class ProjectPostgresRepository implements ProjectRepository {
                     e,
                     PROJECTS,
                     Keys.PROJECTS_NAME_KEY,
-                    () -> new BadRequestException("Project name already exists")
+                    () -> new BadRequestException("Project databaseName already exists")
             );
 
             throw e;

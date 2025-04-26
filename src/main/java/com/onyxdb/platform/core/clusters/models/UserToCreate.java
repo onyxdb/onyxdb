@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.UUID;
 
 public record UserToCreate(
-        String name,
-        String password,
         UUID clusterId,
+        String username,
+        String password,
         List<MongoPermissionToCreate> permissions
 ) {
 }

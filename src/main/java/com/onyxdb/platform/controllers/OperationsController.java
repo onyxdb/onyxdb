@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.onyxdb.platform.exceptions.BadRequestException;
 import com.onyxdb.platform.generated.openapi.apis.OperationsApi;
 import com.onyxdb.platform.generated.openapi.models.ListOperationsResponseOA;
-import com.onyxdb.platform.operations.OperationMapper;
-import com.onyxdb.platform.operations.OperationService;
-import com.onyxdb.platform.taskProcessing.models.Operation;
+import com.onyxdb.platform.operationsOLD.OperationMapper;
+import com.onyxdb.platform.operationsOLD.OperationService;
+import com.onyxdb.platform.processing.models.Operation;
 
 @RestController
 public class OperationsController implements OperationsApi {

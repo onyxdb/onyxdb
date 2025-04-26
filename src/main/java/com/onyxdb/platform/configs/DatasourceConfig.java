@@ -22,6 +22,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy;
+import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -33,8 +34,9 @@ import org.springframework.transaction.support.TransactionTemplate;
 public class DatasourceConfig {
     public static final String POSTGRES_DATASOURCE_BEAN = "postgresDataSource";
     public static final String CLICKHOUSE_DATASOURCE_BEAN = "clickhouseDataSource";
-    public static final String POSTGRES_TRANSACTION_TEMPLATE_BEAN = "postgresTransactionTemplate";
     public static final String CLICKHOUSE_JDBC_TEMPLATE_BEAN = "clickhouseJdbcTemplate";
+    public static final String PSQL_TRANSACTION_TEMPLATE_BEAN = "postgresTransactionTemplate";
+//    public static final String PSQL_PROPAGATION_REQUIRED_TRANSACTION_TEMPLATE_BEAN = "postgresPropagationRequiredTransactionTemplate";
 
     @Bean(POSTGRES_DATASOURCE_BEAN)
     public DataSource postgresDataSource(
@@ -54,13 +56,27 @@ public class DatasourceConfig {
         return new HikariDataSource(config);
     }
 
-    @Bean(POSTGRES_TRANSACTION_TEMPLATE_BEAN)
+    @Bean(PSQL_TRANSACTION_TEMPLATE_BEAN)
     public TransactionTemplate transactionTemplate(
             @Qualifier(POSTGRES_DATASOURCE_BEAN)
             DataSource dataSource
     ) {
-        return new TransactionTemplate(new DataSourceTransactionManager(dataSource));
+        var transactionTemplate = new TransactionTemplate(new DataSourceTransactionManager(dataSource));
+        transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+
+        return transactionTemplate;
     }
+
+//    @Bean(PSQL_PROPAGATION_REQUIRED_TRANSACTION_TEMPLATE_BEAN)
+//    public TransactionTemplate psqlPropagationRequiredTransactionTemplate(
+//            @Qualifier(POSTGRES_DATASOURCE_BEAN)
+//            DataSource dataSource
+//    ) {
+//        var transactionTemplate = new TransactionTemplate(new DataSourceTransactionManager(dataSource));
+//        transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+//
+//        return transactionTemplate;
+//    }
 
     @Bean(CLICKHOUSE_DATASOURCE_BEAN)
     public DataSource clickhouseDataSource(
@@ -72,7 +88,7 @@ public class DatasourceConfig {
             String password
     ) throws SQLException {
         Properties properties = new Properties();
-        properties.put("user", username);
+        properties.put("username", username);
         properties.put("password", password);
 
         return new ClickHouseDataSource(url, properties);

@@ -4,16 +4,17 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.onyxdb.platform.billing.BillingMapper;
-import com.onyxdb.platform.core.clusters.ClusterMapper;
-import com.onyxdb.platform.core.clusters.mappers.DatabaseMapper;
-import com.onyxdb.platform.core.clusters.mappers.HostMapper;
-import com.onyxdb.platform.core.clusters.mappers.UserMapper;
-import com.onyxdb.platform.operations.OperationMapper;
+import com.onyxdb.platform.mdb.clusters.ClusterMapper;
+import com.onyxdb.platform.mdb.databases.DatabaseMapper;
+import com.onyxdb.platform.mdb.hosts.HostMapper;
+import com.onyxdb.platform.mdb.users.UserMapper;
+import com.onyxdb.platform.operationsOLD.OperationMapper;
 import com.onyxdb.platform.quotas.QuotaMapper;
 import com.onyxdb.platform.resources.ResourceMapper;
 
@@ -22,6 +23,8 @@ import com.onyxdb.platform.resources.ResourceMapper;
  */
 @Configuration
 public class MapperConfig {
+    public static final String YAML_OBJECT_MAPPER_BEAN = "YAML_OBJECT_MAPPER";
+
     @Bean
     public ObjectMapper objectMapper() {
         return JsonMapper.builder()
@@ -30,6 +33,16 @@ public class MapperConfig {
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 .build();
     }
+
+    @Bean(YAML_OBJECT_MAPPER_BEAN)
+    public ObjectMapper yamlObjectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        objectMapper.findAndRegisterModules();
+
+        return objectMapper;
+    }
+
 
     @Bean
     public ClusterMapper clusterMapper(ObjectMapper objectMapper) {

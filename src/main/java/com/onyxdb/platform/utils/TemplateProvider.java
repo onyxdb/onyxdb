@@ -8,7 +8,7 @@ import io.fabric8.kubernetes.api.model.Quantity;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
-import static com.onyxdb.platform.core.clusters.ClusterMapper.DEFAULT_NAMESPACE;
+import static com.onyxdb.platform.mdb.clusters.ClusterMapper.DEFAULT_NAMESPACE;
 
 public class TemplateProvider {
     private final SpringTemplateEngine templateEngine;

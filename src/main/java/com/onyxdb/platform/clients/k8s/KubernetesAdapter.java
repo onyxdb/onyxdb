@@ -7,7 +7,7 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import com.onyxdb.platform.clients.k8s.psmdb.PsmdbClient;
 import com.onyxdb.platform.utils.TemplateProvider;
 
-import static com.onyxdb.platform.core.clusters.ClusterMapper.DEFAULT_NAMESPACE;
+import static com.onyxdb.platform.mdb.clusters.ClusterMapper.DEFAULT_NAMESPACE;
 
 public class KubernetesAdapter {
     private final KubernetesClient kubernetesClient;
