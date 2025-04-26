@@ -89,6 +89,7 @@ CREATE TABLE public.users
 (
     id         uuid      NOT NULL,
     name       varchar   NOT NULL,
+    password_secret varchar   NOT NULL,
     cluster_id uuid      NOT NULL,
     created_at timestamp NOT NULL,
     created_by uuid      NOT NULL,
@@ -125,10 +126,14 @@ CREATE TABLE public.operations
     created_at timestamp NOT NULL,
     created_by uuid      NOT NULL,
     updated_at timestamp NOT NULL,
+    payload    jsonb     NOT NULL,
     cluster_id uuid,
     PRIMARY KEY (id),
     FOREIGN KEY (cluster_id) REFERENCES public.clusters (id)
 );
+
+CREATE UNIQUE INDEX operations_uniq_idx ON public.operations (cluster_id, status)
+    WHERE public.operations.status = 'in_progress';
 
 CREATE TYPE public.task_status AS ENUM (
     'scheduled',
@@ -137,27 +142,28 @@ CREATE TYPE public.task_status AS ENUM (
     'success'
     );
 
-CREATE TYPE public.task_type AS ENUM (
-    'mongodb_create_vector_config',
-    'mongodb_apply_psmdb',
-    'mongodb_check_psmdb_readiness',
-    'mongodb_apply_onyxdb_agent',
-    'mongodb_check_onyxdb_agent_readiness',
-    'mongodb_create_exporter_service',
-    'mongodb_create_exporter_service_scrape',
-    'mongodb_delete_exporter_service_scrape',
-    'mongodb_delete_exporter_service',
-    'mongodb_delete_onyxdb_agent',
-    'mongodb_check_onyxdb_agent_is_deleted',
-    'mongodb_delete_psmdb',
-    'mongodb_check_psmdb_is_deleted',
-    'mongodb_delete_vector_config'
-    );
+-- CREATE TYPE public.task_type AS ENUM (
+--     'mongodb_create_vector_config',
+--     'mongodb_apply_psmdb',
+--     'mongodb_check_psmdb_readiness',
+--     'mongodb_apply_onyxdb_agent',
+--     'mongodb_check_onyxdb_agent_readiness',
+--     'mongodb_create_exporter_service',
+--     'mongodb_create_exporter_service_scrape',
+--     'mongodb_delete_exporter_service_scrape',
+--     'mongodb_delete_exporter_service',
+--     'mongodb_delete_onyxdb_agent',
+--     'mongodb_check_onyxdb_agent_is_deleted',
+--     'mongodb_delete_psmdb',
+--     'mongodb_check_psmdb_is_deleted',
+--     'mongodb_delete_vector_config',
+--     'mongodb_delete_secrets'
+--     );
 
 CREATE TABLE public.tasks
 (
     id            uuid               NOT NULL,
-    type          public.task_type   NOT NULL,
+    type          varchar            NOT NULL,
     status        public.task_status NOT NULL,
     operation_id  uuid               NOT NULL,
     created_at    timestamp          NOT NULL,
@@ -231,9 +237,9 @@ CREATE TABLE public.product_quotas
     "limit"     bigint NOT NULL,
     allocation  bigint NOT NULL,
     free        bigint NOT NULL,
-    PRIMARY KEY (product_id, resource_id),
-    FOREIGN KEY (product_id) REFERENCES public.products (id),
-    FOREIGN KEY (resource_id) REFERENCES public.resources (id)
+    PRIMARY KEY (product_id, resource_id)
+--     FOREIGN KEY (product_id) REFERENCES public.products (id),
+--     FOREIGN KEY (resource_id) REFERENCES public.resources (id)
 );
 
 INSERT INTO public.product_quotas(product_id, resource_id, "limit", allocation, free)

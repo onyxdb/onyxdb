@@ -1,0 +1,23 @@
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: onyxdb-agent
+  namespace: onyxdb
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "list"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: onyxdb-agent-binding
+  namespace: onyxdb
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: onyxdb
+roleRef:
+  kind: Role
+  name: onyxdb-agent
+  apiGroup: rbac.authorization.k8s.io
