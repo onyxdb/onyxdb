@@ -31,6 +31,7 @@ import com.onyxdb.platform.mdb.users.UserRepository;
 import com.onyxdb.platform.processing.models.Operation;
 import com.onyxdb.platform.processing.models.OperationType;
 import com.onyxdb.platform.processing.models.TaskStatus;
+import com.onyxdb.platform.processing.models.payloads.ClusterPayload;
 import com.onyxdb.platform.processing.models.payloads.MongoCreateClusterPayload;
 import com.onyxdb.platform.processing.models.payloads.MongoScaleClusterPayload;
 import com.onyxdb.platform.processing.repositories.OperationRepository;
@@ -181,7 +182,13 @@ public class ClusterService {
     public UUID deleteCluster(UUID clusterId) {
         Cluster cluster = getCluster(clusterId);
 
-        var operation = Operation.scheduled(OperationType.MONGO_DELETE_CLUSTER, cluster.id());
+        var operation = Operation.scheduledWithPayload(
+                OperationType.MONGO_DELETE_CLUSTER,
+                cluster.id(),
+                ObjectMapperUtils.convertToString(objectMapper, new ClusterPayload(
+                        clusterId
+                ))
+        );
         operationRepository.createOperation(operation);
 
         return operation.id();

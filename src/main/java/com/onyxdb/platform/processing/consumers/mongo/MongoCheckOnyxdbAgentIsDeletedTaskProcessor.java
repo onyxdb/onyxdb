@@ -29,7 +29,7 @@ public class MongoCheckOnyxdbAgentIsDeletedTaskProcessor extends ClusterTaskProc
 
     @Override
     public TaskType getTaskType() {
-        return TaskType.MONGODB_CHECK_ONYXDB_AGENT_IS_DELETED;
+        return TaskType.MONGO_CHECK_ONYXDB_AGENT_IS_DELETED;
     }
 
     @Override

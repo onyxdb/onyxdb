@@ -28,7 +28,7 @@ public class MongoDeleteExporterServiceProcessor extends ClusterTaskProcessor {
 
     @Override
     public TaskType getTaskType() {
-        return TaskType.MONGODB_DELETE_EXPORTER_SERVICE;
+        return TaskType.MONGO_DELETE_EXPORTER_SERVICE;
     }
 
     @Override

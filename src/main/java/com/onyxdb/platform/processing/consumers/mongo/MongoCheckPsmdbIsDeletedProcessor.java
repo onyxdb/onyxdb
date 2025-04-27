@@ -3,8 +3,11 @@ package com.onyxdb.platform.processing.consumers.mongo;
 import java.time.Duration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import com.onyxdb.platform.clients.k8s.psmdb.PsmdbClient;
+import com.onyxdb.platform.mdb.clusters.ClusterRepository;
 import com.onyxdb.platform.mdb.clusters.ClusterService;
 import com.onyxdb.platform.core.clusters.models.Cluster;
 import com.onyxdb.platform.processing.models.Task;
@@ -16,21 +19,25 @@ import com.onyxdb.platform.processing.consumers.ClusterTaskProcessor;
 import static com.onyxdb.platform.mdb.clusters.ClusterMapper.DEFAULT_NAMESPACE;
 import static com.onyxdb.platform.mdb.clusters.ClusterMapper.DEFAULT_PROJECT;
 
+@Component
 public class MongoCheckPsmdbIsDeletedProcessor extends ClusterTaskProcessor {
     private final PsmdbClient psmdbClient;
+    private final ClusterRepository clusterRepository;
 
     public MongoCheckPsmdbIsDeletedProcessor(
             ObjectMapper objectMapper,
             ClusterService clusterService,
-            PsmdbClient psmdbClient
+            PsmdbClient psmdbClient,
+            ClusterRepository clusterRepository
     ) {
         super(objectMapper, clusterService);
         this.psmdbClient = psmdbClient;
+        this.clusterRepository = clusterRepository;
     }
 
     @Override
     public TaskType getTaskType() {
-        return TaskType.MONGODB_CHECK_PSMDB_IS_DELETED;
+        return TaskType.MONGO_CHECK_PSMDB_IS_DELETED;
     }
 
     @Override
@@ -43,6 +50,7 @@ public class MongoCheckPsmdbIsDeletedProcessor extends ClusterTaskProcessor {
                     task.getScheduledAtWithDelay(Duration.ofSeconds(30))
             );
         }
+        clusterRepository.markClusterDeleted(cluster.id());
 
         return TaskProcessingResult.success();
     }

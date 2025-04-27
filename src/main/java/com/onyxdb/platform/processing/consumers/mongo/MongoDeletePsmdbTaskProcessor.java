@@ -28,7 +28,7 @@ public class MongoDeletePsmdbTaskProcessor extends ClusterTaskProcessor {
 
     @Override
     public TaskType getTaskType() {
-        return TaskType.MONGODB_DELETE_PSMDB;
+        return TaskType.MONGO_DELETE_PSMDB;
     }
 
     @Override

@@ -20,13 +20,13 @@ public enum TaskType implements StringEnum {
     MONGO_DELETE_DATABASE("mongo_delete_database"),
     MONGO_DELETE_USER("mongo_delete_user"),
 
-    MONGODB_DELETE_EXPORTER_SERVICE_SCRAPE("mongodb_delete_exporter_service_scrape"),
-    MONGODB_DELETE_EXPORTER_SERVICE("mongodb_delete_exporter_service"),
-    MONGODB_DELETE_ONYXDB_AGENT("mongodb_delete_onyxdb_agent"),
-    MONGODB_CHECK_ONYXDB_AGENT_IS_DELETED("mongodb_check_onyxdb_agent_is_deleted"),
-    MONGODB_DELETE_PSMDB("mongodb_delete_psmdb"),
-    MONGODB_CHECK_PSMDB_IS_DELETED("mongodb_check_psmdb_is_deleted"),
-    MONGODB_DELETE_VECTOR_CONFIG("mongodb_delete_vector_config"),
+    MONGO_DELETE_EXPORTER_SERVICE_SCRAPE("mongo_delete_exporter_service_scrape"),
+    MONGO_DELETE_EXPORTER_SERVICE("mongo_delete_exporter_service"),
+    MONGO_DELETE_ONYXDB_AGENT("mongo_delete_onyxdb_agent"),
+    MONGO_CHECK_ONYXDB_AGENT_IS_DELETED("mongo_check_onyxdb_agent_is_deleted"),
+    MONGO_DELETE_PSMDB("mongo_delete_psmdb"),
+    MONGO_CHECK_PSMDB_IS_DELETED("mongo_check_psmdb_is_deleted"),
+    MONGO_DELETE_VECTOR_CONFIG("mongo_delete_vector_config"),
 
     FINAL_TASK("final_task");
     ;

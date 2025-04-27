@@ -24,6 +24,7 @@ import com.onyxdb.platform.processing.models.TaskWithBlockers;
 import com.onyxdb.platform.processing.producers.mongo.MongoCreateClusterTaskProducer;
 import com.onyxdb.platform.processing.producers.mongo.MongoCreateDatabaseTaskProducer;
 import com.onyxdb.platform.processing.producers.mongo.MongoCreateUserTaskProducer;
+import com.onyxdb.platform.processing.producers.mongo.MongoDeleteClusterTaskGenerator;
 import com.onyxdb.platform.processing.producers.mongo.MongoDeleteDatabaseTaskProducer;
 import com.onyxdb.platform.processing.producers.mongo.MongoDeleteUserTaskProducer;
 import com.onyxdb.platform.processing.producers.mongo.MongoScaleClusterTaskProducer;
@@ -43,6 +44,7 @@ public class ProduceOperationTasksTask {
     private final TransactionTemplate transactionTemplate;
 
     private final MongoCreateClusterTaskProducer mongoCreateClusterTaskProducer;
+    private final MongoDeleteClusterTaskGenerator mongoDeleteClusterTaskGenerator;
     private final MongoScaleClusterTaskProducer mongoScaleClusterTaskProducer;
     private final MongoCreateDatabaseTaskProducer mongoCreateDatabaseTaskProducer;
     private final MongoDeleteDatabaseTaskProducer mongoDeleteDatabaseTaskProducer;
@@ -83,6 +85,9 @@ public class ProduceOperationTasksTask {
             case MONGO_CREATE_CLUSTER -> {
                 return mongoCreateClusterTaskProducer.produceTasks(operation, operation.payload());
             }
+            case MONGO_DELETE_CLUSTER -> {
+                return mongoDeleteClusterTaskGenerator.produceTasks(operation, operation.payload());
+            }
             case MONGO_SCALE_CLUSTER -> {
                 return mongoScaleClusterTaskProducer.produceTasks(operation, operation.payload());
             }
@@ -119,9 +124,21 @@ public class ProduceOperationTasksTask {
                     // 150 sec
                 }
                 if (prev.task().type().equalsStringEnum(TaskType.MONGO_APPLY_ONYXDB_AGENT)) {
-                    delayAfterPreviousSeconds = 10;
+                    delayAfterPreviousSeconds = 60;
                     attempts = 5;
                     // 50 sec
+                }
+                if (prev.task().type().equalsStringEnum(TaskType.MONGO_CREATE_DATABASE)) {
+                    delayAfterPreviousSeconds = 30;
+                    attempts = 5;
+                    // 50 sec
+                }
+
+                if (current.type().equalsStringEnum(TaskType.MONGO_CREATE_USER)) {
+                    attempts = 1;
+                }
+                if (current.type().equalsStringEnum(TaskType.MONGO_CREATE_DATABASE)) {
+                    attempts = 1;
                 }
             }
 

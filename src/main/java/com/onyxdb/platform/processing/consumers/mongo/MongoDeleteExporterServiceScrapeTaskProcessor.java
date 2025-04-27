@@ -34,7 +34,7 @@ public class MongoDeleteExporterServiceScrapeTaskProcessor extends ClusterTaskPr
     }
 
     public TaskType getTaskType() {
-        return TaskType.MONGODB_DELETE_EXPORTER_SERVICE_SCRAPE;
+        return TaskType.MONGO_DELETE_EXPORTER_SERVICE_SCRAPE;
     }
 
     @Override

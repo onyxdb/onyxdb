@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: agent
-          image: foxleren/onyxdb-agent:master-9d6b3be
+          image: foxleren/onyxdb-agent:foxleren-create-and-delete-databases-75e6da0
           imagePullPolicy: Always
           ports:
             - containerPort: 9004

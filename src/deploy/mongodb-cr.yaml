@@ -1,7 +1,7 @@
 apiVersion: psmdb.percona.com/v1
 kind: PerconaServerMongoDB
 metadata:
-  name: manual-mongo-1
+  name: test-7-sandbox-mongo
   finalizers: []
 #    - percona.com/delete-psmdb-pods-in-order
 #    - percona.com/delete-psmdb-pvc
@@ -18,27 +18,6 @@ spec:
   imagePullPolicy: IfNotPresent
   unsafeFlags:
     replsetSize: true
-  users:
-    - name: user-1
-      db: admin
-      passwordSecretRef:
-        name: manual-mongo-1-user-1
-        key: password
-      roles:
-        - name: read
-          db: admin
-#        - name: readWrite
-#          db: admin
-    - name: user-2
-      db: admin
-      passwordSecretRef:
-        name: manual-mongo-1-user-2
-        key: password
-      roles:
-        - name: read
-          db: admin
-#        - name: readWrite
-#          db: admin
   #  tls:
   #    mode: preferTLS
   #    # 90 days in hours
@@ -72,7 +51,7 @@ spec:
   #    schedule: "0 2 * * *"
   #    setFCV: false
   secrets:
-    users: manual-mongo-1-users
+    users: test-6-sandbox-mongo-users
   #    encryptionKey: demo-cluster-mongodb-encryption-key
   #    ssl: my-cluster-name-ssl
   #    sslInternal: my-cluster-name-ssl-internal
@@ -89,7 +68,7 @@ spec:
   #    mongosParams: --environment=ENVIRONMENT
   replsets:
     - name: rs0
-      size: 1
+      size: 2
       #    terminationGracePeriodSeconds: 300
       #    serviceAccountName: default
       #    topologySpreadConstraints:
@@ -126,6 +105,9 @@ spec:
           path: /data/db/mongod.log
           destination: file
           logAppend: true
+#        security:
+#            enableEncryption: true
+#            encryptionCipherMode: "AES256-CBC"
       #      storage:
       #        engine: wiredTiger
       #        wiredTiger:
@@ -315,11 +297,11 @@ spec:
       #      externalTrafficPolicy: Local
       resources:
         limits:
-          cpu: "300m"
-          memory: "0.3G"
+          cpu: "0.5"
+          memory: "0.5G"
         requests:
-          cpu: "300m"
-          memory: "0.3G"
+          cpu: "0.5"
+          memory: "0.5G"
       volumeSpec:
         #      emptyDir: {}
         #      hostPath:

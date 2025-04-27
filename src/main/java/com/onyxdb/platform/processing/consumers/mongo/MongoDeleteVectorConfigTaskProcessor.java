@@ -28,7 +28,7 @@ public class MongoDeleteVectorConfigTaskProcessor extends ClusterTaskProcessor {
 
     @Override
     public TaskType getTaskType() {
-        return TaskType.MONGODB_DELETE_VECTOR_CONFIG;
+        return TaskType.MONGO_DELETE_VECTOR_CONFIG;
     }
 
     @Override

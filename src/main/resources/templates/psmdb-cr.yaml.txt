@@ -22,6 +22,9 @@ spec:
           path: /data/db/mongod.log
           destination: file
           logAppend: true
+        security:
+            enableEncryption: true
+            encryptionCipherMode: "AES256-CBC"
       affinity:
         advanced:
           nodeAffinity:

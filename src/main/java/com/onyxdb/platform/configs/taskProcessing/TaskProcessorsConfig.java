@@ -161,18 +161,18 @@ public class TaskProcessorsConfig {
         );
     }
 
-    @Bean
-    public MongoCheckPsmdbIsDeletedProcessor mongoCheckPsmdbIsDeletedProcessor(
-            ObjectMapper objectMapper,
-            ClusterService clusterService,
-            PsmdbClient psmdbClient
-    ) {
-        return new MongoCheckPsmdbIsDeletedProcessor(
-                objectMapper,
-                clusterService,
-                psmdbClient
-        );
-    }
+//    @Bean
+//    public MongoCheckPsmdbIsDeletedProcessor mongoCheckPsmdbIsDeletedProcessor(
+//            ObjectMapper objectMapper,
+//            ClusterService clusterService,
+//            PsmdbClient psmdbClient
+//    ) {
+//        return new MongoCheckPsmdbIsDeletedProcessor(
+//                objectMapper,
+//                clusterService,
+//                psmdbClient
+//        );
+//    }
 
     @Bean
     public MongoDeleteVectorConfigTaskProcessor mongoDeleteVectorConfigTaskProcessor(
@@ -414,23 +414,31 @@ public class TaskProcessorsConfig {
                 Map.entry(
                         TaskType.MONGO_DELETE_USER,
                         mongoDeleteUserTaskProcessor
+                ),
+                Map.entry(
+                        TaskType.MONGO_DELETE_EXPORTER_SERVICE_SCRAPE,
+                        mongoDeleteExporterServiceScrapeTaskProcessor
+                ),
+                Map.entry(
+                        TaskType.MONGO_DELETE_EXPORTER_SERVICE,
+                        mongoDeleteExporterServiceProcessor
+                ),
+                Map.entry(
+                        TaskType.MONGO_DELETE_ONYXDB_AGENT,
+                        mongoDeleteOnyxdbAgentTaskProcessor
+                ),
+                Map.entry(
+                        TaskType.MONGO_CHECK_ONYXDB_AGENT_IS_DELETED,
+                        mongoCheckOnyxdbAgentIsDeletedTaskProcessor
+                ),
+                Map.entry(
+                        TaskType.MONGO_DELETE_PSMDB,
+                        mongoDeletePsmdbTaskProcessor
+                ),
+                Map.entry(
+                        TaskType.MONGO_CHECK_PSMDB_IS_DELETED,
+                        mongoCheckPsmdbIsDeletedProcessor
                 )
-//                Map.entry(
-//                        TaskType.MONGODB_DELETE_EXPORTER_SERVICE_SCRAPE,
-//                        mongoDeleteExporterServiceScrapeTaskProcessor
-//                ),
-//                Map.entry(
-//                        TaskType.MONGODB_DELETE_EXPORTER_SERVICE,
-//                        mongoDeleteExporterServiceProcessor
-//                ),
-//                Map.entry(
-//                        TaskType.MONGODB_DELETE_PSMDB,
-//                        mongoDeletePsmdbTaskProcessor
-//                ),
-//                Map.entry(
-//                        TaskType.MONGODB_CHECK_PSMDB_IS_DELETED,
-//                        mongoCheckPsmdbIsDeletedProcessor
-//                ),
 //                Map.entry(
 //                        TaskType.MONGODB_DELETE_VECTOR_CONFIG,
 //                        mongoDeleteVectorConfigTaskProcessor

@@ -1,140 +1,87 @@
-//package com.onyxdb.platform.processing.producers.mongo;
-//
-//import java.time.LocalDateTime;
-//import java.util.List;
-//import java.util.Map;
-//import java.util.UUID;
-//
-//import com.fasterxml.jackson.databind.ObjectMapper;
-//
-//import com.onyxdb.platform.processing.producers.ClusterTaskGenerator;
-//import com.onyxdb.platform.processing.models.OperationType;
-//import com.onyxdb.platform.processing.models.Task;
-//import com.onyxdb.platform.processing.models.TaskType;
-//import com.onyxdb.platform.processing.models.TaskWithBlockers;
-//import com.onyxdb.platform.processing.models.payloads.ClusterPayload;
-//
-//public class MongoDeleteClusterTaskGenerator extends ClusterTaskGenerator {
-//    private static final Map<TaskType, List<TaskType>> TASK_TYPE_TO_BLOCKER_TASK_TYPES = Map.ofEntries(
-//            Map.entry(
-//                    TaskType.MONGODB_DELETE_EXPORTER_SERVICE_SCRAPE, List.of()
-//            ),
-//            Map.entry(
-//                    TaskType.MONGODB_DELETE_EXPORTER_SERVICE, List.of(
-//                            TaskType.MONGODB_DELETE_EXPORTER_SERVICE_SCRAPE
-//                    )
-//            ),
-//            Map.entry(
-//                    TaskType.MONGODB_DELETE_ONYXDB_AGENT, List.of(
-//                            TaskType.MONGODB_DELETE_EXPORTER_SERVICE_SCRAPE,
-//                            TaskType.MONGODB_DELETE_EXPORTER_SERVICE
-//                    )
-//            ),
-//            Map.entry(
-//                    TaskType.MONGODB_CHECK_ONYXDB_AGENT_IS_DELETED, List.of(
-//                            TaskType.MONGODB_DELETE_EXPORTER_SERVICE_SCRAPE,
-//                            TaskType.MONGODB_DELETE_EXPORTER_SERVICE,
-//                            TaskType.MONGODB_DELETE_ONYXDB_AGENT
-//                    )
-//            ),
-//            Map.entry(
-//                    TaskType.MONGODB_DELETE_PSMDB, List.of(
-//                            TaskType.MONGODB_DELETE_EXPORTER_SERVICE_SCRAPE,
-//                            TaskType.MONGODB_DELETE_EXPORTER_SERVICE,
-//                            TaskType.MONGODB_DELETE_ONYXDB_AGENT,
-//                            TaskType.MONGODB_CHECK_ONYXDB_AGENT_IS_DELETED
-//                    )
-//            ),
-//            Map.entry(
-//                    TaskType.MONGODB_CHECK_PSMDB_IS_DELETED, List.of(
-//                            TaskType.MONGODB_DELETE_EXPORTER_SERVICE_SCRAPE,
-//                            TaskType.MONGODB_DELETE_EXPORTER_SERVICE,
-//                            TaskType.MONGODB_DELETE_ONYXDB_AGENT,
-//                            TaskType.MONGODB_CHECK_ONYXDB_AGENT_IS_DELETED
-//                    )
-//            ),
-//            Map.entry(
-//                    TaskType.MONGODB_DELETE_VECTOR_CONFIG, List.of(
-//                            TaskType.MONGODB_DELETE_EXPORTER_SERVICE_SCRAPE,
-//                            TaskType.MONGODB_DELETE_EXPORTER_SERVICE,
-//                            TaskType.MONGODB_CHECK_PSMDB_IS_DELETED,
-//                            TaskType.MONGODB_DELETE_ONYXDB_AGENT,
-//                            TaskType.MONGODB_CHECK_ONYXDB_AGENT_IS_DELETED
-//                    )
-//            )
-//    );
-//
-//    public MongoDeleteClusterTaskGenerator(ObjectMapper objectMapper) {
-//        super(objectMapper);
-//    }
-//
-//    @Override
-//    public OperationType getOperationType() {
-//        return OperationType.MONGO_DELETE_CLUSTER;
-//    }
-//
-//    @Override
-//    public Map<TaskType, List<TaskType>> getTaskTypeToBlockerTaskTypes() {
-//        return TASK_TYPE_TO_BLOCKER_TASK_TYPES;
-//    }
-//
-//    @Override
-//    public List<TaskWithBlockers> generateTasks(UUID operationId, ClusterPayload payload) {
-//        LocalDateTime now = LocalDateTime.now();
-//        String stringPayload = payloadToString(payload);
-//
-//        List<Task> tasks = List.of(
-//                Task.scheduledFirst(
-//                        TaskType.MONGODB_DELETE_EXPORTER_SERVICE_SCRAPE,
-//                        operationId,
-//                        now,
-//                        DEFAULT_RETRIES_LEFT,
-//                        stringPayload
-//                ),
-//                Task.scheduledMiddle(
-//                        TaskType.MONGODB_DELETE_EXPORTER_SERVICE,
-//                        operationId,
-//                        now,
-//                        DEFAULT_RETRIES_LEFT,
-//                        stringPayload
-//                ),
-//                Task.scheduledMiddle(
-//                        TaskType.MONGODB_DELETE_ONYXDB_AGENT,
-//                        operationId,
-//                        now,
-//                        DEFAULT_RETRIES_LEFT,
-//                        stringPayload
-//                ),
-//                Task.scheduledMiddle(
-//                        TaskType.MONGODB_CHECK_ONYXDB_AGENT_IS_DELETED,
-//                        operationId,
-//                        now,
-//                        DEFAULT_RETRIES_LEFT,
-//                        stringPayload
-//                ),
-//                Task.scheduledMiddle(
-//                        TaskType.MONGODB_DELETE_PSMDB,
-//                        operationId,
-//                        now,
-//                        DEFAULT_RETRIES_LEFT,
-//                        stringPayload
-//                ),
-//                Task.scheduledMiddle(
-//                        TaskType.MONGODB_CHECK_PSMDB_IS_DELETED,
-//                        operationId,
-//                        now,
-//                        DEFAULT_RETRIES_LEFT,
-//                        stringPayload
-//                ),
-//                Task.scheduledLast(
-//                        TaskType.MONGODB_DELETE_VECTOR_CONFIG,
-//                        operationId,
-//                        now,
-//                        DEFAULT_RETRIES_LEFT,
-//                        stringPayload
-//                )
-//        );
-//
-//        return aggregateToTasksWithBlockers(tasks);
-//    }
-//}
+package com.onyxdb.platform.processing.producers.mongo;
+
+import java.util.List;
+import java.util.UUID;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Component;
+
+import com.onyxdb.platform.operationsOLD.tasks.ProducedTask;
+import com.onyxdb.platform.processing.models.Operation;
+import com.onyxdb.platform.processing.models.TaskType;
+import com.onyxdb.platform.processing.models.payloads.ClusterPayload;
+import com.onyxdb.platform.processing.producers.TaskProducer;
+
+@Component
+public class MongoDeleteClusterTaskGenerator extends TaskProducer<ClusterPayload> {
+    public MongoDeleteClusterTaskGenerator(ObjectMapper objectMapper) {
+        super(objectMapper);
+    }
+
+    @Override
+    public ClusterPayload parsePayload(String payload) {
+        try {
+            return objectMapper.readValue(payload, ClusterPayload.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<ProducedTask> produceTasks(Operation operation, ClusterPayload payload) {
+        UUID operationId = operation.id();
+
+        var deleteExporterServiceScrapeTask = ProducedTask.createWithPayload(
+                TaskType.MONGO_DELETE_EXPORTER_SERVICE_SCRAPE,
+                operationId,
+                List.of(),
+                payload
+        );
+        var deleteExporterServiceTask = ProducedTask.createWithPayload(
+                TaskType.MONGO_DELETE_EXPORTER_SERVICE,
+                operationId,
+                List.of(deleteExporterServiceScrapeTask.id()),
+                payload
+        );
+        var deleteOnyxdbAgentTask = ProducedTask.createWithPayload(
+                TaskType.MONGO_DELETE_ONYXDB_AGENT,
+                operationId,
+                List.of(deleteExporterServiceTask.id()),
+                payload
+        );
+        var checkOnyxdbAgentIsDeletedTask = ProducedTask.createWithPayload(
+                TaskType.MONGO_CHECK_ONYXDB_AGENT_IS_DELETED,
+                operationId,
+                List.of(deleteOnyxdbAgentTask.id()),
+                payload
+        );
+        var deletePsmdbTask = ProducedTask.createWithPayload(
+                TaskType.MONGO_DELETE_PSMDB,
+                operationId,
+                List.of(checkOnyxdbAgentIsDeletedTask.id()),
+                payload
+        );
+        var checkPsmdbIsDeletedTask = ProducedTask.createWithPayload(
+                TaskType.MONGO_CHECK_PSMDB_IS_DELETED,
+                operationId,
+                List.of(deletePsmdbTask.id()),
+                payload
+        );
+        var finalTask = ProducedTask.create(
+                TaskType.FINAL_TASK,
+                operationId,
+                List.of(checkPsmdbIsDeletedTask.id())
+        );
+
+        return List.of(
+                deleteExporterServiceScrapeTask,
+                deleteExporterServiceTask,
+                deleteOnyxdbAgentTask,
+                checkOnyxdbAgentIsDeletedTask,
+                deletePsmdbTask,
+                checkPsmdbIsDeletedTask,
+                finalTask
+        );
+    }
+}
