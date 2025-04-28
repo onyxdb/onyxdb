@@ -26,6 +26,7 @@ import com.onyxdb.platform.processing.consumers.mongo.MongoCheckOnyxdbAgentIsDel
 import com.onyxdb.platform.processing.consumers.mongo.MongoCheckOnyxdbAgentReadinessTaskProcessor;
 import com.onyxdb.platform.processing.consumers.mongo.MongoCheckPsmdbIsDeletedProcessor;
 import com.onyxdb.platform.processing.consumers.mongo.MongoCheckPsmdbReadinessProcessor;
+import com.onyxdb.platform.processing.consumers.mongo.MongoCreateBackupTaskProcessor;
 import com.onyxdb.platform.processing.consumers.mongo.MongoCreateDatabaseTaskProcessor;
 import com.onyxdb.platform.processing.consumers.mongo.MongoCreateExporterServiceProcessor;
 import com.onyxdb.platform.processing.consumers.mongo.MongoCreateExporterServiceScrapeTaskProcessor;
@@ -359,7 +360,8 @@ public class TaskProcessorsConfig {
 //            MongoCreateUserResultTaskProcessor mongoCreateUserResultTaskProcessor,
             FinalTaskConsumer finalTaskConsumer,
             MongoUpdateHostsTaskProcessor mongoUpdateHostsTaskProcessor,
-            MongoDeleteUserTaskProcessor mongoDeleteUserTaskProcessor
+            MongoDeleteUserTaskProcessor mongoDeleteUserTaskProcessor,
+            MongoCreateBackupTaskProcessor mongoCreateBackupTaskProcessor
 //            MongoDeleteSecretsTaskProcessor mongoDeleteSecretsTaskProcessor
     ) {
         Map<TaskType, TaskProcessor<?>> taskTypeToTaskProcessors = Map.ofEntries(
@@ -438,6 +440,10 @@ public class TaskProcessorsConfig {
                 Map.entry(
                         TaskType.MONGO_CHECK_PSMDB_IS_DELETED,
                         mongoCheckPsmdbIsDeletedProcessor
+                ),
+                Map.entry(
+                        TaskType.MONGO_CREATE_BACKUP,
+                        mongoCreateBackupTaskProcessor
                 )
 //                Map.entry(
 //                        TaskType.MONGODB_DELETE_VECTOR_CONFIG,

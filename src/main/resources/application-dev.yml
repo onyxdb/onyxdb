@@ -35,16 +35,18 @@ onyxdb:
     username: ""
     password: ""
   victoria-logs:
-    base-url: http://vls-victoria-logs-single-server.onyxdb.svc.cluster.local:9428
+    base-url: http://vlogs-onyxdb.onyxdb.svc.cluster.local:9428
+  agent:
+    base-url: http://localhost:9004
   tasks:
     collect-product-quota-usage:
-      fixed-rate: PT5S
-      lock-at-least-for: 5s
-      lock-at-most-for: 5s
+      fixed-rate: PT1S
+      lock-at-least-for: 1s
+      lock-at-most-for: 1s
 
 onyxdb-app:
   workers:
     process-cluster-tasks:
       min-threads: 1
       max-threads: 5
-      polling-interval-seconds: 5
+      polling-interval-seconds: 1

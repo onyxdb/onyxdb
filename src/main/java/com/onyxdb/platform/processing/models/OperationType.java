@@ -13,7 +13,8 @@ public enum OperationType implements StringEnum {
     MONGO_CREATE_USER("mongo_create_user", "Create MongoDB user"),
     MONGO_DELETE_USER("mongo_delete_user", "Delete MongoDB user"),
     MONGO_SCALE_CLUSTER("mongo_scale_cluster", "Scale MongoDB cluster"),
-    MONGO_DELETE_CLUSTER("mongo_delete_cluster", "Delete MongoDB cluster")
+    MONGO_DELETE_CLUSTER("mongo_delete_cluster", "Delete MongoDB cluster"),
+    MONGO_CREATE_BACKUP("mongo_create_backup", "Create MongoDB backup"),
     ;
 
     public static final StringEnumResolver<OperationType> R = new StringEnumResolver<>(OperationType.class);

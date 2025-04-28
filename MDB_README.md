@@ -57,5 +57,6 @@ kubectl apply -f ./src/deploy/grafana.yaml
 kubectl apply -f ./src/deploy/grafana-config.yaml
 ```
 
-http://vmselect-onyxdb.onyxdb.svc.cluster.local:8481/select/0:0/prometheus
-http://vlogs-onyxdb.onyxdb.svc.cluster.local:9428
+Адрес VLogs: http://vlogs-onyxdb.onyxdb.svc.cluster.local:9428
+
+Адрес VMetrics: http://vmselect-onyxdb.onyxdb.svc.cluster.local:8481/select/0:0/prometheus

@@ -24,14 +24,14 @@ logging:
 onyxdb:
   base-url: http://host.minikube.internal:9001
   postgres:
-    url: jdbc:postgresql://localhost/onyxdb
+    url: jdbc:postgresql://localhost:5632/onyxdb
     username: username
     password: password
   redis:
     host: localhost
     port: 6379
   clickhouse:
-    url: jdbc:clickhouse://localhost:8123/onyxdb
+    url: jdbc:clickhouse://localhost:8323/onyxdb
     username: username
     password: password
   victoria-logs:

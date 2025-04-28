@@ -15,12 +15,14 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import com.onyxdb.platform.operationsOLD.tasks.ProducedTask;
 import com.onyxdb.platform.processing.TaskProcessingUtils;
+import com.onyxdb.platform.processing.consumers.mongo.MongoCreateBackupTaskProcessor;
 import com.onyxdb.platform.processing.models.Operation;
 import com.onyxdb.platform.processing.models.OperationStatus;
 import com.onyxdb.platform.processing.models.Task;
 import com.onyxdb.platform.processing.models.TaskStatus;
 import com.onyxdb.platform.processing.models.TaskType;
 import com.onyxdb.platform.processing.models.TaskWithBlockers;
+import com.onyxdb.platform.processing.producers.mongo.MongoCreateBackupTaskProducer;
 import com.onyxdb.platform.processing.producers.mongo.MongoCreateClusterTaskProducer;
 import com.onyxdb.platform.processing.producers.mongo.MongoCreateDatabaseTaskProducer;
 import com.onyxdb.platform.processing.producers.mongo.MongoCreateUserTaskProducer;
@@ -50,6 +52,7 @@ public class ProduceOperationTasksTask {
     private final MongoDeleteDatabaseTaskProducer mongoDeleteDatabaseTaskProducer;
     private final MongoCreateUserTaskProducer mongoCreateUserTaskProducer;
     private final MongoDeleteUserTaskProducer mongoDeleteUserTaskProducer;
+    private final MongoCreateBackupTaskProducer mongoCreateBackupTaskProducer;
 
     @Scheduled(fixedRateString = "PT2S")
     @SchedulerLock(
@@ -102,6 +105,9 @@ public class ProduceOperationTasksTask {
             }
             case MONGO_DELETE_USER -> {
                 return mongoDeleteUserTaskProducer.produceTasks(operation, operation.payload());
+            }
+            case MONGO_CREATE_BACKUP -> {
+                return mongoCreateBackupTaskProducer.produceTasks(operation, operation.payload());
             }
             default -> throw new IllegalStateException("Unexpected value: " + operation.type());
         }
