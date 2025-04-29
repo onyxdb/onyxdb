@@ -11,9 +11,9 @@ server:
 
 springdoc:
   api-docs:
-    path: /internal/api-docs
+    path: /api-docs
   swagger-ui:
-    path: /internal/swagger-ui
+    path: /swagger-ui
 
 logging:
   level:

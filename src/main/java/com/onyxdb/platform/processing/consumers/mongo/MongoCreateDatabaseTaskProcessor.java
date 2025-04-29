@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 
 import com.onyxdb.platform.clients.onyxdbAgent.OnyxdbAgentClient;
 import com.onyxdb.platform.clients.onyxdbAgent.models.CreateMongoDatabaseRequestDTO;
-import com.onyxdb.platform.core.clusters.models.Cluster;
 import com.onyxdb.platform.mdb.clusters.ClusterService;
 import com.onyxdb.platform.operationsOLD.tasks.payloads.MongoCreateDatabasePayload;
 import com.onyxdb.platform.processing.consumers.TaskProcessor;

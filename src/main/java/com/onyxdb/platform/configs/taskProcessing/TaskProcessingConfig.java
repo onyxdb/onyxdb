@@ -8,10 +8,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-import com.onyxdb.platform.processing.repositories.TaskRepository;
-import com.onyxdb.platform.services.BaseClusterService;
 import com.onyxdb.platform.processing.TaskProcessingWorker;
 import com.onyxdb.platform.processing.consumers.CompositeTaskProcessor;
+import com.onyxdb.platform.processing.repositories.TaskRepository;
+import com.onyxdb.platform.services.BaseClusterService;
 
 @Configuration
 public class TaskProcessingConfig {

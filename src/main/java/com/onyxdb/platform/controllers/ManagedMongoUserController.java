@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.onyxdb.platform.mdb.users.UserMapper;
 import com.onyxdb.platform.core.clusters.models.MongoRole;
 import com.onyxdb.platform.core.clusters.models.User;
 import com.onyxdb.platform.core.clusters.models.UserToCreate;
@@ -18,6 +17,7 @@ import com.onyxdb.platform.generated.openapi.models.ListMongoUsersResponse;
 import com.onyxdb.platform.generated.openapi.models.MongoUser;
 import com.onyxdb.platform.generated.openapi.models.MongoUserToCreate;
 import com.onyxdb.platform.generated.openapi.models.V1ScheduledOperationResponse;
+import com.onyxdb.platform.mdb.users.UserMapper;
 import com.onyxdb.platform.mdb.users.UserService;
 
 @RestController

@@ -15,10 +15,10 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import com.onyxdb.platform.core.clusters.models.Cluster;
 import com.onyxdb.platform.mdb.clusters.ClusterRepository;
-import com.onyxdb.platform.processing.producers.CompositeTaskGenerator;
 import com.onyxdb.platform.processing.models.OperationStatus;
 import com.onyxdb.platform.processing.models.Task;
 import com.onyxdb.platform.processing.models.TaskStatus;
+import com.onyxdb.platform.processing.producers.CompositeTaskGenerator;
 import com.onyxdb.platform.processing.repositories.OperationRepository;
 import com.onyxdb.platform.processing.repositories.TaskRepository;
 

@@ -6,13 +6,72 @@ servers:
   - url: http://localhost:9001
     description: localhost
 paths:
-  # ---------- v1ResourcePresets ----------
+  # ---------- Projects ------------------------------------------------------------------------------------------------
+  /api/projects:
+    get:
+      summary: List projects
+      operationId: listProjects
+      tags:
+        - Projects
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListProjectsResponseDTO'
+    post:
+      summary: Create project
+      operationId: createProject
+      tags:
+        - Projects
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProjectRequestDTO'
+      responses:
+        '200':
+          description: OK
+  /api/projects/{projectId}:
+    get:
+      summary: Get project
+      operationId: getProject
+      tags:
+        - Projects
+      parameters:
+        - $ref: '#/components/parameters/ProjectIdPV'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectDTO'
+    put:
+      summary: Update project
+      operationId: updateProject
+      tags:
+        - Projects
+      parameters:
+        - $ref: '#/components/parameters/ProjectIdPV'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProjectRequestDTO'
+      responses:
+        '200':
+          description: OK
+  # ---------- Resource presets ----------------------------------------------------------------------------------------
   /api/v1/resource-presets:
     get:
       summary: Get resource presets
       operationId: listResourcePresets
       tags:
-        - v1ResourcePresets
+        - Resource presets
       responses:
         '200':
           description: OK
@@ -24,7 +83,7 @@ paths:
       summary: Create resource preset
       operationId: createResourcePreset
       tags:
-        - v1ResourcePresets
+        - Resource presets
       requestBody:
         required: true
         content:
@@ -39,7 +98,7 @@ paths:
       summary: Get resource preset
       operationId: getResourcePreset
       tags:
-        - v1ResourcePresets
+        - Resource presets
       parameters:
         - $ref: '#/components/parameters/ResourcePresetIdPV'
       responses:
@@ -53,7 +112,7 @@ paths:
       summary: Update resource preset
       operationId: updateResourcePreset
       tags:
-        - v1ResourcePresets
+        - Resource presets
       parameters:
         - $ref: '#/components/parameters/ResourcePresetIdPV'
       requestBody:
@@ -69,165 +128,12 @@ paths:
       summary: Delete resource preset
       operationId: deleteResourcePreset
       tags:
-        - v1ResourcePresets
+        - Resource presets
       parameters:
         - $ref: '#/components/parameters/ResourcePresetIdPV'
       responses:
         '200':
           description: OK
-
-  # ---------- v1Zones ----------
-#  /api/v1/zones:
-#    get:
-#      summary: Get zones
-#      operationId: listZones
-#      tags:
-#        - v1Zones
-#      responses:
-#        '200':
-#          description: OK
-#          content:
-#            application/json:
-#              schema:
-#                $ref: '#/components/schemas/V1ListZonesResponse'
-#    post:
-#      summary: Create zone
-#      operationId: createZone
-#      tags:
-#        - v1Zones
-#      requestBody:
-#        required: true
-#        content:
-#          application/json:
-#            schema:
-#              $ref: '#/components/schemas/V1CreateZoneRequest'
-#      responses:
-#        '200':
-#          description: OK
-#  /api/v1/zones/{zoneId}:
-#    get:
-#      summary: Get zone
-#      operationId: getZone
-#      tags:
-#        - v1Zones
-#      parameters:
-#        - $ref: '#/components/parameters/ZoneIdPV'
-#      responses:
-#        '200':
-#          description: OK
-#          content:
-#            application/json:
-#              schema:
-#                $ref: '#/components/schemas/V1ZoneResponse'
-#    put:
-#      summary: Update zone
-#      operationId: updateZone
-#      tags:
-#        - v1Zones
-#      parameters:
-#        - $ref: '#/components/parameters/ZoneIdPV'
-#      requestBody:
-#        required: true
-#        content:
-#          application/json:
-#            schema:
-#              $ref: '#/components/schemas/V1UpdateZoneRequest'
-#      responses:
-#        '200':
-#          description: OK
-#    delete:
-#      summary: Delete zone
-#      operationId: deleteZone
-#      tags:
-#        - v1Zones
-#      parameters:
-#        - $ref: '#/components/parameters/ZoneIdPV'
-#      responses:
-#        '200':
-#          description: OK
-
-  # ---------- Projects ----------
-  /api/projects/v1:
-    get:
-      summary: List projects
-      operationId: listProjects
-      tags:
-        - Projects
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/V1ListProjectsResponse'
-    post:
-      summary: Create project
-      operationId: createProject
-      tags:
-        - Projects
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/V1CreateProjectRequest'
-      responses:
-        '200':
-          description: OK
-  /api/projects/v1/{projectId}:
-    get:
-      summary: Get project
-      operationId: getProject
-      tags:
-        - Projects
-      parameters:
-        - $ref: '#/components/parameters/ProjectIdPV'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/V1ProjectResponse'
-    put:
-      summary: Update project
-      operationId: updateProject
-      tags:
-        - Projects
-      parameters:
-        - $ref: '#/components/parameters/ProjectIdPV'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/V1UpdateProjectRequest'
-      responses:
-        '200':
-          description: OK
-  /api/projects/v1/{projectId}/archive:
-    put:
-      summary: Archive project
-      operationId: archiveProject
-      tags:
-        - Projects
-      parameters:
-        - $ref: '#/components/parameters/ProjectIdPV'
-      responses:
-        '200':
-          description: OK
-  /api/projects/v1/{projectId}/unarchive:
-    put:
-      summary: Unarchive project
-      operationId: unarchiveProject
-      tags:
-        - Projects
-      parameters:
-        - $ref: '#/components/parameters/ProjectIdPV'
-      responses:
-        '200':
-          description: OK
-
   # ---------- v1ManagedMongoDb ----------
   /api/v1/managed-mongodb/clusters:
     get:
@@ -324,27 +230,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MongoListHostsResponse'
-  #    put:
-  #      summary: Scale MongoDB hosts
-  #      operationId: scaleHosts
-  #      tags:
-  #        - v1ManagedMongoDb
-  #      parameters:
-  #        - $ref: '#/components/parameters/ClusterIdPV'
-  #      requestBody:
-  #        required: true
-  #        content:
-  #          application/json:
-  #            schema:
-  #              $ref: '#/components/schemas/V1MongoScaleHostsRequest'
-  #      responses:
-  #        '200':
-  #          description: OK
-  #          content:
-  #            application/json:
-  #              schema:
-  #                $ref: '#/components/schemas/V1ScheduledOperationResponse'
-  #  /api/managed-mongodb/v1/hosts:
   # ---------- Managed MongoDB databases -------------------------------------------------------------------------------
   /api/managed-mongodb/v1/clusters/{clusterId}/databases:
     get:
@@ -709,13 +594,73 @@ paths:
 components:
   # ---------- schemas -------------------------------------------------------------------------------------------------
   schemas:
-    V1BadRequestResponse:
+    # ---------- Common schemas ----------------------------------------------------------------------------------------
+    BadRequestResponse:
       type: object
       properties:
         message:
           type: string
       required:
         - message
+    # ---------- Projects schemas --------------------------------------------------------------------------------------
+    ListProjectsResponseDTO:
+      type: object
+      properties:
+        projects:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectDTO'
+      required:
+        - projects
+    ProjectDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        productId:
+          type: string
+          format: uuid
+      required:
+        - id
+        - name
+        - description
+        - productId
+    CreateProjectRequestDTO:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        productId:
+          type: string
+          format: uuid
+      required:
+        - name
+        - description
+        - productId
+    UpdateProjectRequestDTO:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        productId:
+          type: string
+          format: uuid
+      required:
+        - name
+        - description
+        - productId
+
+
+
     # ---------- v1ResourcePresets schemas ----------
     V1ListResourcePresetsResponse:
       type: object
@@ -790,105 +735,6 @@ components:
         - cpu_optimized
         - standard
         - ram_optimized
-    V1ListZonesResponse:
-      type: object
-      properties:
-        zones:
-          type: array
-          items:
-            $ref: '#/components/schemas/V1ZoneResponse'
-      required:
-        - zones
-    V1ZoneResponse:
-      type: object
-      properties:
-        id:
-          type: string
-        description:
-          type: string
-        selector:
-          type: string
-      required:
-        - id
-        - description
-        - selector
-    V1CreateZoneRequest:
-      type: object
-      properties:
-        id:
-          type: string
-        description:
-          type: string
-        selector:
-          type: string
-      required:
-        - id
-        - description
-        - selector
-    V1UpdateZoneRequest:
-      type: object
-      properties:
-        description:
-          type: string
-        selector:
-          type: string
-      required:
-        - description
-        - selector
-    V1ListProjectsResponse:
-      type: object
-      properties:
-        projects:
-          type: array
-          items:
-            $ref: '#/components/schemas/V1ProjectResponse'
-      required:
-        - projects
-    V1ProjectResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        name:
-          type: string
-        description:
-          type: string
-        productId:
-          type: string
-          format: uuid
-        isArchived:
-          type: boolean
-      required:
-        - id
-        - name
-        - description
-        - productId
-        - isArchived
-    V1CreateProjectRequest:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-        productId:
-          type: string
-          format: uuid
-      required:
-        - name
-        - description
-        - productId
-    V1UpdateProjectRequest:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-      required:
-        - name
-        - description
     V1ListMongoClustersResponse:
       type: object
       properties:
@@ -1623,21 +1469,19 @@ components:
         - displayValue
   # ---------- parameters ----------------------------------------------------------------------------------------------
   parameters:
-    ResourcePresetIdPV:
-      name: resourcePresetId
+    # ---------- Projects parameters -----------------------------------------------------------------------------------
+    ProjectIdPV:
+      name: projectId
       in: path
       required: true
       schema:
         type: string
         format: uuid
-    ZoneIdPV:
-      name: zoneId
-      in: path
-      required: true
-      schema:
-        type: string
-    ProjectIdPV:
-      name: projectId
+
+
+
+    ResourcePresetIdPV:
+      name: resourcePresetId
       in: path
       required: true
       schema:

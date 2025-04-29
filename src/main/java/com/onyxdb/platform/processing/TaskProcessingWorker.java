@@ -14,10 +14,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.scheduling.annotation.Async;
 
 import com.onyxdb.platform.configs.taskProcessing.TaskProcessingConfig;
+import com.onyxdb.platform.processing.consumers.CompositeTaskProcessor;
+import com.onyxdb.platform.processing.models.Task;
 import com.onyxdb.platform.processing.repositories.TaskRepository;
 import com.onyxdb.platform.services.BaseClusterService;
-import com.onyxdb.platform.processing.models.Task;
-import com.onyxdb.platform.processing.consumers.CompositeTaskProcessor;
 
 /**
  * @author foxleren

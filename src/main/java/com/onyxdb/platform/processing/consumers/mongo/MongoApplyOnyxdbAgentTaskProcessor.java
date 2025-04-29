@@ -3,13 +3,13 @@ package com.onyxdb.platform.processing.consumers.mongo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.onyxdb.platform.clients.k8s.KubernetesAdapter;
-import com.onyxdb.platform.mdb.clusters.ClusterService;
 import com.onyxdb.platform.core.clusters.models.Cluster;
+import com.onyxdb.platform.mdb.clusters.ClusterService;
+import com.onyxdb.platform.processing.consumers.ClusterTaskProcessor;
 import com.onyxdb.platform.processing.models.Task;
 import com.onyxdb.platform.processing.models.TaskProcessingResult;
 import com.onyxdb.platform.processing.models.TaskType;
 import com.onyxdb.platform.processing.models.payloads.ClusterPayload;
-import com.onyxdb.platform.processing.consumers.ClusterTaskProcessor;
 
 import static com.onyxdb.platform.mdb.clusters.ClusterMapper.DEFAULT_PROJECT;
 
