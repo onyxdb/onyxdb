@@ -9,8 +9,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication(exclude = {JooqAutoConfiguration.class})
 @EnableTransactionManagement
 @EnableScheduling
-public class MdbApplication {
+public class OnyxdbPlatformApplication {
     public static void main(String[] args) {
-        SpringApplication.run(MdbApplication.class, args);
+        SpringApplication.run(OnyxdbPlatformApplication.class, args);
     }
 }
