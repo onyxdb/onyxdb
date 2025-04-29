@@ -7,13 +7,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.onyxdb.platform.idm.common.jwt.SecurityContextUtil;
 import com.onyxdb.platform.generated.openapi.apis.AuthApi;
 import com.onyxdb.platform.generated.openapi.models.AccountDTO;
 import com.onyxdb.platform.generated.openapi.models.AuthRequestDTO;
 import com.onyxdb.platform.generated.openapi.models.GetCurrentUser200Response;
 import com.onyxdb.platform.generated.openapi.models.JwtResponseDTO;
 import com.onyxdb.platform.generated.openapi.models.RefreshTokenDTO;
+import com.onyxdb.platform.idm.common.jwt.SecurityContextUtil;
 import com.onyxdb.platform.idm.models.Account;
 import com.onyxdb.platform.idm.services.AccountService;
 import com.onyxdb.platform.idm.services.AuthService;
