@@ -15,6 +15,7 @@ import com.onyxdb.platform.mdb.databases.DatabaseMapper;
 import com.onyxdb.platform.mdb.hosts.HostMapper;
 import com.onyxdb.platform.mdb.users.UserMapper;
 import com.onyxdb.platform.operationsOLD.OperationMapper;
+import com.onyxdb.platform.projects.ProjectMapper;
 import com.onyxdb.platform.quotas.QuotaMapper;
 import com.onyxdb.platform.resources.ResourceMapper;
 
@@ -43,6 +44,10 @@ public class MapperContextConfiguration {
         return objectMapper;
     }
 
+    @Bean
+    public ProjectMapper projectMapper() {
+        return new ProjectMapper();
+    }
 
     @Bean
     public ClusterMapper clusterMapper(ObjectMapper objectMapper) {

@@ -1,0 +1,65 @@
+package com.onyxdb.platform.controllers;
+
+import java.util.List;
+import java.util.UUID;
+
+import org.hamcrest.MatcherAssert;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+import com.onyxdb.platform.BaseTest;
+import com.onyxdb.platform.generated.openapi.models.ListProjectsResponseDTO;
+import com.onyxdb.platform.projects.ProjectMapper;
+import com.onyxdb.platform.projects.ProjectRepository;
+import com.onyxdb.platform.projects.ProjectToCreate;
+
+import static org.hamcrest.CoreMatchers.is;
+
+public class ProjectControllerTests extends BaseTest {
+    @Autowired
+    private ProjectRepository projectRepository;
+    @Autowired
+    private ProjectMapper projectMapper;
+
+    @BeforeEach
+    public void setUp() {
+        truncateTables();
+    }
+
+    @Test
+    public void listProjects() {
+        var projectToCreate1 = new ProjectToCreate(
+                UUID.randomUUID(),
+                "project1",
+                "project 1",
+                UUID.randomUUID()
+        );
+        var projectToCreate2 = new ProjectToCreate(
+                UUID.randomUUID(),
+                "project2",
+                "project 2",
+                UUID.randomUUID()
+        );
+
+        projectRepository.create(projectToCreate1);
+        projectRepository.create(projectToCreate2);
+
+        var expected = new ListProjectsResponseDTO(List.of(
+                projectMapper.projectToProjectDTO(projectMapper.projectToCreateToProject(projectToCreate1)),
+                projectMapper.projectToProjectDTO(projectMapper.projectToCreateToProject(projectToCreate2))
+        ));
+
+        ResponseEntity<ListProjectsResponseDTO> response = restTemplate.getForEntity(
+                "/api/projects",
+                ListProjectsResponseDTO.class
+        );
+
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertNotNull(response.getBody());
+        MatcherAssert.assertThat(response.getBody(), is(expected));
+    }
+}

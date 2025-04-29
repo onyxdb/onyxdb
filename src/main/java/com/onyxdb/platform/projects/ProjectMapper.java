@@ -1,21 +1,28 @@
-package com.onyxdb.platform.core.projects;
+package com.onyxdb.platform.projects;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.jooq.Record;
 
 import com.onyxdb.platform.generated.jooq.tables.records.ProjectsRecord;
 import com.onyxdb.platform.generated.openapi.models.CreateProjectRequestDTO;
-import com.onyxdb.platform.generated.openapi.models.ListProjectsResponseDTO;
 import com.onyxdb.platform.generated.openapi.models.ProjectDTO;
 import com.onyxdb.platform.generated.openapi.models.UpdateProjectRequestDTO;
 
 /**
  * @author foxleren
  */
-public final class ProjectMapper {
-    public static Project fromJooqRecord(Record r) {
+public class ProjectMapper {
+    public ProjectDTO projectToProjectDTO(Project p) {
+        return new ProjectDTO(
+                p.id(),
+                p.name(),
+                p.description(),
+                p.productId()
+        );
+    }
+
+    public static Project jooqRecordToProject(Record r) {
         ProjectsRecord rr = r.into(ProjectsRecord.class);
         return new Project(
                 rr.getId(),
@@ -36,23 +43,6 @@ public final class ProjectMapper {
         );
     }
 
-    public static ProjectDTO toV1ProjectResponse(Project p) {
-        return new ProjectDTO(
-                p.id(),
-                p.name(),
-                p.description(),
-                p.productId()
-        );
-    }
-
-    public static ListProjectsResponseDTO toV1ListProjectsResponse(List<Project> p) {
-        return new ListProjectsResponseDTO(
-                p.stream()
-                        .map(ProjectMapper::toV1ProjectResponse)
-                        .toList()
-        );
-    }
-
     public static Project fromV1CreateProjectRequest(CreateProjectRequestDTO r) {
         return new Project(
                 UUID.randomUUID(),
@@ -68,6 +58,25 @@ public final class ProjectMapper {
                 id,
                 r.getName(),
                 r.getDescription()
+        );
+    }
+
+    public ProjectToCreate createProjectRequestDTOtoProjectToCreate(CreateProjectRequestDTO rq) {
+        return new ProjectToCreate(
+                UUID.randomUUID(),
+                rq.getName(),
+                rq.getDescription(),
+                rq.getProductId()
+        );
+    }
+
+    public Project projectToCreateToProject(ProjectToCreate projectToCreate) {
+        return new Project(
+                projectToCreate.id(),
+                projectToCreate.name(),
+                projectToCreate.description(),
+                projectToCreate.productId(),
+                false
         );
     }
 }

@@ -25,11 +25,11 @@ public class TaskProcessingContextConfiguration {
     @Bean
     @Profile("!test")
     public TaskProcessingWorker taskProcessingWorker(
-            @Value("${onyxdb-app.workers.process-cluster-tasks.min-threads}")
+            @Value("${onyxdb.workers.process-cluster-tasks.min-threads}")
             int minThreads,
-            @Value("${onyxdb-app.workers.process-cluster-tasks.max-threads}")
+            @Value("${onyxdb.workers.process-cluster-tasks.max-threads}")
             int maxThreads,
-            @Value("${onyxdb-app.workers.process-cluster-tasks.polling-interval-seconds}")
+            @Value("${onyxdb.workers.process-cluster-tasks.polling-interval-seconds}")
             int pollingIntervalSeconds,
             CompositeTaskProcessor compositeTaskProcessor,
             BaseClusterService clusterService,

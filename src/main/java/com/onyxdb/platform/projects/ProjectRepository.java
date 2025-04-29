@@ -1,4 +1,4 @@
-package com.onyxdb.platform.core.projects;
+package com.onyxdb.platform.projects;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +12,7 @@ public interface ProjectRepository {
 
     Optional<Project> getO(UUID id);
 
-    void create(Project project);
+    void create(ProjectToCreate projectToCreate);
 
     void update(UpdateProject updateProject);
 
