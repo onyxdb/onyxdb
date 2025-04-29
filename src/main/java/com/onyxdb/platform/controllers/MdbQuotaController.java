@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.onyxdb.platform.core.clusters.ClusterMapper;
+import com.onyxdb.platform.mdb.clusters.ClusterMapper;
 import com.onyxdb.platform.core.clusters.models.ClusterConfig;
 import com.onyxdb.platform.generated.openapi.apis.MdbQuotasApi;
 import com.onyxdb.platform.generated.openapi.models.ListQuotasByProductsResponse;

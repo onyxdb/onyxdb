@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 public class SchedlockConfig {
     @Bean
     public LockProvider lockProvider(
-            @Qualifier(DatasourceConfig.POSTGRES_DATASOURCE_BEAN)
+            @Qualifier(DatasourceContextConfiguration.POSTGRES_DATASOURCE_BEAN)
             DataSource dataSource
     ) {
         return new JdbcTemplateLockProvider(dataSource);

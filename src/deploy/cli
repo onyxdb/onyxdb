@@ -1,5 +1,19 @@
-kubectl -n onyxdb-demo run -i --rm --tty percona-client --image=percona/percona-server-mongodb:7.0.14-8 --restart=Never -- bash -il
+kubectl -n onyxdb run -i --rm --tty percona-client --image=percona/percona-server-mongodb:7.0.14-8 --restart=Never -- bash -il
 
-mongosh "mongodb+srv://databaseAdmin:tJnZ74YuV5MBA4hwUS0@demo-cluster-rs0.onyxdb.svc.cluster.local/admin?replicaSet=rs0&ssl=false"
+mongosh "mongodb+srv://databaseAdmin:bNd1zYmXsTHoJjEQFvC@demo-sandbox-mongo-rs0.onyxdb.svc.cluster.local/admin?replicaSet=rs0&ssl=false"
+mongosh "mongodb+srv://u-2:p-2@demo-sandbox-mongo-rs0.onyxdb.svc.cluster.local/admin?replicaSet=rs0&ssl=false"
 
 db.adminCommand( { replSetGetStatus: 1 } )
+
+db.createUser(
+   {
+     user: "db1-user",
+     pwd: "qwerty",
+     roles:
+       [
+         { role: "readWrite", db: "db1" }
+       ]
+   }
+)
+
+mongosh "mongodb+srv://databaseAdmin:8yypSaHeer8QDr0yCvk@manual-mongo-1-rs0.onyxdb.svc.cluster.local/admin?replicaSet=rs0&ssl=false"

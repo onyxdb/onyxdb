@@ -6,14 +6,14 @@ import java.util.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.onyxdb.platform.core.clusters.ClusterMapper;
-import com.onyxdb.platform.core.clusters.ClusterService;
-import com.onyxdb.platform.core.clusters.HostService;
-import com.onyxdb.platform.core.clusters.mappers.DatabaseMapper;
-import com.onyxdb.platform.core.clusters.mappers.HostMapper;
-import com.onyxdb.platform.core.clusters.mappers.UserMapper;
+import com.onyxdb.platform.mdb.clusters.ClusterMapper;
+import com.onyxdb.platform.mdb.clusters.ClusterService;
+import com.onyxdb.platform.mdb.hosts.HostService;
+import com.onyxdb.platform.mdb.databases.DatabaseMapper;
+import com.onyxdb.platform.mdb.hosts.HostMapper;
+import com.onyxdb.platform.mdb.users.UserMapper;
 import com.onyxdb.platform.core.clusters.models.Cluster;
-import com.onyxdb.platform.core.clusters.models.CreateCluster;
+import com.onyxdb.platform.core.clusters.models.ClusterToCreate;
 import com.onyxdb.platform.core.clusters.models.UpdateCluster;
 import com.onyxdb.platform.generated.openapi.apis.V1ManagedMongoDbApi;
 import com.onyxdb.platform.generated.openapi.models.MongoListHostsResponse;
@@ -72,9 +72,9 @@ public class V1ManagedMongoController implements V1ManagedMongoDbApi {
 
     @Override
     public ResponseEntity<V1CreateMongoClusterResponse> createCluster(V1CreateMongoClusterRequest r) {
-        CreateCluster createCluster = clusterMapper.v1CreateMongoClusterRequestToCreateCluster(r);
+        ClusterToCreate clusterToCreate = clusterMapper.v1CreateMongoClusterRequestToCreateCluster(r);
         // TODO validate with quotas
-        UUID clusterId = clusterService.createCluster(createCluster);
+        UUID clusterId = clusterService.createCluster(clusterToCreate);
 
         var response = new V1CreateMongoClusterResponse(clusterId);
         return ResponseEntity.ok().body(response);

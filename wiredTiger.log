@@ -1,0 +1,64 @@
++ install -o 2 -g 2 -m 0755 -D /physical-restore-ps-entry.sh /opt/percona/physical-restore-ps-entry.sh
+++ id -u
+++ id -g
++ install -o 2 -g 2 -m 0755 -D /mongodb-healthcheck /opt/percona/mongodb-healthcheck
+++ id -u
+++ id -g
++ install -o 2 -g 2 -m 0755 -D /pbm-entry.sh /opt/percona/pbm-entry.sh
+time="2025-04-26T18:44:55Z" level=debug msg="Compatible mode: true"
+time="2025-04-26T18:44:55Z" level=debug msg="Connection URI: mongodb://databaseAdmin:tUnQaNt3ZzAiEZmta6x@10.244.1.93:27017"
+time=2025-04-26T18:44:55.405Z level=INFO source=tls_config.go:347 msg="Listening on" address=[::]:9216
+time=2025-04-26T18:44:55.405Z level=INFO source=tls_config.go:350 msg="TLS is disabled." http2=false address=[::]:9216
+2025/04/26 18:44:55 [entrypoint] starting `pbm-agent`
+time="2025-04-26T18:45:00Z" level=error msg="Cannot connect to MongoDB: cannot connect to MongoDB: server selection error: server selection timeout, current topology: { Type: Single, Servers: [{ Addr: 10.244.1.93:27017, Type: Unknown, Last error: dial tcp 10.244.1.93:27017: connect: connection refused }, ] }"
+2025-04-26T18:45:26.000+0000 E Exit: connect to PBM: create mongo connection: ping: server selection error: server selection timeout, current topology: { Type: ReplicaSetNoPrimary, Servers: [{ Addr: localhost:27017, Type: Unknown, Last error: dial tcp [::1]:27017: connect: connection refused }, ] }
+2025/04/26 18:45:26 [entrypoint] `pbm-agent` exited with code 1
+2025/04/26 18:45:26 [entrypoint] restart in 5 sec
+2025/04/26 18:45:31 [entrypoint] starting `pbm-agent`
+2025-04-26T18:46:01.000+0000 E Exit: connect to PBM: create mongo connection: ping: server selection error: server selection timeout, current topology: { Type: ReplicaSetNoPrimary, Servers: [{ Addr: localhost:27017, Type: Unknown, Last error: dial tcp [::1]:27017: connect: connection refused }, ] }
+2025/04/26 18:46:01 [entrypoint] `pbm-agent` exited with code 1
+2025/04/26 18:46:01 [entrypoint] restart in 5 sec
+2025/04/26 18:46:06 [entrypoint] starting `pbm-agent`
++ exec mongod --bind_ip_all --auth --dbpath=/data/db --port=27017 --replSet=rs0 --storageEngine=wiredTiger --relaxPermChecks --clusterAuthMode=x509 --enableEncryption --encryptionKeyFile=/etc/mongodb-encryption/encryption-key --wiredTigerCacheSizeGB=0.25 --wiredTigerIndexPrefixCompression=true --config=/etc/mongodb-config/mongod.conf --quiet --tlsMode preferTLS --sslPEMKeyFile /tmp/tls.pem --tlsAllowInvalidCertificates --tlsClusterFile /tmp/tls-internal.pem --tlsCAFile /etc/mongodb-ssl/ca.crt --tlsClusterCAFile /etc/mongodb-ssl-internal/ca.crt
+{"t":{"$date":"2025-04-26T18:46:19.860Z"},"s":"W",  "c":"CONTROL",  "id":23321,   "ctx":"main","msg":"Option: This name is deprecated. Please use the preferred name instead.","attr":{"deprecatedName":"sslPEMKeyFile","preferredName":"tlsCertificateKeyFile"}}
+[1745693180:257846][1:0xffff9c221040], file:WiredTiger.wt, connection: [WT_VERB_EXTENSION][ERROR]: libcrypto: error:06065064:digital envelope routines:EVP_DecryptFinal_ex:bad decrypt:crypto/evp/evp_enc.c:643:
+
+[1745693180:257860][1:0xffff9c221040], file:WiredTiger.wt, connection: [WT_VERB_EXTENSION][ERROR]: setting return code to WT_PANIC
+[1745693180:257863][1:0xffff9c221040], file:WiredTiger.wt, connection: [WT_VERB_DEFAULT][ERROR]: __wti_btree_tree_open, 658: unable to read root page from file:WiredTiger.wt: WT_PANIC: WiredTiger library panic
+[1745693180:257869][1:0xffff9c221040], file:WiredTiger.wt, connection: [WT_VERB_DEFAULT][ERROR]: __wti_btree_tree_open, 664: WiredTiger has failed to open its metadata: WT_PANIC: WiredTiger library panic
+[1745693180:257870][1:0xffff9c221040], file:WiredTiger.wt, connection: [WT_VERB_DEFAULT][ERROR]: __wti_btree_tree_open, 665: This may be due to the database files being encrypted, being from an older version or due to corruption on disk: WT_PANIC: WiredTiger library panic
+[1745693180:257870][1:0xffff9c221040], file:WiredTiger.wt, connection: [WT_VERB_DEFAULT][ERROR]: __wti_btree_tree_open, 668: You should confirm that you have opened the database with the correct options including all encryption and compression options: WT_PANIC: WiredTiger library panic
+[1745693180:258746][1:0xffff9c221040], file:WiredTiger.wt, connection: [WT_VERB_EXTENSION][ERROR]: libcrypto: error:06065064:digital envelope routines:EVP_DecryptFinal_ex:bad decrypt:crypto/evp/evp_enc.c:643:
+
+[1745693180:258751][1:0xffff9c221040], file:WiredTiger.wt, connection: [WT_VERB_EXTENSION][ERROR]: setting return code to WT_PANIC
+[1745693180:258752][1:0xffff9c221040], file:WiredTiger.wt, connection: [WT_VERB_DEFAULT][ERROR]: __wti_btree_tree_open, 658: unable to read root page from file:WiredTiger.wt: WT_PANIC: WiredTiger library panic
+[1745693180:258753][1:0xffff9c221040], file:WiredTiger.wt, connection: [WT_VERB_DEFAULT][ERROR]: __wti_btree_tree_open, 664: WiredTiger has failed to open its metadata: WT_PANIC: WiredTiger library panic
+[1745693180:258754][1:0xffff9c221040], file:WiredTiger.wt, connection: [WT_VERB_DEFAULT][ERROR]: __wti_btree_tree_open, 665: This may be due to the database files being encrypted, being from an older version or due to corruption on disk: WT_PANIC: WiredTiger library panic
+[1745693180:258754][1:0xffff9c221040], file:WiredTiger.wt, connection: [WT_VERB_DEFAULT][ERROR]: __wti_btree_tree_open, 668: You should confirm that you have opened the database with the correct options including all encryption and compression options: WT_PANIC: WiredTiger library panic
+[1745693180:259508][1:0xffff9c221040], file:WiredTiger.wt, connection: [WT_VERB_EXTENSION][ERROR]: libcrypto: error:06065064:digital envelope routines:EVP_DecryptFinal_ex:bad decrypt:crypto/evp/evp_enc.c:643:
+
+
+
++ exec mongod --bind_ip_all --auth --dbpath=/data/db --port=27017 --replSet=rs0 --storageEngine=wiredTiger --relaxPermChecks --clusterAuthMode=x509 --enableEncryption --encryptionKeyFile=/etc/mongodb-encryption/encryption-key --wiredTigerCacheSizeGB=0.25 --wiredTigerIndexPrefixCompression=true --config=/etc/mongodb-config/mongod.conf --quiet --tlsMode preferTLS --sslPEMKeyFile /tmp/tls.pem --tlsAllowInvalidCertificates --tlsClusterFile /tmp/tls-internal.pem --tlsCAFile /etc/mongodb-ssl/ca.crt --tlsClusterCAFile /etc/mongodb-ssl-internal/ca.crt
+{"t":{"$date":"2025-04-26T18:57:37.966Z"},"s":"W",  "c":"CONTROL",  "id":23321,   "ctx":"main","msg":"Option: This name is deprecated. Please use the preferred name instead.","attr":{"deprecatedName":"sslPEMKeyFile","preferredName":"tlsCertificateKeyFile"}}
+[1745693858:367342][1:0xffffb4623040], file:WiredTiger.wt, connection: [WT_VERB_EXTENSION][ERROR]: libcrypto: error:06065064:digital envelope routines:EVP_DecryptFinal_ex:bad decrypt:crypto/evp/evp_enc.c:643:
+
+[1745693858:367392][1:0xffffb4623040], file:WiredTiger.wt, connection: [WT_VERB_EXTENSION][ERROR]: setting return code to WT_PANIC
+[1745693858:367394][1:0xffffb4623040], file:WiredTiger.wt, connection: [WT_VERB_DEFAULT][ERROR]: __wt_btree_tree_open, 644: unable to read root page from file:WiredTiger.wt: WT_PANIC: WiredTiger library panic
+[1745693858:367396][1:0xffffb4623040], file:WiredTiger.wt, connection: [WT_VERB_DEFAULT][ERROR]: __wt_btree_tree_open, 650: WiredTiger has failed to open its metadata: WT_PANIC: WiredTiger library panic
+[1745693858:367399][1:0xffffb4623040], file:WiredTiger.wt, connection: [WT_VERB_DEFAULT][ERROR]: __wt_btree_tree_open, 651: This may be due to the database files being encrypted, being from an older version or due to corruption on disk: WT_PANIC: WiredTiger library panic
+[1745693858:367400][1:0xffffb4623040], file:WiredTiger.wt, connection: [WT_VERB_DEFAULT][ERROR]: __wt_btree_tree_open, 654: You should confirm that you have opened the database with the correct options including all encryption and compression options: WT_PANIC: WiredTiger library panic
+[1745693858:368996][1:0xffffb4623040], file:WiredTiger.wt, connection: [WT_VERB_EXTENSION][ERROR]: libcrypto: error:06065064:digital envelope routines:EVP_DecryptFinal_ex:bad decrypt:crypto/evp/evp_enc.c:643:
+
+[1745693858:369001][1:0xffffb4623040], file:WiredTiger.wt, connection: [WT_VERB_EXTENSION][ERROR]: setting return code to WT_PANIC
+[1745693858:369003][1:0xffffb4623040], file:WiredTiger.wt, connection: [WT_VERB_DEFAULT][ERROR]: __wt_btree_tree_open, 644: unable to read root page from file:WiredTiger.wt: WT_PANIC: WiredTiger library panic
+[1745693858:369004][1:0xffffb4623040], file:WiredTiger.wt, connection: [WT_VERB_DEFAULT][ERROR]: __wt_btree_tree_open, 650: WiredTiger has failed to open its metadata: WT_PANIC: WiredTiger library panic
+[1745693858:369005][1:0xffffb4623040], file:WiredTiger.wt, connection: [WT_VERB_DEFAULT][ERROR]: __wt_btree_tree_open, 651: This may be due to the database files being encrypted, being from an older version or due to corruption on disk: WT_PANIC: WiredTiger library panic
+[1745693858:369005][1:0xffffb4623040], file:WiredTiger.wt, connection: [WT_VERB_DEFAULT][ERROR]: __wt_btree_tree_open, 654: You should confirm that you have opened the database with the correct options including all encryption and compression options: WT_PANIC: WiredTiger library panic
+[1745693858:369732][1:0xffffb4623040], file:WiredTiger.wt, connection: [WT_VERB_EXTENSION][ERROR]: libcrypto: error:06065064:digital envelope routines:EVP_DecryptFinal_ex:bad decrypt:crypto/evp/evp_enc.c:643:
+
+[1745693858:369737][1:0xffffb4623040], file:WiredTiger.wt, connection: [WT_VERB_EXTENSION][ERROR]: setting return code to WT_PANIC
+[1745693858:369738][1:0xffffb4623040], file:WiredTiger.wt, connection: [WT_VERB_DEFAULT][ERROR]: __wt_btree_tree_open, 644: unable to read root page from file:WiredTiger.wt: WT_PANIC: WiredTiger library panic
+[1745693858:369739][1:0xffffb4623040], file:WiredTiger.wt, connection: [WT_VERB_DEFAULT][ERROR]: __wt_btree_tree_open, 650: WiredTiger has failed to open its metadata: WT_PANIC: WiredTiger library panic
+[1745693858:369740][1:0xffffb4623040], file:WiredTiger.wt, connection: [WT_VERB_DEFAULT][ERROR]: __wt_btree_tree_open, 651: This may be due to the database files being encrypted, being from an older version or due to corruption on disk: WT_PANIC: WiredTiger library panic
+[1745693858:369740][1:0xffffb4623040], file:WiredTiger.wt, connection: [WT_VERB_DEFAULT][ERROR]: __wt_btree_tree_open, 654: You should confirm that you have opened the database with the correct options including all encryption and compression options: WT_PANIC: WiredTiger library panic

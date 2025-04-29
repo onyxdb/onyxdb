@@ -12,27 +12,37 @@ import com.onyxdb.platform.clients.k8s.psmdb.PsmdbExporterServiceClient;
 import com.onyxdb.platform.clients.k8s.psmdb.PsmdbExporterServiceScrapeClient;
 import com.onyxdb.platform.clients.k8s.victoriaMetrics.VmServiceScrapeClient;
 import com.onyxdb.platform.clients.k8s.victoriaMetrics.adapters.MongoExporterServiceScrapeAdapter;
-import com.onyxdb.platform.core.clusters.ClusterService;
-import com.onyxdb.platform.core.clusters.HostService;
+import com.onyxdb.platform.clients.onyxdbAgent.OnyxdbAgentClient;
 import com.onyxdb.platform.core.resourcePresets.ResourcePresetService;
+import com.onyxdb.platform.mdb.clusters.ClusterService;
+import com.onyxdb.platform.mdb.databases.DatabaseRepository;
+import com.onyxdb.platform.mdb.hosts.HostService;
+import com.onyxdb.platform.processing.consumers.CompositeTaskProcessor;
+import com.onyxdb.platform.processing.consumers.TaskProcessor;
+import com.onyxdb.platform.processing.consumers.mongo.FinalTaskConsumer;
+import com.onyxdb.platform.processing.consumers.mongo.MongoApplyOnyxdbAgentTaskProcessor;
+import com.onyxdb.platform.processing.consumers.mongo.MongoApplyPsmdbTaskProcessor;
+import com.onyxdb.platform.processing.consumers.mongo.MongoCheckOnyxdbAgentIsDeletedTaskProcessor;
+import com.onyxdb.platform.processing.consumers.mongo.MongoCheckOnyxdbAgentReadinessTaskProcessor;
+import com.onyxdb.platform.processing.consumers.mongo.MongoCheckPsmdbIsDeletedProcessor;
+import com.onyxdb.platform.processing.consumers.mongo.MongoCheckPsmdbReadinessProcessor;
+import com.onyxdb.platform.processing.consumers.mongo.MongoCreateBackupTaskProcessor;
+import com.onyxdb.platform.processing.consumers.mongo.MongoCreateDatabaseTaskProcessor;
+import com.onyxdb.platform.processing.consumers.mongo.MongoCreateExporterServiceProcessor;
+import com.onyxdb.platform.processing.consumers.mongo.MongoCreateExporterServiceScrapeTaskProcessor;
+import com.onyxdb.platform.processing.consumers.mongo.MongoCreateUserTaskProcessor;
+import com.onyxdb.platform.processing.consumers.mongo.MongoCreateVectorConfigTaskProcessor;
+import com.onyxdb.platform.processing.consumers.mongo.MongoDeleteDatabaseTaskProcessor;
+import com.onyxdb.platform.processing.consumers.mongo.MongoDeleteExporterServiceProcessor;
+import com.onyxdb.platform.processing.consumers.mongo.MongoDeleteExporterServiceScrapeTaskProcessor;
+import com.onyxdb.platform.processing.consumers.mongo.MongoDeleteOnyxdbAgentTaskProcessor;
+import com.onyxdb.platform.processing.consumers.mongo.MongoDeletePsmdbTaskProcessor;
+import com.onyxdb.platform.processing.consumers.mongo.MongoDeleteUserTaskProcessor;
+import com.onyxdb.platform.processing.consumers.mongo.MongoDeleteVectorConfigTaskProcessor;
+import com.onyxdb.platform.processing.consumers.mongo.MongoUpdateHostsTaskProcessor;
+import com.onyxdb.platform.processing.models.TaskType;
+import com.onyxdb.platform.processing.repositories.TaskRepository;
 import com.onyxdb.platform.services.BaseClusterService;
-import com.onyxdb.platform.taskProcessing.models.TaskType;
-import com.onyxdb.platform.taskProcessing.processors.CompositeTaskProcessor;
-import com.onyxdb.platform.taskProcessing.processors.TaskProcessor;
-import com.onyxdb.platform.taskProcessing.processors.mongo.MongoApplyOnyxdbAgentTaskProcessor;
-import com.onyxdb.platform.taskProcessing.processors.mongo.MongoApplyPsmdbTaskProcessor;
-import com.onyxdb.platform.taskProcessing.processors.mongo.MongoCheckOnyxdbAgentIsDeletedTaskProcessor;
-import com.onyxdb.platform.taskProcessing.processors.mongo.MongoCheckOnyxdbAgentReadinessTaskProcessor;
-import com.onyxdb.platform.taskProcessing.processors.mongo.MongoCheckPsmdbIsDeletedProcessor;
-import com.onyxdb.platform.taskProcessing.processors.mongo.MongoCheckPsmdbReadinessProcessor;
-import com.onyxdb.platform.taskProcessing.processors.mongo.MongoCreateExporterServiceProcessor;
-import com.onyxdb.platform.taskProcessing.processors.mongo.MongoCreateExporterServiceScrapeTaskProcessor;
-import com.onyxdb.platform.taskProcessing.processors.mongo.MongoCreateVectorConfigTaskProcessor;
-import com.onyxdb.platform.taskProcessing.processors.mongo.MongoDeleteExporterServiceProcessor;
-import com.onyxdb.platform.taskProcessing.processors.mongo.MongoDeleteExporterServiceScrapeTaskProcessor;
-import com.onyxdb.platform.taskProcessing.processors.mongo.MongoDeleteOnyxdbAgentTaskProcessor;
-import com.onyxdb.platform.taskProcessing.processors.mongo.MongoDeletePsmdbTaskProcessor;
-import com.onyxdb.platform.taskProcessing.processors.mongo.MongoDeleteVectorConfigTaskProcessor;
 
 @Configuration
 public class TaskProcessorsConfig {
@@ -152,18 +162,18 @@ public class TaskProcessorsConfig {
         );
     }
 
-    @Bean
-    public MongoCheckPsmdbIsDeletedProcessor mongoCheckPsmdbIsDeletedProcessor(
-            ObjectMapper objectMapper,
-            ClusterService clusterService,
-            PsmdbClient psmdbClient
-    ) {
-        return new MongoCheckPsmdbIsDeletedProcessor(
-                objectMapper,
-                clusterService,
-                psmdbClient
-        );
-    }
+//    @Bean
+//    public MongoCheckPsmdbIsDeletedProcessor mongoCheckPsmdbIsDeletedProcessor(
+//            ObjectMapper objectMapper,
+//            ClusterService clusterService,
+//            PsmdbClient psmdbClient
+//    ) {
+//        return new MongoCheckPsmdbIsDeletedProcessor(
+//                objectMapper,
+//                clusterService,
+//                psmdbClient
+//        );
+//    }
 
     @Bean
     public MongoDeleteVectorConfigTaskProcessor mongoDeleteVectorConfigTaskProcessor(
@@ -177,6 +187,19 @@ public class TaskProcessorsConfig {
                 psmdbClient
         );
     }
+
+//    @Bean
+//    public MongoDeleteSecretsTaskProcessor mongoDeleteSecretsTaskProcessor(
+//            ObjectMapper objectMapper,
+//            ClusterService clusterService,
+//            PsmdbClient psmdbClient
+//    ) {
+//        return new MongoDeleteSecretsTaskProcessor(
+//                objectMapper,
+//                clusterService,
+//                psmdbClient
+//        );
+//    }
 
     @Bean
     public MongoApplyOnyxdbAgentTaskProcessor mongoCreateOnyxdbAgentTaskProcessor(
@@ -230,10 +253,93 @@ public class TaskProcessorsConfig {
         );
     }
 
+//    @Bean
+//    public MongoCreateDatabaseTaskProcessor mongoCreateDatabaseTaskProcessor(
+//            ObjectMapper objectMapper,
+//            ClusterService clusterService,
+//            OnyxdbAgentClient onyxdbAgentClient
+//    ) {
+//        return new MongoCreateDatabaseTaskProcessor(
+//                objectMapper,
+//                clusterService,
+//                onyxdbAgentClient
+//        );
+//    }
+
+//    @Bean
+//    public MongoDeleteDatabaseTaskProcessor mongoDeleteDatabaseTaskProcessor(
+//            ObjectMapper objectMapper,
+//            ClusterService clusterService,
+//            OnyxdbAgentClient onyxdbAgentClient,
+//            DatabaseRepository databaseRepository
+//    ) {
+//        return new MongoDeleteDatabaseTaskProcessor(
+//                objectMapper,
+//                clusterService,
+//                onyxdbAgentClient,
+//                databaseRepository
+//        );
+//    }
+
+//    @Bean
+//    public MongoDeleteDatabaseResultTaskProcessor mongoDeleteDatabaseResultTaskProcessor(
+//            ObjectMapper objectMapper,
+//            ClusterService clusterService,
+//            OnyxdbAgentClient onyxdbAgentClient
+//    ) {
+//        return new MongoDeleteDatabaseResultTaskProcessor(
+//                objectMapper,
+//                clusterService,
+//                onyxdbAgentClient
+//        );
+//    }
+
+//    @Bean
+//    public MongoCreateDatabaseResultTaskProcessor mongoCreateDatabaseResultTaskProcessor(
+//            ObjectMapper objectMapper,
+//            ClusterService clusterService,
+//            OnyxdbAgentClient onyxdbAgentClient
+//    ) {
+//        return new MongoCreateDatabaseResultTaskProcessor(
+//                objectMapper,
+//                clusterService,
+//                onyxdbAgentClient
+//        );
+//    }
+
+    @Bean
+    public MongoCreateUserTaskProcessor mongoCreateUserTaskProcessor(
+            ObjectMapper objectMapper,
+            ClusterService clusterService,
+            OnyxdbAgentClient onyxdbAgentClient,
+            DatabaseRepository databaseRepository
+    ) {
+        return new MongoCreateUserTaskProcessor(
+                objectMapper,
+                clusterService,
+                onyxdbAgentClient,
+                databaseRepository
+        );
+    }
+
+//    @Bean
+//    public MongoCreateUserResultTaskProcessor mongoCreateUserResultTaskProcessor(
+//            ObjectMapper objectMapper,
+//            ClusterService clusterService,
+//            OnyxdbAgentClient onyxdbAgentClient
+//    ) {
+//        return new MongoCreateUserResultTaskProcessor(
+//                objectMapper,
+//                clusterService,
+//                onyxdbAgentClient
+//        );
+//    }
+
     @Bean
     public CompositeTaskProcessor compositeTaskProcessor(
             BaseClusterService clusterServiceOld,
             ClusterService clusterService,
+            TaskRepository taskRepository,
             MongoCreateVectorConfigTaskProcessor mongoCreateVectorConfigTaskProcessor,
             MongoApplyPsmdbTaskProcessor mongoApplyPsmdbTaskProcessor,
             MongoCheckPsmdbReadinessProcessor mongoCheckPsmdbReadinessProcessor,
@@ -247,71 +353,141 @@ public class TaskProcessorsConfig {
             MongoCheckPsmdbIsDeletedProcessor mongoCheckPsmdbIsDeletedProcessor,
             MongoDeleteVectorConfigTaskProcessor mongoDeleteVectorConfigTaskProcessor,
             MongoDeleteOnyxdbAgentTaskProcessor mongoDeleteOnyxdbAgentTaskProcessor,
-            MongoCheckOnyxdbAgentIsDeletedTaskProcessor mongoCheckOnyxdbAgentIsDeletedTaskProcessor
+            MongoCheckOnyxdbAgentIsDeletedTaskProcessor mongoCheckOnyxdbAgentIsDeletedTaskProcessor,
+            MongoCreateDatabaseTaskProcessor mongoCreateDatabaseTaskProcessor,
+            MongoDeleteDatabaseTaskProcessor mongoDeleteDatabaseTaskProcessor,
+            MongoCreateUserTaskProcessor mongoCreateUserTaskProcessor,
+//            MongoCreateUserResultTaskProcessor mongoCreateUserResultTaskProcessor,
+            FinalTaskConsumer finalTaskConsumer,
+            MongoUpdateHostsTaskProcessor mongoUpdateHostsTaskProcessor,
+            MongoDeleteUserTaskProcessor mongoDeleteUserTaskProcessor,
+            MongoCreateBackupTaskProcessor mongoCreateBackupTaskProcessor
+//            MongoDeleteSecretsTaskProcessor mongoDeleteSecretsTaskProcessor
     ) {
         Map<TaskType, TaskProcessor<?>> taskTypeToTaskProcessors = Map.ofEntries(
                 Map.entry(
-                        TaskType.MONGODB_CREATE_VECTOR_CONFIG,
+                        TaskType.MONGO_APPLY_VECTOR_CONFIG,
                         mongoCreateVectorConfigTaskProcessor
                 ),
                 Map.entry(
-                        TaskType.MONGODB_APPLY_PSMDB,
+                        TaskType.MONGO_APPLY_PSMDB,
                         mongoApplyPsmdbTaskProcessor
                 ),
                 Map.entry(
-                        TaskType.MONGODB_CHECK_PSMDB_READINESS,
+                        TaskType.MONGO_CHECK_PSMDB_READINESS,
                         mongoCheckPsmdbReadinessProcessor
                 ),
                 Map.entry(
-                        TaskType.MONGODB_APPLY_ONYXDB_AGENT,
+                        TaskType.MONGO_APPLY_ONYXDB_AGENT,
                         mongoApplyOnyxdbAgentTaskProcessor
                 ),
                 Map.entry(
-                        TaskType.MONGODB_CHECK_ONYXDB_AGENT_READINESS,
+                        TaskType.MONGO_CHECK_ONYXDB_AGENT_READINESS,
                         mongoCheckOnyxdbAgentReadinessTaskProcessor
                 ),
                 Map.entry(
-                        TaskType.MONGODB_CREATE_EXPORTER_SERVICE,
+                        TaskType.MONGO_APPLY_EXPORTER_SERVICE,
                         mongoCreateExporterServiceProcessor
                 ),
                 Map.entry(
-                        TaskType.MONGODB_CREATE_EXPORTER_SERVICE_SCRAPE,
+                        TaskType.MONGO_APPLY_EXPORTER_SERVICE_SCRAPE,
                         mongoCreateExporterServiceScrapeTaskProcessor
                 ),
                 Map.entry(
-                        TaskType.MONGODB_DELETE_EXPORTER_SERVICE_SCRAPE,
+                        TaskType.MONGO_CREATE_DATABASE,
+                        mongoCreateDatabaseTaskProcessor
+                ),
+                Map.entry(
+                        TaskType.MONGO_CREATE_USER,
+                        mongoCreateUserTaskProcessor
+                ),
+                Map.entry(
+                        TaskType.FINAL_TASK,
+                        finalTaskConsumer
+                ),
+                Map.entry(
+                        TaskType.MONGO_UPDATE_HOSTS,
+                        mongoUpdateHostsTaskProcessor
+                ),
+                Map.entry(
+                        TaskType.MONGO_DELETE_DATABASE,
+                        mongoDeleteDatabaseTaskProcessor
+                ),
+                Map.entry(
+                        TaskType.MONGO_DELETE_USER,
+                        mongoDeleteUserTaskProcessor
+                ),
+                Map.entry(
+                        TaskType.MONGO_DELETE_EXPORTER_SERVICE_SCRAPE,
                         mongoDeleteExporterServiceScrapeTaskProcessor
                 ),
                 Map.entry(
-                        TaskType.MONGODB_DELETE_EXPORTER_SERVICE,
+                        TaskType.MONGO_DELETE_EXPORTER_SERVICE,
                         mongoDeleteExporterServiceProcessor
                 ),
                 Map.entry(
-                        TaskType.MONGODB_DELETE_PSMDB,
-                        mongoDeletePsmdbTaskProcessor
-                ),
-                Map.entry(
-                        TaskType.MONGODB_CHECK_PSMDB_IS_DELETED,
-                        mongoCheckPsmdbIsDeletedProcessor
-                ),
-                Map.entry(
-                        TaskType.MONGODB_DELETE_VECTOR_CONFIG,
-                        mongoDeleteVectorConfigTaskProcessor
-                ),
-                Map.entry(
-                        TaskType.MONGODB_DELETE_ONYXDB_AGENT,
+                        TaskType.MONGO_DELETE_ONYXDB_AGENT,
                         mongoDeleteOnyxdbAgentTaskProcessor
                 ),
                 Map.entry(
-                        TaskType.MONGODB_CHECK_ONYXDB_AGENT_IS_DELETED,
+                        TaskType.MONGO_CHECK_ONYXDB_AGENT_IS_DELETED,
                         mongoCheckOnyxdbAgentIsDeletedTaskProcessor
+                ),
+                Map.entry(
+                        TaskType.MONGO_DELETE_PSMDB,
+                        mongoDeletePsmdbTaskProcessor
+                ),
+                Map.entry(
+                        TaskType.MONGO_CHECK_PSMDB_IS_DELETED,
+                        mongoCheckPsmdbIsDeletedProcessor
+                ),
+                Map.entry(
+                        TaskType.MONGO_CREATE_BACKUP,
+                        mongoCreateBackupTaskProcessor
                 )
+//                Map.entry(
+//                        TaskType.MONGODB_DELETE_VECTOR_CONFIG,
+//                        mongoDeleteVectorConfigTaskProcessor
+//                ),
+//                Map.entry(
+//                        TaskType.MONGODB_DELETE_ONYXDB_AGENT,
+//                        mongoDeleteOnyxdbAgentTaskProcessor
+//                ),
+//                Map.entry(
+//                        TaskType.MONGODB_CHECK_ONYXDB_AGENT_IS_DELETED,
+//                        mongoCheckOnyxdbAgentIsDeletedTaskProcessor
+//                ),
+//                Map.entry(
+//                        TaskType.MONGO_CREATE_DATABASE,
+//                        mongoCreateDatabaseTaskProcessor
+//                ),
+//                Map.entry(
+//                        TaskType.MONGODB_CREATE_DATABASE_RESULT,
+//                        mongoCreateDatabaseResultTaskProcessor
+//                ),
+//                Map.entry(
+//                        TaskType.MONGODB_DELETE_DATABASE,
+//                        mongoDeleteDatabaseTaskProcessor
+//                ),
+//                Map.entry(
+//                        TaskType.MONGODB_DELETE_DATABASE_RESULT,
+//                        mongoDeleteDatabaseResultTaskProcessor
+//                ),
+//                Map.entry(
+//                        TaskType.MONGO_CREATE_USER,
+//                        mongoCreateUserTaskProcessor
+//                ),
+//                Map.entry(
+//                        TaskType.MONGODB_CREATE_USER_RESULT,
+//                        mongoCreateUserResultTaskProcessor
+//                )
         );
 
         return new CompositeTaskProcessor(
                 taskTypeToTaskProcessors,
                 clusterServiceOld,
-                clusterService
+                clusterService,
+                taskRepository
         );
     }
 

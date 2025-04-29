@@ -8,9 +8,9 @@ import java.util.UUID;
 import org.jetbrains.annotations.Nullable;
 
 import com.onyxdb.platform.core.clusters.models.Cluster;
-import com.onyxdb.platform.taskProcessing.models.OperationStatus;
-import com.onyxdb.platform.taskProcessing.models.Task;
-import com.onyxdb.platform.taskProcessing.models.TaskStatus;
+import com.onyxdb.platform.processing.models.OperationStatus;
+import com.onyxdb.platform.processing.models.Task;
+import com.onyxdb.platform.processing.models.TaskStatus;
 
 /**
  * @author foxleren

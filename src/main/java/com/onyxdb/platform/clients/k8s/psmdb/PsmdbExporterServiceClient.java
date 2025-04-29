@@ -62,42 +62,42 @@ public class PsmdbExporterServiceClient extends AbstractPsmdbFactory {
 //        kubernetesClient.resource(service).delete();
 //    }
 
-//    public boolean resourceExists(String namespace, String name) {
+//    public boolean resourceExists(String namespace, String databaseName) {
 //        return kubernetesClient.services()
 //                .inNamespace(namespace)
-//                .withName(PsmdbExporterServiceClient.getPreparedName(name))
+//                .withName(PsmdbExporterServiceClient.getPreparedName(databaseName))
 //                .get() != null;
 //    }
 
-//    public static String getPreparedName(String name) {
-//        return String.format("managed-mongodb-%s-exporter", name);
+//    public static String getPreparedName(String databaseName) {
+//        return String.format("managed-mongodb-%s-exporter", databaseName);
 //    }
 
     public static String getExporterServiceName(String project, String cluster) {
         return String.format("%s-%s-mongo-exporter", cluster, project);
     }
 
-//    public static Map<String, String> getLabels(String name) {
+//    public static Map<String, String> getLabels(String databaseName) {
 //        return Map.ofEntries(
-//                Map.entry("app.kubernetes.io/instance", getPreparedName(getPreparedName(name)))
+//                Map.entry("app.kubernetes.io/instance", getPreparedName(getPreparedName(databaseName)))
 //        );
 //    }
 
 //    private Service buildService(PsmdbExporterService psmdbExporterService) {
 //        String namespace = psmdbExporterService.namespace();
-//        String name = psmdbExporterService.name();
+//        String databaseName = psmdbExporterService.databaseName();
 //
 //        return new ServiceBuilder()
 //                .withMetadata(
 //                        new ObjectMetaBuilder()
-//                                .withName(getPreparedName(name))
+//                                .withName(getPreparedName(databaseName))
 //                                .withNamespace(namespace)
-//                                .withLabels(getLabels(name))
+//                                .withLabels(getLabels(databaseName))
 //                                .build()
 //                )
 //                .withSpec(
 //                        new ServiceSpecBuilder()
-//                                .withSelector(getLabels(name))
+//                                .withSelector(getLabels(databaseName))
 //                                .withPorts(
 //                                        new ServicePortBuilder()
 //                                                .withName(PORT_NAME)

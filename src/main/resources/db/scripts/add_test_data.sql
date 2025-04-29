@@ -15,7 +15,7 @@ VALUES ('5cb0ca1c-e6c1-47ab-b832-0074312490a3',
         'This this sandbox project',
         'a3e1fcde-aa38-4029-9370-9b320d81d01e');
 
--- INSERT INTO public.clusters (id, name, description, project_id, type, config, is_deleted)
+-- INSERT INTO public.clusters (id, databaseName, description, project_id, type, config, is_deleted)
 -- VALUES ('062c4806-0248-4c5d-86da-e1244e172619',
 --         'test-cluster',
 --         'some desc',

@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 public record User(
         UUID id,
         String name,
+        String passwordSecretName,
         UUID clusterId,
         LocalDateTime createdAt,
         UUID createdBy,

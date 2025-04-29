@@ -5,9 +5,10 @@
 ### Create namespace in Minikube
 
 ```shell
-minikube start
+minikube start --memory=8000 --cpus=4 --disk-size=30g
 minikube create ns onyxdb
 kubectl config set-context --current --namespace onyxdb
+minikube addons enable metrics-server
 ```
 
 ### Deploy Percona MongoDB Operator
@@ -18,13 +19,34 @@ kubectl config set-context --current --namespace onyxdb
 kubectl apply --server-side -f https://raw.githubusercontent.com/percona/percona-server-mongodb-operator/v1.19.1/deploy/bundle.yaml -n onyxdb
 ```
 
-### Deploy Victoria Metrics
+### Deploy VictoriaMetrics operator
 
-[Гайд](https://docs.victoriametrics.com/guides/getting-started-with-vm-operator/#) 
+https://docs.victoriametrics.com/operator/setup/#installing-by-manifest 
 ```shell
-helm repo add vm https://victoriametrics.github.io/helm-charts/
-helm install vmoperator vm/victoria-metrics-operator
-kubectl apply -f ./src/deploy/vm-cluster.yaml
+# Get latest release version from https://github.com/VictoriaMetrics/operator/releases/latest
+export VM_VERSION=`basename $(curl -fs -o/dev/null -w %{redirect_url} https://github.com/VictoriaMetrics/operator/releases/latest)`
+
+# Download manifest with webhook (requires CertManager to be preinstalled)
+wget -O install.yaml https://github.com/VictoriaMetrics/operator/releases/download/$VM_VERSION/install-with-webhook.yaml
+
+# Or download manifest without webhook
+wget -O install.yaml https://github.com/VictoriaMetrics/operator/releases/download/$VM_VERSION/install-no-webhook.yaml
+
+sed -i '' "s/namespace: vm/namespace: onyxdb/g" install.yaml
+
+kubectl apply -f install.yaml
+```
+
+### Deploy VictoriaLogs
+
+```shell
+kubectl apply -f  vlogs.yaml
+```
+
+### Deploy VictoriaMetrics
+```shell
+k apply -f vm-cluster.yaml
+k apply -f vm-agent.yaml
 ```
 
 ### Deploy Grafana
@@ -35,5 +57,6 @@ kubectl apply -f ./src/deploy/grafana.yaml
 kubectl apply -f ./src/deploy/grafana-config.yaml
 ```
 
-Не забыть поставить агент по гайду!!!
+Адрес VLogs: http://vlogs-onyxdb.onyxdb.svc.cluster.local:9428
 
+Адрес VMetrics: http://vmselect-onyxdb.onyxdb.svc.cluster.local:8481/select/0:0/prometheus

@@ -1,0 +1,109 @@
+apiVersion: psmdb.percona.com/v1
+kind: PerconaServerMongoDB
+metadata:
+  creationTimestamp: '2025-04-26T18:24:08Z'
+  generation: 3
+  labels:
+    k8slens-edit-resource-version: v1
+  name: test-5-sandbox-mongo
+  namespace: onyxdb
+  resourceVersion: '600385'
+  uid: 66426edd-31ea-493f-8961-1ef2d0320135
+  selfLink: >-
+    /apis/psmdb.percona.com/v1/namespaces/onyxdb/perconaservermongodbs/test-5-sandbox-mongo
+status:
+  conditions:
+    - lastTransitionTime: '2025-04-26T18:24:08Z'
+      status: 'False'
+      type: sharding
+    - lastTransitionTime: '2025-04-26T18:24:09Z'
+      status: 'True'
+      type: initializing
+    - lastTransitionTime: '2025-04-26T18:24:34Z'
+      message: pod test-5-sandbox-mongo-rs0-1 is in CrashLoopBackOff state
+      reason: ErrorReconcile
+      status: 'True'
+      type: error
+  host: test-5-sandbox-mongo-rs0.onyxdb.svc.cluster.local
+  message: 'Error: pod test-5-sandbox-mongo-rs0-1 is in CrashLoopBackOff state'
+  observedGeneration: 1
+  ready: 1
+  replsets:
+    rs0:
+      message: >-
+        mongod: back-off 1m20s restarting failed container=mongod
+        pod=test-5-sandbox-mongo-rs0-1_onyxdb(4748569b-2093-4b3c-b7ab-1775d3c71af7);
+      ready: 1
+      size: 3
+      status: initializing
+  size: 3
+  state: error
+spec:
+  crVersion: 1.19.1
+  enableVolumeExpansion: false
+  image: percona/percona-server-mongodb:8.0.4-1-multi
+  imagePullPolicy: IfNotPresent
+  replsets:
+    - affinity:
+        advanced:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+                - matchExpressions:
+                    - key: kubernetes.io/os
+                      operator: In
+                      values:
+                        - linux
+      configuration: |
+        systemLog:
+          path: /data/db/mongod.log
+          destination: file
+          logAppend: true
+      name: rs0
+      resources:
+        limits:
+          cpu: '0.5'
+          memory: 0.5Gi
+        requests:
+          cpu: '0.5'
+          memory: 0.5Gi
+      sidecars:
+        - args:
+            - '--discovering-mode'
+            - '--compatible-mode'
+            - '--collect-all'
+            - '--log.level=debug'
+            - '--mongodb.uri=$(MONGODB_URI)'
+          env:
+            - name: EXPORTER_USER
+              valueFrom:
+                secretKeyRef:
+                  key: MONGODB_DATABASE_ADMIN_USER
+                  name: test-5-sandbox-mongo-users
+            - name: EXPORTER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: MONGODB_DATABASE_ADMIN_PASSWORD
+                  name: test-5-sandbox-mongo-users
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: MONGODB_URI
+              value: mongodb://$(EXPORTER_USER):$(EXPORTER_PASSWORD)@$(POD_IP):27017
+          image: percona/mongodb_exporter:0.44
+          name: exporter
+      size: 3
+      volumeSpec:
+        persistentVolumeClaim:
+          resources:
+            requests:
+              storage: 1Gi
+  secrets:
+    users: test-5-sandbox-mongo-users
+  sharding:
+    enabled: false
+  unsafeFlags:
+    replsetSize: true
+  upgradeOptions:
+    apply: disabled

@@ -10,20 +10,20 @@ import redis.clients.jedis.JedisPool;
 
 import com.onyxdb.platform.billing.BillingClickhouseRepository;
 import com.onyxdb.platform.billing.BillingRepository;
-import com.onyxdb.platform.core.clusters.ClusterMapper;
-import com.onyxdb.platform.core.clusters.mappers.DatabaseMapper;
-import com.onyxdb.platform.core.clusters.mappers.HostMapper;
-import com.onyxdb.platform.core.clusters.mappers.UserMapper;
-import com.onyxdb.platform.core.clusters.repositories.ClusterPostgresRepository;
-import com.onyxdb.platform.core.clusters.repositories.ClusterRepository;
-import com.onyxdb.platform.core.clusters.repositories.DatabasePostgresRepository;
-import com.onyxdb.platform.core.clusters.repositories.DatabaseRepository;
-import com.onyxdb.platform.core.clusters.repositories.EnrichedHostRedisRepository;
-import com.onyxdb.platform.core.clusters.repositories.EnrichedHostRepository;
-import com.onyxdb.platform.core.clusters.repositories.HostPostgresRepository;
-import com.onyxdb.platform.core.clusters.repositories.HostRepository;
-import com.onyxdb.platform.core.clusters.repositories.UserPostgresRepository;
-import com.onyxdb.platform.core.clusters.repositories.UserRepository;
+import com.onyxdb.platform.mdb.clusters.ClusterMapper;
+import com.onyxdb.platform.mdb.databases.DatabaseMapper;
+import com.onyxdb.platform.mdb.hosts.HostMapper;
+import com.onyxdb.platform.mdb.users.UserMapper;
+import com.onyxdb.platform.mdb.clusters.ClusterPostgresRepository;
+import com.onyxdb.platform.mdb.clusters.ClusterRepository;
+import com.onyxdb.platform.mdb.databases.DatabasePostgresRepository;
+import com.onyxdb.platform.mdb.databases.DatabaseRepository;
+import com.onyxdb.platform.mdb.hosts.EnrichedHostRedisRepository;
+import com.onyxdb.platform.mdb.hosts.EnrichedHostRepository;
+import com.onyxdb.platform.mdb.hosts.HostPostgresRepository;
+import com.onyxdb.platform.mdb.hosts.HostRepository;
+import com.onyxdb.platform.mdb.users.UserPostgresRepository;
+import com.onyxdb.platform.mdb.users.UserRepository;
 import com.onyxdb.platform.core.projects.ProjectPostgresRepository;
 import com.onyxdb.platform.core.projects.ProjectRepository;
 import com.onyxdb.platform.core.resourcePresets.ResourcePresetPostgresRepository;
@@ -135,7 +135,7 @@ public class RepositoryConfig {
 
     @Bean
     public BillingRepository billingRepository(
-            @Qualifier(DatasourceConfig.CLICKHOUSE_JDBC_TEMPLATE_BEAN)
+            @Qualifier(DatasourceContextConfiguration.CLICKHOUSE_JDBC_TEMPLATE_BEAN)
             JdbcTemplate jdbcTemplate
     ) {
         return new BillingClickhouseRepository(jdbcTemplate);

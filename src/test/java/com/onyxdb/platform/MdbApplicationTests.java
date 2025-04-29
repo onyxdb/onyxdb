@@ -6,7 +6,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
 @ActiveProfiles("test")
-class MdbApplicationTests extends DatabaseTests {
+class MdbApplicationTests {
     @Test
     void contextLoads() {
     }

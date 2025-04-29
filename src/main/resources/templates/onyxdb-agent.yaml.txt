@@ -19,10 +19,10 @@ spec:
     spec:
       containers:
         - name: agent
-          image: foxleren/onyxdb-agent:master-c25a282
+          image: foxleren/onyxdb-agent:foxleren-create-and-delete-databases-75e6da0
           imagePullPolicy: Always
           ports:
-            - containerPort: 9002
+            - containerPort: 9004
           env:
             - name: ONYXDB_MDB__BASE_URL
               value: [[${ONYXDB_BASE_URL}]]

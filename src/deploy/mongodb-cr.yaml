@@ -1,7 +1,7 @@
 apiVersion: psmdb.percona.com/v1
 kind: PerconaServerMongoDB
 metadata:
-  name: managed-mongodb-demo
+  name: test-7-sandbox-mongo
   finalizers: []
 #    - percona.com/delete-psmdb-pods-in-order
 #    - percona.com/delete-psmdb-pvc
@@ -16,6 +16,8 @@ spec:
   crVersion: 1.19.1
   image: percona/percona-server-mongodb:7.0.15-9-multi
   imagePullPolicy: IfNotPresent
+  unsafeFlags:
+    replsetSize: true
   #  tls:
   #    mode: preferTLS
   #    # 90 days in hours
@@ -49,7 +51,7 @@ spec:
   #    schedule: "0 2 * * *"
   #    setFCV: false
   secrets:
-    users: managed-mongodb-demo-secrets
+    users: test-6-sandbox-mongo-users
   #    encryptionKey: demo-cluster-mongodb-encryption-key
   #    ssl: my-cluster-name-ssl
   #    sslInternal: my-cluster-name-ssl-internal
@@ -66,7 +68,7 @@ spec:
   #    mongosParams: --environment=ENVIRONMENT
   replsets:
     - name: rs0
-      size: 3
+      size: 2
       #    terminationGracePeriodSeconds: 300
       #    serviceAccountName: default
       #    topologySpreadConstraints:
@@ -103,6 +105,9 @@ spec:
           path: /data/db/mongod.log
           destination: file
           logAppend: true
+#        security:
+#            enableEncryption: true
+#            encryptionCipherMode: "AES256-CBC"
       #      storage:
       #        engine: wiredTiger
       #        wiredTiger:
@@ -173,37 +178,37 @@ spec:
       #      runAsGroup: 1001
       #      supplementalGroups: [1001]
       #    runtimeClassName: image-rc
-      sidecars:
-        - image: percona/mongodb_exporter:0.40
-          env:
-            - name: EXPORTER_USER
-              valueFrom:
-                secretKeyRef:
-                  name: managed-mongodb-demo-secrets
-                  key: MONGODB_CLUSTER_MONITOR_USER
-            - name: EXPORTER_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: managed-mongodb-demo-secrets
-                  key: MONGODB_CLUSTER_MONITOR_PASSWORD
-            - name: POD_IP
-              valueFrom:
-                fieldRef:
-                  fieldPath: status.podIP
-            - name: MONGODB_URI
-              value: "mongodb://$(EXPORTER_USER):$(EXPORTER_PASS)@$(POD_IP):27017"
-          args: [ "--discovering-mode", "--compatible-mode", "--collect-all", "--log.level=debug", "--mongodb.uri=$(MONGODB_URI)" ]
-          name: exporter
-        - name: vector
-          image: timberio/vector:0.31.0-debian
-          command: ["vector"]
-          args: ["--config=/etc/vector/vector.yaml"]
-          workingDir: /data/db
-          volumeMounts:
-            - name: sidecar-vector-config-volume
-              mountPath: "/etc/vector"
-            - mountPath: /data/db
-              name: mongod-data
+#      sidecars:
+#        - image: percona/mongodb_exporter:0.40
+#          env:
+#            - name: EXPORTER_USER
+#              valueFrom:
+#                secretKeyRef:
+#                  name: managed-mongodb-demo-secrets
+#                  key: MONGODB_CLUSTER_MONITOR_USER
+#            - name: EXPORTER_PASS
+#              valueFrom:
+#                secretKeyRef:
+#                  name: managed-mongodb-demo-secrets
+#                  key: MONGODB_CLUSTER_MONITOR_PASSWORD
+#            - name: POD_IP
+#              valueFrom:
+#                fieldRef:
+#                  fieldPath: status.podIP
+#            - name: MONGODB_URI
+#              value: "mongodb://$(EXPORTER_USER):$(EXPORTER_PASS)@$(POD_IP):27017"
+#          args: [ "--discovering-mode", "--compatible-mode", "--collect-all", "--log.level=debug", "--mongodb.uri=$(MONGODB_URI)" ]
+#          name: exporter
+#        - name: vector
+#          image: timberio/vector:0.31.0-debian
+#          command: ["vector"]
+#          args: ["--config=/etc/vector/vector.yaml"]
+#          workingDir: /data/db
+#          volumeMounts:
+#            - name: sidecar-vector-config-volume
+#              mountPath: "/etc/vector"
+#            - mountPath: /data/db
+#              name: mongod-data
 
 #        - image: busybox
 #          command: [ "/bin/sh" ]
@@ -220,10 +225,10 @@ spec:
 #          volumeMounts:
 #            - mountPath: /mongod-data
 #              name: mongod-data
-      sidecarVolumes:
-        - name: sidecar-vector-config-volume
-          configMap:
-            name: sidecar-vector-config
+#      sidecarVolumes:
+#        - name: sidecar-vector-config-volume
+#          configMap:
+#            name: sidecar-vector-config
 
 #        - image: percona/percona-server-mongodb:7.0.14-8
 #          name: percona-client
@@ -292,10 +297,10 @@ spec:
       #      externalTrafficPolicy: Local
       resources:
         limits:
-          cpu: "300m"
+          cpu: "0.5"
           memory: "0.5G"
         requests:
-          cpu: "300m"
+          cpu: "0.5"
           memory: "0.5G"
       volumeSpec:
         #      emptyDir: {}

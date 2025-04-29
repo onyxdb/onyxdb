@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import com.onyxdb.platform.billing.BillingService;
-import com.onyxdb.platform.core.clusters.ClusterService;
+import com.onyxdb.platform.mdb.clusters.ClusterService;
 import com.onyxdb.platform.quotas.EnrichedProductQuota;
 import com.onyxdb.platform.quotas.QuotaFilter;
 import com.onyxdb.platform.quotas.QuotaService;

@@ -14,13 +14,13 @@ import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import com.onyxdb.platform.core.clusters.models.Cluster;
-import com.onyxdb.platform.core.clusters.repositories.ClusterRepository;
-import com.onyxdb.platform.taskProcessing.generators.CompositeTaskGenerator;
-import com.onyxdb.platform.taskProcessing.models.OperationStatus;
-import com.onyxdb.platform.taskProcessing.models.Task;
-import com.onyxdb.platform.taskProcessing.models.TaskStatus;
-import com.onyxdb.platform.taskProcessing.repositories.OperationRepository;
-import com.onyxdb.platform.taskProcessing.repositories.TaskRepository;
+import com.onyxdb.platform.mdb.clusters.ClusterRepository;
+import com.onyxdb.platform.processing.producers.CompositeTaskGenerator;
+import com.onyxdb.platform.processing.models.OperationStatus;
+import com.onyxdb.platform.processing.models.Task;
+import com.onyxdb.platform.processing.models.TaskStatus;
+import com.onyxdb.platform.processing.repositories.OperationRepository;
+import com.onyxdb.platform.processing.repositories.TaskRepository;
 
 /**
  * @author foxleren

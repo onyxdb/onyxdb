@@ -1,10 +1,13 @@
 package com.onyxdb.platform.clients.k8s.psmdb;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.fabric8.kubernetes.api.model.GenericKubernetesResource;
+import io.fabric8.kubernetes.api.model.Secret;
+import io.fabric8.kubernetes.api.model.SecretBuilder;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.dsl.base.ResourceDefinitionContext;
 import org.jetbrains.annotations.Nullable;
@@ -27,6 +30,7 @@ public class PsmdbClient extends AbstractPsmdbFactory {
     private final KubernetesClient kubernetesClient;
     private final TemplateProvider templateProvider;
     private final VictoriaLogsClient victoriaLogsClient;
+    private final ObjectMapper yamlObjectMapper;
 
     private static final String REPLSET_NAME = "rs0";
 
@@ -34,12 +38,14 @@ public class PsmdbClient extends AbstractPsmdbFactory {
             ObjectMapper objectMapper,
             KubernetesClient kubernetesClient,
             TemplateProvider templateProvider,
-            VictoriaLogsClient victoriaLogsClient
+            VictoriaLogsClient victoriaLogsClient,
+            ObjectMapper yamlObjectMapper
     ) {
         super(objectMapper);
         this.kubernetesClient = kubernetesClient;
         this.templateProvider = templateProvider;
         this.victoriaLogsClient = victoriaLogsClient;
+        this.yamlObjectMapper = yamlObjectMapper;
     }
 
     @Nullable
@@ -141,6 +147,69 @@ public class PsmdbClient extends AbstractPsmdbFactory {
                 .toList();
     }
 
+    public List<String> calculatePsmdbHostnames(String project, String cluster, int replicas) {
+        List<String> hosts = new ArrayList<>(replicas);
+        for (int i = 0; i < replicas; i++) {
+            hosts.add(String.format("%s-%s-mongo-%s-%d", cluster, project, REPLSET_NAME, i));
+        }
+
+        return hosts;
+    }
+
+    public String applyMongoUserSecret(
+            String namespace,
+            String project,
+            String cluster,
+            String user,
+            String password
+    ) {
+        String secretName = getMongoUserSecretName(project, cluster, user);
+        // TODO add extra labels
+        Secret secret = new SecretBuilder()
+                .withNewMetadata()
+                .withName(secretName)
+                .endMetadata()
+                .addToStringData("username", user)
+                .addToStringData("password", password)
+                .build();
+
+        kubernetesClient.secrets()
+                .inNamespace(namespace)
+                .resource(secret)
+                .serverSideApply();
+
+        return secretName;
+    }
+
+    public boolean deleteMongoUserSecret(
+            String namespace,
+            String project,
+            String cluster,
+            String user
+    ) {
+        return kubernetesClient.secrets()
+                .inNamespace(namespace)
+                .withName(getMongoUserSecretName(project, cluster, user))
+                .delete().size() == 1;
+    }
+
+    public void deletePsmdbSecrets(
+            String namespace,
+            String project,
+            String cluster
+    ) {
+        System.err.println(getPsmdbName(project, cluster));
+        var r = kubernetesClient.secrets()
+                .inNamespace(namespace)
+                .withLabels(Map.ofEntries(
+                        Map.entry("app.kubernetes.io/instance", getPsmdbName(project, cluster))
+                ))
+//                .withLabel("app.kubernetes.io/instance", getPsmdbName(project, cluster))
+//                .withName(getSecretName(project, cluster))
+                .delete();
+        System.err.println(r);
+    }
+
     public static String getPsmdbName(String project, String cluster) {
         return String.format("%s-%s-mongo", cluster, project);
     }
@@ -157,6 +226,10 @@ public class PsmdbClient extends AbstractPsmdbFactory {
         return String.format("%s-%s-mongo-vector", cluster, project);
     }
 
+    public static String getMongoUserSecretName(String project, String cluster, String user) {
+        return String.format("%s-%s-username-%s", cluster, project, user);
+    }
+
 //    public static List<String> getPsmdbPods(String cluster, ) {
 //
 //    }
@@ -168,7 +241,7 @@ public class PsmdbClient extends AbstractPsmdbFactory {
 //                .withApiVersion(API_VERSION)
 //                .withKind(KIND)
 //                .withNewMetadata()
-//                .withName(getPsmdbName(psmdb.name()))
+//                .withName(getPsmdbName(psmdb.databaseName()))
 //                .endMetadata()
 //                .addToAdditionalProperties("spec", specMap)
 //                .build();

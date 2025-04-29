@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 public class FlywayConfig {
     @Bean
     public Flyway postgresFlyway(
-            @Qualifier(DatasourceConfig.POSTGRES_DATASOURCE_BEAN)
+            @Qualifier(DatasourceContextConfiguration.POSTGRES_DATASOURCE_BEAN)
             DataSource dataSource
     ) {
         Flyway flyway = Flyway.configure()
@@ -26,7 +26,7 @@ public class FlywayConfig {
 
     @Bean
     public Flyway clickhouseFlyway(
-            @Qualifier(DatasourceConfig.CLICKHOUSE_DATASOURCE_BEAN)
+            @Qualifier(DatasourceContextConfiguration.CLICKHOUSE_DATASOURCE_BEAN)
             DataSource dataSource
     ) {
         Flyway flyway = Flyway.configure()
