@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.onyxdb.platform.generated.openapi.apis.ProjectsApi;
 import com.onyxdb.platform.generated.openapi.models.CreateProjectRequestDTO;
+import com.onyxdb.platform.generated.openapi.models.CreateProjectResponseDTO;
 import com.onyxdb.platform.generated.openapi.models.ListProjectsResponseDTO;
 import com.onyxdb.platform.generated.openapi.models.ProjectDTO;
 import com.onyxdb.platform.generated.openapi.models.UpdateProjectRequestDTO;
@@ -50,11 +51,13 @@ public class ProjectController implements ProjectsApi {
     }
 
     @Override
-    public ResponseEntity<Void> createProject(CreateProjectRequestDTO rq) {
+    public ResponseEntity<CreateProjectResponseDTO> createProject(CreateProjectRequestDTO rq) {
         ProjectToCreate projectToCreate = projectMapper.createProjectRequestDTOtoProjectToCreate(rq);
-        projectService.create(projectToCreate);
+        UUID projectId = projectService.create(projectToCreate);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new CreateProjectResponseDTO(
+                projectId
+        ));
     }
 
     @Override

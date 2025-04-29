@@ -63,7 +63,6 @@ public class ProjectMapper {
 
     public ProjectToCreate createProjectRequestDTOtoProjectToCreate(CreateProjectRequestDTO rq) {
         return new ProjectToCreate(
-                UUID.randomUUID(),
                 rq.getName(),
                 rq.getDescription(),
                 rq.getProductId()
@@ -71,12 +70,10 @@ public class ProjectMapper {
     }
 
     public Project projectToCreateToProject(ProjectToCreate projectToCreate) {
-        return new Project(
-                projectToCreate.id(),
+        return Project.create(
                 projectToCreate.name(),
                 projectToCreate.description(),
-                projectToCreate.productId(),
-                false
+                projectToCreate.productId()
         );
     }
 }

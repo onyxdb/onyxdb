@@ -14,7 +14,7 @@ public interface ProjectRepository {
 
     Project get(UUID projectId);
 
-    void create(ProjectToCreate projectToCreate);
+    void create(Project project);
 
     void update(UpdateProject updateProject);
 

@@ -8,9 +8,11 @@ import java.util.UUID;
  */
 public class ProjectService {
     private final ProjectRepository projectRepository;
+    private final ProjectMapper projectMapper;
 
-    public ProjectService(ProjectRepository projectRepository) {
+    public ProjectService(ProjectRepository projectRepository, ProjectMapper projectMapper) {
         this.projectRepository = projectRepository;
+        this.projectMapper = projectMapper;
     }
 
     public List<Project> list() {
@@ -21,8 +23,11 @@ public class ProjectService {
         return projectRepository.get(projectId);
     }
 
-    public void create(ProjectToCreate projectToCreate) {
-        projectRepository.create(projectToCreate);
+    public UUID create(ProjectToCreate projectToCreate) {
+        Project project = projectMapper.projectToCreateToProject(projectToCreate);
+        projectRepository.create(project);
+
+        return project.id();
     }
 
     public void update(UpdateProject updateProject) {

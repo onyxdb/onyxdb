@@ -50,9 +50,7 @@ public class ProjectPostgresRepository implements ProjectRepository {
     }
 
     @Override
-    public void create(ProjectToCreate projectToCreate) {
-        Project project = projectMapper.projectToCreateToProject(projectToCreate);
-
+    public void create(Project project) {
         try {
             dslContext.insertInto(PROJECTS)
                     .set(ProjectMapper.toJooqProjectsRecord(project))
