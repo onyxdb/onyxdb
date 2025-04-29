@@ -5,15 +5,23 @@ spring:
     scheduling:
       pool:
         size: 5
+  graphql:
+    cors:
+      allowed-methods=POST:
+    graphiql:
+      enabled: true
+    schema:
+      #      locations=classpath*:/:
+      locations=classpath*:graphql/**/:
 
 server:
   port: 9001
 
 springdoc:
-  api-docs:
-    path: /api-docs
   swagger-ui:
     path: /swagger-ui
+  api-docs:
+    path: /api-docs
 
 logging:
   level:
@@ -53,3 +61,7 @@ onyxdb:
       min-threads: 1
       max-threads: 5
       polling-interval-seconds: 1
+  jwt-token:
+    salt-jwt: ${JWT_TOKEN_SALT_JWT:ns9ozm2ani3oc6xo4pozoijxsperv8rpo1bsdijvdlpszq}
+    salt-refresh: ${JWT_TOKEN_SALT_REFRESH:nn9ozm2ani3oc6xo4pozoijxsperv8rpo1bsdijvdlpszq}
+    expiration: ${JWT_TOKEN_EXPIRATION:5 } # minutes

@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   version: 1.0.0
-  title: onyxdb-mdb
+  title: OnyxDB
 servers:
   - url: http://localhost:9001
     description: localhost
@@ -594,8 +594,2074 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GetProductQuotaUsageReportResponseOA'
+  /api/v1/auth/login:
+    post:
+      summary: Аутентификация пользователя
+      operationId: login
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthRequestDTO'
+      responses:
+        '200':
+          description: Успешная аутентификация
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JwtResponseDTO'
+        '400':
+          description: Неверные учетные данные
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+  /api/v1/auth/logout:
+    post:
+      summary: Выход пользователя из системы
+      operationId: logout
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenDTO'
+      responses:
+        '204':
+          description: Успешный выход
+        '400':
+          description: Неверный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+  /api/v1/auth/refresh-token:
+    post:
+      summary: Обновление access токена
+      operationId: refreshToken
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenDTO'
+      responses:
+        '200':
+          description: Успешное обновление токена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JwtResponseDTO'
+        '400':
+          description: Неверный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+  /api/v1/auth/service-token:
+    post:
+      summary: Обновление access токена
+      operationId: generateServiceToken
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthRequestDTO'
+      responses:
+        '200':
+          description: Успешное обновление токена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JwtResponseDTO'
+        '400':
+          description: Неверный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+  /api/v1/auth/me:
+    get:
+      summary: Получение информации о текущем пользователе
+      operationId: getCurrentUser
+      tags:
+        - Auth
+      responses:
+        '200':
+          description: Успешное получение информации
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  account:
+                    $ref: '#/components/schemas/AccountDTO'
+                  permissions:
+                    $ref: '#/components/schemas/PermissionsBitsDTO'
+                required:
+                  - account
+                  - permissions
+        '401':
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedResponse'
+
+  /api/v1/accounts:
+    get:
+      summary: Get all accounts
+      operationId: getAllAccounts
+      tags:
+        - Accounts
+      parameters:
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAccountResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+    post:
+      summary: Create a new account
+      operationId: createAccount
+      tags:
+        - Accounts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountDTO'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+  /api/v1/accounts/{accountId}:
+    get:
+      summary: Get an account by ID
+      operationId: getAccountById
+      tags:
+        - Accounts
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+    put:
+      summary: Update an account by ID
+      operationId: updateAccount
+      tags:
+        - Accounts
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountDTO'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+    delete:
+      summary: Delete an account by ID
+      operationId: deleteAccount
+      tags:
+        - Accounts
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+  /api/v1/accounts/{accountId}/permissions:
+    get:
+      summary: Get all account Permissions
+      operationId: getAccountPermission
+      tags:
+        - Accounts
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RoleWithPermissionsDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+  /api/v1/accounts/{accountId}/permissions-bits:
+    get:
+      summary: Get all account Permissions in bits
+      operationId: getAccountPermissionBits
+      tags:
+        - Accounts
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PermissionsBitsDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+  /api/v1/accounts/{accountId}/roles:
+    get:
+      summary: Get account roles
+      operationId: getAccountRoles
+      tags:
+        - Accounts
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RoleDTO'
+  /api/v1/accounts/{accountId}/roles-history:
+    get:
+      summary: Get account roles History
+      operationId: getAccountRolesHistory
+      tags:
+        - Accounts
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountRolesHistoryDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+  /api/v1/accounts/{accountId}/roles/{roleId}:
+    post:
+      summary: Add role to account link
+      operationId: addRoleToAccount
+      tags:
+        - Accounts
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+    delete:
+      summary: Remove Role from Account
+      operationId: removeRoleFromAccount
+      tags:
+        - Accounts
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+  /api/v1/accounts/{accountId}/business-roles:
+    get:
+      summary: Get account business roles
+      operationId: getAccountBusinessRoles
+      tags:
+        - Accounts
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BusinessRoleDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+  /api/v1/accounts/{accountId}/business-roles-history:
+    get:
+      summary: Get account business roles History
+      operationId: getAccountBusinessRolesHistory
+      tags:
+        - Accounts
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountBusinessRolesHistoryDTO'
+  /api/v1/accounts/{accountId}/business-roles/{businessRoleId}:
+    post:
+      summary: Add business role to account link
+      operationId: addBusinessRoleToAccount
+      tags:
+        - Accounts
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: businessRoleId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Ok
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+    delete:
+      summary: Remove Business Role from Account
+      operationId: removeBusinessRoleFromAccount
+      tags:
+        - Accounts
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: businessRoleId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+  /api/v1/accounts/{accountId}/organization-units:
+    get:
+      summary: Get account organization-units
+      operationId: getAccountOrganizationUnits
+      tags:
+        - Accounts
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrganizationUnitDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+
+  /api/v1/domain-components:
+    get:
+      summary: Get all domain components
+      operationId: getAllDomainComponents
+      tags:
+        - Domain Components
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DomainComponentDTO'
+    post:
+      summary: Create a new domain component
+      operationId: createDomainComponent
+      tags:
+        - Domain Components
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DomainComponentDTO'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainComponentDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+  /api/v1/domain-components/{dcId}:
+    get:
+      summary: Get a domain component by ID
+      operationId: getDomainComponentById
+      tags:
+        - Domain Components
+      parameters:
+        - name: dcId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainComponentDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+    put:
+      summary: Update a domain component by ID
+      operationId: updateDomainComponent
+      tags:
+        - Domain Components
+      parameters:
+        - name: dcId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DomainComponentDTO'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainComponentDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+    delete:
+      summary: Delete a domain component by ID
+      operationId: deleteDomainComponent
+      tags:
+        - Domain Components
+      parameters:
+        - name: dcId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+  /api/v1/domain-components/{dcId}/tree:
+    get:
+      summary: Get a domain component tree
+      operationId: getDomainComponentTree
+      tags:
+        - Domain Components
+      parameters:
+        - name: dcId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainTreeDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+  /api/v1/domain-components/{dcId}/organization-units/roots:
+    get:
+      summary: Getting the root elements of the organization-unit
+      operationId: getDomainComponentRootsOrganizationUnits
+      tags:
+        - Domain Components
+      parameters:
+        - name: dcId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Successful acquisition of root elements
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrganizationUnitDTO'
+        '404':
+          description: Domain Component not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+
+  /api/v1/organization-units:
+    get:
+      summary: Get all organization units
+      operationId: getAllOrganizationUnits
+      tags:
+        - Organization Units
+      parameters:
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: parentOuId
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: dcId
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOrganizationUnitResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+    post:
+      summary: Create a new organization unit
+      operationId: createOrganizationUnit
+      tags:
+        - Organization Units
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganizationUnitDTO'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationUnitDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+  /api/v1/organization-units/{ouId}:
+    get:
+      summary: Get an organization unit by ID
+      operationId: getOrganizationUnitById
+      tags:
+        - Organization Units
+      parameters:
+        - name: ouId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationUnitDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+    put:
+      summary: Update an organization unit by ID
+      operationId: updateOrganizationUnit
+      tags:
+        - Organization Units
+      parameters:
+        - name: ouId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganizationUnitDTO'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationUnitDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+    delete:
+      summary: Delete an organization unit by ID
+      operationId: deleteOrganizationUnit
+      tags:
+        - Organization Units
+      parameters:
+        - name: ouId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+  /api/v1/organization-units/{ouId}/children:
+    get:
+      summary: Получение дочерних элементов organization-unit
+      operationId: getOrganizationUnitChildren
+      tags:
+        - Organization Units
+      parameters:
+        - name: ouId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Успешное получение дочерних элементов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrganizationUnitDTO'
+        '404':
+          description: Organization Unit не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+  /api/v1/organization-units/{ouId}/parents:
+    get:
+      summary: Получение родительских элементов organization-unit
+      operationId: getOrganizationUnitParents
+      tags:
+        - Organization Units
+      parameters:
+        - name: ouId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Успешное получение родительских элементов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrganizationUnitDTO'
+        '404':
+          description: Organization Unit не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+  /api/v1/organization-units/{ouId}/tree:
+    get:
+      summary: Получение дерева organization-unit
+      operationId: getOrganizationUnitTree
+      tags:
+        - Organization Units
+      parameters:
+        - name: ouId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Успешное дерева элементов
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationTreeDTO'
+        '404':
+          description: Organization Unit не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+  /api/v1/organization-units/{ouId}/accounts:
+    get:
+      summary: Get all organization unit accounts
+      operationId: getAccountsByouId
+      tags:
+        - Organization Units
+      parameters:
+        - name: ouId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+  /api/v1/organization-units/{ouId}/accounts/{accountId}:
+    post:
+      summary: Add account to org. unit link
+      operationId: addAccountToOrganizationUnit
+      tags:
+        - Organization Units
+      parameters:
+        - name: ouId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+    delete:
+      summary: Delete account to org. unit link
+      operationId: removeAccountFromOrganizationUnit
+      tags:
+        - Organization Units
+      parameters:
+        - name: ouId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+
+  /api/v1/roles:
+    get:
+      summary: Get all roles
+      operationId: getAllRoles
+      tags:
+        - Roles
+      parameters:
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: productId
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: orgUnitId
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRoleResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+    post:
+      summary: Create a new role
+      operationId: createRole
+      tags:
+        - Roles
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleWithPermissionsDTO'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleWithPermissionsDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+  /api/v1/roles/{roleId}:
+    get:
+      summary: Get a role by ID
+      operationId: getRoleById
+      tags:
+        - Roles
+      parameters:
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+    put:
+      summary: Update a role by ID
+      operationId: updateRole
+      tags:
+        - Roles
+      parameters:
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleWithPermissionsDTO'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleWithPermissionsDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+    delete:
+      summary: Delete a role by ID
+      operationId: deleteRole
+      tags:
+        - Roles
+      parameters:
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+  /api/v1/roles/{roleId}/permissions:
+    get:
+      summary: Get role permission
+      operationId: getPermissionsByRoleId
+      tags:
+        - Roles
+      parameters:
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleWithPermissionsDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+  /api/v1/roles/{roleId}/history:
+    get:
+      summary: Get role history
+      operationId: getRoleHistory
+      tags:
+        - Roles
+      parameters:
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleHistoryDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+
+  /api/v1/permissions/{permissionId}:
+    get:
+      summary: Get a permission by ID
+      operationId: getPermissionById
+      tags:
+        - Permissions
+      parameters:
+        - name: permissionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PermissionDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+  /api/v1/permissions/check:
+    get:
+      summary: Checking if the current user has access
+      operationId: checkPermission
+      tags:
+        - Permissions
+      parameters:
+        - name: actionType
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: resourceId
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Successful access verification
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  hasAccess:
+                    type: boolean
+        '401':
+          description: The user is not logged in
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedResponse'
+
+  /api/v1/business-roles:
+    get:
+      summary: Get all business roles
+      operationId: getAllBusinessRoles
+      tags:
+        - Business Roles
+      parameters:
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedBusinessRoleResponse'
+    post:
+      summary: Create a new business role
+      operationId: createBusinessRole
+      tags:
+        - Business Roles
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BusinessRoleDTO'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BusinessRoleDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+  /api/v1/business-roles/{businessRoleId}:
+    get:
+      summary: Get a business role by ID
+      operationId: getBusinessRoleById
+      tags:
+        - Business Roles
+      parameters:
+        - name: businessRoleId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BusinessRoleDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+    put:
+      summary: Update a business role by ID
+      operationId: updateBusinessRole
+      tags:
+        - Business Roles
+      parameters:
+        - name: businessRoleId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BusinessRoleDTO'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BusinessRoleDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+    delete:
+      summary: Delete a business role by ID
+      operationId: deleteBusinessRole
+      tags:
+        - Business Roles
+      parameters:
+        - name: businessRoleId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+  /api/v1/business-roles/{businessRoleId}/children:
+    get:
+      summary: Get a business role children business roles
+      operationId: getBusinessRoleChildrenBRs
+      tags:
+        - Business Roles
+      parameters:
+        - name: businessRoleId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BusinessRoleDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+  /api/v1/business-roles/{businessRoleId}/parents:
+    get:
+      summary: Get a business role parents business roles
+      operationId: getBusinessRoleParentsBRs
+      tags:
+        - Business Roles
+      parameters:
+        - name: businessRoleId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BusinessRoleDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+  /api/v1/business-roles/{businessRoleId}/roles:
+    get:
+      summary: Get business role roles
+      operationId: getRolesByBusinessRoleId
+      tags:
+        - Business Roles
+      parameters:
+        - name: businessRoleId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RoleDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+  /api/v1/business-roles/{businessRoleId}/roles/{roleId}:
+    post:
+      summary: Add role to the business role link
+      operationId: addRoleToBusinessRole
+      tags:
+        - Business Roles
+      parameters:
+        - name: businessRoleId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Ok
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+    delete:
+      summary: Delete role to the business role link
+      operationId: removeRoleFromBusinessRole
+      tags:
+        - Business Roles
+      parameters:
+        - name: businessRoleId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+
+  /api/v1/roles-requests:
+    get:
+      summary: Get all roles requests
+      operationId: getAllRolesRequests
+      tags:
+        - RolesRequests
+      parameters:
+        - name: ownerId
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: accountId
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: roleId
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRoleRequestResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+    post:
+      summary: Create a new role request
+      operationId: createRoleRequest
+      tags:
+        - RolesRequests
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleRequestDTO'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleRequestDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+  /api/v1/roles-requests/{roleRequestId}:
+    get:
+      summary: Get a role Request by ID
+      operationId: getRoleRequestById
+      tags:
+        - RolesRequests
+      parameters:
+        - name: roleRequestId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleRequestDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+    put:
+      summary: Update a role request by ID
+      operationId: updateRoleRequest
+      tags:
+        - RolesRequests
+      parameters:
+        - name: roleRequestId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleRequestDTO'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleRequestDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+    patch:
+      summary: Update a role request status by ID
+      operationId: updateRoleRequestStatus
+      tags:
+        - RolesRequests
+      parameters:
+        - name: roleRequestId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: newStatus
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [ WAITING, APPROVED, DECLINED ]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleRequestDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+
+  /api/v1/products:
+    get:
+      summary: Get all products
+      operationId: getAllProducts
+      tags:
+        - Products
+      parameters:
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedProductResponse'
+    post:
+      summary: Create a new product
+      operationId: createProduct
+      tags:
+        - Products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductDTO'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDTOGet'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+  /api/v1/products-roots:
+    get:
+      summary: Obtaining the root elements of products
+      operationId: getProductsRoots
+      tags:
+        - Products
+      responses:
+        '200':
+          description: Successful acquisition of root elements
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductDTOGet'
+  /api/v1/products-tree:
+    get:
+      summary: Getting child elements of all products by a tree
+      operationId: getAllProductTree
+      tags:
+        - Products
+      responses:
+        '200':
+          description: Successful acquisition of element trees
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductTreeDTO'
+  /api/v1/products/{productId}:
+    get:
+      summary: Get a product by ID
+      operationId: getProductById
+      tags:
+        - Products
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDTOGet'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+    put:
+      summary: Update a product by ID
+      operationId: updateProduct
+      tags:
+        - Products
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductDTO'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDTOGet'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+    delete:
+      summary: Delete a product by ID
+      operationId: deleteProduct
+      tags:
+        - Products
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+  /api/v1/products/{productId}/children:
+    get:
+      summary: Getting child elements of a product
+      operationId: getProductChildren
+      tags:
+        - Products
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Successful receipt of child elements
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductDTOGet'
+  /api/v1/products/{productId}/parents:
+    get:
+      summary: Getting the parent elements of a product
+      operationId: getProductParents
+      tags:
+        - Products
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Successful receipt of parent elements
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductDTOGet'
+  /api/v1/products/{productId}/tree:
+    get:
+      summary: Getting child elements of a product by a tree
+      operationId: getProductTree
+      tags:
+        - Products
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: depth
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful receipt of child elements
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductTreeDTO'
 # ---------- components ------------------------------------------------------------------------------------------------
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   # ---------- schemas -------------------------------------------------------------------------------------------------
   schemas:
     # ---------- Common schemas ----------------------------------------------------------------------------------------
@@ -1479,6 +3545,537 @@ components:
       required:
         - value
         - displayValue
+    # ---------- IDM schemas -------------------------------------------------------------------------------------------
+    AccountDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        username:
+          type: string
+        password:
+          type: string
+        email:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        data:
+          type: object
+          additionalProperties: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - username
+        - email
+        - firstname
+        - lastname
+    PaginatedAccountResponse:
+      type: object
+      properties:
+        totalCount:
+          type: integer
+        startPosition:
+          type: integer
+        endPosition:
+          type: integer
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccountDTO'
+      required:
+        - totalCount
+        - startPosition
+        - endPosition
+        - data
+    PermissionDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        actionType:
+          type: string
+        resourceType:
+          type: string
+        data:
+          type: object
+          additionalProperties: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - actionType
+        - resourceType
+    RoleDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        roleType:
+          type: string
+        name:
+          type: string
+        shopName:
+          type: string
+        isShopHidden:
+          type: boolean
+        description:
+          type: string
+        entity:
+          type: string
+        productId:
+          type: string
+          format: uuid
+        orgUnitId:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - roleType
+        - name
+        - shopName
+        - isShopHidden
+        - description
+    RoleWithPermissionsDTO:
+      type: object
+      properties:
+        role:
+          $ref: '#/components/schemas/RoleDTO'
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/PermissionDTO'
+      required:
+        - role
+        - permissions
+    PaginatedRoleResponse:
+      type: object
+      properties:
+        totalCount:
+          type: integer
+        startPosition:
+          type: integer
+        endPosition:
+          type: integer
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoleDTO'
+      required:
+        - totalCount
+        - startPosition
+        - endPosition
+        - data
+    PermissionsBitsDTO:
+      type: object
+      additionalProperties:
+        type: object
+        nullable: true
+        additionalProperties:
+          type: object
+          nullable: true
+    DomainComponentDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - name
+        - description
+    BusinessRoleDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        shopName:
+          type: string
+        description:
+          type: string
+        parentId:
+          type: string
+          format: uuid
+        data:
+          type: object
+          additionalProperties: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - name
+        - shopName
+        - description
+    PaginatedBusinessRoleResponse:
+      type: object
+      properties:
+        totalCount:
+          type: integer
+        startPosition:
+          type: integer
+        endPosition:
+          type: integer
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/BusinessRoleDTO'
+      required:
+        - totalCount
+        - startPosition
+        - endPosition
+        - data
+    OrganizationUnitDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        domainComponentId:
+          type: string
+          format: uuid
+        parentId:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        ownerId:
+          type: string
+          format: uuid
+      required:
+        - name
+        - description
+        - domainComponentId
+    OrganizationTreeDTO:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationTreeDTO'
+        unit:
+          $ref: '#/components/schemas/OrganizationUnitDTO'
+      required:
+        - unit
+        - items
+    DomainTreeDTO:
+      type: object
+      properties:
+        item:
+          $ref: '#/components/schemas/DomainComponentDTO'
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationTreeDTO'
+      required:
+        - item
+        - children
+    PaginatedOrganizationUnitResponse:
+      type: object
+      properties:
+        totalCount:
+          type: integer
+        startPosition:
+          type: integer
+        endPosition:
+          type: integer
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationUnitDTO'
+      required:
+        - totalCount
+        - startPosition
+        - endPosition
+        - data
+    ProductDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        parentId:
+          type: string
+          format: uuid
+        ownerId:
+          type: string
+          format: uuid
+        data:
+          type: object
+          additionalProperties: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - name
+        - description
+    ProductDTOGet:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        parentId:
+          type: string
+          format: uuid
+        ownerId:
+          type: string
+          format: uuid
+        data:
+          type: object
+          additionalProperties: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - description
+        - createdAt
+        - updatedAt
+    ProductTreeDTO:
+      type: object
+      properties:
+        item:
+          $ref: '#/components/schemas/ProductDTOGet'
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductTreeDTO'
+      required:
+        - item
+    PaginatedProductResponse:
+      type: object
+      properties:
+        totalCount:
+          type: integer
+        startPosition:
+          type: integer
+        endPosition:
+          type: integer
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductDTOGet'
+      required:
+        - totalCount
+        - startPosition
+        - endPosition
+        - data
+    RoleRequestDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        roleId:
+          type: string
+          format: uuid
+        accountId:
+          type: string
+          format: uuid
+        ownerId:
+          type: string
+          format: uuid
+        reason:
+          type: string
+        status:
+          type: string
+          enum: [ WAITING, APPROVED, DECLINED ]
+        createdAt:
+          type: string
+          format: date-time
+        resolvedAt:
+          type: string
+          format: date-time
+      required:
+        - roleId
+        - accountId
+        - reason
+        - status
+    PaginatedRoleRequestResponse:
+      type: object
+      properties:
+        totalCount:
+          type: integer
+        startPosition:
+          type: integer
+        endPosition:
+          type: integer
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoleRequestDTO'
+      required:
+        - totalCount
+        - startPosition
+        - endPosition
+        - data
+    AccountRolesHistoryDTO:
+      type: object
+      properties:
+        record_id:
+          type: string
+          format: uuid
+        account_id:
+          type: string
+          format: uuid
+        role_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - record_id
+        - account_id
+        - role_id
+        - status
+        - createdAt
+    AccountBusinessRolesHistoryDTO:
+      type: object
+      properties:
+        record_id:
+          type: string
+          format: uuid
+        account_id:
+          type: string
+          format: uuid
+        business_role_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - record_id
+        - account_id
+        - business_role_id
+        - status
+        - createdAt
+    RoleHistoryDTO:
+      type: object
+      properties:
+        record_id:
+          type: string
+          format: uuid
+        role_id:
+          type: string
+          format: uuid
+        difference:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - record_id
+        - role_id
+        - difference
+        - createdAt
+    AuthRequestDTO:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      required:
+        - username
+        - password
+    JwtResponseDTO:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+      required:
+        - accessToken
+        - refreshToken
+    RefreshTokenDTO:
+      type: object
+      properties:
+        refreshToken:
+          type: string
+      required:
+        - refreshToken
+    NotFoundResponse:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+    InternalServerErrorResponse:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+    UnauthorizedResponse:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
   # ---------- parameters ----------------------------------------------------------------------------------------------
   parameters:
     ProjectIdPV:
