@@ -1,4 +1,4 @@
-package com.onyxdb.platform.configs;
+package com.onyxdb.platform.context;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,7 +22,7 @@ import com.onyxdb.platform.resources.ResourceMapper;
  * @author foxleren
  */
 @Configuration
-public class MapperConfig {
+public class MapperContextConfiguration {
     public static final String YAML_OBJECT_MAPPER_BEAN = "YAML_OBJECT_MAPPER";
 
     @Bean

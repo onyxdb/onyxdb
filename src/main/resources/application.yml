@@ -36,6 +36,11 @@ onyxdb:
     url: jdbc:clickhouse://localhost:8323/onyxdb
     username: username
     password: password
+  flyway:
+    postgres:
+      location: db/migrations/postgres
+    clickhouse:
+      location: db/migrations/clickhouse
   victoria-logs:
     base-url: http://vls-victoria-logs-single-server.onyxdb.svc.cluster.local:9428
   tasks:

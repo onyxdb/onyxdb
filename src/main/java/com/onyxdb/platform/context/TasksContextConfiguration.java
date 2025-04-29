@@ -1,4 +1,4 @@
-package com.onyxdb.platform.configs;
+package com.onyxdb.platform.context;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,7 +9,7 @@ import com.onyxdb.platform.quotas.QuotaService;
 import com.onyxdb.platform.tasks.CollectProductQuotaUsageTask;
 
 @Configuration
-public class TasksConfig {
+public class TasksContextConfiguration {
     @Bean
     public CollectProductQuotaUsageTask collectQuotaUsageTask(
             BillingService billingService,

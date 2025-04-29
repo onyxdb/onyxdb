@@ -1,4 +1,4 @@
-package com.onyxdb.platform.configs;
+package com.onyxdb.platform.context;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,7 +9,7 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
 
 
 @Configuration
-public class TemplateEngineConfig {
+public class TemplateEngineContextConfiguration {
     @Bean
     public ITemplateResolver textTemplateResolver() {
         ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();

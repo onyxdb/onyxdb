@@ -1,11 +1,7 @@
-package com.onyxdb.platform.configs;
-
-import java.sql.SQLException;
-import java.util.Properties;
+package com.onyxdb.platform.context;
 
 import javax.sql.DataSource;
 
-import com.clickhouse.jdbc.ClickHouseDataSource;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.jooq.DSLContext;
@@ -89,12 +85,14 @@ public class DatasourceContextConfiguration {
             String username,
             @Value("${onyxdb.clickhouse.password}")
             String password
-    ) throws SQLException {
-        Properties properties = new Properties();
-        properties.put("username", username);
-        properties.put("password", password);
+    ) {
+        HikariConfig config = new HikariConfig();
+        config.setDriverClassName("com.clickhouse.jdbc.ClickHouseDriver");
+        config.setJdbcUrl(url);
+        config.setUsername(username);
+        config.setPassword(password);
 
-        return new ClickHouseDataSource(url, properties);
+        return new HikariDataSource(config);
     }
 
     @Bean

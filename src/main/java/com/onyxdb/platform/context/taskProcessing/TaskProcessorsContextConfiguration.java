@@ -1,4 +1,4 @@
-package com.onyxdb.platform.configs.taskProcessing;
+package com.onyxdb.platform.context.taskProcessing;
 
 import java.util.Map;
 
@@ -45,7 +45,7 @@ import com.onyxdb.platform.processing.repositories.TaskRepository;
 import com.onyxdb.platform.services.BaseClusterService;
 
 @Configuration
-public class TaskProcessorsConfig {
+public class TaskProcessorsContextConfiguration {
     @Bean
     public MongoCreateVectorConfigTaskProcessor mongoCreateVectorConfig(
             ObjectMapper objectMapper,

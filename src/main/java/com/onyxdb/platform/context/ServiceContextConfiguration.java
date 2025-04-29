@@ -1,4 +1,4 @@
-package com.onyxdb.platform.configs;
+package com.onyxdb.platform.context;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +29,7 @@ import com.onyxdb.platform.resources.ResourceService;
  * @author foxleren
  */
 @Configuration
-public class ServiceConfig {
+public class ServiceContextConfiguration {
     @Bean
     public ResourcePresetService resourcePresetService(ResourcePresetRepository resourcePresetRepository) {
         return new ResourcePresetService(resourcePresetRepository);

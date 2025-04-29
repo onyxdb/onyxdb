@@ -1,7 +1,5 @@
 package com.onyxdb.platform;
 
-import java.sql.SQLException;
-
 import javax.sql.DataSource;
 
 import com.zaxxer.hikari.HikariConfig;
@@ -13,7 +11,7 @@ import org.testcontainers.clickhouse.ClickHouseContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.wait.strategy.HostPortWaitStrategy;
 
-import com.onyxdb.platform.configs.DatasourceContextConfiguration;
+import com.onyxdb.platform.context.DatasourceContextConfiguration;
 
 /**
  * @author sergey-mokhov
@@ -51,7 +49,7 @@ public class TestContextConfiguration {
 
     @Bean(DatasourceContextConfiguration.CLICKHOUSE_DATASOURCE_BEAN)
     @Profile("test")
-    public DataSource clickhouseDataSource(ClickHouseContainer clickhouseContainer) throws SQLException {
+    public DataSource clickhouseDataSource(ClickHouseContainer clickhouseContainer) {
         HikariConfig config = new HikariConfig();
         config.setDriverClassName("com.clickhouse.jdbc.ClickHouseDriver");
         config.setJdbcUrl(clickhouseContainer.getJdbcUrl());
