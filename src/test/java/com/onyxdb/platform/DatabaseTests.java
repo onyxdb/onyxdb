@@ -19,7 +19,7 @@ public abstract class DatabaseTests {
             .withDatabaseName("onyxdb")
             .withUsername("username")
             .withPassword("password")
-            .withExposedPorts(5432)
+            .withExposedPorts(5632)
             .withCreateContainerCmdModifier(cmd -> cmd.withHostConfig(
                     new HostConfig().withPortBindings(new PortBinding(Ports.Binding.bindPort(5432), new ExposedPort(5432)))
             ));
@@ -29,7 +29,7 @@ public abstract class DatabaseTests {
             .withDatabaseName("onyxdb")
             .withUsername("username")
             .withPassword("password")
-            .withExposedPorts(8123)
+            .withExposedPorts(8323)
             .withCreateContainerCmdModifier(cmd -> cmd.withHostConfig(
                     new HostConfig().withPortBindings(new PortBinding(Ports.Binding.bindPort(8123), new ExposedPort(8123)))
             ));
