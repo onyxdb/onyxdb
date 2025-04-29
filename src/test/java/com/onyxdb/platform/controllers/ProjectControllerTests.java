@@ -99,7 +99,7 @@ public class ProjectControllerTests extends BaseTest {
                 projectId
         );
 
-        var expected = new BadRequestResponse(String.format("Project with id '%s' does not exist", projectId));
+        var expected = new BadRequestResponse(String.format("Project with id '%s' is not found", projectId));
 
         Assertions.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         Assertions.assertNotNull(response.getBody());
