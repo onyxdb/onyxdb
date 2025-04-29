@@ -6,10 +6,10 @@ import java.util.UUID;
 import org.jooq.Record;
 
 import com.onyxdb.platform.generated.jooq.tables.records.ProjectsRecord;
-import com.onyxdb.platform.generated.openapi.models.V1CreateProjectRequest;
-import com.onyxdb.platform.generated.openapi.models.V1ListProjectsResponse;
-import com.onyxdb.platform.generated.openapi.models.V1ProjectResponse;
-import com.onyxdb.platform.generated.openapi.models.V1UpdateProjectRequest;
+import com.onyxdb.platform.generated.openapi.models.CreateProjectRequestDTO;
+import com.onyxdb.platform.generated.openapi.models.ListProjectsResponseDTO;
+import com.onyxdb.platform.generated.openapi.models.ProjectDTO;
+import com.onyxdb.platform.generated.openapi.models.UpdateProjectRequestDTO;
 
 /**
  * @author foxleren
@@ -36,25 +36,24 @@ public final class ProjectMapper {
         );
     }
 
-    public static V1ProjectResponse toV1ProjectResponse(Project p) {
-        return new V1ProjectResponse(
+    public static ProjectDTO toV1ProjectResponse(Project p) {
+        return new ProjectDTO(
                 p.id(),
                 p.name(),
                 p.description(),
-                p.productId(),
-                p.isArchived()
+                p.productId()
         );
     }
 
-    public static V1ListProjectsResponse toV1ListProjectsResponse(List<Project> p) {
-        return new V1ListProjectsResponse(
+    public static ListProjectsResponseDTO toV1ListProjectsResponse(List<Project> p) {
+        return new ListProjectsResponseDTO(
                 p.stream()
                         .map(ProjectMapper::toV1ProjectResponse)
                         .toList()
         );
     }
 
-    public static Project fromV1CreateProjectRequest(V1CreateProjectRequest r) {
+    public static Project fromV1CreateProjectRequest(CreateProjectRequestDTO r) {
         return new Project(
                 UUID.randomUUID(),
                 r.getName(),
@@ -64,7 +63,7 @@ public final class ProjectMapper {
         );
     }
 
-    public static UpdateProject fromV1UpdateProjectRequest(UUID id, V1UpdateProjectRequest r) {
+    public static UpdateProject fromV1UpdateProjectRequest(UUID id, UpdateProjectRequestDTO r) {
         return new UpdateProject(
                 id,
                 r.getName(),

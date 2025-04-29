@@ -6,12 +6,6 @@ import java.util.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.onyxdb.platform.mdb.clusters.ClusterMapper;
-import com.onyxdb.platform.mdb.clusters.ClusterService;
-import com.onyxdb.platform.mdb.hosts.HostService;
-import com.onyxdb.platform.mdb.databases.DatabaseMapper;
-import com.onyxdb.platform.mdb.hosts.HostMapper;
-import com.onyxdb.platform.mdb.users.UserMapper;
 import com.onyxdb.platform.core.clusters.models.Cluster;
 import com.onyxdb.platform.core.clusters.models.ClusterToCreate;
 import com.onyxdb.platform.core.clusters.models.UpdateCluster;
@@ -24,6 +18,12 @@ import com.onyxdb.platform.generated.openapi.models.V1ListMongoClustersResponse;
 import com.onyxdb.platform.generated.openapi.models.V1MongoClusterResponse;
 import com.onyxdb.platform.generated.openapi.models.V1MongoUpdateClusterRequest;
 import com.onyxdb.platform.generated.openapi.models.V1ScheduledOperationResponse;
+import com.onyxdb.platform.mdb.clusters.ClusterMapper;
+import com.onyxdb.platform.mdb.clusters.ClusterService;
+import com.onyxdb.platform.mdb.databases.DatabaseMapper;
+import com.onyxdb.platform.mdb.hosts.HostMapper;
+import com.onyxdb.platform.mdb.hosts.HostService;
+import com.onyxdb.platform.mdb.users.UserMapper;
 
 /**
  * @author foxleren

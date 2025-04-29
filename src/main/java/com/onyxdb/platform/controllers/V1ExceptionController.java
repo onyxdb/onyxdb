@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.onyxdb.platform.exceptions.BadRequestException;
-import com.onyxdb.platform.generated.openapi.models.V1BadRequestResponse;
+import com.onyxdb.platform.generated.openapi.models.BadRequestResponse;
 
 /**
  * @author foxleren
@@ -14,8 +14,8 @@ import com.onyxdb.platform.generated.openapi.models.V1BadRequestResponse;
 @ControllerAdvice
 public class V1ExceptionController {
     @ExceptionHandler(value = BadRequestException.class)
-    public ResponseEntity<V1BadRequestResponse> handleBadRequestException(BadRequestException e) {
-        V1BadRequestResponse badRequestResponse = new V1BadRequestResponse(e.getMessage());
+    public ResponseEntity<BadRequestResponse> handleBadRequestException(BadRequestException e) {
+        BadRequestResponse badRequestResponse = new BadRequestResponse(e.getMessage());
         return new ResponseEntity<>(badRequestResponse, HttpStatus.BAD_REQUEST);
     }
 }

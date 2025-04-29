@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.onyxdb.platform.core.resourcePresets.ResourcePreset;
 import com.onyxdb.platform.core.resourcePresets.ResourcePresetConverter;
 import com.onyxdb.platform.core.resourcePresets.ResourcePresetService;
-import com.onyxdb.platform.generated.openapi.apis.V1ResourcePresetsApi;
+import com.onyxdb.platform.generated.openapi.apis.ResourcePresetsApi;
 import com.onyxdb.platform.generated.openapi.models.V1CreateResourcePresetRequest;
 import com.onyxdb.platform.generated.openapi.models.V1ListResourcePresetsResponse;
 import com.onyxdb.platform.generated.openapi.models.V1ResourcePresetResponse;
@@ -19,7 +19,7 @@ import com.onyxdb.platform.generated.openapi.models.V1UpdateResourcePresetReques
  * @author foxleren
  */
 @RestController
-public class v1ResourcePresetController implements V1ResourcePresetsApi {
+public class v1ResourcePresetController implements ResourcePresetsApi {
     private final ResourcePresetService resourcePresetService;
 
     public v1ResourcePresetController(ResourcePresetService resourcePresetService) {

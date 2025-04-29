@@ -5,17 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 
 import com.onyxdb.platform.clients.onyxdbAgent.OnyxdbAgentClient;
-import com.onyxdb.platform.clients.onyxdbAgent.models.DeleteMongoDatabaseRequestDTO;
 import com.onyxdb.platform.clients.onyxdbAgent.models.DeleteMongoUserRequestDTO;
 import com.onyxdb.platform.core.clusters.models.User;
 import com.onyxdb.platform.mdb.clusters.ClusterService;
-import com.onyxdb.platform.mdb.databases.DatabaseRepository;
 import com.onyxdb.platform.mdb.users.UserRepository;
 import com.onyxdb.platform.processing.consumers.TaskProcessor;
 import com.onyxdb.platform.processing.models.Task;
 import com.onyxdb.platform.processing.models.TaskProcessingResult;
 import com.onyxdb.platform.processing.models.TaskType;
-import com.onyxdb.platform.processing.models.payloads.MongoDeleteDatabasePayload;
 import com.onyxdb.platform.processing.models.payloads.MongoDeleteUserPayload;
 import com.onyxdb.platform.utils.Consts;
 

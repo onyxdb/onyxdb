@@ -1,19 +1,11 @@
 package com.onyxdb.platform.processing.producers;
 
-import java.time.Duration;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.onyxdb.platform.operationsOLD.tasks.ProducedTask;
 import com.onyxdb.platform.processing.models.Operation;
-import com.onyxdb.platform.processing.models.Task;
-import com.onyxdb.platform.processing.models.TaskStatus;
-import com.onyxdb.platform.processing.models.TaskType;
-import com.onyxdb.platform.processing.models.TaskWithBlockers;
-import com.onyxdb.platform.utils.ObjectMapperUtils;
-import com.onyxdb.platform.utils.TimeUtils;
 
 public abstract class TaskProducer<PAYLOAD> {
     protected final ObjectMapper objectMapper;

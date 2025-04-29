@@ -7,7 +7,6 @@ import org.jetbrains.annotations.Nullable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.onyxdb.platform.mdb.clusters.ClusterMapper;
 import com.onyxdb.platform.core.clusters.models.ClusterConfig;
 import com.onyxdb.platform.generated.openapi.apis.MdbQuotasApi;
 import com.onyxdb.platform.generated.openapi.models.ListQuotasByProductsResponse;
@@ -17,6 +16,7 @@ import com.onyxdb.platform.generated.openapi.models.SimulateMongoDBQuotasUsageRe
 import com.onyxdb.platform.generated.openapi.models.SimulateTransferQuotasBetweenProductsResponse;
 import com.onyxdb.platform.generated.openapi.models.TransferQuotasBetweenProductsRequest;
 import com.onyxdb.platform.generated.openapi.models.UploadQuotasToProductsRequest;
+import com.onyxdb.platform.mdb.clusters.ClusterMapper;
 import com.onyxdb.platform.quotas.EnrichedProductQuota;
 import com.onyxdb.platform.quotas.ProductQuotaToUpload;
 import com.onyxdb.platform.quotas.QuotaFilter;

@@ -1,10 +1,6 @@
 package com.onyxdb.platform.configs.taskProcessing;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import com.onyxdb.platform.processing.producers.CompositeTaskGenerator;
 //import com.onyxdb.platform.processing.producers.mongo.MongoCreateClusterTaskGenerator;
 //import com.onyxdb.platform.processing.producers.mongo.MongoCreateDatabaseTaskGenerator;
 //import com.onyxdb.platform.processing.producers.mongo.MongoDeleteClusterTaskGenerator;

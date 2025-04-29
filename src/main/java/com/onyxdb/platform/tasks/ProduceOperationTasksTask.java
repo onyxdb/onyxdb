@@ -15,7 +15,6 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import com.onyxdb.platform.operationsOLD.tasks.ProducedTask;
 import com.onyxdb.platform.processing.TaskProcessingUtils;
-import com.onyxdb.platform.processing.consumers.mongo.MongoCreateBackupTaskProcessor;
 import com.onyxdb.platform.processing.models.Operation;
 import com.onyxdb.platform.processing.models.OperationStatus;
 import com.onyxdb.platform.processing.models.Task;

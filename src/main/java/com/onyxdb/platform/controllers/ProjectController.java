@@ -11,10 +11,10 @@ import com.onyxdb.platform.core.projects.ProjectMapper;
 import com.onyxdb.platform.core.projects.ProjectService;
 import com.onyxdb.platform.core.projects.UpdateProject;
 import com.onyxdb.platform.generated.openapi.apis.ProjectsApi;
-import com.onyxdb.platform.generated.openapi.models.V1CreateProjectRequest;
-import com.onyxdb.platform.generated.openapi.models.V1ListProjectsResponse;
-import com.onyxdb.platform.generated.openapi.models.V1ProjectResponse;
-import com.onyxdb.platform.generated.openapi.models.V1UpdateProjectRequest;
+import com.onyxdb.platform.generated.openapi.models.CreateProjectRequestDTO;
+import com.onyxdb.platform.generated.openapi.models.ListProjectsResponseDTO;
+import com.onyxdb.platform.generated.openapi.models.ProjectDTO;
+import com.onyxdb.platform.generated.openapi.models.UpdateProjectRequestDTO;
 
 /**
  * @author foxleren
@@ -28,45 +28,33 @@ public class ProjectController implements ProjectsApi {
     }
 
     @Override
-    public ResponseEntity<V1ListProjectsResponse> listProjects() {
+    public ResponseEntity<ListProjectsResponseDTO> listProjects() {
         List<Project> projects = projectService.list();
         var response = ProjectMapper.toV1ListProjectsResponse(projects);
         return ResponseEntity.ok().body(response);
     }
 
     @Override
-    public ResponseEntity<V1ProjectResponse> getProject(UUID projectId) {
+    public ResponseEntity<ProjectDTO> getProject(UUID projectId) {
         Project project = projectService.getOrThrow(projectId);
         var response = ProjectMapper.toV1ProjectResponse(project);
         return ResponseEntity.ok().body(response);
     }
 
     @Override
-    public ResponseEntity<Void> createProject(V1CreateProjectRequest v1CreateProjectRequest) {
+    public ResponseEntity<Void> createProject(CreateProjectRequestDTO v1CreateProjectRequest) {
         Project project = ProjectMapper.fromV1CreateProjectRequest(v1CreateProjectRequest);
         projectService.create(project);
         return ResponseEntity.ok().build();
     }
 
     @Override
-    public ResponseEntity<Void> updateProject(UUID projectId, V1UpdateProjectRequest v1UpdateProjectRequest) {
+    public ResponseEntity<Void> updateProject(UUID projectId, UpdateProjectRequestDTO v1UpdateProjectRequest) {
         UpdateProject updateProject = ProjectMapper.fromV1UpdateProjectRequest(
                 projectId,
                 v1UpdateProjectRequest
         );
         projectService.update(updateProject);
-        return ResponseEntity.ok().build();
-    }
-
-    @Override
-    public ResponseEntity<Void> archiveProject(UUID projectId) {
-        projectService.archive(projectId);
-        return ResponseEntity.ok().build();
-    }
-
-    @Override
-    public ResponseEntity<Void> unarchiveProject(UUID projectId) {
-        projectService.unarchive(projectId);
         return ResponseEntity.ok().build();
     }
 }
