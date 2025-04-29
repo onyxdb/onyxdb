@@ -1,4 +1,4 @@
-package com.onyxdb.platform.configs.taskProcessing;
+package com.onyxdb.platform.context.taskProcessing;
 
 import org.springframework.context.annotation.Configuration;
 //import com.onyxdb.platform.processing.producers.mongo.MongoCreateClusterTaskGenerator;
@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 //import com.onyxdb.platform.processing.producers.mongo.MongoScaleHostsTaskGenerator;
 
 @Configuration
-public class TaskGeneratorsConfig {
+public class TaskGeneratorsContextConfiguration {
 //    @Bean
 //    public MongoCreateClusterTaskGenerator mongoCreateClusterTaskGenerator(ObjectMapper objectMapper) {
 //        return new MongoCreateClusterTaskGenerator(objectMapper);

@@ -1,22 +1,25 @@
-package com.onyxdb.platform.configs;
+package com.onyxdb.platform.context;
 
 import javax.sql.DataSource;
 
 import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class FlywayConfig {
+public class FlywayContextConfiguration {
     @Bean
     public Flyway postgresFlyway(
             @Qualifier(DatasourceContextConfiguration.POSTGRES_DATASOURCE_BEAN)
-            DataSource dataSource
+            DataSource dataSource,
+            @Value("${onyxdb.flyway.postgres.location}")
+            String location
     ) {
         Flyway flyway = Flyway.configure()
                 .dataSource(dataSource)
-                .locations("db/migrations/postgres")
+                .locations(location)
                 .load();
 
         flyway.migrate();
@@ -27,11 +30,13 @@ public class FlywayConfig {
     @Bean
     public Flyway clickhouseFlyway(
             @Qualifier(DatasourceContextConfiguration.CLICKHOUSE_DATASOURCE_BEAN)
-            DataSource dataSource
+            DataSource dataSource,
+            @Value("${onyxdb.flyway.clickhouse.location}")
+            String location
     ) {
         Flyway flyway = Flyway.configure()
                 .dataSource(dataSource)
-                .locations("db/migrations/clickhouse")
+                .locations(location)
                 .load();
 
         flyway.migrate();

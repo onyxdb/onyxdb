@@ -1,4 +1,4 @@
-package com.onyxdb.platform.configs.clients;
+package com.onyxdb.platform.context.clients;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.fabric8.kubernetes.client.DefaultKubernetesClient;
@@ -20,10 +20,10 @@ import com.onyxdb.platform.clients.k8s.victoriaMetrics.VmServiceScrapeClient;
 import com.onyxdb.platform.clients.onyxdbAgent.OnyxdbAgentClient;
 import com.onyxdb.platform.utils.TemplateProvider;
 
-import static com.onyxdb.platform.configs.MapperConfig.YAML_OBJECT_MAPPER_BEAN;
+import static com.onyxdb.platform.context.MapperContextConfiguration.YAML_OBJECT_MAPPER_BEAN;
 
 @Configuration
-public class ClientsConfig {
+public class ClientsContextConfiguration {
     @Bean
     public KubernetesClient kubernetesClient() {
         return new DefaultKubernetesClient();

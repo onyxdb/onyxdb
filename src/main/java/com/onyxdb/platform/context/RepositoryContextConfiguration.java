@@ -1,4 +1,4 @@
-package com.onyxdb.platform.configs;
+package com.onyxdb.platform.context;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jooq.DSLContext;
@@ -40,7 +40,7 @@ import com.onyxdb.platform.resources.ResourcePostgresRepository;
  * @author foxleren
  */
 @Configuration
-public class RepositoryConfig {
+public class RepositoryContextConfiguration {
     @Bean
     public ResourcePresetRepository resourcePresetRepository(DSLContext dslContext) {
         return new ResourcePresetPostgresRepository(dslContext);

@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.scheduling.annotation.Async;
 
-import com.onyxdb.platform.configs.taskProcessing.TaskProcessingConfig;
+import com.onyxdb.platform.context.taskProcessing.TaskProcessingContextConfiguration;
 import com.onyxdb.platform.processing.consumers.CompositeTaskProcessor;
 import com.onyxdb.platform.processing.models.Task;
 import com.onyxdb.platform.processing.repositories.TaskRepository;
@@ -51,7 +51,7 @@ public class TaskProcessingWorker implements CommandLineRunner {
     }
 
     @Override
-    @Async(TaskProcessingConfig.TASK_PROCESSING_WORKER_EXECUTOR_BEAN)
+    @Async(TaskProcessingContextConfiguration.TASK_PROCESSING_WORKER_EXECUTOR_BEAN)
     public void run(String... args) {
         try {
             logger.info("Starting processing cluster tasks");

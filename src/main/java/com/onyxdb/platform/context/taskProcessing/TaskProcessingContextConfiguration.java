@@ -1,4 +1,4 @@
-package com.onyxdb.platform.configs.taskProcessing;
+package com.onyxdb.platform.context.taskProcessing;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -14,7 +14,7 @@ import com.onyxdb.platform.processing.repositories.TaskRepository;
 import com.onyxdb.platform.services.BaseClusterService;
 
 @Configuration
-public class TaskProcessingConfig {
+public class TaskProcessingContextConfiguration {
     public static final String TASK_PROCESSING_WORKER_EXECUTOR_BEAN = "taskProcessingWorkerExecutor";
 
     @Bean(name = TASK_PROCESSING_WORKER_EXECUTOR_BEAN)
