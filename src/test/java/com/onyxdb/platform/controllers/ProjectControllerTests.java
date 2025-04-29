@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.onyxdb.platform.BaseTest;
+import com.onyxdb.platform.generated.openapi.models.BadRequestResponse;
 import com.onyxdb.platform.generated.openapi.models.ListProjectsResponseDTO;
 import com.onyxdb.platform.generated.openapi.models.ProjectDTO;
 import com.onyxdb.platform.projects.ProjectMapper;
@@ -84,6 +85,23 @@ public class ProjectControllerTests extends BaseTest {
         var expected = projectMapper.projectToProjectDTO(projectMapper.projectToCreateToProject(projectToCreate));
 
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertNotNull(response.getBody());
+        MatcherAssert.assertThat(response.getBody(), is(expected));
+    }
+
+    @Test
+    public void whenProjectNotFound_then404() {
+        var projectId = UUID.randomUUID();
+
+        ResponseEntity<BadRequestResponse> response = restTemplate.getForEntity(
+                "/api/projects/{projectId}",
+                BadRequestResponse.class,
+                projectId
+        );
+
+        var expected = new BadRequestResponse(String.format("Project with id '%s' does not exist", projectId));
+
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         Assertions.assertNotNull(response.getBody());
         MatcherAssert.assertThat(response.getBody(), is(expected));
     }
