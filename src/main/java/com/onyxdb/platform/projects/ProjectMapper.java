@@ -29,7 +29,7 @@ public class ProjectMapper {
                 rr.getName(),
                 rr.getDescription(),
                 rr.getProductId(),
-                rr.getIsArchived()
+                rr.getIsDeleted()
         );
     }
 

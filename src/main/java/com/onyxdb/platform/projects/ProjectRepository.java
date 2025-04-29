@@ -10,7 +10,9 @@ import java.util.UUID;
 public interface ProjectRepository {
     List<Project> list();
 
-    Optional<Project> getO(UUID id);
+    Optional<Project> getO(UUID projectId);
+
+    Project get(UUID projectId);
 
     void create(ProjectToCreate projectToCreate);
 

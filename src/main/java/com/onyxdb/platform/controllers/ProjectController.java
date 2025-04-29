@@ -45,15 +45,14 @@ public class ProjectController implements ProjectsApi {
 
     @Override
     public ResponseEntity<ProjectDTO> getProject(UUID projectId) {
-        Project project = projectService.getOrThrow(projectId);
+        Project project = projectService.get(projectId);
         return ResponseEntity.ok(projectMapper.projectToProjectDTO(project));
     }
 
     @Override
     public ResponseEntity<Void> createProject(CreateProjectRequestDTO rq) {
         ProjectToCreate projectToCreate = projectMapper.createProjectRequestDTOtoProjectToCreate(rq);
-//        Project project = ProjectMapper.fromV1CreateProjectRequest(v1CreateProjectRequest);
-//        projectService.create(project);
+        projectService.create(projectToCreate);
 
         return ResponseEntity.ok().build();
     }
