@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import com.onyxdb.platform.exceptions.BadRequestException;
+import com.onyxdb.platform.exceptions.ProjectNotFoundException;
 
 /**
  * @author foxleren
@@ -25,7 +26,7 @@ public class ProjectService {
     }
 
     public Project getOrThrow(UUID id) {
-        return getO(id).orElseThrow(() -> new BadRequestException("Can't get project with id=" + id));
+        return getO(id).orElseThrow(() -> new ProjectNotFoundException(id));
     }
 
     public void create(ProjectToCreate projectToCreate) {
