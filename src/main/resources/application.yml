@@ -48,10 +48,8 @@ onyxdb:
       fixed-rate: PT15M
       lock-at-least-for: 14m
       lock-at-most-for: 14m
-
-onyxdb-app:
   workers:
     process-cluster-tasks:
       min-threads: 1
       max-threads: 5
-      polling-interval-seconds: 5
+      polling-interval-seconds: 1
