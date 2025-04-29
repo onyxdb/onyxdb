@@ -1,4 +1,4 @@
-package com.onyxdb.platform.idm.v1;
+package com.onyxdb.platform.idm.controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

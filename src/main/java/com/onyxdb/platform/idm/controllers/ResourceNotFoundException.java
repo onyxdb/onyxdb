@@ -1,4 +1,4 @@
-package com.onyxdb.platform.idm.v1;
+package com.onyxdb.platform.idm.controllers;
 
 /**
  * @author ArtemFed

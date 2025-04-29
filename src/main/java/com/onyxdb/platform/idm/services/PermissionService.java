@@ -6,7 +6,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import com.onyxdb.platform.idm.v1.ResourceNotFoundException;
+import com.onyxdb.platform.idm.controllers.ResourceNotFoundException;
 import com.onyxdb.platform.idm.models.Permission;
 import com.onyxdb.platform.idm.repositories.PermissionRepository;
 
