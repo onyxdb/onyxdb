@@ -12,4 +12,17 @@ public record Project(
         UUID productId,
         boolean isArchived
 ) {
+    public static Project create(
+            String name,
+            String description,
+            UUID productId
+    ) {
+        return new Project(
+                UUID.randomUUID(),
+                name,
+                description,
+                productId,
+                false
+        );
+    }
 }

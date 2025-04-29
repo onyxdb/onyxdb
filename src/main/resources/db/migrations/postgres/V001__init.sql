@@ -38,10 +38,13 @@ CREATE TABLE public.projects
     name        varchar NOT NULL,
     description varchar NOT NULL,
     product_id  uuid    NOT NULL,
-    is_archived boolean NOT NULL DEFAULT false,
-    PRIMARY KEY (id),
-    UNIQUE (name)
+    is_deleted  bool    NOT NULL DEFAULT false,
+    PRIMARY KEY (id)
 );
+
+
+CREATE UNIQUE INDEX project_name_is_deleted_uniq_idx ON public.projects (name, is_deleted)
+    WHERE public.projects.is_deleted = false;
 
 CREATE TYPE public.cluster_type AS ENUM (
     'mongodb'

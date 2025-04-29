@@ -34,6 +34,10 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateProjectResponseDTO'
   /api/projects/{projectId}:
     get:
       summary: Get project
@@ -644,6 +648,14 @@ components:
         - name
         - description
         - productId
+    CreateProjectResponseDTO:
+      type: object
+      properties:
+        projectId:
+          type: string
+          format: uuid
+      required:
+        - projectId
     UpdateProjectRequestDTO:
       type: object
       properties:

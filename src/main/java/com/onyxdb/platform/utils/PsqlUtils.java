@@ -5,14 +5,13 @@ import java.util.function.Supplier;
 import org.jooq.Index;
 import org.jooq.Record;
 import org.jooq.UniqueKey;
-import org.jooq.exception.DataAccessException;
 import org.jooq.impl.TableImpl;
 import org.postgresql.util.PSQLException;
 import org.postgresql.util.ServerErrorMessage;
 
 public class PsqlUtils {
     public static <RECORD extends Record, EXCEPTION extends Throwable> void handleDataAccessEx(
-            DataAccessException e,
+            Throwable e,
             TableImpl<RECORD> table,
             UniqueKey<RECORD> key,
             Supplier<? extends EXCEPTION> exceptionSupplier
@@ -31,7 +30,7 @@ public class PsqlUtils {
     }
 
     public static <RECORD extends Record, EXCEPTION extends Throwable> void handleDataAccessEx(
-            DataAccessException e,
+            Throwable e,
             TableImpl<RECORD> table,
             Index index,
             Supplier<? extends EXCEPTION> exceptionSupplier
@@ -39,7 +38,6 @@ public class PsqlUtils {
         if (e.getCause() instanceof PSQLException psqlException) {
             ServerErrorMessage serverErrorMessage = psqlException.getServerErrorMessage();
             if (serverErrorMessage != null) {
-                System.err.println(serverErrorMessage);
                 boolean tableMatches = table.getName().equals(serverErrorMessage.getTable());
                 boolean constraintMatches = index.getName().equals(serverErrorMessage.getConstraint());
 

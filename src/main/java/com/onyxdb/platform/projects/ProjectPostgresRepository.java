@@ -6,9 +6,11 @@ import java.util.UUID;
 
 import org.jooq.DSLContext;
 import org.jooq.exception.DataAccessException;
+import org.springframework.dao.DuplicateKeyException;
 
 import com.onyxdb.platform.exceptions.BadRequestException;
-import com.onyxdb.platform.generated.jooq.Keys;
+import com.onyxdb.platform.exceptions.ProjectNotFoundException;
+import com.onyxdb.platform.generated.jooq.Indexes;
 import com.onyxdb.platform.utils.PsqlUtils;
 
 import static com.onyxdb.platform.generated.jooq.Tables.PROJECTS;
@@ -34,28 +36,33 @@ public class ProjectPostgresRepository implements ProjectRepository {
     }
 
     @Override
-    public Optional<Project> getO(UUID id) {
+    public Optional<Project> getO(UUID projectId) {
         return dslContext.select()
                 .from(PROJECTS)
-                .where(PROJECTS.ID.eq(id))
+                .where(PROJECTS.ID.eq(projectId))
                 .fetchOptional()
                 .map(ProjectMapper::jooqRecordToProject);
     }
 
     @Override
-    public void create(ProjectToCreate projectToCreate) {
-        Project project = projectMapper.projectToCreateToProject(projectToCreate);
+    public Project get(UUID projectId) {
+        return getO(projectId).orElseThrow(() -> new ProjectNotFoundException(projectId));
+    }
 
+    @Override
+    public void create(Project project) {
         try {
             dslContext.insertInto(PROJECTS)
                     .set(ProjectMapper.toJooqProjectsRecord(project))
                     .execute();
-        } catch (DataAccessException e) {
+        } catch (DataAccessException | DuplicateKeyException e) {
             PsqlUtils.handleDataAccessEx(
                     e,
                     PROJECTS,
-                    Keys.PROJECTS_NAME_KEY,
-                    () -> new BadRequestException("Project databaseName already exists")
+                    Indexes.PROJECT_NAME_IS_DELETED_UNIQ_IDX,
+                    () -> new BadRequestException(
+                            String.format("Project with name '%s' already exists", project.name())
+                    )
             );
 
             throw e;
@@ -83,7 +90,7 @@ public class ProjectPostgresRepository implements ProjectRepository {
 
     private void setIsArchived(UUID id, boolean isArchived) {
         dslContext.update(PROJECTS)
-                .set(PROJECTS.IS_ARCHIVED, isArchived)
+                .set(PROJECTS.IS_DELETED, isArchived)
                 .where(PROJECTS.ID.eq(id))
                 .execute();
     }

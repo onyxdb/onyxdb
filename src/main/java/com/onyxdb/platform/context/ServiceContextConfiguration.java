@@ -17,6 +17,7 @@ import com.onyxdb.platform.mdb.hosts.HostService;
 import com.onyxdb.platform.operationsOLD.OperationService;
 import com.onyxdb.platform.processing.repositories.OperationRepository;
 import com.onyxdb.platform.processing.repositories.TaskRepository;
+import com.onyxdb.platform.projects.ProjectMapper;
 import com.onyxdb.platform.projects.ProjectRepository;
 import com.onyxdb.platform.projects.ProjectService;
 import com.onyxdb.platform.quotas.QuotaMapper;
@@ -41,8 +42,14 @@ public class ServiceContextConfiguration {
     }
 
     @Bean
-    public ProjectService projectService(ProjectRepository projectRepository) {
-        return new ProjectService(projectRepository);
+    public ProjectService projectService(
+            ProjectRepository projectRepository,
+            ProjectMapper projectMapper
+    ) {
+        return new ProjectService(
+                projectRepository,
+                projectMapper
+        );
     }
 
 //    @Bean

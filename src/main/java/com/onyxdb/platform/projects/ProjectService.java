@@ -1,36 +1,33 @@
 package com.onyxdb.platform.projects;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-
-import com.onyxdb.platform.exceptions.BadRequestException;
-import com.onyxdb.platform.exceptions.ProjectNotFoundException;
 
 /**
  * @author foxleren
  */
 public class ProjectService {
     private final ProjectRepository projectRepository;
+    private final ProjectMapper projectMapper;
 
-    public ProjectService(ProjectRepository projectRepository) {
+    public ProjectService(ProjectRepository projectRepository, ProjectMapper projectMapper) {
         this.projectRepository = projectRepository;
+        this.projectMapper = projectMapper;
     }
 
     public List<Project> list() {
         return projectRepository.list();
     }
 
-    public Optional<Project> getO(UUID id) {
-        return projectRepository.getO(id);
+    public Project get(UUID projectId) {
+        return projectRepository.get(projectId);
     }
 
-    public Project getOrThrow(UUID id) {
-        return getO(id).orElseThrow(() -> new ProjectNotFoundException(id));
-    }
+    public UUID create(ProjectToCreate projectToCreate) {
+        Project project = projectMapper.projectToCreateToProject(projectToCreate);
+        projectRepository.create(project);
 
-    public void create(ProjectToCreate projectToCreate) {
-        projectRepository.create(projectToCreate);
+        return project.id();
     }
 
     public void update(UpdateProject updateProject) {
