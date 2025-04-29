@@ -3,6 +3,25 @@ plugins {
 	alias(libs.plugins.onyxdb.jooqManualConventions)
 	alias(libs.plugins.openapiGenerator)
 	alias(libs.plugins.lombok)
+	alias(libs.plugins.netflixDGSCodegen)
+	alias(libs.plugins.spring.dependencyManagement)
+}
+
+buildscript {
+	dependencies {
+		classpath("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml") {
+			version { strictly("2.14.2") }
+		}
+	}
+}
+
+//extra["netflixDgsVersion"] = libs.versions.netflix.dgs.version
+extra["netflixDgsVersion"] = "10.0.1" // Без этого не работает ниже dependencyManagement
+
+dependencyManagement {
+	imports {
+		mavenBom("com.netflix.graphql.dgs:graphql-dgs-platform-dependencies:${property("netflixDgsVersion")}")
+	}
 }
 
 configurations.all {
@@ -40,10 +59,31 @@ dependencies {
 	implementation("com.clickhouse:clickhouse-jdbc:0.7.1")
 	implementation("org.lz4:lz4-java:1.8.0")
 	implementation("org.flywaydb:flyway-database-clickhouse:10.16.3")
+	implementation(libs.yandex.clickhouseJdbc)
 
 	// schedlock
 	implementation("net.javacrumbs.shedlock:shedlock-spring:6.3.1")
 	implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:6.3.1")
+
+	// security
+	implementation(libs.springSecurity.core)
+	implementation(libs.springSecurity.config)
+	implementation(libs.springSecurity.crypto)
+	implementation(libs.springSecurity.web)
+
+	// netflix
+	implementation(libs.netflix.graphql.dgs.codegen)
+	testImplementation(libs.netflix.graphql.dgs.starterTest)
+	testRuntimeOnly(libs.junit.platformLauncher)
+
+	// spring data redis
+	implementation(libs.springBoot.starterDataRedis)
+	implementation(libs.springData.dataRedis)
+
+	// jwt
+	implementation(libs.ioJsonwebtoken.jjwtApi)
+	implementation(libs.ioJsonwebtoken.jjwtImpl)
+	implementation(libs.ioJsonwebtoken.jjwtJackson)
 
 	testImplementation(libs.springBoot.starterTest)
 	testImplementation(libs.springBoot.starterTestcontainers)
@@ -79,6 +119,12 @@ sourceSets {
 			srcDirs("$buildDir/generated/openapi/src/main/java")
 		}
 	}
+}
+
+tasks.generateJava {
+	schemaPaths.add("${projectDir}/src/main/resources/schema")
+	packageName = "com.onyxdb.idm.codegen"
+	generateClient = true
 }
 
 tasks.named(CustomTasksConfig.ONYXDB_GENERATE_ALL_CODEGEN).configure {

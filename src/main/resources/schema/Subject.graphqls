@@ -1,0 +1,29 @@
+union Subject = Account | Group
+
+type Account {
+    id: ID!
+    username: String!
+    email: String!
+    groups: [Group]
+    roles: [Role]
+}
+
+input AccountInput {
+    username: String!
+    email: String!
+}
+
+type Group {
+    id: ID!
+    name: String!
+    accounts: [Account]
+    groups: [Group]
+    roles: [Role]
+}
+
+input GroupInput {
+    name: String!
+    accountIds: [ID]
+    groupIds: [ID]
+    roleIds: [ID]
+}
