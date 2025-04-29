@@ -1,4 +1,4 @@
-package com.onyxdb.platform.core.projects;
+package com.onyxdb.platform.projects;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,9 +18,11 @@ import static com.onyxdb.platform.generated.jooq.Tables.PROJECTS;
  */
 public class ProjectPostgresRepository implements ProjectRepository {
     private final DSLContext dslContext;
+    private final ProjectMapper projectMapper;
 
-    public ProjectPostgresRepository(DSLContext dslContext) {
+    public ProjectPostgresRepository(DSLContext dslContext, ProjectMapper projectMapper) {
         this.dslContext = dslContext;
+        this.projectMapper = projectMapper;
     }
 
     @Override
@@ -28,7 +30,7 @@ public class ProjectPostgresRepository implements ProjectRepository {
         return dslContext.select()
                 .from(PROJECTS)
                 .fetch()
-                .map(ProjectMapper::fromJooqRecord);
+                .map(ProjectMapper::jooqRecordToProject);
     }
 
     @Override
@@ -37,11 +39,13 @@ public class ProjectPostgresRepository implements ProjectRepository {
                 .from(PROJECTS)
                 .where(PROJECTS.ID.eq(id))
                 .fetchOptional()
-                .map(ProjectMapper::fromJooqRecord);
+                .map(ProjectMapper::jooqRecordToProject);
     }
 
     @Override
-    public void create(Project project) {
+    public void create(ProjectToCreate projectToCreate) {
+        Project project = projectMapper.projectToCreateToProject(projectToCreate);
+
         try {
             dslContext.insertInto(PROJECTS)
                     .set(ProjectMapper.toJooqProjectsRecord(project))

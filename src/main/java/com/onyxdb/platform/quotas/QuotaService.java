@@ -9,11 +9,11 @@ import java.util.stream.Collectors;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import com.onyxdb.platform.core.clusters.models.ClusterConfig;
-import com.onyxdb.platform.core.projects.Project;
-import com.onyxdb.platform.core.projects.ProjectService;
 import com.onyxdb.platform.core.resourcePresets.ResourcePreset;
 import com.onyxdb.platform.core.resourcePresets.ResourcePresetService;
 import com.onyxdb.platform.exceptions.BadRequestException;
+import com.onyxdb.platform.projects.Project;
+import com.onyxdb.platform.projects.ProjectService;
 import com.onyxdb.platform.resources.Resource;
 import com.onyxdb.platform.resources.ResourceFilter;
 import com.onyxdb.platform.resources.ResourceService;

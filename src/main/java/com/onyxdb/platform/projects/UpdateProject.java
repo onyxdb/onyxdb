@@ -1,4 +1,4 @@
-package com.onyxdb.platform.core.projects;
+package com.onyxdb.platform.projects;
 
 import java.util.UUID;
 

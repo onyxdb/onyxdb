@@ -33,6 +33,7 @@ public class DatasourceContextConfiguration {
     public static final String CLICKHOUSE_DATASOURCE_BEAN = "clickhouseDataSource";
     public static final String CLICKHOUSE_JDBC_TEMPLATE_BEAN = "clickhouseJdbcTemplate";
     public static final String PSQL_TRANSACTION_TEMPLATE_BEAN = "postgresTransactionTemplate";
+    public static final String PSQL_JOOQ_DSL_CONTEXT = "psqlJooqDslContext";
 //    public static final String PSQL_PROPAGATION_REQUIRED_TRANSACTION_TEMPLATE_BEAN = "postgresPropagationRequiredTransactionTemplate";
 
     @Bean(POSTGRES_DATASOURCE_BEAN)
@@ -95,7 +96,7 @@ public class DatasourceContextConfiguration {
         return new HikariDataSource(config);
     }
 
-    @Bean
+    @Bean(PSQL_JOOQ_DSL_CONTEXT)
     public DSLContext dsl(
             @Qualifier(POSTGRES_DATASOURCE_BEAN)
             DataSource dataSource

@@ -10,8 +10,6 @@ import redis.clients.jedis.JedisPool;
 
 import com.onyxdb.platform.billing.BillingClickhouseRepository;
 import com.onyxdb.platform.billing.BillingRepository;
-import com.onyxdb.platform.core.projects.ProjectPostgresRepository;
-import com.onyxdb.platform.core.projects.ProjectRepository;
 import com.onyxdb.platform.core.resourcePresets.ResourcePresetPostgresRepository;
 import com.onyxdb.platform.core.resourcePresets.ResourcePresetRepository;
 import com.onyxdb.platform.core.zones.ZonePostgresRepository;
@@ -30,6 +28,9 @@ import com.onyxdb.platform.mdb.hosts.HostRepository;
 import com.onyxdb.platform.mdb.users.UserMapper;
 import com.onyxdb.platform.mdb.users.UserPostgresRepository;
 import com.onyxdb.platform.mdb.users.UserRepository;
+import com.onyxdb.platform.projects.ProjectMapper;
+import com.onyxdb.platform.projects.ProjectPostgresRepository;
+import com.onyxdb.platform.projects.ProjectRepository;
 import com.onyxdb.platform.quotas.QuotaMapper;
 import com.onyxdb.platform.quotas.QuotaPostgresRepository;
 import com.onyxdb.platform.quotas.QuotaRepository;
@@ -52,8 +53,14 @@ public class RepositoryContextConfiguration {
     }
 
     @Bean
-    public ProjectRepository projectRepository(DSLContext dslContext) {
-        return new ProjectPostgresRepository(dslContext);
+    public ProjectRepository projectRepository(
+            DSLContext dslContext,
+            ProjectMapper projectMapper
+    ) {
+        return new ProjectPostgresRepository(
+                dslContext,
+                projectMapper
+        );
     }
 
     @Bean

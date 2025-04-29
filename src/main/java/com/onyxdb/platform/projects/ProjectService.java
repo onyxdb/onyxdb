@@ -1,4 +1,4 @@
-package com.onyxdb.platform.core.projects;
+package com.onyxdb.platform.projects;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,8 +28,8 @@ public class ProjectService {
         return getO(id).orElseThrow(() -> new BadRequestException("Can't get project with id=" + id));
     }
 
-    public void create(Project project) {
-        projectRepository.create(project);
+    public void create(ProjectToCreate projectToCreate) {
+        projectRepository.create(projectToCreate);
     }
 
     public void update(UpdateProject updateProject) {
