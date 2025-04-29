@@ -2,7 +2,7 @@
 
 ## Development
 
-The current instruction launches the necessary components namespace 'onyxdb'.
+This instruction launches the necessary components in namespace "onyxdb".
 
 ### Install Minikube
 
