@@ -23,8 +23,10 @@ logging:
 
 onyxdb:
   base-url: http://host.minikube.internal:9001
+  agent:
+    base-url: http://localhost:9004
   postgres:
-    url: jdbc:postgresql://localhost/onyxdb
+    url: jdbc:postgresql://localhost:5432/onyxdb
     username: postgres
     password: password
   redis:
@@ -36,8 +38,6 @@ onyxdb:
     password: ""
   victoria-logs:
     base-url: http://vlogs-onyxdb.onyxdb.svc.cluster.local:9428
-  agent:
-    base-url: http://localhost:9004
   tasks:
     collect-product-quota-usage:
       fixed-rate: PT1S

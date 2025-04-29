@@ -135,7 +135,7 @@ public class RepositoryConfig {
 
     @Bean
     public BillingRepository billingRepository(
-            @Qualifier(DatasourceConfig.CLICKHOUSE_JDBC_TEMPLATE_BEAN)
+            @Qualifier(DatasourceContextConfiguration.CLICKHOUSE_JDBC_TEMPLATE_BEAN)
             JdbcTemplate jdbcTemplate
     ) {
         return new BillingClickhouseRepository(jdbcTemplate);
