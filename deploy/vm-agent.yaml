@@ -2,6 +2,7 @@ apiVersion: operator.victoriametrics.com/v1beta1
 kind: VMAgent
 metadata:
   name: onyxdb
+  namespace: onyxdb
 spec:
   serviceScrapeNamespaceSelector: {}
   podScrapeNamespaceSelector: {}
