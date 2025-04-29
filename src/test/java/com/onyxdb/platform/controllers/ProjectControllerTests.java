@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.onyxdb.platform.BaseTest;
 import com.onyxdb.platform.generated.openapi.models.ListProjectsResponseDTO;
+import com.onyxdb.platform.generated.openapi.models.ProjectDTO;
 import com.onyxdb.platform.projects.ProjectMapper;
 import com.onyxdb.platform.projects.ProjectRepository;
 import com.onyxdb.platform.projects.ProjectToCreate;
@@ -35,13 +36,13 @@ public class ProjectControllerTests extends BaseTest {
         var projectToCreate1 = new ProjectToCreate(
                 UUID.randomUUID(),
                 "project1",
-                "project 1",
+                "project1 desc",
                 UUID.randomUUID()
         );
         var projectToCreate2 = new ProjectToCreate(
                 UUID.randomUUID(),
                 "project2",
-                "project 2",
+                "project2 desc",
                 UUID.randomUUID()
         );
 
@@ -57,6 +58,30 @@ public class ProjectControllerTests extends BaseTest {
                 "/api/projects",
                 ListProjectsResponseDTO.class
         );
+
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertNotNull(response.getBody());
+        MatcherAssert.assertThat(response.getBody(), is(expected));
+    }
+
+    @Test
+    public void getProject() {
+        var projectToCreate = new ProjectToCreate(
+                UUID.randomUUID(),
+                "project",
+                "project desc",
+                UUID.randomUUID()
+        );
+
+        projectRepository.create(projectToCreate);
+
+        ResponseEntity<ProjectDTO> response = restTemplate.getForEntity(
+                "/api/projects/{projectId}",
+                ProjectDTO.class,
+                projectToCreate.id()
+        );
+
+        var expected = projectMapper.projectToProjectDTO(projectMapper.projectToCreateToProject(projectToCreate));
 
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
         Assertions.assertNotNull(response.getBody());

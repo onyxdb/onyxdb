@@ -1469,7 +1469,6 @@ components:
         - displayValue
   # ---------- parameters ----------------------------------------------------------------------------------------------
   parameters:
-    # ---------- Projects parameters -----------------------------------------------------------------------------------
     ProjectIdPV:
       name: projectId
       in: path
@@ -1477,6 +1476,15 @@ components:
       schema:
         type: string
         format: uuid
+    ProductIdsOQP:
+      name: productIds
+      in: query
+      required: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
 
 
 
