@@ -48,8 +48,6 @@ onyxdb:
       fixed-rate: PT1S
       lock-at-least-for: 1s
       lock-at-most-for: 1s
-
-onyxdb-app:
   workers:
     process-cluster-tasks:
       min-threads: 1
