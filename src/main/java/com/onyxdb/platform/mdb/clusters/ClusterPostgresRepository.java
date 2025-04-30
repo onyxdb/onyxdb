@@ -9,10 +9,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jooq.DSLContext;
 import org.jooq.JSONB;
 
-import com.onyxdb.platform.core.clusters.models.Cluster;
-import com.onyxdb.platform.core.clusters.models.ClusterConfig;
-import com.onyxdb.platform.core.clusters.models.UpdateCluster;
-import com.onyxdb.platform.exceptions.ClusterNotFoundException;
+import com.onyxdb.platform.mdb.exceptions.ClusterNotFoundException;
+import com.onyxdb.platform.mdb.models.Cluster;
+import com.onyxdb.platform.mdb.models.ClusterConfig;
+import com.onyxdb.platform.mdb.models.UpdateCluster;
 
 import static com.onyxdb.platform.generated.jooq.Tables.CLUSTERS;
 

@@ -11,7 +11,7 @@ import org.testcontainers.clickhouse.ClickHouseContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.wait.strategy.HostPortWaitStrategy;
 
-import com.onyxdb.platform.context.DatasourceContextConfiguration;
+import com.onyxdb.platform.mdb.context.DatasourceContextConfiguration;
 
 /**
  * @author sergey-mokhov

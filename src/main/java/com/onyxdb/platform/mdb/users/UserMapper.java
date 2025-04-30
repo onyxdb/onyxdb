@@ -6,17 +6,17 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jooq.JSONB;
 
-import com.onyxdb.platform.core.clusters.models.MongoPermission;
-import com.onyxdb.platform.core.clusters.models.MongoPermissionToCreate;
-import com.onyxdb.platform.core.clusters.models.MongoRole;
-import com.onyxdb.platform.core.clusters.models.PermissionData;
-import com.onyxdb.platform.core.clusters.models.User;
-import com.onyxdb.platform.core.clusters.models.UserToCreate;
 import com.onyxdb.platform.generated.jooq.tables.records.PermissionsRecord;
 import com.onyxdb.platform.generated.openapi.models.MongoUser;
 import com.onyxdb.platform.generated.openapi.models.MongoUserToCreate;
-import com.onyxdb.platform.utils.Consts;
-import com.onyxdb.platform.utils.TimeUtils;
+import com.onyxdb.platform.mdb.models.MongoPermission;
+import com.onyxdb.platform.mdb.models.MongoPermissionToCreate;
+import com.onyxdb.platform.mdb.models.MongoRole;
+import com.onyxdb.platform.mdb.models.PermissionData;
+import com.onyxdb.platform.mdb.models.User;
+import com.onyxdb.platform.mdb.models.UserToCreate;
+import com.onyxdb.platform.mdb.utils.Consts;
+import com.onyxdb.platform.mdb.utils.TimeUtils;
 
 public class UserMapper {
     private final ObjectMapper objectMapper;

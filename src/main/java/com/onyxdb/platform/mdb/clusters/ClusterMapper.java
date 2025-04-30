@@ -6,12 +6,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jooq.Record;
 
-import com.onyxdb.platform.core.clusters.models.Cluster;
-import com.onyxdb.platform.core.clusters.models.ClusterConfig;
-import com.onyxdb.platform.core.clusters.models.ClusterResources;
-import com.onyxdb.platform.core.clusters.models.ClusterToCreate;
-import com.onyxdb.platform.core.clusters.models.ClusterType;
-import com.onyxdb.platform.core.clusters.models.UpdateCluster;
 import com.onyxdb.platform.generated.jooq.tables.records.ClustersRecord;
 import com.onyxdb.platform.generated.openapi.models.V1ClusterResources;
 import com.onyxdb.platform.generated.openapi.models.V1ClusterStatusResponse;
@@ -19,6 +13,12 @@ import com.onyxdb.platform.generated.openapi.models.V1CreateMongoClusterRequest;
 import com.onyxdb.platform.generated.openapi.models.V1MongoClusterResponse;
 import com.onyxdb.platform.generated.openapi.models.V1MongoConfig;
 import com.onyxdb.platform.generated.openapi.models.V1MongoUpdateClusterRequest;
+import com.onyxdb.platform.mdb.models.Cluster;
+import com.onyxdb.platform.mdb.models.ClusterConfig;
+import com.onyxdb.platform.mdb.models.ClusterResources;
+import com.onyxdb.platform.mdb.models.ClusterToCreate;
+import com.onyxdb.platform.mdb.models.ClusterType;
+import com.onyxdb.platform.mdb.models.UpdateCluster;
 
 /**
  * @author foxleren

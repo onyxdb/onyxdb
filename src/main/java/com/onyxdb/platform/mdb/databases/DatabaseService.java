@@ -8,14 +8,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import com.onyxdb.platform.core.clusters.models.Database;
-import com.onyxdb.platform.core.clusters.models.DatabaseToCreate;
-import com.onyxdb.platform.processing.models.Operation;
-import com.onyxdb.platform.processing.models.OperationType;
-import com.onyxdb.platform.processing.models.payloads.MongoCreateDatabasePayload;
-import com.onyxdb.platform.processing.models.payloads.MongoDeleteDatabasePayload;
-import com.onyxdb.platform.processing.repositories.OperationRepository;
-import com.onyxdb.platform.utils.ObjectMapperUtils;
+import com.onyxdb.platform.mdb.models.Database;
+import com.onyxdb.platform.mdb.models.DatabaseToCreate;
+import com.onyxdb.platform.mdb.processing.models.Operation;
+import com.onyxdb.platform.mdb.processing.models.OperationType;
+import com.onyxdb.platform.mdb.processing.models.payloads.MongoCreateDatabasePayload;
+import com.onyxdb.platform.mdb.processing.models.payloads.MongoDeleteDatabasePayload;
+import com.onyxdb.platform.mdb.processing.repositories.OperationRepository;
+import com.onyxdb.platform.mdb.utils.ObjectMapperUtils;
 
 @Service
 @RequiredArgsConstructor

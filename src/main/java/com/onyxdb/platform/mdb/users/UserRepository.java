@@ -6,8 +6,8 @@ import java.util.UUID;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.onyxdb.platform.core.clusters.models.MongoPermission;
-import com.onyxdb.platform.core.clusters.models.User;
+import com.onyxdb.platform.mdb.models.MongoPermission;
+import com.onyxdb.platform.mdb.models.User;
 
 public interface UserRepository {
     List<User> listUsers(

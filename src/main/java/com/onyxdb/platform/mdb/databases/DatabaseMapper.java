@@ -2,13 +2,13 @@ package com.onyxdb.platform.mdb.databases;
 
 import java.util.UUID;
 
-import com.onyxdb.platform.core.clusters.models.Database;
-import com.onyxdb.platform.core.clusters.models.DatabaseToCreate;
 import com.onyxdb.platform.generated.jooq.tables.records.DatabasesRecord;
 import com.onyxdb.platform.generated.openapi.models.CreateMongoDatabaseRequest;
 import com.onyxdb.platform.generated.openapi.models.MongoDatabase;
-import com.onyxdb.platform.utils.Consts;
-import com.onyxdb.platform.utils.TimeUtils;
+import com.onyxdb.platform.mdb.models.Database;
+import com.onyxdb.platform.mdb.models.DatabaseToCreate;
+import com.onyxdb.platform.mdb.utils.Consts;
+import com.onyxdb.platform.mdb.utils.TimeUtils;
 
 public class DatabaseMapper {
     public DatabaseToCreate map(UUID clusterId, CreateMongoDatabaseRequest r) {

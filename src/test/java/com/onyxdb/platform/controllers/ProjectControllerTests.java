@@ -17,9 +17,9 @@ import com.onyxdb.platform.generated.openapi.models.CreateProjectRequestDTO;
 import com.onyxdb.platform.generated.openapi.models.CreateProjectResponseDTO;
 import com.onyxdb.platform.generated.openapi.models.ListProjectsResponseDTO;
 import com.onyxdb.platform.generated.openapi.models.ProjectDTO;
-import com.onyxdb.platform.projects.Project;
-import com.onyxdb.platform.projects.ProjectMapper;
-import com.onyxdb.platform.projects.ProjectRepository;
+import com.onyxdb.platform.mdb.projects.Project;
+import com.onyxdb.platform.mdb.projects.ProjectMapper;
+import com.onyxdb.platform.mdb.projects.ProjectRepository;
 
 import static org.hamcrest.CoreMatchers.is;
 

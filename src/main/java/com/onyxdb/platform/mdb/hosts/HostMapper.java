@@ -2,14 +2,14 @@ package com.onyxdb.platform.mdb.hosts;
 
 import java.util.List;
 
-import com.onyxdb.platform.core.clusters.models.EnrichedHost;
-import com.onyxdb.platform.core.clusters.models.Host;
-import com.onyxdb.platform.core.clusters.models.MongoHost;
-import com.onyxdb.platform.core.clusters.models.MongoHostRole;
-import com.onyxdb.platform.core.clusters.models.MongoHostStatus;
-import com.onyxdb.platform.core.clusters.models.MongoHostType;
 import com.onyxdb.platform.generated.jooq.tables.records.ClusterHostsRecord;
 import com.onyxdb.platform.generated.openapi.models.UpdateMongoHostsRequest;
+import com.onyxdb.platform.mdb.models.EnrichedHost;
+import com.onyxdb.platform.mdb.models.Host;
+import com.onyxdb.platform.mdb.models.MongoHost;
+import com.onyxdb.platform.mdb.models.MongoHostRole;
+import com.onyxdb.platform.mdb.models.MongoHostStatus;
+import com.onyxdb.platform.mdb.models.MongoHostType;
 
 public class HostMapper {
     public com.onyxdb.platform.generated.openapi.models.MongoHost map(MongoHost h) {
