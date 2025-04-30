@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
 
 import com.onyxdb.platform.mdb.clients.k8s.KubernetesAdapter;
 import com.onyxdb.platform.mdb.clients.k8s.psmdb.PsmdbClient;
@@ -91,25 +89,6 @@ public class ClientsContextConfiguration {
                 kubernetesClient,
                 objectMapper
         );
-    }
-
-    @Bean
-    public JedisPoolConfig jedisPoolConfig() {
-        JedisPoolConfig config = new JedisPoolConfig();
-        config.setJmxEnabled(false);
-
-        return config;
-    }
-
-    @Bean
-    public JedisPool jedisPool(
-            JedisPoolConfig config,
-            @Value("${onyxdb.redis.host}")
-            String host,
-            @Value("${onyxdb.redis.port}")
-            int port
-    ) {
-        return new JedisPool(config, host, port);
     }
 
     @Bean

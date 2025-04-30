@@ -2,14 +2,19 @@ package com.onyxdb.platform;
 
 import javax.sql.DataSource;
 
+import com.redis.testcontainers.RedisContainer;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.testcontainers.clickhouse.ClickHouseContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.wait.strategy.HostPortWaitStrategy;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
 
 import com.onyxdb.platform.mdb.context.DatasourceContextConfiguration;
 
@@ -35,6 +40,12 @@ public class TestContextConfiguration {
         return container;
     }
 
+    @Bean
+    @Profile("test")
+    public RedisContainer redisContainer() {
+        return new RedisContainer("redis:6.2.6");
+    }
+
     @Bean(DatasourceContextConfiguration.POSTGRES_DATASOURCE_BEAN)
     @Profile("test")
     public DataSource postgresDataSource(PostgreSQLContainer<?> psqlContainer) {
@@ -57,5 +68,27 @@ public class TestContextConfiguration {
         config.setPassword(clickhouseContainer.getPassword());
 
         return new HikariDataSource(config);
+    }
+
+    @Bean(DatasourceContextConfiguration.JEDIS_POOL_BEAN)
+    @Profile("test")
+    public JedisPool jedisPool(
+            @Qualifier(DatasourceContextConfiguration.JEDIS_POOL_CONFIG_BEAN)
+            JedisPoolConfig config,
+            RedisContainer redisContainer
+    ) {
+        return new JedisPool(config, redisContainer.getHost(), redisContainer.getRedisPort());
+    }
+
+    @Bean(DatasourceContextConfiguration.JEDIS_CONNECTION_FACTORY_BEAN)
+    @Profile("test")
+    public JedisConnectionFactory jedisConnectionFactory(
+            RedisContainer redisContainer
+    ) {
+        JedisConnectionFactory jedisConFactory = new JedisConnectionFactory();
+        jedisConFactory.setHostName(redisContainer.getHost());
+        jedisConFactory.setPort(redisContainer.getRedisPort());
+
+        return jedisConFactory;
     }
 }

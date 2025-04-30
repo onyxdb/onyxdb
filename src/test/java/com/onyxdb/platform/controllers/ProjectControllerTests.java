@@ -37,7 +37,7 @@ public class ProjectControllerTests extends BaseTest {
     private ProjectMapper projectMapper;
 
     @BeforeEach
-    public void setUp() {
+    public void beforeEach() {
         truncateTables();
     }
 

@@ -1,6 +1,7 @@
 package com.onyxdb.platform.idm.context;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -9,6 +10,7 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import com.onyxdb.platform.idm.models.redis.RefreshToken;
+import com.onyxdb.platform.mdb.context.DatasourceContextConfiguration;
 
 /**
  * @author ArtemFed
@@ -16,7 +18,10 @@ import com.onyxdb.platform.idm.models.redis.RefreshToken;
 @Configuration
 public class RedisConfig {
     @Bean
-    public RedisTemplate<String, RefreshToken> redisTemplate(RedisConnectionFactory connectionFactory) {
+    public RedisTemplate<String, RefreshToken> redisTemplate(
+            @Qualifier(DatasourceContextConfiguration.JEDIS_CONNECTION_FACTORY_BEAN)
+            RedisConnectionFactory connectionFactory
+    ) {
         RedisTemplate<String, RefreshToken> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
 

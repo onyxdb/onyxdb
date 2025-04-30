@@ -90,6 +90,7 @@ dependencies {
 	testImplementation(libs.testcontainers.junitJupiter)
 	testImplementation(libs.testcontainers.postgresql)
 	testImplementation("org.testcontainers:clickhouse:1.20.6")
+	testImplementation("com.redis:testcontainers-redis:2.2.2")
 }
 
 openApiGenerate {
