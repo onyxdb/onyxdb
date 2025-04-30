@@ -25,7 +25,7 @@ import com.onyxdb.platform.mdb.context.DatasourceContextConfiguration;
 public class TestContextConfiguration {
     @Bean
     public PostgreSQLContainer<?> psqlContainer() {
-        PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:14.4-alpine");
+        var container = new PostgreSQLContainer<>("postgres:14.4-alpine");
         container.start();
         new HostPortWaitStrategy().waitUntilReady(container);
         return container;
@@ -33,17 +33,22 @@ public class TestContextConfiguration {
 
     @Bean
     public ClickHouseContainer clickhouseContainer() {
-        ClickHouseContainer container = new ClickHouseContainer("clickhouse/clickhouse-server:24.11")
+        var container = new ClickHouseContainer("clickhouse/clickhouse-server:24.11")
                 .withDatabaseName("onyxdb");
         container.start();
         new HostPortWaitStrategy().waitUntilReady(container);
+
         return container;
     }
 
     @Bean
     @Profile("test")
     public RedisContainer redisContainer() {
-        return new RedisContainer("redis:6.2.6");
+        var container = new RedisContainer("redis:6.2.6");
+        container.start();
+        new HostPortWaitStrategy().waitUntilReady(container);
+
+        return container;
     }
 
     @Bean(DatasourceContextConfiguration.POSTGRES_DATASOURCE_BEAN)
