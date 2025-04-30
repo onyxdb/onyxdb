@@ -65,7 +65,7 @@ public class ProjectControllerTests extends BaseTest {
         );
 
         ResponseEntity<ListProjectsResponseDTO> response = restTemplate.exchange(
-                "/api/projects",
+                "/api/mdb/projects",
                 HttpMethod.GET,
                 new HttpEntity<>(getHeaders()),
                 ListProjectsResponseDTO.class
@@ -88,7 +88,7 @@ public class ProjectControllerTests extends BaseTest {
         projectRepository.create(project);
 
         ResponseEntity<ProjectDTO> response = restTemplate.exchange(
-                "/api/projects/{projectId}",
+                "/api/mdb/projects/{projectId}",
                 HttpMethod.GET,
                 new HttpEntity<>(getHeaders()),
                 ProjectDTO.class,
@@ -107,7 +107,7 @@ public class ProjectControllerTests extends BaseTest {
         var projectId = TestUtils.PROJECT_ID_1;
 
         ResponseEntity<BadRequestResponse> response = restTemplate.exchange(
-                "/api/projects/{projectId}",
+                "/api/mdb/projects/{projectId}",
                 HttpMethod.GET,
                 new HttpEntity<>(getHeaders()),
                 BadRequestResponse.class,
@@ -130,7 +130,7 @@ public class ProjectControllerTests extends BaseTest {
         );
 
         ResponseEntity<CreateProjectResponseDTO> createResponse = restTemplate.postForEntity(
-                "/api/projects",
+                "/api/mdb/projects",
                 new HttpEntity<>(rq, getHeaders()),
                 CreateProjectResponseDTO.class
         );
@@ -173,7 +173,7 @@ public class ProjectControllerTests extends BaseTest {
         );
 
         ResponseEntity<BadRequestResponse> response = restTemplate.exchange(
-                "/api/projects",
+                "/api/mdb/projects",
                 HttpMethod.POST,
                 new HttpEntity<>(rq, getHeaders()),
                 BadRequestResponse.class
@@ -203,7 +203,7 @@ public class ProjectControllerTests extends BaseTest {
         );
 
         ResponseEntity<Void> response = restTemplate.exchange(
-                "/api/projects/{projectId}",
+                "/api/mdb/projects/{projectId}",
                 HttpMethod.PUT,
                 new HttpEntity<>(rq, getHeaders()),
                 Void.class,
@@ -238,7 +238,7 @@ public class ProjectControllerTests extends BaseTest {
         );
 
         ResponseEntity<BadRequestResponse> response = restTemplate.exchange(
-                "/api/projects/{projectId}",
+                "/api/mdb/projects/{projectId}",
                 HttpMethod.PUT,
                 new HttpEntity<>(rq, getHeaders()),
                 BadRequestResponse.class,
@@ -276,7 +276,7 @@ public class ProjectControllerTests extends BaseTest {
         );
 
         ResponseEntity<BadRequestResponse> response = restTemplate.exchange(
-                "/api/projects/{projectId}",
+                "/api/mdb/projects/{projectId}",
                 HttpMethod.PUT,
                 new HttpEntity<>(rq, getHeaders()),
                 BadRequestResponse.class,
