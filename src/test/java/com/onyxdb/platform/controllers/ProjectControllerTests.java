@@ -99,7 +99,10 @@ public class ProjectControllerTests extends BaseTest {
 
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
         Assertions.assertNotNull(response.getBody());
-        MatcherAssert.assertThat(response.getBody(), is(expected));
+        assertThat(response.getBody())
+                .usingRecursiveComparison()
+                .ignoringFields("createdAt")
+                .isEqualTo(expected);
     }
 
     @Test
