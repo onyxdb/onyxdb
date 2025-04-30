@@ -19,8 +19,8 @@ public class ProjectService {
         return projectRepository.list();
     }
 
-    public Project get(UUID projectId) {
-        return projectRepository.get(projectId);
+    public Project getOrThrow(UUID projectId) {
+        return projectRepository.getOrThrow(projectId);
     }
 
     public UUID create(ProjectToCreate projectToCreate) {
