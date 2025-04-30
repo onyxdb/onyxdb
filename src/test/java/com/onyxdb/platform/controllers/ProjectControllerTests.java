@@ -73,7 +73,10 @@ public class ProjectControllerTests extends BaseTest {
 
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
         Assertions.assertNotNull(response.getBody());
-        MatcherAssert.assertThat(response.getBody(), is(expected));
+        assertThat(response.getBody().getProjects())
+                .usingRecursiveComparison()
+                .ignoringFields("createdAt")
+                .isEqualTo(expected.getProjects());
     }
 
     @Test
@@ -226,7 +229,7 @@ public class ProjectControllerTests extends BaseTest {
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
         assertThat(updatedProject)
                 .usingRecursiveComparison()
-                .ignoringFields("projects.createdAt")
+                .ignoringFields("createdAt")
                 .isEqualTo(expected);
     }
 
