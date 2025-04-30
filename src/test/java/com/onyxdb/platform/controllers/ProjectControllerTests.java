@@ -226,7 +226,7 @@ public class ProjectControllerTests extends BaseTest {
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
         assertThat(updatedProject)
                 .usingRecursiveComparison()
-                .ignoringFields("createdAt")
+                .ignoringFields("projects.createdAt")
                 .isEqualTo(expected);
     }
 
