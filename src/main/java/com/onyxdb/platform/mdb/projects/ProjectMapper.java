@@ -43,37 +43,28 @@ public class ProjectMapper {
         );
     }
 
-    public static Project fromV1CreateProjectRequest(CreateProjectRequestDTO r) {
-        return new Project(
-                UUID.randomUUID(),
-                r.getName(),
-                r.getDescription(),
-                r.getProductId(),
-                false
-        );
-    }
-
-    public static UpdateProject fromV1UpdateProjectRequest(UUID id, UpdateProjectRequestDTO r) {
+    public static UpdateProject updateProjectRequestDTOtoUpdateProject(UUID productId, UpdateProjectRequestDTO rq) {
         return new UpdateProject(
-                id,
-                r.getName(),
-                r.getDescription()
-        );
-    }
-
-    public ProjectToCreate createProjectRequestDTOtoProjectToCreate(CreateProjectRequestDTO rq) {
-        return new ProjectToCreate(
+                productId,
                 rq.getName(),
                 rq.getDescription(),
                 rq.getProductId()
         );
     }
 
-    public Project projectToCreateToProject(ProjectToCreate projectToCreate) {
+    public CreateProject createProjectRequestDTOtoProjectToCreate(CreateProjectRequestDTO r) {
+        return new CreateProject(
+                r.getName(),
+                r.getDescription(),
+                r.getProductId()
+        );
+    }
+
+    public Project createProjectToProject(CreateProject c) {
         return Project.create(
-                projectToCreate.name(),
-                projectToCreate.description(),
-                projectToCreate.productId()
+                c.name(),
+                c.description(),
+                c.productId()
         );
     }
 }

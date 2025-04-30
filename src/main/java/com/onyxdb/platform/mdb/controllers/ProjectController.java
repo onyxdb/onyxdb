@@ -12,10 +12,10 @@ import com.onyxdb.platform.generated.openapi.models.CreateProjectResponseDTO;
 import com.onyxdb.platform.generated.openapi.models.ListProjectsResponseDTO;
 import com.onyxdb.platform.generated.openapi.models.ProjectDTO;
 import com.onyxdb.platform.generated.openapi.models.UpdateProjectRequestDTO;
+import com.onyxdb.platform.mdb.projects.CreateProject;
 import com.onyxdb.platform.mdb.projects.Project;
 import com.onyxdb.platform.mdb.projects.ProjectMapper;
 import com.onyxdb.platform.mdb.projects.ProjectService;
-import com.onyxdb.platform.mdb.projects.ProjectToCreate;
 import com.onyxdb.platform.mdb.projects.UpdateProject;
 
 /**
@@ -39,9 +39,7 @@ public class ProjectController implements ProjectsApi {
         List<Project> projects = projectService.list();
         List<ProjectDTO> projectDTOs = projects.stream().map(projectMapper::projectToProjectDTO).toList();
 
-        return ResponseEntity.ok(new ListProjectsResponseDTO(
-                projectDTOs
-        ));
+        return ResponseEntity.ok(new ListProjectsResponseDTO(projectDTOs));
     }
 
     @Override
@@ -52,21 +50,20 @@ public class ProjectController implements ProjectsApi {
 
     @Override
     public ResponseEntity<CreateProjectResponseDTO> createProject(CreateProjectRequestDTO rq) {
-        ProjectToCreate projectToCreate = projectMapper.createProjectRequestDTOtoProjectToCreate(rq);
-        UUID projectId = projectService.create(projectToCreate);
+        CreateProject createProject = projectMapper.createProjectRequestDTOtoProjectToCreate(rq);
+        UUID projectId = projectService.create(createProject);
 
-        return ResponseEntity.ok(new CreateProjectResponseDTO(
-                projectId
-        ));
+        return ResponseEntity.ok(new CreateProjectResponseDTO(projectId));
     }
 
     @Override
-    public ResponseEntity<Void> updateProject(UUID projectId, UpdateProjectRequestDTO v1UpdateProjectRequest) {
-        UpdateProject updateProject = ProjectMapper.fromV1UpdateProjectRequest(
+    public ResponseEntity<Void> updateProject(UUID projectId, UpdateProjectRequestDTO rq) {
+        UpdateProject updateProject = ProjectMapper.updateProjectRequestDTOtoUpdateProject(
                 projectId,
-                v1UpdateProjectRequest
+                rq
         );
         projectService.update(updateProject);
+
         return ResponseEntity.ok().build();
     }
 }

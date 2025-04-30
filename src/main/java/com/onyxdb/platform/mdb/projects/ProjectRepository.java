@@ -16,7 +16,7 @@ public interface ProjectRepository {
 
     void create(Project project);
 
-    void update(UpdateProject updateProject);
+    boolean update(UpdateProject updateProject);
 
     void archive(UUID id);
 
