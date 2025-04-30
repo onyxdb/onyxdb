@@ -46,7 +46,7 @@ public class ProjectController implements ProjectsApi {
 
     @Override
     public ResponseEntity<ProjectDTO> getProject(UUID projectId) {
-        Project project = projectService.get(projectId);
+        Project project = projectService.getOrThrow(projectId);
         return ResponseEntity.ok(projectMapper.projectToProjectDTO(project));
     }
 

@@ -45,7 +45,7 @@ public class ProjectPostgresRepository implements ProjectRepository {
     }
 
     @Override
-    public Project get(UUID projectId) {
+    public Project getOrThrow(UUID projectId) {
         return getO(projectId).orElseThrow(() -> new ProjectNotFoundException(projectId));
     }
 

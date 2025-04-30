@@ -12,7 +12,7 @@ public interface ProjectRepository {
 
     Optional<Project> getO(UUID projectId);
 
-    Project get(UUID projectId);
+    Project getOrThrow(UUID projectId);
 
     void create(Project project);
 
