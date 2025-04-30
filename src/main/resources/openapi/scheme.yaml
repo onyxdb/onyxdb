@@ -7,7 +7,7 @@ servers:
     description: localhost
 paths:
   # ---------- Projects ------------------------------------------------------------------------------------------------
-  /api/projects:
+  /api/mdb/projects:
     get:
       summary: List projects
       operationId: listProjects
@@ -38,7 +38,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CreateProjectResponseDTO'
-  /api/projects/{projectId}:
+  /api/mdb/projects/{projectId}:
     get:
       summary: Get project
       operationId: getProject
@@ -2695,11 +2695,32 @@ components:
         productId:
           type: string
           format: uuid
+        createdAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+          format: uuid
+        isDeleted:
+          type: boolean
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+        deletedBy:
+          type: string
+          format: uuid
+          nullable: true
       required:
         - id
         - name
         - description
         - productId
+        - createdAt
+        - createdBy
+        - isDeleted
+        - deletedAt
+        - deletedBy
     CreateProjectRequestDTO:
       type: object
       properties:
@@ -4159,3 +4180,6 @@ components:
       schema:
         type: string
         format: uuid
+
+security:
+  - bearerAuth: [ ]

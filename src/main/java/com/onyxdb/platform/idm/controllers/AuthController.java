@@ -13,7 +13,7 @@ import com.onyxdb.platform.generated.openapi.models.AuthRequestDTO;
 import com.onyxdb.platform.generated.openapi.models.GetCurrentUser200Response;
 import com.onyxdb.platform.generated.openapi.models.JwtResponseDTO;
 import com.onyxdb.platform.generated.openapi.models.RefreshTokenDTO;
-import com.onyxdb.platform.idm.common.jwt.SecurityContextUtil;
+import com.onyxdb.platform.idm.common.jwt.SecurityContextUtils;
 import com.onyxdb.platform.idm.models.Account;
 import com.onyxdb.platform.idm.services.AccountService;
 import com.onyxdb.platform.idm.services.AuthService;
@@ -65,7 +65,7 @@ public class AuthController implements AuthApi {
 
     @Override
     public ResponseEntity<GetCurrentUser200Response> getCurrentUser() {
-        Account account = SecurityContextUtil.getCurrentAccount();
+        Account account = SecurityContextUtils.getCurrentAccount();
         AccountDTO accountDTO = account.toDTO();
 
         Map<String, Map<String, Object>> data = accountService.getAllPermissionBitsResponse(account.id());

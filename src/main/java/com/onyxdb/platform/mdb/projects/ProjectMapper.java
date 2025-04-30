@@ -18,7 +18,12 @@ public class ProjectMapper {
                 p.id(),
                 p.name(),
                 p.description(),
-                p.productId()
+                p.productId(),
+                p.createdAt(),
+                p.createdBy(),
+                p.isDeleted(),
+                p.deletedAt(),
+                p.deletedBy()
         );
     }
 
@@ -29,7 +34,11 @@ public class ProjectMapper {
                 rr.getName(),
                 rr.getDescription(),
                 rr.getProductId(),
-                rr.getIsDeleted()
+                rr.getCreatedAt(),
+                rr.getCreatedBy(),
+                rr.getIsDeleted(),
+                rr.getDeletedAt(),
+                rr.getDeletedBy()
         );
     }
 
@@ -39,7 +48,11 @@ public class ProjectMapper {
                 p.name(),
                 p.description(),
                 p.productId(),
-                p.isArchived()
+                p.createdAt(),
+                p.createdBy(),
+                p.isDeleted(),
+                p.deletedAt(),
+                p.deletedBy()
         );
     }
 
@@ -52,11 +65,12 @@ public class ProjectMapper {
         );
     }
 
-    public CreateProject createProjectRequestDTOtoProjectToCreate(CreateProjectRequestDTO r) {
+    public CreateProject createProjectRequestDTOtoProjectToCreate(CreateProjectRequestDTO r, UUID createdBy) {
         return new CreateProject(
                 r.getName(),
                 r.getDescription(),
-                r.getProductId()
+                r.getProductId(),
+                createdBy
         );
     }
 
@@ -64,7 +78,8 @@ public class ProjectMapper {
         return Project.create(
                 c.name(),
                 c.description(),
-                c.productId()
+                c.productId(),
+                c.createdBy()
         );
     }
 }
