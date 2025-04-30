@@ -169,7 +169,7 @@ public class QuotaService {
                         .build()
         );
 
-        Project project = projectService.get(projectId);
+        Project project = projectService.getOrThrow(projectId);
         UUID productId = project.productId();
         List<EnrichedProductQuota> productQuotas = listProductQuotas(QuotaFilter.builder()
                 .withProductId(productId)
