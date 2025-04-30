@@ -8,15 +8,21 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.onyxdb.platform.BaseTest;
+import com.onyxdb.platform.TestUtils;
 import com.onyxdb.platform.generated.openapi.models.BadRequestResponse;
 import com.onyxdb.platform.generated.openapi.models.CreateProjectRequestDTO;
 import com.onyxdb.platform.generated.openapi.models.CreateProjectResponseDTO;
 import com.onyxdb.platform.generated.openapi.models.ListProjectsResponseDTO;
 import com.onyxdb.platform.generated.openapi.models.ProjectDTO;
+import com.onyxdb.platform.generated.openapi.models.UpdateProjectRequestDTO;
+import com.onyxdb.platform.mdb.exceptions.ProjectAlreadyExistsException;
+import com.onyxdb.platform.mdb.exceptions.ProjectNotFoundException;
 import com.onyxdb.platform.mdb.projects.Project;
 import com.onyxdb.platform.mdb.projects.ProjectMapper;
 import com.onyxdb.platform.mdb.projects.ProjectRepository;
@@ -39,12 +45,12 @@ public class ProjectControllerTests extends BaseTest {
         var project1 = Project.create(
                 "project1",
                 "project1 desc",
-                UUID.randomUUID()
+                TestUtils.productId1
         );
         var project2 = Project.create(
                 "project2",
                 "project2 desc",
-                UUID.randomUUID()
+                TestUtils.productId2
         );
 
         projectRepository.create(project1);
@@ -70,7 +76,7 @@ public class ProjectControllerTests extends BaseTest {
         var project = Project.create(
                 "project",
                 "project desc",
-                UUID.randomUUID()
+                TestUtils.productId1
         );
 
         projectRepository.create(project);
@@ -90,7 +96,7 @@ public class ProjectControllerTests extends BaseTest {
 
     @Test
     public void whenProjectNotFound_then404() {
-        var projectId = UUID.randomUUID();
+        var projectId = TestUtils.projectId1;
 
         ResponseEntity<BadRequestResponse> response = restTemplate.getForEntity(
                 "/api/projects/{projectId}",
@@ -98,7 +104,7 @@ public class ProjectControllerTests extends BaseTest {
                 projectId
         );
 
-        var expected = new BadRequestResponse(String.format("Project with id '%s' is not found", projectId));
+        var expected = new BadRequestResponse(ProjectNotFoundException.buildMessage(projectId));
 
         Assertions.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         Assertions.assertNotNull(response.getBody());
@@ -110,7 +116,7 @@ public class ProjectControllerTests extends BaseTest {
         var rq = new CreateProjectRequestDTO(
                 "project",
                 "project description",
-                UUID.randomUUID()
+                TestUtils.productId1
         );
 
         ResponseEntity<CreateProjectResponseDTO> createResponse = restTemplate.postForEntity(
@@ -124,20 +130,17 @@ public class ProjectControllerTests extends BaseTest {
         UUID projectId = createResponse.getBody().getProjectId();
         Assertions.assertNotNull(projectId);
 
-        ResponseEntity<ProjectDTO> getResponse = restTemplate.getForEntity(
-                "/api/projects/{projectId}",
-                ProjectDTO.class,
-                projectId
-        );
+        Project project = projectRepository.getOrThrow(projectId);
 
-        var expected = new ProjectDTO(
+        var expected = new Project(
                 projectId,
                 rq.getName(),
                 rq.getDescription(),
-                rq.getProductId()
+                rq.getProductId(),
+                false
         );
 
-        MatcherAssert.assertThat(getResponse.getBody(), is(expected));
+        MatcherAssert.assertThat(project, is(expected));
     }
 
     @Test
@@ -145,7 +148,7 @@ public class ProjectControllerTests extends BaseTest {
         var project = Project.create(
                 "project",
                 "project desc",
-                UUID.randomUUID()
+                TestUtils.productId1
         );
         projectRepository.create(project);
 
@@ -161,7 +164,105 @@ public class ProjectControllerTests extends BaseTest {
                 BadRequestResponse.class
         );
 
-        var expected = new BadRequestResponse(String.format("Project with name '%s' already exists", project.name()));
+        var expected = new BadRequestResponse(ProjectAlreadyExistsException.buildMessage(project.name()));
+
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        Assertions.assertNotNull(response.getBody());
+        MatcherAssert.assertThat(response.getBody(), is(expected));
+    }
+
+    @Test
+    public void updateProject() {
+        var projectBefore = Project.create(
+                "name before",
+                "desc before",
+                TestUtils.productId1
+        );
+        projectRepository.create(projectBefore);
+
+        var rq = new UpdateProjectRequestDTO(
+                "updated name",
+                "updated desc",
+                TestUtils.productId2
+        );
+
+        ResponseEntity<Void> response = restTemplate.exchange(
+                "/api/projects/{projectId}",
+                HttpMethod.PUT,
+                new HttpEntity<>(rq),
+                Void.class,
+                projectBefore.id()
+        );
+
+        Project updatedProject = projectRepository.getOrThrow(projectBefore.id());
+
+        var expected = new Project(
+                projectBefore.id(),
+                rq.getName(),
+                rq.getDescription(),
+                rq.getProductId(),
+                false
+        );
+
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        MatcherAssert.assertThat(updatedProject, is(expected));
+    }
+
+    @Test
+    public void whenUpdateProjectNotExistingProject_then404() {
+        var projectId = TestUtils.projectId1;
+
+        var rq = new UpdateProjectRequestDTO(
+                "updated name",
+                "updated desc",
+                TestUtils.productId1
+        );
+
+        ResponseEntity<BadRequestResponse> response = restTemplate.exchange(
+                "/api/projects/{projectId}",
+                HttpMethod.PUT,
+                new HttpEntity<>(rq),
+                BadRequestResponse.class,
+                projectId
+        );
+
+        var expected = new BadRequestResponse(ProjectNotFoundException.buildMessage(projectId));
+
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        Assertions.assertNotNull(response.getBody());
+        MatcherAssert.assertThat(response.getBody(), is(expected));
+    }
+
+    @Test
+    public void whenUpdateProjectNameDuplicate_then400() {
+        var project1 = Project.create(
+                "project1",
+                "desc1",
+                TestUtils.productId1
+        );
+        var project2 = Project.create(
+                "project2",
+                "desc2",
+                TestUtils.productId2
+        );
+        projectRepository.create(project1);
+        projectRepository.create(project2);
+
+        var rq = new UpdateProjectRequestDTO(
+                project1.name(),
+                "updated desc",
+                TestUtils.productId2
+        );
+
+        ResponseEntity<BadRequestResponse> response = restTemplate.exchange(
+                "/api/projects/{projectId}",
+                HttpMethod.PUT,
+                new HttpEntity<>(rq),
+                BadRequestResponse.class,
+                project2.id()
+        );
+
+        var expected = new BadRequestResponse(ProjectAlreadyExistsException.buildMessage(rq.getName()));
 
         Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         Assertions.assertNotNull(response.getBody());

@@ -9,7 +9,7 @@ import org.jooq.exception.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
 
 import com.onyxdb.platform.generated.jooq.Indexes;
-import com.onyxdb.platform.mdb.exceptions.BadRequestException;
+import com.onyxdb.platform.mdb.exceptions.ProjectAlreadyExistsException;
 import com.onyxdb.platform.mdb.exceptions.ProjectNotFoundException;
 import com.onyxdb.platform.mdb.utils.PsqlUtils;
 
@@ -60,9 +60,7 @@ public class ProjectPostgresRepository implements ProjectRepository {
                     e,
                     PROJECTS,
                     Indexes.PROJECT_NAME_IS_DELETED_UNIQ_IDX,
-                    () -> new BadRequestException(
-                            String.format("Project with name '%s' already exists", project.name())
-                    )
+                    () -> new ProjectAlreadyExistsException(project.name())
             );
 
             throw e;
@@ -70,12 +68,27 @@ public class ProjectPostgresRepository implements ProjectRepository {
     }
 
     @Override
-    public void update(UpdateProject updateProject) {
-        dslContext.update(PROJECTS)
-                .set(PROJECTS.NAME, updateProject.name())
-                .set(PROJECTS.DESCRIPTION, updateProject.description())
-                .where(PROJECTS.ID.eq(updateProject.id()))
-                .execute();
+    public boolean update(UpdateProject updateProject) {
+        try {
+            var updatedProjectId = dslContext.update(PROJECTS)
+                    .set(PROJECTS.NAME, updateProject.name())
+                    .set(PROJECTS.DESCRIPTION, updateProject.description())
+                    .set(PROJECTS.PRODUCT_ID, updateProject.productId())
+                    .where(PROJECTS.ID.eq(updateProject.id()))
+                    .returningResult(PROJECTS.ID)
+                    .fetchOne();
+
+            return updatedProjectId != null;
+        } catch (DataAccessException | DuplicateKeyException e) {
+            PsqlUtils.handleDataAccessEx(
+                    e,
+                    PROJECTS,
+                    Indexes.PROJECT_NAME_IS_DELETED_UNIQ_IDX,
+                    () -> new ProjectAlreadyExistsException(updateProject.name())
+            );
+
+            throw e;
+        }
     }
 
     @Override

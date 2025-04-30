@@ -3,6 +3,8 @@ package com.onyxdb.platform.mdb.projects;
 import java.util.List;
 import java.util.UUID;
 
+import com.onyxdb.platform.mdb.exceptions.ProjectNotFoundException;
+
 /**
  * @author foxleren
  */
@@ -23,15 +25,18 @@ public class ProjectService {
         return projectRepository.getOrThrow(projectId);
     }
 
-    public UUID create(ProjectToCreate projectToCreate) {
-        Project project = projectMapper.projectToCreateToProject(projectToCreate);
+    public UUID create(CreateProject createProject) {
+        Project project = projectMapper.createProjectToProject(createProject);
         projectRepository.create(project);
 
         return project.id();
     }
 
     public void update(UpdateProject updateProject) {
-        projectRepository.update(updateProject);
+        boolean updated = projectRepository.update(updateProject);
+        if (!updated) {
+            throw new ProjectNotFoundException(updateProject.id());
+        }
     }
 
     public void archive(UUID id) {

@@ -5,7 +5,7 @@ import java.util.UUID;
 /**
  * @author foxleren
  */
-public record ProjectToCreate(
+public record CreateProject(
         String name,
         String description,
         UUID productId
