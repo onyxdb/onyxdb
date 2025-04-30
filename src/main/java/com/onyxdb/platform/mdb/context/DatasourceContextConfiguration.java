@@ -16,12 +16,15 @@ import org.springframework.boot.autoconfigure.jooq.ExceptionTranslatorExecuteLis
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.support.TransactionTemplate;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
 
 /**
  * @author foxleren
@@ -34,6 +37,9 @@ public class DatasourceContextConfiguration {
     public static final String CLICKHOUSE_JDBC_TEMPLATE_BEAN = "clickhouseJdbcTemplate";
     public static final String PSQL_TRANSACTION_TEMPLATE_BEAN = "postgresTransactionTemplate";
     public static final String PSQL_JOOQ_DSL_CONTEXT = "psqlJooqDslContext";
+    public static final String JEDIS_POOL_CONFIG_BEAN = "jedisPoolConfig";
+    public static final String JEDIS_POOL_BEAN = "jedisConfig";
+    public static final String JEDIS_CONNECTION_FACTORY_BEAN = "jedisConnectionFactory";
 //    public static final String PSQL_PROPAGATION_REQUIRED_TRANSACTION_TEMPLATE_BEAN = "postgresPropagationRequiredTransactionTemplate";
 
     @Bean(POSTGRES_DATASOURCE_BEAN)
@@ -115,5 +121,41 @@ public class DatasourceContextConfiguration {
             DataSource clickhouseDataSource
     ) {
         return new JdbcTemplate(clickhouseDataSource);
+    }
+
+    @Bean(JEDIS_POOL_CONFIG_BEAN)
+    public JedisPoolConfig jedisPoolConfig() {
+        JedisPoolConfig config = new JedisPoolConfig();
+        config.setJmxEnabled(false);
+
+        return config;
+    }
+
+    @Bean(JEDIS_POOL_BEAN)
+    @Profile("!test")
+    public JedisPool jedisPool(
+            @Qualifier(JEDIS_POOL_CONFIG_BEAN)
+            JedisPoolConfig config,
+            @Value("${onyxdb.redis.host}")
+            String host,
+            @Value("${onyxdb.redis.port}")
+            int port
+    ) {
+        return new JedisPool(config, host, port);
+    }
+
+    @Bean(JEDIS_CONNECTION_FACTORY_BEAN)
+    @Profile("!test")
+    public JedisConnectionFactory jedisConnectionFactory(
+            @Value("${onyxdb.redis.host}")
+            String host,
+            @Value("${onyxdb.redis.port}")
+            int port
+    ) {
+        JedisConnectionFactory jedisConFactory = new JedisConnectionFactory();
+        jedisConFactory.setHostName(host);
+        jedisConFactory.setPort(port);
+
+        return jedisConFactory;
     }
 }

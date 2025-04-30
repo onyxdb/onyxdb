@@ -17,33 +17,32 @@ public class ProjectService {
         this.projectMapper = projectMapper;
     }
 
-    public List<Project> list() {
-        return projectRepository.list();
+    public List<Project> listProjects() {
+        return projectRepository.listProjects();
     }
 
-    public Project getOrThrow(UUID projectId) {
-        return projectRepository.getOrThrow(projectId);
+    public Project getProjectOrThrow(UUID projectId, boolean isDeleted) {
+        return projectRepository.getProjectOrThrow(projectId, isDeleted);
     }
 
-    public UUID create(CreateProject createProject) {
+    public UUID createProject(CreateProject createProject) {
         Project project = projectMapper.createProjectToProject(createProject);
-        projectRepository.create(project);
+        projectRepository.createProject(project);
 
         return project.id();
     }
 
-    public void update(UpdateProject updateProject) {
-        boolean updated = projectRepository.update(updateProject);
-        if (!updated) {
+    public void updateProject(UpdateProject updateProject) {
+        boolean isUpdated = projectRepository.updateProject(updateProject);
+        if (!isUpdated) {
             throw new ProjectNotFoundException(updateProject.id());
         }
     }
 
-    public void archive(UUID id) {
-        projectRepository.archive(id);
-    }
-
-    public void unarchive(UUID id) {
-        projectRepository.unarchive(id);
+    public void deleteProject(UUID projectId, UUID deletedBy) {
+        boolean isDeleted = projectRepository.markAsDeleted(projectId, deletedBy);
+        if (!isDeleted) {
+            throw new ProjectNotFoundException(projectId);
+        }
     }
 }
