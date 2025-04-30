@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.clickhouse.logging.Logger;
+import com.clickhouse.logging.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +24,10 @@ import com.onyxdb.platform.idm.services.RoleService;
  */
 @Configuration
 public class AdminInitializer {
+    private static final Logger logger = LoggerFactory.getLogger(AdminInitializer.class);
+
+    public static final UUID ADMIN_ID = UUID.fromString("4a2770da-c806-4ae2-8e02-3b54641463df");
+
     @Bean
     public CommandLineRunner createAdminAccount(
             AccountRepository accountRepository,
@@ -33,7 +39,7 @@ public class AdminInitializer {
                 String login = "admin";
                 String password = "admin";
                 Account admin = new Account(
-                        UUID.randomUUID(),
+                        ADMIN_ID,
                         login,
                         password,
                         "admin@example.com",
@@ -70,7 +76,7 @@ public class AdminInitializer {
                 RoleWithPermissions newRole = roleService.create(new RoleWithPermissions(role, List.of(permission)));
                 accountRepository.addRole(newAccount.id(), newRole.role().id());
 
-                System.out.printf("Admin account created: login=%s, password=%s", login, password);
+                logger.info("Created admin account: login={}, password={}", login, password);
             }
         };
     }

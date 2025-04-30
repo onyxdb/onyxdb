@@ -8,6 +8,7 @@ import java.util.UUID;
 public record CreateProject(
         String name,
         String description,
-        UUID productId
+        UUID productId,
+        UUID createdBy
 ) {
 }

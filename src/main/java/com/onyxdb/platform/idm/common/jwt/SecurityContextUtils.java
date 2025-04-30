@@ -12,7 +12,7 @@ import com.onyxdb.platform.idm.models.Account;
  * @author ArtemFed
  */
 @Component
-public class SecurityContextUtil {
+public class SecurityContextUtils {
     public static Account getCurrentAccount() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || authentication.getPrincipal() == null) {

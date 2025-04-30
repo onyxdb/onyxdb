@@ -12,6 +12,8 @@ import com.onyxdb.platform.generated.openapi.models.CreateProjectResponseDTO;
 import com.onyxdb.platform.generated.openapi.models.ListProjectsResponseDTO;
 import com.onyxdb.platform.generated.openapi.models.ProjectDTO;
 import com.onyxdb.platform.generated.openapi.models.UpdateProjectRequestDTO;
+import com.onyxdb.platform.idm.common.jwt.SecurityContextUtils;
+import com.onyxdb.platform.idm.models.Account;
 import com.onyxdb.platform.mdb.projects.CreateProject;
 import com.onyxdb.platform.mdb.projects.Project;
 import com.onyxdb.platform.mdb.projects.ProjectMapper;
@@ -50,7 +52,9 @@ public class ProjectController implements ProjectsApi {
 
     @Override
     public ResponseEntity<CreateProjectResponseDTO> createProject(CreateProjectRequestDTO rq) {
-        CreateProject createProject = projectMapper.createProjectRequestDTOtoProjectToCreate(rq);
+        Account account = SecurityContextUtils.getCurrentAccount();
+
+        CreateProject createProject = projectMapper.createProjectRequestDTOtoProjectToCreate(rq, account.id());
         UUID projectId = projectService.create(createProject);
 
         return ResponseEntity.ok(new CreateProjectResponseDTO(projectId));

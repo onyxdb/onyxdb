@@ -27,6 +27,7 @@ import com.onyxdb.platform.mdb.projects.Project;
 import com.onyxdb.platform.mdb.projects.ProjectMapper;
 import com.onyxdb.platform.mdb.projects.ProjectRepository;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 
 public class ProjectControllerTests extends BaseTest {
@@ -45,12 +46,14 @@ public class ProjectControllerTests extends BaseTest {
         var project1 = Project.create(
                 "project1",
                 "project1 desc",
-                TestUtils.productId1
+                TestUtils.PRODUCT_ID_1,
+                TestUtils.ADMIN_ID
         );
         var project2 = Project.create(
                 "project2",
                 "project2 desc",
-                TestUtils.productId2
+                TestUtils.PRODUCT_ID_2,
+                TestUtils.ADMIN_ID
         );
 
         projectRepository.create(project1);
@@ -61,8 +64,10 @@ public class ProjectControllerTests extends BaseTest {
                 projectMapper.projectToProjectDTO(project2))
         );
 
-        ResponseEntity<ListProjectsResponseDTO> response = restTemplate.getForEntity(
+        ResponseEntity<ListProjectsResponseDTO> response = restTemplate.exchange(
                 "/api/projects",
+                HttpMethod.GET,
+                new HttpEntity<>(getHeaders()),
                 ListProjectsResponseDTO.class
         );
 
@@ -76,13 +81,16 @@ public class ProjectControllerTests extends BaseTest {
         var project = Project.create(
                 "project",
                 "project desc",
-                TestUtils.productId1
+                TestUtils.PRODUCT_ID_1,
+                TestUtils.ADMIN_ID
         );
 
         projectRepository.create(project);
 
-        ResponseEntity<ProjectDTO> response = restTemplate.getForEntity(
+        ResponseEntity<ProjectDTO> response = restTemplate.exchange(
                 "/api/projects/{projectId}",
+                HttpMethod.GET,
+                new HttpEntity<>(getHeaders()),
                 ProjectDTO.class,
                 project.id()
         );
@@ -96,10 +104,12 @@ public class ProjectControllerTests extends BaseTest {
 
     @Test
     public void whenProjectNotFound_then404() {
-        var projectId = TestUtils.projectId1;
+        var projectId = TestUtils.PROJECT_ID_1;
 
-        ResponseEntity<BadRequestResponse> response = restTemplate.getForEntity(
+        ResponseEntity<BadRequestResponse> response = restTemplate.exchange(
                 "/api/projects/{projectId}",
+                HttpMethod.GET,
+                new HttpEntity<>(getHeaders()),
                 BadRequestResponse.class,
                 projectId
         );
@@ -116,12 +126,12 @@ public class ProjectControllerTests extends BaseTest {
         var rq = new CreateProjectRequestDTO(
                 "project",
                 "project description",
-                TestUtils.productId1
+                TestUtils.PRODUCT_ID_1
         );
 
         ResponseEntity<CreateProjectResponseDTO> createResponse = restTemplate.postForEntity(
                 "/api/projects",
-                rq,
+                new HttpEntity<>(rq, getHeaders()),
                 CreateProjectResponseDTO.class
         );
         Assertions.assertEquals(HttpStatus.OK, createResponse.getStatusCode());
@@ -132,15 +142,18 @@ public class ProjectControllerTests extends BaseTest {
 
         Project project = projectRepository.getOrThrow(projectId);
 
-        var expected = new Project(
+        var expected = Project.create(
                 projectId,
                 rq.getName(),
                 rq.getDescription(),
                 rq.getProductId(),
-                false
+                TestUtils.ADMIN_ID
         );
 
-        MatcherAssert.assertThat(project, is(expected));
+        assertThat(project)
+                .usingRecursiveComparison()
+                .ignoringFields("createdAt")
+                .isEqualTo(expected);
     }
 
     @Test
@@ -148,7 +161,8 @@ public class ProjectControllerTests extends BaseTest {
         var project = Project.create(
                 "project",
                 "project desc",
-                TestUtils.productId1
+                TestUtils.PRODUCT_ID_1,
+                TestUtils.ADMIN_ID
         );
         projectRepository.create(project);
 
@@ -158,9 +172,10 @@ public class ProjectControllerTests extends BaseTest {
                 project.productId()
         );
 
-        ResponseEntity<BadRequestResponse> response = restTemplate.postForEntity(
+        ResponseEntity<BadRequestResponse> response = restTemplate.exchange(
                 "/api/projects",
-                rq,
+                HttpMethod.POST,
+                new HttpEntity<>(rq, getHeaders()),
                 BadRequestResponse.class
         );
 
@@ -176,52 +191,56 @@ public class ProjectControllerTests extends BaseTest {
         var projectBefore = Project.create(
                 "name before",
                 "desc before",
-                TestUtils.productId1
+                TestUtils.PRODUCT_ID_1,
+                TestUtils.ADMIN_ID
         );
         projectRepository.create(projectBefore);
 
         var rq = new UpdateProjectRequestDTO(
                 "updated name",
                 "updated desc",
-                TestUtils.productId2
+                TestUtils.PRODUCT_ID_2
         );
 
         ResponseEntity<Void> response = restTemplate.exchange(
                 "/api/projects/{projectId}",
                 HttpMethod.PUT,
-                new HttpEntity<>(rq),
+                new HttpEntity<>(rq, getHeaders()),
                 Void.class,
                 projectBefore.id()
         );
 
         Project updatedProject = projectRepository.getOrThrow(projectBefore.id());
 
-        var expected = new Project(
+        var expected = Project.create(
                 projectBefore.id(),
                 rq.getName(),
                 rq.getDescription(),
                 rq.getProductId(),
-                false
+                TestUtils.ADMIN_ID
         );
 
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
-        MatcherAssert.assertThat(updatedProject, is(expected));
+        assertThat(updatedProject)
+                .usingRecursiveComparison()
+                .ignoringFields("createdAt")
+                .isEqualTo(expected);
     }
 
     @Test
     public void whenUpdateProjectNotExistingProject_then404() {
-        var projectId = TestUtils.projectId1;
+        var projectId = TestUtils.PROJECT_ID_1;
 
         var rq = new UpdateProjectRequestDTO(
                 "updated name",
                 "updated desc",
-                TestUtils.productId1
+                TestUtils.PRODUCT_ID_1
         );
 
         ResponseEntity<BadRequestResponse> response = restTemplate.exchange(
                 "/api/projects/{projectId}",
                 HttpMethod.PUT,
-                new HttpEntity<>(rq),
+                new HttpEntity<>(rq, getHeaders()),
                 BadRequestResponse.class,
                 projectId
         );
@@ -238,12 +257,14 @@ public class ProjectControllerTests extends BaseTest {
         var project1 = Project.create(
                 "project1",
                 "desc1",
-                TestUtils.productId1
+                TestUtils.PRODUCT_ID_1,
+                TestUtils.ADMIN_ID
         );
         var project2 = Project.create(
                 "project2",
                 "desc2",
-                TestUtils.productId2
+                TestUtils.PRODUCT_ID_2,
+                TestUtils.ADMIN_ID
         );
         projectRepository.create(project1);
         projectRepository.create(project2);
@@ -251,13 +272,13 @@ public class ProjectControllerTests extends BaseTest {
         var rq = new UpdateProjectRequestDTO(
                 project1.name(),
                 "updated desc",
-                TestUtils.productId2
+                TestUtils.PRODUCT_ID_2
         );
 
         ResponseEntity<BadRequestResponse> response = restTemplate.exchange(
                 "/api/projects/{projectId}",
                 HttpMethod.PUT,
-                new HttpEntity<>(rq),
+                new HttpEntity<>(rq, getHeaders()),
                 BadRequestResponse.class,
                 project2.id()
         );

@@ -34,11 +34,15 @@ CREATE TABLE public.zones
 
 CREATE TABLE public.projects
 (
-    id          uuid    NOT NULL,
-    name        varchar NOT NULL,
-    description varchar NOT NULL,
-    product_id  uuid    NOT NULL,
-    is_deleted  bool    NOT NULL DEFAULT false,
+    id          uuid      NOT NULL,
+    name        varchar   NOT NULL,
+    description varchar   NOT NULL,
+    product_id  uuid      NOT NULL,
+    created_at  timestamp NOT NULL,
+    created_by  uuid      NOT NULL,
+    is_deleted  bool      NOT NULL DEFAULT false,
+    deleted_at  timestamp,
+    deleted_by  uuid,
     PRIMARY KEY (id)
 );
 
@@ -96,7 +100,7 @@ CREATE TABLE public.users
     cluster_id      uuid      NOT NULL,
     created_at      timestamp NOT NULL,
     created_by      uuid      NOT NULL,
-    is_deleted      bool      NOT NULL,
+    is_deleted      bool      NOT NULL DEFAULT false,
     deleted_at      timestamp,
     deleted_by      uuid,
     PRIMARY KEY (id)
@@ -274,8 +278,10 @@ INSERT INTO public.resource_presets (id, name, type, vcpu, ram)
 VALUES ('155df930-243d-4b57-b24b-607992f8c3d1', 'dev-2', 'standard', 0.35, 805306368);
 
 
-INSERT INTO public.projects (id, name, description, product_id)
+INSERT INTO public.projects (id, name, description, product_id, created_at, created_by)
 VALUES ('5cb0ca1c-e6c1-47ab-b832-0074312490a3',
         'sandbox',
         'This this sandbox project',
-        '672fdd9c-fdef-49c2-a675-3c890e7316a3');
+        '672fdd9c-fdef-49c2-a675-3c890e7316a3',
+        now(),
+        'c1e0125f-61bb-421f-9f64-df0436506186');
