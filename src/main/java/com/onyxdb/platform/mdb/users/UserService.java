@@ -8,17 +8,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import com.onyxdb.platform.clients.k8s.psmdb.PsmdbClient;
-import com.onyxdb.platform.core.clusters.models.Cluster;
-import com.onyxdb.platform.core.clusters.models.User;
-import com.onyxdb.platform.core.clusters.models.UserToCreate;
+import com.onyxdb.platform.mdb.clients.k8s.psmdb.PsmdbClient;
 import com.onyxdb.platform.mdb.clusters.ClusterRepository;
-import com.onyxdb.platform.processing.models.Operation;
-import com.onyxdb.platform.processing.models.OperationType;
-import com.onyxdb.platform.processing.models.payloads.MongoCreateUserPayload;
-import com.onyxdb.platform.processing.models.payloads.MongoDeleteUserPayload;
-import com.onyxdb.platform.processing.repositories.OperationRepository;
-import com.onyxdb.platform.utils.ObjectMapperUtils;
+import com.onyxdb.platform.mdb.models.Cluster;
+import com.onyxdb.platform.mdb.models.User;
+import com.onyxdb.platform.mdb.models.UserToCreate;
+import com.onyxdb.platform.mdb.processing.models.Operation;
+import com.onyxdb.platform.mdb.processing.models.OperationType;
+import com.onyxdb.platform.mdb.processing.models.payloads.MongoCreateUserPayload;
+import com.onyxdb.platform.mdb.processing.models.payloads.MongoDeleteUserPayload;
+import com.onyxdb.platform.mdb.processing.repositories.OperationRepository;
+import com.onyxdb.platform.mdb.utils.ObjectMapperUtils;
 
 import static com.onyxdb.platform.mdb.clusters.ClusterMapper.DEFAULT_NAMESPACE;
 import static com.onyxdb.platform.mdb.clusters.ClusterMapper.DEFAULT_PROJECT;

@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import com.onyxdb.platform.core.clusters.models.Cluster;
-import com.onyxdb.platform.core.clusters.models.ClusterConfig;
-import com.onyxdb.platform.core.clusters.models.UpdateCluster;
+import com.onyxdb.platform.mdb.models.Cluster;
+import com.onyxdb.platform.mdb.models.ClusterConfig;
+import com.onyxdb.platform.mdb.models.UpdateCluster;
 
 /**
  * @author foxleren

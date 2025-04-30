@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
-import com.onyxdb.platform.context.DatasourceContextConfiguration;
+import com.onyxdb.platform.mdb.context.DatasourceContextConfiguration;
 import com.onyxdb.platform.generated.jooq.Public;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
