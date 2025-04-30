@@ -38,7 +38,7 @@ public class ProjectController implements ProjectsApi {
 
     @Override
     public ResponseEntity<ListProjectsResponseDTO> listProjects() {
-        List<Project> projects = projectService.list();
+        List<Project> projects = projectService.listProjects();
         List<ProjectDTO> projectDTOs = projects.stream().map(projectMapper::projectToProjectDTO).toList();
 
         return ResponseEntity.ok(new ListProjectsResponseDTO(projectDTOs));
@@ -46,7 +46,7 @@ public class ProjectController implements ProjectsApi {
 
     @Override
     public ResponseEntity<ProjectDTO> getProject(UUID projectId) {
-        Project project = projectService.getOrThrow(projectId);
+        Project project = projectService.getProjectOrThrow(projectId, false);
         return ResponseEntity.ok(projectMapper.projectToProjectDTO(project));
     }
 
@@ -55,7 +55,7 @@ public class ProjectController implements ProjectsApi {
         Account account = SecurityContextUtils.getCurrentAccount();
 
         CreateProject createProject = projectMapper.createProjectRequestDTOtoProjectToCreate(rq, account.id());
-        UUID projectId = projectService.create(createProject);
+        UUID projectId = projectService.createProject(createProject);
 
         return ResponseEntity.ok(new CreateProjectResponseDTO(projectId));
     }
@@ -66,7 +66,15 @@ public class ProjectController implements ProjectsApi {
                 projectId,
                 rq
         );
-        projectService.update(updateProject);
+        projectService.updateProject(updateProject);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteProject(UUID projectId) {
+        Account account = SecurityContextUtils.getCurrentAccount();
+        projectService.deleteProject(projectId, account.id());
 
         return ResponseEntity.ok().build();
     }

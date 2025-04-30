@@ -56,8 +56,8 @@ public class ProjectControllerTests extends BaseTest {
                 TestUtils.ADMIN_ID
         );
 
-        projectRepository.create(project1);
-        projectRepository.create(project2);
+        projectRepository.createProject(project1);
+        projectRepository.createProject(project2);
 
         var expected = new ListProjectsResponseDTO(List.of(
                 projectMapper.projectToProjectDTO(project1),
@@ -85,7 +85,7 @@ public class ProjectControllerTests extends BaseTest {
                 TestUtils.ADMIN_ID
         );
 
-        projectRepository.create(project);
+        projectRepository.createProject(project);
 
         ResponseEntity<ProjectDTO> response = restTemplate.exchange(
                 "/api/mdb/projects/{projectId}",
@@ -140,7 +140,7 @@ public class ProjectControllerTests extends BaseTest {
         UUID projectId = createResponse.getBody().getProjectId();
         Assertions.assertNotNull(projectId);
 
-        Project project = projectRepository.getOrThrow(projectId);
+        Project project = projectRepository.getProjectOrThrow(projectId, false);
 
         var expected = Project.create(
                 projectId,
@@ -164,7 +164,7 @@ public class ProjectControllerTests extends BaseTest {
                 TestUtils.PRODUCT_ID_1,
                 TestUtils.ADMIN_ID
         );
-        projectRepository.create(project);
+        projectRepository.createProject(project);
 
         var rq = new CreateProjectRequestDTO(
                 project.name(),
@@ -194,7 +194,7 @@ public class ProjectControllerTests extends BaseTest {
                 TestUtils.PRODUCT_ID_1,
                 TestUtils.ADMIN_ID
         );
-        projectRepository.create(projectBefore);
+        projectRepository.createProject(projectBefore);
 
         var rq = new UpdateProjectRequestDTO(
                 "updated name",
@@ -210,7 +210,7 @@ public class ProjectControllerTests extends BaseTest {
                 projectBefore.id()
         );
 
-        Project updatedProject = projectRepository.getOrThrow(projectBefore.id());
+        Project updatedProject = projectRepository.getProjectOrThrow(projectBefore.id(), false);
 
         var expected = Project.create(
                 projectBefore.id(),
@@ -266,8 +266,8 @@ public class ProjectControllerTests extends BaseTest {
                 TestUtils.PRODUCT_ID_2,
                 TestUtils.ADMIN_ID
         );
-        projectRepository.create(project1);
-        projectRepository.create(project2);
+        projectRepository.createProject(project1);
+        projectRepository.createProject(project2);
 
         var rq = new UpdateProjectRequestDTO(
                 project1.name(),
@@ -288,5 +288,82 @@ public class ProjectControllerTests extends BaseTest {
         Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         Assertions.assertNotNull(response.getBody());
         MatcherAssert.assertThat(response.getBody(), is(expected));
+    }
+
+    @Test
+    public void deleteProject() {
+        var project = Project.create(
+                "name",
+                "desc",
+                TestUtils.PRODUCT_ID_1,
+                TestUtils.ADMIN_ID
+        );
+        projectRepository.createProject(project);
+
+        ResponseEntity<Void> response = restTemplate.exchange(
+                "/api/mdb/projects/{projectId}",
+                HttpMethod.DELETE,
+                new HttpEntity<>(getHeaders()),
+                Void.class,
+                project.id()
+        );
+
+        var deletedProject = projectRepository.getProjectOrThrow(project.id(), true);
+
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertTrue(deletedProject.isDeleted());
+        Assertions.assertNotNull(deletedProject.deletedAt());
+        Assertions.assertEquals(TestUtils.ADMIN_ID, deletedProject.deletedBy());
+    }
+
+    @Test
+    public void whenDeleteNotExistingProject_then404() {
+        var projectId = TestUtils.PROJECT_ID_1;
+        ResponseEntity<BadRequestResponse> response = restTemplate.exchange(
+                "/api/mdb/projects/{projectId}",
+                HttpMethod.DELETE,
+                new HttpEntity<>(getHeaders()),
+                BadRequestResponse.class,
+                projectId
+        );
+
+        var expected = new BadRequestResponse(ProjectNotFoundException.buildMessage(projectId));
+
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        Assertions.assertNotNull(response.getBody());
+        MatcherAssert.assertThat(response.getBody(), is(expected));
+    }
+
+    @Test
+    public void whenDeleteAlreadyDeletedProject_then400() {
+        var project = Project.create(
+                "name",
+                "desc",
+                TestUtils.PRODUCT_ID_1,
+                TestUtils.ADMIN_ID
+        );
+        projectRepository.createProject(project);
+
+        restTemplate.exchange(
+                "/api/mdb/projects/{projectId}",
+                HttpMethod.DELETE,
+                new HttpEntity<>(getHeaders()),
+                Void.class,
+                project.id()
+        );
+
+        ResponseEntity<BadRequestResponse> response2 = restTemplate.exchange(
+                "/api/mdb/projects/{projectId}",
+                HttpMethod.DELETE,
+                new HttpEntity<>(getHeaders()),
+                BadRequestResponse.class,
+                project.id()
+        );
+
+        var expected = new BadRequestResponse(ProjectNotFoundException.buildMessage(project.id()));
+
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, response2.getStatusCode());
+        Assertions.assertNotNull(response2.getBody());
+        MatcherAssert.assertThat(response2.getBody(), is(expected));
     }
 }

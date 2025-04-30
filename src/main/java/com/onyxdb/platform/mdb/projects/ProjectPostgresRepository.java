@@ -12,6 +12,7 @@ import com.onyxdb.platform.generated.jooq.Indexes;
 import com.onyxdb.platform.mdb.exceptions.ProjectAlreadyExistsException;
 import com.onyxdb.platform.mdb.exceptions.ProjectNotFoundException;
 import com.onyxdb.platform.mdb.utils.PsqlUtils;
+import com.onyxdb.platform.mdb.utils.TimeUtils;
 
 import static com.onyxdb.platform.generated.jooq.Tables.PROJECTS;
 
@@ -28,7 +29,7 @@ public class ProjectPostgresRepository implements ProjectRepository {
     }
 
     @Override
-    public List<Project> list() {
+    public List<Project> listProjects() {
         return dslContext.select()
                 .from(PROJECTS)
                 .fetch()
@@ -36,21 +37,21 @@ public class ProjectPostgresRepository implements ProjectRepository {
     }
 
     @Override
-    public Optional<Project> getO(UUID projectId) {
+    public Optional<Project> getProjectO(UUID projectId, boolean isDeleted) {
         return dslContext.select()
                 .from(PROJECTS)
-                .where(PROJECTS.ID.eq(projectId))
+                .where(PROJECTS.ID.eq(projectId).and(PROJECTS.IS_DELETED.eq(isDeleted)))
                 .fetchOptional()
                 .map(ProjectMapper::jooqRecordToProject);
     }
 
     @Override
-    public Project getOrThrow(UUID projectId) {
-        return getO(projectId).orElseThrow(() -> new ProjectNotFoundException(projectId));
+    public Project getProjectOrThrow(UUID projectId, boolean isDeleted) {
+        return getProjectO(projectId, isDeleted).orElseThrow(() -> new ProjectNotFoundException(projectId));
     }
 
     @Override
-    public void create(Project project) {
+    public void createProject(Project project) {
         try {
             dslContext.insertInto(PROJECTS)
                     .set(ProjectMapper.toJooqProjectsRecord(project))
@@ -68,7 +69,7 @@ public class ProjectPostgresRepository implements ProjectRepository {
     }
 
     @Override
-    public boolean update(UpdateProject updateProject) {
+    public boolean updateProject(UpdateProject updateProject) {
         try {
             var updatedProjectId = dslContext.update(PROJECTS)
                     .set(PROJECTS.NAME, updateProject.name())
@@ -92,19 +93,15 @@ public class ProjectPostgresRepository implements ProjectRepository {
     }
 
     @Override
-    public void archive(UUID id) {
-        setIsArchived(id, true);
-    }
+    public boolean markAsDeleted(UUID projectId, UUID deletedBy) {
+        var updatedProjectId = dslContext.update(PROJECTS)
+                .set(PROJECTS.IS_DELETED, true)
+                .set(PROJECTS.DELETED_AT, TimeUtils.now())
+                .set(PROJECTS.DELETED_BY, deletedBy)
+                .where(PROJECTS.ID.eq(projectId).and(PROJECTS.IS_DELETED.eq(false)))
+                .returningResult(PROJECTS.ID)
+                .fetchOne();
 
-    @Override
-    public void unarchive(UUID id) {
-        setIsArchived(id, false);
-    }
-
-    private void setIsArchived(UUID id, boolean isArchived) {
-        dslContext.update(PROJECTS)
-                .set(PROJECTS.IS_DELETED, isArchived)
-                .where(PROJECTS.ID.eq(id))
-                .execute();
+        return updatedProjectId != null;
     }
 }

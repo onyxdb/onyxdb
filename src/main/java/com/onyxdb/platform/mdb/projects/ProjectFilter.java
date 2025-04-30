@@ -1,6 +1,5 @@
 package com.onyxdb.platform.mdb.projects;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.jetbrains.annotations.Nullable;
@@ -11,18 +10,24 @@ import static com.onyxdb.platform.generated.jooq.Tables.PROJECTS;
 
 public record ProjectFilter(
         @Nullable
+        UUID projectId,
+        @Nullable
         String projectName,
         @Nullable
-        List<UUID> productIds
+        Boolean isDeleted
 ) {
     public Condition buildConditionForProjectsTable() {
         Condition condition = DSL.trueCondition();
+        if (projectId != null) {
+            condition = condition.and(PROJECTS.ID.eq(projectId));
+        }
+
         if (projectName != null) {
             condition = condition.and(PROJECTS.NAME.equal(projectName));
         }
 
-        if (productIds != null && !productIds.isEmpty()) {
-            condition = condition.and(PROJECTS.PRODUCT_ID.in(productIds));
+        if (isDeleted != null) {
+            condition = condition.and(PROJECTS.IS_DELETED.equal(isDeleted));
         }
 
         return condition;
@@ -33,21 +38,31 @@ public record ProjectFilter(
     }
 
     public static class Builder {
+        private UUID projectId;
         private String projectName;
-        private List<UUID> productIds;
+        private Boolean isDeleted;
+
+        public Builder withProjectId(UUID projectId) {
+            this.projectId = projectId;
+            return this;
+        }
 
         public Builder withProjectName(String projectName) {
             this.projectName = projectName;
             return this;
         }
 
-        public Builder withProductIds(List<UUID> productIds) {
-            this.productIds = productIds;
+        public Builder withIsDeleted(boolean isDeleted) {
+            this.isDeleted = isDeleted;
             return this;
         }
 
         public ProjectFilter build() {
-            return new ProjectFilter(projectName, productIds);
+            return new ProjectFilter(
+                    projectId,
+                    projectName,
+                    isDeleted
+            );
         }
     }
 }

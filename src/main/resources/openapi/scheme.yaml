@@ -69,6 +69,16 @@ paths:
       responses:
         '200':
           description: OK
+    delete:
+      summary: Delete project
+      operationId: deleteProject
+      tags:
+        - Projects
+      parameters:
+        - $ref: '#/components/parameters/ProjectIdPV'
+      responses:
+        '200':
+          description: OK
   # ---------- Resource presets ----------------------------------------------------------------------------------------
   /api/v1/resource-presets:
     get:

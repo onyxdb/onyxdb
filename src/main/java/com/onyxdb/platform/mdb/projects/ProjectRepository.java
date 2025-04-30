@@ -8,17 +8,15 @@ import java.util.UUID;
  * @author foxleren
  */
 public interface ProjectRepository {
-    List<Project> list();
+    List<Project> listProjects();
 
-    Optional<Project> getO(UUID projectId);
+    Optional<Project> getProjectO(UUID projectId, boolean isDeleted);
 
-    Project getOrThrow(UUID projectId);
+    Project getProjectOrThrow(UUID projectId, boolean isDeleted);
 
-    void create(Project project);
+    void createProject(Project project);
 
-    boolean update(UpdateProject updateProject);
+    boolean updateProject(UpdateProject updateProject);
 
-    void archive(UUID id);
-
-    void unarchive(UUID id);
+    boolean markAsDeleted(UUID projectId, UUID deletedBy);
 }
