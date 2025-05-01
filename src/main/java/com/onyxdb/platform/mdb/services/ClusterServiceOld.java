@@ -14,7 +14,7 @@ import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import com.onyxdb.platform.mdb.clusters.ClusterRepository;
-import com.onyxdb.platform.mdb.models.Cluster;
+import com.onyxdb.platform.mdb.clusters.models.Cluster;
 import com.onyxdb.platform.mdb.processing.models.OperationStatus;
 import com.onyxdb.platform.mdb.processing.models.Task;
 import com.onyxdb.platform.mdb.processing.models.TaskStatus;

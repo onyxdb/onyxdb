@@ -1,6 +1,7 @@
-package com.onyxdb.platform.mdb.models;
+package com.onyxdb.platform.mdb.clusters.models;
 
 import com.onyxdb.platform.mdb.utils.StringEnum;
+import com.onyxdb.platform.mdb.utils.StringEnumResolver;
 
 
 /**
@@ -9,6 +10,8 @@ import com.onyxdb.platform.mdb.utils.StringEnum;
 public enum ClusterType implements StringEnum {
     MONGODB("mongodb"),
     ;
+
+    public static final StringEnumResolver<ClusterType> R = new StringEnumResolver<>(ClusterType.class);
 
     private final String value;
 
@@ -19,10 +22,5 @@ public enum ClusterType implements StringEnum {
     @Override
     public String value() {
         return value;
-    }
-
-    // TODO remove
-    public static ClusterType fromValue(String value) {
-        return StringEnum.fromValue(ClusterType.class, value);
     }
 }

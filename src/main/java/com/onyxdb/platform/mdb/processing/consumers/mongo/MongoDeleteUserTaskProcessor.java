@@ -14,7 +14,7 @@ import com.onyxdb.platform.mdb.processing.models.TaskProcessingResult;
 import com.onyxdb.platform.mdb.processing.models.TaskType;
 import com.onyxdb.platform.mdb.processing.models.payloads.MongoDeleteUserPayload;
 import com.onyxdb.platform.mdb.users.UserRepository;
-import com.onyxdb.platform.mdb.utils.Consts;
+import com.onyxdb.platform.mdb.utils.OnyxdbConsts;
 
 @Component
 public class MongoDeleteUserTaskProcessor extends TaskProcessor<MongoDeleteUserPayload> {
@@ -51,7 +51,7 @@ public class MongoDeleteUserTaskProcessor extends TaskProcessor<MongoDeleteUserP
         User user = userRepository.getUser(payload.userId());
 
         onyxdbAgentClient.deleteUser(new DeleteMongoUserRequestDTO(payload.username()));
-        userRepository.markUserAsDeleted(user.id(), Consts.USER_ID);
+        userRepository.markUserAsDeleted(user.id(), OnyxdbConsts.USER_ID);
 
         return TaskProcessingResult.success();
     }

@@ -13,19 +13,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import com.onyxdb.platform.mdb.clients.k8s.psmdb.PsmdbClient;
+import com.onyxdb.platform.mdb.clusters.models.Cluster;
+import com.onyxdb.platform.mdb.clusters.models.ClusterConfig;
+import com.onyxdb.platform.mdb.clusters.models.CreateCluster;
+import com.onyxdb.platform.mdb.clusters.models.CreateClusterResult;
 import com.onyxdb.platform.mdb.databases.DatabaseMapper;
 import com.onyxdb.platform.mdb.databases.DatabaseRepository;
 import com.onyxdb.platform.mdb.exceptions.ClusterNotFoundException;
+import com.onyxdb.platform.mdb.hosts.HostMapper;
 import com.onyxdb.platform.mdb.hosts.HostRepository;
-import com.onyxdb.platform.mdb.models.Cluster;
-import com.onyxdb.platform.mdb.models.ClusterConfig;
-import com.onyxdb.platform.mdb.models.ClusterToCreate;
-import com.onyxdb.platform.mdb.models.DatabaseToCreate;
+import com.onyxdb.platform.mdb.models.CreateDatabase;
+import com.onyxdb.platform.mdb.models.CreateMongoPermission;
+import com.onyxdb.platform.mdb.models.CreateUserWithSecret;
 import com.onyxdb.platform.mdb.models.Host;
-import com.onyxdb.platform.mdb.models.MongoPermissionToCreate;
 import com.onyxdb.platform.mdb.models.MongoRole;
 import com.onyxdb.platform.mdb.models.UpdateCluster;
-import com.onyxdb.platform.mdb.models.UserToCreate;
 import com.onyxdb.platform.mdb.processing.models.Operation;
 import com.onyxdb.platform.mdb.processing.models.OperationType;
 import com.onyxdb.platform.mdb.processing.models.TaskStatus;
@@ -34,13 +36,12 @@ import com.onyxdb.platform.mdb.processing.models.payloads.MongoCreateClusterPayl
 import com.onyxdb.platform.mdb.processing.models.payloads.MongoScaleClusterPayload;
 import com.onyxdb.platform.mdb.processing.repositories.OperationRepository;
 import com.onyxdb.platform.mdb.processing.repositories.TaskRepository;
+import com.onyxdb.platform.mdb.projects.Project;
+import com.onyxdb.platform.mdb.projects.ProjectService;
 import com.onyxdb.platform.mdb.users.UserMapper;
 import com.onyxdb.platform.mdb.users.UserRepository;
-import com.onyxdb.platform.mdb.utils.Consts;
 import com.onyxdb.platform.mdb.utils.ObjectMapperUtils;
-
-import static com.onyxdb.platform.mdb.clusters.ClusterMapper.DEFAULT_NAMESPACE;
-import static com.onyxdb.platform.mdb.clusters.ClusterMapper.DEFAULT_PROJECT;
+import com.onyxdb.platform.mdb.utils.OnyxdbConsts;
 
 /**
  * @author foxleren
@@ -50,7 +51,10 @@ import static com.onyxdb.platform.mdb.clusters.ClusterMapper.DEFAULT_PROJECT;
 public class ClusterService {
     private static final Logger logger = LoggerFactory.getLogger(ClusterService.class);
 
+    private final ProjectService projectService;
     private final ClusterMapper clusterMapper;
+
+
     private final ClusterRepository clusterRepository;
     private final TransactionTemplate transactionTemplate;
     private final OperationRepository operationRepository;
@@ -62,56 +66,60 @@ public class ClusterService {
     private final PsmdbClient psmdbClient;
     private final HostRepository hostRepository;
     private final ObjectMapper objectMapper;
+    private final HostMapper hostMapper;
 
     public List<Cluster> listClusters() {
         return clusterRepository.listClusters();
     }
 
-    public UUID createCluster(ClusterToCreate clusterToCreate) {
-        Cluster cluster = clusterMapper.createClusterToCluster(clusterToCreate);
+    public CreateClusterResult createCluster(CreateCluster createCluster) {
+        Project project = projectService.getUndeletedProjectOrThrow(createCluster.projectId());
+        // TODO get namespace from project
+        String namespace = OnyxdbConsts.NAMESPACE;
+
+        Cluster cluster = clusterMapper.createClusterToCluster(createCluster, namespace);
+
+        var createDatabase = new CreateDatabase(
+                createCluster.databaseName(),
+                cluster.id(),
+                createCluster.createdBy()
+        );
+        var database = databaseMapper.databaseToCreateToDatabase(createDatabase);
 
         String userPasswordSecretName = psmdbClient.applyMongoUserSecret(
-                DEFAULT_NAMESPACE,
-                DEFAULT_PROJECT,
+                namespace,
+                project.name(),
                 cluster.name(),
-                clusterToCreate.user(),
-                clusterToCreate.password()
+                createCluster.userName(),
+                createCluster.password()
         );
 
-        var database = databaseMapper.databaseToCreateToDatabase(new DatabaseToCreate(
+        List<MongoRole> userRoles = List.of(MongoRole.READ_WRITE);
+        var createUser = new CreateUserWithSecret(
+                createCluster.userName(),
+                userPasswordSecretName,
                 cluster.id(),
-                clusterToCreate.databaseName(),
-                Consts.USER_ID
-        ));
-
-        List<MongoRole> userRoles = List.of(MongoRole.READ, MongoRole.READ_WRITE);
-        var userToCreate = new UserToCreate(
-                cluster.id(),
-                clusterToCreate.user(),
-                clusterToCreate.password(),
-                List.of(new MongoPermissionToCreate(
-                        database.id(),
+                List.of(new CreateMongoPermission(
+                        createCluster.userName(),
+                        database.name(),
+                        cluster.id(),
                         userRoles
                 ))
         );
-        var user = userMapper.userToCreateToUser(userToCreate, userPasswordSecretName);
+        var user = userMapper.createUserWithSecretToUser(createUser);
 
-        List<Host> hosts = psmdbClient.calculatePsmdbHostnames(
-                        DEFAULT_PROJECT,
-                        cluster.name(),
-                        cluster.config().replicas()
-                )
-                .stream()
-                .map(podName -> new Host(podName, cluster.id()))
-                .toList();
+        List<Host> hosts = hostMapper.hostNamesToHosts(PsmdbClient.calculatePsmdbHostNames(
+                project.name(),
+                cluster.name(),
+                cluster.config().replicas()
+        ), cluster.id());
 
         var operationPayload = new MongoCreateClusterPayload(
                 cluster.id(),
-                database.id(),
                 database.name(),
                 user.name(),
                 userPasswordSecretName,
-                DEFAULT_NAMESPACE,
+                namespace,
                 userRoles
         );
         var operation = Operation.scheduledWithPayload(
@@ -129,7 +137,10 @@ public class ClusterService {
             operationRepository.createOperation(operation);
         });
 
-        return cluster.id();
+        return new CreateClusterResult(
+                cluster.id(),
+                operation.id()
+        );
     }
 
     public Optional<Cluster> getClusterO(UUID clusterId) {

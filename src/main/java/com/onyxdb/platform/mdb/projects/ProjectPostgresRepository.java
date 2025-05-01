@@ -60,7 +60,7 @@ public class ProjectPostgresRepository implements ProjectRepository {
             PsqlUtils.handleDataAccessEx(
                     e,
                     PROJECTS,
-                    Indexes.PROJECT_NAME_IS_DELETED_UNIQ_IDX,
+                    Indexes.PROJECTS_PROJECT_NAME_IS_DELETED_UNIQ_IDX,
                     () -> new ProjectAlreadyExistsException(project.name())
             );
 
@@ -84,7 +84,7 @@ public class ProjectPostgresRepository implements ProjectRepository {
             PsqlUtils.handleDataAccessEx(
                     e,
                     PROJECTS,
-                    Indexes.PROJECT_NAME_IS_DELETED_UNIQ_IDX,
+                    Indexes.PROJECTS_PROJECT_NAME_IS_DELETED_UNIQ_IDX,
                     () -> new ProjectAlreadyExistsException(updateProject.name())
             );
 

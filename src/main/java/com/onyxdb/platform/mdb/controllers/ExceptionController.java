@@ -52,6 +52,7 @@ public class ExceptionController {
 
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity<InternalServerErrorResponse> handleInternalServerErrorException(Exception e) {
+        System.err.println("Internal Server Error: " + e.getMessage());
         InternalServerErrorResponse internalServerErrorResponse = new InternalServerErrorResponse();
         internalServerErrorResponse.setMessage(e.getMessage());
         return new ResponseEntity<>(internalServerErrorResponse, HttpStatus.INTERNAL_SERVER_ERROR);

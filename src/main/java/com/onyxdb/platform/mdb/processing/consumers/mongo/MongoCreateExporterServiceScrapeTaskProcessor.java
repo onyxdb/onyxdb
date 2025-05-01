@@ -6,7 +6,7 @@ import com.onyxdb.platform.mdb.clients.k8s.psmdb.PsmdbExporterServiceScrapeClien
 import com.onyxdb.platform.mdb.clients.k8s.victoriaMetrics.VmServiceScrapeClient;
 import com.onyxdb.platform.mdb.clients.k8s.victoriaMetrics.adapters.MongoExporterServiceScrapeAdapter;
 import com.onyxdb.platform.mdb.clusters.ClusterService;
-import com.onyxdb.platform.mdb.models.Cluster;
+import com.onyxdb.platform.mdb.clusters.models.Cluster;
 import com.onyxdb.platform.mdb.processing.consumers.ClusterTaskProcessor;
 import com.onyxdb.platform.mdb.processing.models.Task;
 import com.onyxdb.platform.mdb.processing.models.TaskProcessingResult;

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 
-import com.onyxdb.platform.mdb.models.MongoPermissionToCreate;
+import com.onyxdb.platform.mdb.models.CreateMongoPermission;
 import com.onyxdb.platform.mdb.operationsOLD.tasks.ProducedTask;
 import com.onyxdb.platform.mdb.processing.models.Operation;
 import com.onyxdb.platform.mdb.processing.models.TaskType;
@@ -95,11 +95,13 @@ public class MongoCreateClusterTaskProducer extends TaskProducer<MongoCreateClus
 
         var createMongoUserPayload = new MongoCreateUserPayload(
                 payload.clusterId(),
-                payload.username(),
+                payload.userName(),
                 payload.passwordSecretName(),
                 payload.passwordSecretNamespace(),
-                List.of(new MongoPermissionToCreate(
-                        payload.databaseId(),
+                List.of(new CreateMongoPermission(
+                        payload.databaseName(),
+                        payload.userName(),
+                        payload.clusterId(),
                         payload.roles()
                 ))
         );

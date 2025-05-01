@@ -7,8 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.onyxdb.platform.mdb.clients.k8s.psmdb.PsmdbClient;
 import com.onyxdb.platform.mdb.clusters.ClusterService;
+import com.onyxdb.platform.mdb.clusters.models.Cluster;
 import com.onyxdb.platform.mdb.hosts.HostService;
-import com.onyxdb.platform.mdb.models.Cluster;
 import com.onyxdb.platform.mdb.models.Host;
 import com.onyxdb.platform.mdb.processing.consumers.ClusterTaskProcessor;
 import com.onyxdb.platform.mdb.processing.models.Task;

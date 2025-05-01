@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 
 import com.onyxdb.platform.mdb.clients.k8s.psmdb.PsmdbClient;
 import com.onyxdb.platform.mdb.clusters.ClusterService;
+import com.onyxdb.platform.mdb.clusters.models.Cluster;
 import com.onyxdb.platform.mdb.hosts.HostRepository;
-import com.onyxdb.platform.mdb.models.Cluster;
 import com.onyxdb.platform.mdb.models.Host;
 import com.onyxdb.platform.mdb.processing.consumers.ClusterTaskProcessor;
 import com.onyxdb.platform.mdb.processing.models.Task;
@@ -43,7 +43,7 @@ public class MongoUpdateHostsTaskProcessor extends ClusterTaskProcessor {
     protected TaskProcessingResult internalProcess(Task task, ClusterPayload payload) {
         Cluster cluster = clusterService.getCluster(payload.clusterId());
 
-        List<String> hostnames = psmdbClient.calculatePsmdbHostnames(
+        List<String> hostnames = PsmdbClient.calculatePsmdbHostNames(
                 DEFAULT_PROJECT,
                 cluster.name(),
                 cluster.config().replicas()

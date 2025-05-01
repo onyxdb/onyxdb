@@ -7,9 +7,8 @@ import com.onyxdb.platform.mdb.models.MongoRole;
 
 public record MongoCreateClusterPayload(
         UUID clusterId,
-        UUID databaseId,
         String databaseName,
-        String username,
+        String userName,
         String passwordSecretName,
         String passwordSecretNamespace,
         List<MongoRole> roles

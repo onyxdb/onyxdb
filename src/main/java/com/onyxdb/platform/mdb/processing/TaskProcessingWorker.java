@@ -53,12 +53,12 @@ public class TaskProcessingWorker implements CommandLineRunner {
     @Override
     @Async(TaskProcessingContextConfiguration.TASK_PROCESSING_WORKER_EXECUTOR_BEAN)
     public void run(String... args) {
-        try {
-            logger.info("Starting processing cluster tasks");
-            internalRun();
-        } catch (Exception e) {
-            logger.error("Failed to process cluster tasks", e);
-        }
+//        try {
+//            logger.info("Starting processing cluster tasks");
+//            internalRun();
+//        } catch (Exception e) {
+//            logger.error("Failed to process cluster tasks", e);
+//        }
     }
 
     private void internalRun() {

@@ -46,13 +46,13 @@ public class ProjectControllerTests extends BaseTest {
         var project1 = Project.create(
                 "project1",
                 "project1 desc",
-                TestUtils.PRODUCT_ID_1,
+                TestUtils.PARENT_PRODUCT_ID,
                 TestUtils.ADMIN_ID
         );
         var project2 = Project.create(
                 "project2",
                 "project2 desc",
-                TestUtils.PRODUCT_ID_2,
+                TestUtils.CHILD_PRODUCT_ID,
                 TestUtils.ADMIN_ID
         );
 
@@ -84,7 +84,7 @@ public class ProjectControllerTests extends BaseTest {
         var project = Project.create(
                 "project",
                 "project desc",
-                TestUtils.PRODUCT_ID_1,
+                TestUtils.PARENT_PRODUCT_ID,
                 TestUtils.ADMIN_ID
         );
 
@@ -110,7 +110,7 @@ public class ProjectControllerTests extends BaseTest {
 
     @Test
     public void whenProjectNotFound_then404() {
-        var projectId = TestUtils.PROJECT_ID_1;
+        var projectId = TestUtils.SANDBOX_PROJECT_ID;
 
         ResponseEntity<BadRequestResponse> response = restTemplate.exchange(
                 "/api/mdb/projects/{projectId}",
@@ -132,7 +132,7 @@ public class ProjectControllerTests extends BaseTest {
         var rq = new CreateProjectRequestDTO(
                 "project",
                 "project description",
-                TestUtils.PRODUCT_ID_1
+                TestUtils.PARENT_PRODUCT_ID
         );
 
         ResponseEntity<CreateProjectResponseDTO> createResponse = restTemplate.postForEntity(
@@ -167,7 +167,7 @@ public class ProjectControllerTests extends BaseTest {
         var project = Project.create(
                 "project",
                 "project desc",
-                TestUtils.PRODUCT_ID_1,
+                TestUtils.PARENT_PRODUCT_ID,
                 TestUtils.ADMIN_ID
         );
         projectRepository.createProject(project);
@@ -197,7 +197,7 @@ public class ProjectControllerTests extends BaseTest {
         var projectBefore = Project.create(
                 "name before",
                 "desc before",
-                TestUtils.PRODUCT_ID_1,
+                TestUtils.PARENT_PRODUCT_ID,
                 TestUtils.ADMIN_ID
         );
         projectRepository.createProject(projectBefore);
@@ -205,7 +205,7 @@ public class ProjectControllerTests extends BaseTest {
         var rq = new UpdateProjectRequestDTO(
                 "updated name",
                 "updated desc",
-                TestUtils.PRODUCT_ID_2
+                TestUtils.CHILD_PRODUCT_ID
         );
 
         ResponseEntity<Void> response = restTemplate.exchange(
@@ -235,12 +235,12 @@ public class ProjectControllerTests extends BaseTest {
 
     @Test
     public void whenUpdateProjectNotExistingProject_then404() {
-        var projectId = TestUtils.PROJECT_ID_1;
+        var projectId = TestUtils.SANDBOX_PROJECT_ID;
 
         var rq = new UpdateProjectRequestDTO(
                 "updated name",
                 "updated desc",
-                TestUtils.PRODUCT_ID_1
+                TestUtils.PARENT_PRODUCT_ID
         );
 
         ResponseEntity<BadRequestResponse> response = restTemplate.exchange(
@@ -263,13 +263,13 @@ public class ProjectControllerTests extends BaseTest {
         var project1 = Project.create(
                 "project1",
                 "desc1",
-                TestUtils.PRODUCT_ID_1,
+                TestUtils.PARENT_PRODUCT_ID,
                 TestUtils.ADMIN_ID
         );
         var project2 = Project.create(
                 "project2",
                 "desc2",
-                TestUtils.PRODUCT_ID_2,
+                TestUtils.CHILD_PRODUCT_ID,
                 TestUtils.ADMIN_ID
         );
         projectRepository.createProject(project1);
@@ -278,7 +278,7 @@ public class ProjectControllerTests extends BaseTest {
         var rq = new UpdateProjectRequestDTO(
                 project1.name(),
                 "updated desc",
-                TestUtils.PRODUCT_ID_2
+                TestUtils.CHILD_PRODUCT_ID
         );
 
         ResponseEntity<BadRequestResponse> response = restTemplate.exchange(
@@ -301,7 +301,7 @@ public class ProjectControllerTests extends BaseTest {
         var project = Project.create(
                 "name",
                 "desc",
-                TestUtils.PRODUCT_ID_1,
+                TestUtils.PARENT_PRODUCT_ID,
                 TestUtils.ADMIN_ID
         );
         projectRepository.createProject(project);
@@ -324,7 +324,7 @@ public class ProjectControllerTests extends BaseTest {
 
     @Test
     public void whenDeleteNotExistingProject_then404() {
-        var projectId = TestUtils.PROJECT_ID_1;
+        var projectId = TestUtils.SANDBOX_PROJECT_ID;
         ResponseEntity<BadRequestResponse> response = restTemplate.exchange(
                 "/api/mdb/projects/{projectId}",
                 HttpMethod.DELETE,
@@ -345,7 +345,7 @@ public class ProjectControllerTests extends BaseTest {
         var project = Project.create(
                 "name",
                 "desc",
-                TestUtils.PRODUCT_ID_1,
+                TestUtils.PARENT_PRODUCT_ID,
                 TestUtils.ADMIN_ID
         );
         projectRepository.createProject(project);

@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.jetbrains.annotations.Nullable;
 import org.jooq.DSLContext;
 import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DSL;
@@ -14,6 +13,7 @@ import org.jooq.impl.DSL;
 import com.onyxdb.platform.generated.jooq.Indexes;
 import com.onyxdb.platform.generated.jooq.tables.records.PermissionsRecord;
 import com.onyxdb.platform.mdb.exceptions.BadRequestException;
+import com.onyxdb.platform.mdb.exceptions.NotImplementedException;
 import com.onyxdb.platform.mdb.models.MongoPermission;
 import com.onyxdb.platform.mdb.models.PermissionData;
 import com.onyxdb.platform.mdb.models.User;
@@ -41,36 +41,36 @@ public class UserPostgresRepository implements UserRepository {
     // TODO use filter builder for search
     @Override
     public List<User> listUsers(
-            @Nullable
             UUID clusterId,
-            @Nullable
-            UUID userId
+            String userName
     ) {
+//        throw new RuntimeException("FIXME");
         var condition = DSL.trueCondition()
                 .and(USERS.IS_DELETED.eq(false)
                         .and(PERMISSIONS.IS_DELETED.eq(false)));
 
-        if (clusterId != null) {
+//        if (clusterId != null) {
             condition = condition.and(USERS.CLUSTER_ID.eq(clusterId));
-        }
-        if (userId != null) {
-            condition = condition.and(USERS.ID.eq(userId));
-        }
-
-        USERS.CLUSTER_ID.eq(clusterId)
-                .and(USERS.IS_DELETED.eq(false));
+//        }
+//        if (userId != null) {
+            condition = condition.and(USERS.NAME.eq(userName));
+//        }
+//
+//        USERS.CLUSTER_ID.eq(clusterId)
+//                .and(USERS.IS_DELETED.eq(false));
         return dslContext.select()
                 .from(USERS)
                 .join(PERMISSIONS)
-                .on(USERS.ID.eq(PERMISSIONS.USER_ID))
+                .on(USERS.CLUSTER_ID.eq(PERMISSIONS.CLUSTER_ID).and(USERS.NAME.eq(PERMISSIONS.USER_NAME)))
                 .where(condition)
                 .fetch()
                 .map(r -> {
                     try {
                         MongoPermission permission = new MongoPermission(
                                 r.get(PERMISSIONS.ID),
-                                r.get(PERMISSIONS.USER_ID),
-                                r.get(PERMISSIONS.DATABASE_ID),
+                                r.get(PERMISSIONS.USER_NAME),
+                                r.get(PERMISSIONS.DATABASE_NAME),
+                                r.get(PERMISSIONS.CLUSTER_ID),
                                 r.get(PERMISSIONS.CREATED_AT),
                                 r.get(PERMISSIONS.CREATED_BY),
                                 r.get(PERMISSIONS.IS_DELETED),
@@ -99,12 +99,23 @@ public class UserPostgresRepository implements UserRepository {
 
     @Override
     public Optional<User> getUserO(UUID userId) {
-        return listUsers(null, userId).stream().findFirst();
+//        return listUsers(null, userId).stream().findFirst();
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public Optional<User> getUserO(UUID clusterId, String userName) {
+        return listUsers(clusterId, userName).stream().findFirst();
     }
 
     @Override
     public User getUser(UUID userId) {
         return getUserO(userId).orElseThrow(() -> new BadRequestException("User not found"));
+    }
+
+    @Override
+    public User getUser(UUID clusterId, String userName) {
+        return getUserO(clusterId, userName).orElseThrow(() -> new BadRequestException("User not found"));
     }
 
     @Override
@@ -138,9 +149,9 @@ public class UserPostgresRepository implements UserRepository {
             PsqlUtils.handleDataAccessEx(
                     e,
                     USERS,
-                    Indexes.USERS_NAME_CLUSTER_ID_UNIQ_IDX,
+                    Indexes.USERS_USER_NAME_CLUSTER_ID_IS_DELETED_UNIQ_IDX,
                     () -> new BadRequestException(String.format(
-                            "User with databaseName '%s' already exists",
+                            "User with database '%s' already exists",
                             user.name()
                     ))
             );
@@ -167,9 +178,10 @@ public class UserPostgresRepository implements UserRepository {
 
     @Override
     public void markPermissionsAsDeleted(UUID userId) {
-        dslContext.update(PERMISSIONS)
-                .set(PERMISSIONS.IS_DELETED, true)
-                .where(PERMISSIONS.USER_ID.eq(userId))
-                .execute();
+//        dslContext.update(PERMISSIONS)
+//                .set(PERMISSIONS.IS_DELETED, true)
+//                .where(PERMISSIONS.USER_ID.eq(userId))
+//                .execute();
+        throw new RuntimeException("FIXME");
     }
 }

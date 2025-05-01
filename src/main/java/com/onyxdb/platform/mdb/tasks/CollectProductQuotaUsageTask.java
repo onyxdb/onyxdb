@@ -1,7 +1,5 @@
 package com.onyxdb.platform.mdb.tasks;
 
-import java.util.List;
-
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,8 +7,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import com.onyxdb.platform.mdb.billing.BillingService;
 import com.onyxdb.platform.mdb.clusters.ClusterService;
-import com.onyxdb.platform.mdb.quotas.EnrichedProductQuota;
-import com.onyxdb.platform.mdb.quotas.QuotaFilter;
 import com.onyxdb.platform.mdb.quotas.QuotaService;
 
 public class CollectProductQuotaUsageTask {
@@ -37,16 +33,16 @@ public class CollectProductQuotaUsageTask {
             lockAtMostFor = "${onyxdb.tasks.collect-product-quota-usage.lock-at-most-for}"
     )
     public void scheduledTask() {
-        int collectedQuotas = 0;
-        logger.info("Started collecting product quota usage");
-        try {
-            List<EnrichedProductQuota> productQuotas = quotaService.listProductQuotas(QuotaFilter.builder().build());
-            collectedQuotas = productQuotas.size();
-            billingService.saveProductQuotaUsageRecords(productQuotas);
-        } catch (Exception e) {
-            logger.info("Failed to collect product quota usage", e);
-            return;
-        }
-        logger.info("Finished collecting product quota usage. Collected {} records", collectedQuotas);
+//        int collectedQuotas = 0;
+//        logger.info("Started collecting product quota usage");
+//        try {
+//            List<EnrichedProductQuota> productQuotas = quotaService.listProductQuotas(QuotaFilter.builder().build());
+//            collectedQuotas = productQuotas.size();
+//            billingService.saveProductQuotaUsageRecords(productQuotas);
+//        } catch (Exception e) {
+//            logger.info("Failed to collect product quota usage", e);
+//            return;
+//        }
+//        logger.info("Finished collecting product quota usage. Collected {} records", collectedQuotas);
     }
 }

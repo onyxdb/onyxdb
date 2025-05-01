@@ -7,8 +7,9 @@ import org.jetbrains.annotations.Nullable;
 
 public record MongoPermission(
         UUID id,
-        UUID userId,
-        UUID databaseId,
+        String userName,
+        String databaseName,
+        UUID clusterId,
         LocalDateTime createdAt,
         UUID createdBy,
         boolean isDeleted,

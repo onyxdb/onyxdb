@@ -16,7 +16,7 @@ import com.onyxdb.platform.generated.openapi.models.SimulateTransferQuotasBetwee
 import com.onyxdb.platform.generated.openapi.models.TransferQuotasBetweenProductsRequest;
 import com.onyxdb.platform.generated.openapi.models.UploadQuotasToProductsRequest;
 import com.onyxdb.platform.mdb.clusters.ClusterMapper;
-import com.onyxdb.platform.mdb.models.ClusterConfig;
+import com.onyxdb.platform.mdb.clusters.models.ClusterConfig;
 import com.onyxdb.platform.mdb.quotas.EnrichedProductQuota;
 import com.onyxdb.platform.mdb.quotas.ProductQuotaToUpload;
 import com.onyxdb.platform.mdb.quotas.QuotaFilter;
@@ -111,7 +111,7 @@ public class MdbQuotaController implements MdbQuotasApi {
     public ResponseEntity<SimulateMongoDBQuotasUsageResponse> simulateMongoDbQuotasUsage(
             SimulateMongoDBQuotasUsageRequest rq
     ) {
-        ClusterConfig clusterConfig = clusterMapper.mapToClusterConfig(rq.getConfig());
+        ClusterConfig clusterConfig = clusterMapper.mongoConfigDTOtoClusterConfig(rq.getConfig());
         List<EnrichedProductQuota> simulatedQuotas = quotaService.simulateMongoDbQuotasUsage(
                 rq.getProjectId(),
                 clusterConfig

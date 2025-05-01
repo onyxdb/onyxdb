@@ -4,22 +4,22 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.jetbrains.annotations.Nullable;
-
 import com.onyxdb.platform.mdb.models.MongoPermission;
 import com.onyxdb.platform.mdb.models.User;
 
 public interface UserRepository {
     List<User> listUsers(
-            @Nullable
             UUID clusterId,
-            @Nullable
-            UUID userId
+            String userName
     );
 
     Optional<User> getUserO(UUID userId);
 
+    Optional<User> getUserO(UUID clusterId, String userName);
+
     User getUser(UUID userId);
+
+    User getUser(UUID clusterId, String userName);
 
     void createUser(User user);
 

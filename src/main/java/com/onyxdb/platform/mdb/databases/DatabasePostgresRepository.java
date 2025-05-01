@@ -7,7 +7,7 @@ import java.util.UUID;
 import org.jooq.DSLContext;
 import org.jooq.exception.DataAccessException;
 
-import com.onyxdb.platform.generated.jooq.Keys;
+import com.onyxdb.platform.generated.jooq.Indexes;
 import com.onyxdb.platform.generated.jooq.tables.records.DatabasesRecord;
 import com.onyxdb.platform.mdb.exceptions.BadRequestException;
 import com.onyxdb.platform.mdb.models.Database;
@@ -53,6 +53,23 @@ public class DatabasePostgresRepository implements DatabaseRepository {
     }
 
     @Override
+    public Optional<Database> getDatabaseO(UUID clusterId, String databaseName) {
+        return dslContext.select()
+                .from(DATABASES)
+                .where(DATABASES.CLUSTER_ID.eq(clusterId)
+                        .and(DATABASES.NAME.eq(databaseName))
+                        .and(DATABASES.IS_DELETED.eq(false))
+                )
+                .fetchOptional()
+                .map(r -> databaseMapper.map(r.into(DatabasesRecord.class)));
+    }
+
+    @Override
+    public Database getDatabase(UUID clusterId, String databaseName) {
+        return getDatabaseO(clusterId, databaseName).orElseThrow(()-> new RuntimeException("Database not found"));
+    }
+
+    @Override
     public void createDatabase(Database database) {
         try {
             dslContext.insertInto(DATABASES)
@@ -62,9 +79,9 @@ public class DatabasePostgresRepository implements DatabaseRepository {
             PsqlUtils.handleDataAccessEx(
                     e,
                     DATABASES,
-                    Keys.DATABASES_NAME_CLUSTER_ID_KEY,
+                    Indexes.DATABASES_DATABASE_NAME_CLUSTER_ID_IS_DELETED_UNIQ_IDX,
                     () -> new BadRequestException(String.format(
-                            "Database with databaseName '%s' exists or was deleted earlier", database.name()
+                            "Database with name '%s' already exists", database.name()
                     ))
             );
 

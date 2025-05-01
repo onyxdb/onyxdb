@@ -13,6 +13,10 @@ public interface DatabaseRepository {
 
     Database getDatabase(UUID clusterId, UUID databaseId);
 
+    Optional<Database> getDatabaseO(UUID clusterId, String databaseName);
+
+    Database getDatabase(UUID clusterId, String databaseName);
+
     void createDatabase(Database database);
 
     void markDatabaseAsDeleted(UUID databaseId, UUID deletedBy);

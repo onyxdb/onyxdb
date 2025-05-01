@@ -20,4 +20,6 @@ public interface OperationRepository {
     List<Operation> listOperations(@Nullable UUID clusterId, @Nullable OperationStatus status);
 
     Optional<Operation> getForUpdateO(UUID operationId);
+
+    Operation getOperation(UUID operationId);
 }

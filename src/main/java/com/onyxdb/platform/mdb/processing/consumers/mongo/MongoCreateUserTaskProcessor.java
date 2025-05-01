@@ -4,11 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.onyxdb.platform.mdb.clients.onyxdbAgent.OnyxdbAgentClient;
-import com.onyxdb.platform.mdb.clients.onyxdbAgent.models.CreateMongoUserRequestDTO;
-import com.onyxdb.platform.mdb.clients.onyxdbAgent.models.MongoPermissionDTO;
 import com.onyxdb.platform.mdb.clusters.ClusterService;
 import com.onyxdb.platform.mdb.databases.DatabaseRepository;
-import com.onyxdb.platform.mdb.models.MongoRole;
 import com.onyxdb.platform.mdb.processing.consumers.TaskProcessor;
 import com.onyxdb.platform.mdb.processing.models.Task;
 import com.onyxdb.platform.mdb.processing.models.TaskProcessingResult;
@@ -37,18 +34,19 @@ public class MongoCreateUserTaskProcessor extends TaskProcessor<MongoCreateUserP
 
     @Override
     protected TaskProcessingResult internalProcess(Task task, MongoCreateUserPayload payload) {
-        var rq = new CreateMongoUserRequestDTO(
-                payload.username(),
-                payload.passwordSecretName(),
-                payload.passwordSecretNamespace(),
-                payload.permissions().stream().map(p -> new MongoPermissionDTO(
-                        databaseRepository.getDatabase(payload.clusterId(), p.databaseId()).name(),
-                        p.roles().stream().map(MongoRole::value).toList()
-                )).toList()
-        );
-        onyxdbAgentClient.createUser(rq);
+//        var rq = new CreateMongoUserRequestDTO(
+//                payload.username(),
+//                payload.passwordSecretName(),
+//                payload.passwordSecretNamespace(),
+//                payload.permissions().stream().map(p -> new MongoPermissionDTO(
+//                        databaseRepository.getDatabase(payload.clusterId(), p.databaseId()).name(),
+//                        p.roles().stream().map(MongoRole::value).toList()
+//                )).toList()
+//        );
+//        onyxdbAgentClient.createUser(rq);
+        throw new RuntimeException("FIXME");
 
-        return TaskProcessingResult.success();
+//        return TaskProcessingResult.success();
     }
 
     @Override
