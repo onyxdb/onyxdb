@@ -53,6 +53,7 @@ public class ClusterService {
 
     private final ProjectService projectService;
     private final ClusterMapper clusterMapper;
+    private final ClusterConfigValidator clusterConfigValidator;
 
 
     private final ClusterRepository clusterRepository;
@@ -76,6 +77,8 @@ public class ClusterService {
         Project project = projectService.getUndeletedProjectOrThrow(createCluster.projectId());
         // TODO get namespace from project
         String namespace = OnyxdbConsts.NAMESPACE;
+
+        clusterConfigValidator.validate(createCluster.config());
 
         Cluster cluster = clusterMapper.createClusterToCluster(createCluster, namespace);
 
