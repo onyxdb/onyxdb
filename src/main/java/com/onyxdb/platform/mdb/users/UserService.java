@@ -36,7 +36,7 @@ public class UserService {
     private final ObjectMapper objectMapper;
 
     public List<User> listUsers(UUID clusterId) {
-//        return userRepository.listUsers(clusterId, null);
+//        return userRepository.listUsers(id, null);
         throw new NotImplementedException();
     }
 
@@ -45,7 +45,7 @@ public class UserService {
     }
 
     public UUID createUser(CreateUser createUser) {
-        Cluster cluster = clusterRepository.getCluster(createUser.clusterId());
+        Cluster cluster = clusterRepository.getClusterOrThrow(createUser.clusterId());
 
         String userPasswordSecretName = psmdbClient.applyMongoUserSecret(
                 DEFAULT_NAMESPACE,

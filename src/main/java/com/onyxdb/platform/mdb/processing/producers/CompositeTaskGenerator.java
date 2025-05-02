@@ -16,7 +16,7 @@ public class CompositeTaskGenerator {
 //    public List<TaskWithBlockers> generateClusterTasks(
 //            UUID operationId,
 //            OperationType operationType,
-//            UUID clusterId
+//            UUID id
 //    ) {
 //        if (!operationTypeToClusterTaskGenerator.containsKey(operationType)) {
 //            throw new InternalServerErrorException(String.format(
@@ -25,7 +25,7 @@ public class CompositeTaskGenerator {
 //        }
 //
 //        ClusterTaskGenerator generator = operationTypeToClusterTaskGenerator.get(operationType);
-//        ClusterTaskPayload payload = new ClusterTaskPayload(clusterId);
+//        ClusterTaskPayload payload = new ClusterTaskPayload(id);
 //        return generator.generateTasks(operationId, payload);
 //    }
 }

@@ -34,7 +34,7 @@ public class OperationsController implements OperationsApi {
             UUID clusterId
     ) {
         if (clusterId == null) {
-            throw new BadRequestException("Nullable clusterId will be supported later");
+            throw new BadRequestException("Nullable id will be supported later");
         }
 
         List<Operation> operations = operationService.listOperations(clusterId);

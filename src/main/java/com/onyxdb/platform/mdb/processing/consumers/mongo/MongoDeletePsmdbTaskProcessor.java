@@ -33,7 +33,7 @@ public class MongoDeletePsmdbTaskProcessor extends ClusterTaskProcessor {
 
     @Override
     protected TaskProcessingResult internalProcess(Task task, ClusterPayload payload) {
-        Cluster cluster = clusterService.getCluster(payload.clusterId());
+        Cluster cluster = clusterService.getClusterOrThrow(payload.clusterId());
         psmdbClient.deletePsmdb(DEFAULT_NAMESPACE, DEFAULT_PROJECT, cluster.name());
 
         return TaskProcessingResult.success();

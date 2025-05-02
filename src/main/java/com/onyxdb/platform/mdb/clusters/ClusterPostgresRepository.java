@@ -14,9 +14,10 @@ import org.springframework.dao.DuplicateKeyException;
 import com.onyxdb.platform.generated.jooq.Indexes;
 import com.onyxdb.platform.mdb.clusters.models.Cluster;
 import com.onyxdb.platform.mdb.clusters.models.ClusterConfig;
+import com.onyxdb.platform.mdb.clusters.models.ClusterFilter;
 import com.onyxdb.platform.mdb.exceptions.ClusterAlreadyExistsException;
 import com.onyxdb.platform.mdb.exceptions.ClusterNotFoundException;
-import com.onyxdb.platform.mdb.models.UpdateCluster;
+import com.onyxdb.platform.mdb.clusters.models.UpdateCluster;
 import com.onyxdb.platform.mdb.utils.PsqlUtils;
 
 import static com.onyxdb.platform.generated.jooq.Tables.CLUSTERS;
@@ -41,10 +42,10 @@ public class ClusterPostgresRepository implements ClusterRepository {
     }
 
     @Override
-    public List<Cluster> listClusters() {
+    public List<Cluster> listClusters(ClusterFilter filter) {
         return dslContext.select()
                 .from(CLUSTERS)
-                .where(CLUSTERS.IS_DELETED.eq(false))
+                .where(filter.buildCondition())
                 .fetch(clusterMapper::fromJooqRecord);
     }
 
@@ -76,7 +77,7 @@ public class ClusterPostgresRepository implements ClusterRepository {
     }
 
     @Override
-    public Cluster getCluster(UUID clusterId) {
+    public Cluster getClusterOrThrow(UUID clusterId) {
         return getClusterO(clusterId).orElseThrow(() -> new ClusterNotFoundException(clusterId));
     }
 

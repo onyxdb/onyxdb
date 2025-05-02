@@ -35,7 +35,7 @@
 //
 //    @Override
 //    public TaskProcessingResult internalProcess(Task task, ClusterTaskPayload payload) {
-//        Cluster cluster = clusterService.getCluster(payload.clusterId());
+//        Cluster cluster = clusterService.getCluster(payload.id());
 //
 //        boolean isReady = vmServiceScrapeClient.resourceExists(
 //                DEFAULT_NAMESPACE,

@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.onyxdb.platform.BaseTest;
 import com.onyxdb.platform.TestUtils;
+import com.onyxdb.platform.generated.openapi.models.BadRequestResponse;
 import com.onyxdb.platform.generated.openapi.models.ClusterBackupConfigDTO;
 import com.onyxdb.platform.generated.openapi.models.ClusterResourcesDTO;
 import com.onyxdb.platform.generated.openapi.models.CreateMongoClusterRequestDTO;
@@ -34,6 +36,9 @@ import com.onyxdb.platform.mdb.clusters.models.ClusterResources;
 import com.onyxdb.platform.mdb.clusters.models.ClusterType;
 import com.onyxdb.platform.mdb.clusters.models.ClusterVersion;
 import com.onyxdb.platform.mdb.databases.DatabaseRepository;
+import com.onyxdb.platform.mdb.exceptions.ClusterAlreadyExistsException;
+import com.onyxdb.platform.mdb.exceptions.ProjectNotFoundException;
+import com.onyxdb.platform.mdb.exceptions.ResourcePresetNotFoundException;
 import com.onyxdb.platform.mdb.hosts.HostMapper;
 import com.onyxdb.platform.mdb.hosts.HostRepository;
 import com.onyxdb.platform.mdb.models.CreateMongoPermission;
@@ -56,8 +61,9 @@ import com.onyxdb.platform.mdb.utils.ObjectMapperUtils;
 import com.onyxdb.platform.mdb.utils.OnyxdbConsts;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.is;
 
-public class MongoClusterControllerTests extends BaseTest {
+public class ManagedMongoDbControllerTests extends BaseTest {
     @Autowired
     private ProjectRepository projectRepository;
     @Autowired
@@ -206,7 +212,7 @@ public class MongoClusterControllerTests extends BaseTest {
                     )
             ));
 
-            Cluster createdCluster = clusterRepository.getCluster(expectedCluster.id());
+            Cluster createdCluster = clusterRepository.getClusterOrThrow(expectedCluster.id());
             List<Host> createHosts = hostRepository.listHosts(createdClusterId);
             Database createdDatabase = databaseRepository.getDatabase(createdClusterId, rq.getDatabase().getName());
             User createdUser = userRepository.getUser(createdClusterId, rq.getUser().getName());
@@ -265,6 +271,164 @@ public class MongoClusterControllerTests extends BaseTest {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Test
+    public void whenCreateClusterWithDuplicateName_then400() {
+        Project project = TestUtils.SANDBOX_PROJECT;
+        ResourcePreset resourcePreset = TestUtils.RESOURCE_PRESET;
+        String namespace = OnyxdbConsts.NAMESPACE;
+
+        var rq = new CreateMongoClusterRequestDTO(
+                "test",
+                "test cluster",
+                project.id(),
+                new MongoConfigDTO(
+                        "8.0",
+                        new ClusterResourcesDTO(
+                                resourcePreset.id(),
+                                "standard",
+                                1073741824L
+                        ),
+                        3,
+                        new ClusterBackupConfigDTO(
+                                true,
+                                "0 0 * * *"
+                        )
+                ),
+                new MongoDatabaseDTO(
+                        "db1"
+                ),
+                new MongoUserDTO(
+                        "u1",
+                        "p1"
+                )
+        );
+
+        String userSecretName = PsmdbClient.getMongoUserSecretName(
+                project.name(),
+                rq.getName(),
+                rq.getUser().getName()
+        );
+
+        Mockito.when(psmdbClient.applyMongoUserSecret(
+                namespace,
+                project.name(),
+                rq.getName(),
+                rq.getUser().getName(),
+                rq.getUser().getPassword()
+        )).thenReturn(userSecretName);
+
+        ResponseEntity<CreateMongoClusterResponseDTO> response = restTemplate.exchange(
+                "/api/mdb/mongodb/clusters",
+                HttpMethod.POST,
+                new HttpEntity<>(rq, getHeaders()),
+                CreateMongoClusterResponseDTO.class
+        );
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertNotNull(response.getBody());
+
+        ResponseEntity<BadRequestResponse> response2 = restTemplate.exchange(
+                "/api/mdb/mongodb/clusters",
+                HttpMethod.POST,
+                new HttpEntity<>(rq, getHeaders()),
+                BadRequestResponse.class
+        );
+
+        var expected = new BadRequestResponse(ClusterAlreadyExistsException.buildMessage(rq.getName()));
+
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, response2.getStatusCode());
+        Assertions.assertNotNull(response2.getBody());
+        MatcherAssert.assertThat(response2.getBody(), is(expected));
+    }
+
+    @Test
+    public void whenCreateClusterWithNotExisingProject_then404() {
+        ResourcePreset resourcePreset = TestUtils.RESOURCE_PRESET;
+
+        var rq = new CreateMongoClusterRequestDTO(
+                "test",
+                "test cluster",
+                TestUtils.NOT_EXISTING_PROJECT_ID,
+                new MongoConfigDTO(
+                        "8.0",
+                        new ClusterResourcesDTO(
+                                resourcePreset.id(),
+                                "standard",
+                                1073741824L
+                        ),
+                        3,
+                        new ClusterBackupConfigDTO(
+                                true,
+                                "0 0 * * *"
+                        )
+                ),
+                new MongoDatabaseDTO(
+                        "db1"
+                ),
+                new MongoUserDTO(
+                        "u1",
+                        "p1"
+                )
+        );
+
+        ResponseEntity<BadRequestResponse> response = restTemplate.exchange(
+                "/api/mdb/mongodb/clusters",
+                HttpMethod.POST,
+                new HttpEntity<>(rq, getHeaders()),
+                BadRequestResponse.class
+        );
+
+        var expected = new BadRequestResponse(ProjectNotFoundException.buildMessage(rq.getProjectId()));
+
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        Assertions.assertNotNull(response.getBody());
+        MatcherAssert.assertThat(response.getBody(), is(expected));
+    }
+
+    @Test
+    public void whenCreateClusterWithNotExisingResourcePreset_then404() {
+        Project project = TestUtils.SANDBOX_PROJECT;
+
+        var rq = new CreateMongoClusterRequestDTO(
+                "test",
+                "test cluster",
+                project.id(),
+                new MongoConfigDTO(
+                        "8.0",
+                        new ClusterResourcesDTO(
+                                TestUtils.NOT_EXISTING_RESOURCE_PRESET_ID,
+                                "standard",
+                                1073741824L
+                        ),
+                        3,
+                        new ClusterBackupConfigDTO(
+                                true,
+                                "0 0 * * *"
+                        )
+                ),
+                new MongoDatabaseDTO(
+                        "db1"
+                ),
+                new MongoUserDTO(
+                        "u1",
+                        "p1"
+                )
+        );
+
+        ResponseEntity<BadRequestResponse> response = restTemplate.exchange(
+                "/api/mdb/mongodb/clusters",
+                HttpMethod.POST,
+                new HttpEntity<>(rq, getHeaders()),
+                BadRequestResponse.class
+        );
+
+        String expectedMessage = ResourcePresetNotFoundException.buildMessage(rq.getConfig().getResources().getPresetId());
+        var expected = new BadRequestResponse(expectedMessage);
+
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        Assertions.assertNotNull(response.getBody());
+        MatcherAssert.assertThat(response.getBody(), is(expected));
     }
 
     private void prepare() {

@@ -84,18 +84,21 @@ paths:
           description: OK
   # ---------- Managed MongoDB clusters --------------------------------------------------------------------------------
   /api/mdb/mongodb/clusters:
-#    get:
-#      summary: Get MongoDB clusters
-#      operationId: listClusters
-#      tags:
-#        - v1ManagedMongoDb
-#      responses:
-#        '200':
-#          description: OK
-#          content:
-#            application/json:
-#              schema:
-#                $ref: '#/components/schemas/V1ListMongoClustersResponse'
+    get:
+      summary: List MongoDB clusters
+      operationId: listClusters
+      tags:
+        - Managed MongoDB clusters
+      parameters:
+        - $ref: '#/components/parameters/ProjectIdsOQP'
+        - $ref: '#/components/parameters/IsDeletedOQP'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListMongoClustersResponseDTO'
     post:
       summary: Create MongoDB cluster
       operationId: createCluster
@@ -114,7 +117,55 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CreateMongoClusterResponseDTO'
-
+  /api/mdb/mongodb/clusters/{clusterId}:
+    get:
+      summary: Get MongoDB cluster
+      operationId: getCluster
+      tags:
+        - Managed MongoDB clusters
+      parameters:
+        - $ref: '#/components/parameters/ClusterIdPV'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MongoClusterDTO'
+    put:
+      summary: Update MongoDB cluster
+      operationId: updateCluster
+      tags:
+        - Managed MongoDB clusters
+      parameters:
+        - $ref: '#/components/parameters/ClusterIdPV'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMongoClusterRequestDTO'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduledOperationDTO'
+    delete:
+      summary: Delete MongoDB cluster
+      operationId: deleteCluster
+      tags:
+        - Managed MongoDB clusters
+      parameters:
+        - $ref: '#/components/parameters/ClusterIdPV'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduledOperationDTO'
 
 
 
@@ -189,55 +240,6 @@ paths:
         '200':
           description: OK
   # ---------- v1ManagedMongoDb ----------
-  /api/v1/managed-mongodb/clusters/{clusterId}:
-    get:
-      summary: Get MongoDB cluster
-      operationId: getCluster
-      tags:
-        - v1ManagedMongoDb
-      parameters:
-        - $ref: '#/components/parameters/ClusterIdPV'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/V1MongoClusterResponse'
-    put:
-      summary: Update MongoDB cluster
-      operationId: updateCluster
-      tags:
-        - v1ManagedMongoDb
-      parameters:
-        - $ref: '#/components/parameters/ClusterIdPV'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/V1MongoUpdateClusterRequest'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/V1ScheduledOperationResponse'
-    delete:
-      summary: Delete MongoDB cluster
-      operationId: deleteCluster
-      tags:
-        - v1ManagedMongoDb
-      parameters:
-        - $ref: '#/components/parameters/ClusterIdPV'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/V1DeleteMongoClusterResponse'
   /api/managed-mongodb/v1/clusters/{clusterId}/hosts:
     get:
       summary: Get MongoDB hosts
@@ -2882,6 +2884,123 @@ components:
       required:
         - clusterId
         - operationId
+    ListMongoClustersResponseDTO:
+      type: object
+      properties:
+        clusters:
+          type: array
+          items:
+            $ref: '#/components/schemas/MongoClusterDTO'
+      required:
+        - clusters
+    ClusterStatusDTO:
+      type: object
+      properties:
+        value:
+          type: string
+        displayValue:
+          type: string
+      required:
+        - value
+        - displayValue
+    MongoClusterDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        status:
+          $ref: '#/components/schemas/ClusterStatusDTO'
+        projectId:
+          type: string
+          format: uuid
+        namespace:
+          type: string
+        config:
+          $ref: '#/components/schemas/MongoConfigDTO'
+        createdAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+          format: uuid
+        isDeleted:
+          type: boolean
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+        deletedBy:
+          type: string
+          format: uuid
+          nullable: true
+      required:
+        - id
+        - name
+        - description
+        - status
+        - projectId
+        - namespace
+        - config
+        - createdAt
+        - createdBy
+        - isDeleted
+        - deletedAt
+        - deletedBy
+    ScheduledOperationDTO:
+      type: object
+      properties:
+        operationId:
+          type: string
+          format: uuid
+      required:
+        - operationId
+    UpdateMongoClusterRequestDTO:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        config:
+          $ref: '#/components/schemas/UpdateMongoConfigDTO'
+      required:
+        - name
+        - description
+        - config
+    UpdateMongoConfigDTO:
+      type: object
+      properties:
+        version:
+          type: string
+        resources:
+          $ref: '#/components/schemas/UpdateClusterResourcesDTO'
+        replicas:
+          type: integer
+          format: int32
+        backup:
+          $ref: '#/components/schemas/ClusterBackupConfigDTO'
+      required:
+        - version
+        - resources
+        - replicas
+        - backup
+    UpdateClusterResourcesDTO:
+      type: object
+      properties:
+        presetId:
+          type: string
+          format: uuid
+      required:
+        - presetId
+
+
+
+
 
 
 
@@ -2961,39 +3080,6 @@ components:
         - cpu_optimized
         - standard
         - ram_optimized
-    V1ListMongoClustersResponse:
-      type: object
-      properties:
-        clusters:
-          type: array
-          items:
-            $ref: '#/components/schemas/V1MongoClusterResponse'
-      required:
-        - clusters
-    V1MongoClusterResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        name:
-          type: string
-        description:
-          type: string
-        status:
-          $ref: '#/components/schemas/V1ClusterStatusResponse'
-        projectId:
-          type: string
-          format: uuid
-        config:
-          $ref: '#/components/schemas/MongoConfigDTO'
-      required:
-        - id
-        - name
-        - description
-        - status
-        - projectId
-        - config
     V1DeleteMongoClusterResponse:
       type: object
       properties:
@@ -3002,16 +3088,6 @@ components:
           format: uuid
       required:
         - operationId
-    V1ClusterStatusResponse:
-      type: object
-      properties:
-        value:
-          type: string
-        message:
-          type: string
-      required:
-        - value
-        - message
     MongoListHostsResponse:
       type: object
       properties:
@@ -3036,17 +3112,6 @@ components:
           format: uuid
       required:
         - id
-    V1MongoUpdateClusterRequest:
-      type: object
-      properties:
-        name:
-          type: string
-        config:
-          $ref: '#/components/schemas/MongoConfigDTO'
-      required:
-        - name
-        - description
-        - config
     UpdateMongoHostsRequest:
       type: object
       properties:
@@ -4123,6 +4188,21 @@ components:
       schema:
         type: string
         format: uuid
+    ProjectIdsOQP:
+      name: projectIds
+      in: query
+      required: false
+      schema:
+        type: array
+        items:
+          type: string
+          format: uuid
+    IsDeletedOQP:
+      name: isDeleted
+      in: query
+      required: false
+      schema:
+        type: boolean
     ProductIdsOQP:
       name: productIds
       in: query
@@ -4143,14 +4223,14 @@ components:
         type: string
         format: uuid
     ClusterIdPV:
-      name: clusterId
+      name: id
       in: path
       required: true
       schema:
         type: string
         format: uuid
     ClusterIdOQP:
-      name: clusterId
+      name: id
       in: query
       required: false
       schema:

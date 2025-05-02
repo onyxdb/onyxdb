@@ -3,9 +3,9 @@ package com.onyxdb.platform.mdb.clusters.models;
 /**
  * @author foxleren
  */
-public record ClusterConfig(
+public record UpdateClusterConfig(
         ClusterVersion version,
-        ClusterResources resources,
+        UpdateClusterResources resources,
         int replicas,
         ClusterBackupConfig backup
 ) {

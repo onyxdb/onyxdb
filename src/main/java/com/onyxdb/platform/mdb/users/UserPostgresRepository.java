@@ -49,14 +49,14 @@ public class UserPostgresRepository implements UserRepository {
                 .and(USERS.IS_DELETED.eq(false)
                         .and(PERMISSIONS.IS_DELETED.eq(false)));
 
-//        if (clusterId != null) {
+//        if (id != null) {
             condition = condition.and(USERS.CLUSTER_ID.eq(clusterId));
 //        }
 //        if (userId != null) {
             condition = condition.and(USERS.NAME.eq(userName));
 //        }
 //
-//        USERS.CLUSTER_ID.eq(clusterId)
+//        USERS.CLUSTER_ID.eq(id)
 //                .and(USERS.IS_DELETED.eq(false));
         return dslContext.select()
                 .from(USERS)

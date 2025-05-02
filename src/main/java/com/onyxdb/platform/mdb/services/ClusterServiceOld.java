@@ -76,6 +76,6 @@ public class ClusterServiceOld implements BaseClusterService {
 
     @Override
     public void updateProject(UUID clusterId, UUID projectId) {
-//        clusterRepository.updateProject(clusterId, projectId);
+//        clusterRepository.updateProject(id, projectId);
     }
 }

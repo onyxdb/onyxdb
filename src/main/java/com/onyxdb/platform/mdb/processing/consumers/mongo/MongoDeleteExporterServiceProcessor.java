@@ -33,7 +33,7 @@ public class MongoDeleteExporterServiceProcessor extends ClusterTaskProcessor {
 
     @Override
     protected TaskProcessingResult internalProcess(Task task, ClusterPayload payload) {
-        Cluster cluster = clusterService.getCluster(payload.clusterId());
+        Cluster cluster = clusterService.getClusterOrThrow(payload.clusterId());
 
         psmdbExporterServiceClient.deletePsmdbExporterService(
                 DEFAULT_NAMESPACE,

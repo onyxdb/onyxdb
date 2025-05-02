@@ -42,7 +42,7 @@ public class HostPostgresRepository implements HostRepository {
                         HOSTS.CLUSTER_ID
                 )
                 .from(HOSTS)
-//                .where(HOSTS.CLUSTER_ID.eq(clusterId))
+//                .where(HOSTS.CLUSTER_ID.eq(id))
                 .fetchInto(Host.class);
     }
 

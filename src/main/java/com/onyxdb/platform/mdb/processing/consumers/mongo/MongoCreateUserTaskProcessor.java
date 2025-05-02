@@ -39,7 +39,7 @@ public class MongoCreateUserTaskProcessor extends TaskProcessor<MongoCreateUserP
 //                payload.passwordSecretName(),
 //                payload.passwordSecretNamespace(),
 //                payload.permissions().stream().map(p -> new MongoPermissionDTO(
-//                        databaseRepository.getDatabase(payload.clusterId(), p.databaseId()).name(),
+//                        databaseRepository.getDatabase(payload.id(), p.databaseId()).name(),
 //                        p.roles().stream().map(MongoRole::value).toList()
 //                )).toList()
 //        );

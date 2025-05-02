@@ -24,7 +24,7 @@ public class ExceptionController {
     }
 
     @ExceptionHandler(value = NotFoundException.class)
-    public ResponseEntity<BadRequestResponse> handleBadRequestException(NotFoundException e) {
+    public ResponseEntity<BadRequestResponse> handleNotFoundException(NotFoundException e) {
         BadRequestResponse response = new BadRequestResponse(e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
