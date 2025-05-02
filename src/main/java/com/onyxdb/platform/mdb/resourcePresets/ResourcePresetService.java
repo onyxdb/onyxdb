@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import com.onyxdb.platform.mdb.exceptions.BadRequestException;
+import com.onyxdb.platform.mdb.exceptions.ResourcePresetNotFoundException;
 
 /**
  * @author foxleren
@@ -25,7 +25,7 @@ public class ResourcePresetService {
     }
 
     public ResourcePreset getOrThrow(UUID id) {
-        return getO(id).orElseThrow(() -> new BadRequestException("Can't get resource preset with id=" + id));
+        return getO(id).orElseThrow(() -> new ResourcePresetNotFoundException(id));
     }
 
     public UUID create(ResourcePreset resourcePreset) {
