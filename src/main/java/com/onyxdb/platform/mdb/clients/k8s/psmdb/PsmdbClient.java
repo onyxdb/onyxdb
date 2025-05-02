@@ -170,7 +170,7 @@ public class PsmdbClient extends AbstractPsmdbFactory {
                 .withNewMetadata()
                 .withName(secretName)
                 .endMetadata()
-                .addToStringData("userName", user)
+                .addToStringData("username", user)
                 .addToStringData("password", password)
                 .build();
 

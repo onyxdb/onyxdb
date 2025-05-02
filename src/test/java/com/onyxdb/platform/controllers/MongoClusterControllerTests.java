@@ -210,7 +210,7 @@ public class MongoClusterControllerTests extends BaseTest {
             List<Host> createHosts = hostRepository.listHosts(createdClusterId);
             Database createdDatabase = databaseRepository.getDatabase(createdClusterId, rq.getDatabase().getName());
             User createdUser = userRepository.getUser(createdClusterId, rq.getUser().getName());
-            Operation createdOperation = operationRepository.getOperation(response.getBody().getOperationId());
+            Operation createdOperation = operationRepository.getOperation(operationId);
 
             var operationPayload = new MongoCreateClusterPayload(
                     createdClusterId,
