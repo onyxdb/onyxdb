@@ -13,7 +13,7 @@ import com.onyxdb.platform.mdb.processing.models.Task;
 import com.onyxdb.platform.mdb.processing.models.TaskProcessingResult;
 import com.onyxdb.platform.mdb.processing.models.TaskType;
 import com.onyxdb.platform.mdb.processing.models.payloads.MongoDeleteDatabasePayload;
-import com.onyxdb.platform.mdb.utils.Consts;
+import com.onyxdb.platform.mdb.utils.OnyxdbConsts;
 
 @Component
 public class MongoDeleteDatabaseTaskProcessor extends TaskProcessor<MongoDeleteDatabasePayload> {
@@ -48,7 +48,7 @@ public class MongoDeleteDatabaseTaskProcessor extends TaskProcessor<MongoDeleteD
         onyxdbAgentClient.deleteDatabase(new DeleteMongoDatabaseRequestDTO(
                 payload.databaseName()
         ));
-        databaseRepository.markDatabaseAsDeleted(payload.databaseId(), Consts.USER_ID);
+        databaseRepository.markDatabaseAsDeleted(payload.databaseId(), OnyxdbConsts.USER_ID);
 
         return TaskProcessingResult.success();
     }

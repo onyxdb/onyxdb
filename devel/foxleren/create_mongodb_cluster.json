@@ -1,0 +1,25 @@
+{
+  "name": "test",
+  "description": "This this test cluster",
+  "projectId": "5cb0ca1c-e6c1-47ab-b832-0074312490a3",
+  "config": {
+    "version": "8.0",
+    "resources": {
+      "presetId": "c92712a0-d344-4b1a-91fb-b27469b72bf5",
+      "storageClass": "standard",
+      "storage": 1073741824
+    },
+    "replicas": 3,
+    "backup": {
+      "isEnabled": true,
+      "schedule": "0 0 * * *"
+    }
+  },
+  "database": {
+    "name": "db1"
+  },
+  "user": {
+    "name": "u1",
+    "password": "p1"
+  }
+}

@@ -28,8 +28,10 @@ public class ResourcePresetService {
         return getO(id).orElseThrow(() -> new BadRequestException("Can't get resource preset with id=" + id));
     }
 
-    public void create(ResourcePreset resourcePreset) {
+    public UUID create(ResourcePreset resourcePreset) {
         resourcePresetRepository.create(resourcePreset);
+
+        return resourcePreset.id();
     }
 
     public void update(ResourcePreset resourcePreset) {

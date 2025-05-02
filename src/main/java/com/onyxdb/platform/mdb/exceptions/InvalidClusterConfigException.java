@@ -1,6 +1,6 @@
 package com.onyxdb.platform.mdb.exceptions;
 
-import com.onyxdb.platform.mdb.models.ClusterVersion;
+import com.onyxdb.platform.mdb.clusters.models.ClusterVersion;
 
 /**
  * @author foxleren

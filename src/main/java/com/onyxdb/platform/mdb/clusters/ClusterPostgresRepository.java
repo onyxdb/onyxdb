@@ -8,11 +8,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jooq.DSLContext;
 import org.jooq.JSONB;
+import org.jooq.exception.DataAccessException;
+import org.springframework.dao.DuplicateKeyException;
 
+import com.onyxdb.platform.generated.jooq.Indexes;
+import com.onyxdb.platform.mdb.clusters.models.Cluster;
+import com.onyxdb.platform.mdb.clusters.models.ClusterConfig;
+import com.onyxdb.platform.mdb.exceptions.ClusterAlreadyExistsException;
 import com.onyxdb.platform.mdb.exceptions.ClusterNotFoundException;
-import com.onyxdb.platform.mdb.models.Cluster;
-import com.onyxdb.platform.mdb.models.ClusterConfig;
 import com.onyxdb.platform.mdb.models.UpdateCluster;
+import com.onyxdb.platform.mdb.utils.PsqlUtils;
 
 import static com.onyxdb.platform.generated.jooq.Tables.CLUSTERS;
 
@@ -47,25 +52,17 @@ public class ClusterPostgresRepository implements ClusterRepository {
     public void createCluster(Cluster cluster) {
         try {
             dslContext.insertInto(CLUSTERS)
-                    .columns(
-                            CLUSTERS.ID,
-                            CLUSTERS.NAME,
-                            CLUSTERS.DESCRIPTION,
-                            CLUSTERS.PROJECT_ID,
-                            CLUSTERS.TYPE,
-                            CLUSTERS.CONFIG
-                    )
-                    .values(
-                            cluster.id(),
-                            cluster.name(),
-                            cluster.description(),
-                            cluster.projectId(),
-                            clusterMapper.clusterTypeToJooqClusterType(cluster.type()),
-                            JSONB.jsonb(objectMapper.writeValueAsString(cluster.config()))
-                    )
+                    .set(clusterMapper.clusterToClustersRecord(cluster))
                     .execute();
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+        } catch (DataAccessException | DuplicateKeyException e) {
+            PsqlUtils.handleDataAccessEx(
+                    e,
+                    CLUSTERS,
+                    Indexes.CLUSTERS_CLUSTER_NAME_IS_DELETED_UNIQ_IDX,
+                    () -> new ClusterAlreadyExistsException(cluster.name())
+            );
+
+            throw e;
         }
     }
 

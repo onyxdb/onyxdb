@@ -9,13 +9,13 @@ import org.jooq.JSONB;
 import com.onyxdb.platform.generated.jooq.tables.records.PermissionsRecord;
 import com.onyxdb.platform.generated.openapi.models.MongoUser;
 import com.onyxdb.platform.generated.openapi.models.MongoUserToCreate;
+import com.onyxdb.platform.mdb.models.CreateMongoPermission;
+import com.onyxdb.platform.mdb.models.CreateUser;
+import com.onyxdb.platform.mdb.models.CreateUserWithSecret;
 import com.onyxdb.platform.mdb.models.MongoPermission;
-import com.onyxdb.platform.mdb.models.MongoPermissionToCreate;
-import com.onyxdb.platform.mdb.models.MongoRole;
 import com.onyxdb.platform.mdb.models.PermissionData;
 import com.onyxdb.platform.mdb.models.User;
-import com.onyxdb.platform.mdb.models.UserToCreate;
-import com.onyxdb.platform.mdb.utils.Consts;
+import com.onyxdb.platform.mdb.utils.OnyxdbConsts;
 import com.onyxdb.platform.mdb.utils.TimeUtils;
 
 public class UserMapper {
@@ -40,43 +40,45 @@ public class UserMapper {
     }
 
     public com.onyxdb.platform.generated.openapi.models.MongoPermission map(MongoPermission p) {
-        return new com.onyxdb.platform.generated.openapi.models.MongoPermission(
-                p.id(),
-                p.databaseId(),
-                p.createdAt(),
-                p.createdBy(),
-                p.isDeleted(),
-                p.deletedAt(),
-                p.deletedBy(),
-                p.data().roles().stream().map(MongoRole::value).toList()
-        );
+        throw new RuntimeException("FIX ME");
+//        return new com.onyxdb.platform.generated.openapi.models.MongoPermission(
+//                p.id(),
+//                p.databaseId(),
+//                p.createdAt(),
+//                p.createdBy(),
+//                p.isDeleted(),
+//                p.deletedAt(),
+//                p.deletedBy(),
+//                p.data().roles().stream().map(MongoRole::value).toList()
+//        );
     }
 
-    public UserToCreate map(UUID clusterId, MongoUserToCreate u) {
-        return new UserToCreate(
-                clusterId,
+    public CreateUser map(UUID clusterId, MongoUserToCreate u) {
+        return new CreateUser(
                 u.getName(),
                 u.getPassword(),
+                clusterId,
                 u.getPermissions().stream().map(this::map).toList()
         );
     }
 
-    public MongoPermissionToCreate map(com.onyxdb.platform.generated.openapi.models.MongoPermissionToCreate p) {
-        return new MongoPermissionToCreate(
-                p.getDatabaseId(),
-                p.getRoles().stream().map(MongoRole.R::fromValue).toList()
-        );
+    public CreateMongoPermission map(com.onyxdb.platform.generated.openapi.models.MongoPermissionToCreate p) {
+        throw new RuntimeException("FIX ME");
+//        return new CreateMongoPermission(
+//                p.getDatabaseId(),
+//                p.getRoles().stream().map(MongoRole.R::fromValue).toList()
+//        );
     }
 
-    public User userToCreateToUser(UserToCreate u, String passwordSecretName) {
+    public User createUserWithSecretToUser(CreateUserWithSecret u) {
         UUID userId = UUID.randomUUID();
         return new User(
                 userId,
-                u.username(),
-                passwordSecretName,
+                u.userName(),
+                u.passwordSecretName(),
                 u.clusterId(),
                 TimeUtils.now(),
-                Consts.USER_ID,
+                OnyxdbConsts.USER_ID,
                 false,
                 null,
                 null,
@@ -84,13 +86,30 @@ public class UserMapper {
         );
     }
 
-    public MongoPermission map(UUID userId, MongoPermissionToCreate p) {
+    public User userToCreateToUser(CreateUser u, String passwordSecretName) {
+        UUID userId = UUID.randomUUID();
+        return new User(
+                userId,
+                u.userName(),
+                passwordSecretName,
+                u.clusterId(),
+                TimeUtils.now(),
+                OnyxdbConsts.USER_ID,
+                false,
+                null,
+                null,
+                u.permissions().stream().map(p -> map(userId, p)).toList()
+        );
+    }
+
+    public MongoPermission map(UUID userId, CreateMongoPermission p) {
         return new MongoPermission(
                 UUID.randomUUID(),
-                userId,
-                p.databaseId(),
+                p.userName(),
+                p.databaseName(),
+                p.clusterId(),
                 TimeUtils.now(),
-                Consts.USER_ID,
+                OnyxdbConsts.USER_ID,
                 false,
                 null,
                 null,
@@ -104,10 +123,11 @@ public class UserMapper {
         try {
             return new PermissionsRecord(
                     p.id(),
-                    p.userId(),
-                    p.databaseId(),
+                    p.userName(),
+                    p.databaseName(),
+                    p.clusterId(),
                     TimeUtils.now(),
-                    Consts.USER_ID,
+                    OnyxdbConsts.USER_ID,
                     false,
                     null,
                     null,

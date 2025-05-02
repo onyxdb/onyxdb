@@ -3,13 +3,13 @@ package com.onyxdb.platform.mdb.processing.models.payloads;
 import java.util.List;
 import java.util.UUID;
 
-import com.onyxdb.platform.mdb.models.MongoPermissionToCreate;
+import com.onyxdb.platform.mdb.models.CreateMongoPermission;
 
 public record MongoCreateUserPayload(
         UUID clusterId,
         String username,
         String passwordSecretName,
         String passwordSecretNamespace,
-        List<MongoPermissionToCreate> permissions
+        List<CreateMongoPermission> permissions
 ) implements Payload {
 }

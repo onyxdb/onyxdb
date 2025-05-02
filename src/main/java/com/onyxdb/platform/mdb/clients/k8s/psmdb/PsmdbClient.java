@@ -15,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import com.onyxdb.platform.mdb.clients.k8s.victoriaLogs.VictoriaLogsClient;
 import com.onyxdb.platform.mdb.utils.TemplateProvider;
 
+// TODO rewrite all
 public class PsmdbClient extends AbstractPsmdbFactory {
     private static final String GROUP = "psmdb.percona.com";
     private static final String VERSION = "v1";
@@ -147,7 +148,7 @@ public class PsmdbClient extends AbstractPsmdbFactory {
                 .toList();
     }
 
-    public List<String> calculatePsmdbHostnames(String project, String cluster, int replicas) {
+    public static List<String> calculatePsmdbHostNames(String project, String cluster, int replicas) {
         List<String> hosts = new ArrayList<>(replicas);
         for (int i = 0; i < replicas; i++) {
             hosts.add(String.format("%s-%s-mongo-%s-%d", cluster, project, REPLSET_NAME, i));
@@ -227,7 +228,7 @@ public class PsmdbClient extends AbstractPsmdbFactory {
     }
 
     public static String getMongoUserSecretName(String project, String cluster, String user) {
-        return String.format("%s-%s-username-%s", cluster, project, user);
+        return String.format("%s-%s-user-%s", cluster, project, user);
     }
 
 //    public static List<String> getPsmdbPods(String cluster, ) {
@@ -241,7 +242,7 @@ public class PsmdbClient extends AbstractPsmdbFactory {
 //                .withApiVersion(API_VERSION)
 //                .withKind(KIND)
 //                .withNewMetadata()
-//                .withName(getPsmdbName(psmdb.databaseName()))
+//                .withName(getPsmdbName(psmdb.database()))
 //                .endMetadata()
 //                .addToAdditionalProperties("spec", specMap)
 //                .build();

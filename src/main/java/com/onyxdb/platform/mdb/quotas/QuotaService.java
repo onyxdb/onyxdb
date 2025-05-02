@@ -8,8 +8,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.transaction.support.TransactionTemplate;
 
+import com.onyxdb.platform.mdb.clusters.models.ClusterConfig;
 import com.onyxdb.platform.mdb.exceptions.BadRequestException;
-import com.onyxdb.platform.mdb.models.ClusterConfig;
 import com.onyxdb.platform.mdb.projects.Project;
 import com.onyxdb.platform.mdb.projects.ProjectService;
 import com.onyxdb.platform.mdb.resourcePresets.ResourcePreset;

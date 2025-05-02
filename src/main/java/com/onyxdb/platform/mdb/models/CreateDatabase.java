@@ -2,9 +2,9 @@ package com.onyxdb.platform.mdb.models;
 
 import java.util.UUID;
 
-public record DatabaseToCreate(
+public record CreateDatabase(
+        String name,
         UUID clusterId,
-        String databaseName,
         UUID createdBy
 ) {
 }

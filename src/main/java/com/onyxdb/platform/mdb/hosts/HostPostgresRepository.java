@@ -5,10 +5,10 @@ import java.util.UUID;
 
 import org.jooq.DSLContext;
 
-import com.onyxdb.platform.generated.jooq.tables.records.ClusterHostsRecord;
+import com.onyxdb.platform.generated.jooq.tables.records.HostsRecord;
 import com.onyxdb.platform.mdb.models.Host;
 
-import static com.onyxdb.platform.generated.jooq.Tables.CLUSTER_HOSTS;
+import static com.onyxdb.platform.generated.jooq.Tables.HOSTS;
 
 public class HostPostgresRepository implements HostRepository {
     private final DSLContext dslContext;
@@ -24,11 +24,11 @@ public class HostPostgresRepository implements HostRepository {
 
     @Override
     public void upsertHosts(List<Host> hosts) {
-        List<ClusterHostsRecord> records = hosts.stream()
+        List<HostsRecord> records = hosts.stream()
                 .map(hostMapper::map)
                 .toList();
 
-        dslContext.insertInto(CLUSTER_HOSTS)
+        dslContext.insertInto(HOSTS)
                 .set(records)
                 .onConflict()
                 .doNothing()
@@ -38,18 +38,18 @@ public class HostPostgresRepository implements HostRepository {
     @Override
     public List<Host> listHosts(UUID clusterId) {
         return dslContext.select(
-                        CLUSTER_HOSTS.NAME,
-                        CLUSTER_HOSTS.CLUSTER_ID
+                        HOSTS.NAME,
+                        HOSTS.CLUSTER_ID
                 )
-                .from(CLUSTER_HOSTS)
-                .where(CLUSTER_HOSTS.CLUSTER_ID.eq(clusterId))
+                .from(HOSTS)
+//                .where(HOSTS.CLUSTER_ID.eq(clusterId))
                 .fetchInto(Host.class);
     }
 
     @Override
     public void deleteNotMatchingHosts(UUID id, List<String> hostnames) {
-        dslContext.deleteFrom(CLUSTER_HOSTS)
-                .where(CLUSTER_HOSTS.CLUSTER_ID.eq(id).and(CLUSTER_HOSTS.NAME.notIn(hostnames)))
+        dslContext.deleteFrom(HOSTS)
+                .where(HOSTS.CLUSTER_ID.eq(id).and(HOSTS.NAME.notIn(hostnames)))
                 .execute();
     }
 }

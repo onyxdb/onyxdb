@@ -7,7 +7,7 @@ import java.util.UUID;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.onyxdb.platform.mdb.models.Cluster;
+import com.onyxdb.platform.mdb.clusters.models.Cluster;
 import com.onyxdb.platform.mdb.processing.models.OperationStatus;
 import com.onyxdb.platform.mdb.processing.models.Task;
 import com.onyxdb.platform.mdb.processing.models.TaskStatus;

@@ -25,6 +25,10 @@ public class ProjectService {
         return projectRepository.getProjectOrThrow(projectId, isDeleted);
     }
 
+    public Project getUndeletedProjectOrThrow(UUID projectId) {
+        return projectRepository.getProjectOrThrow(projectId, false);
+    }
+
     public UUID createProject(CreateProject createProject) {
         Project project = projectMapper.createProjectToProject(createProject);
         projectRepository.createProject(project);

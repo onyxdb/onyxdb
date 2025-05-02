@@ -14,9 +14,9 @@ import com.onyxdb.platform.generated.openapi.models.ListMongoUsersResponse;
 import com.onyxdb.platform.generated.openapi.models.MongoUser;
 import com.onyxdb.platform.generated.openapi.models.MongoUserToCreate;
 import com.onyxdb.platform.generated.openapi.models.V1ScheduledOperationResponse;
+import com.onyxdb.platform.mdb.models.CreateUser;
 import com.onyxdb.platform.mdb.models.MongoRole;
 import com.onyxdb.platform.mdb.models.User;
-import com.onyxdb.platform.mdb.models.UserToCreate;
 import com.onyxdb.platform.mdb.users.UserMapper;
 import com.onyxdb.platform.mdb.users.UserService;
 
@@ -54,8 +54,8 @@ public class ManagedMongoUserController implements ManagedMongoDbUsersApi {
             UUID clusterId,
             MongoUserToCreate mongoUserToCreate
     ) {
-        UserToCreate userToCreate = userMapper.map(clusterId, mongoUserToCreate);
-        UUID operationId = userService.createUser(userToCreate);
+        CreateUser createUser = userMapper.map(clusterId, mongoUserToCreate);
+        UUID operationId = userService.createUser(createUser);
 
         return ResponseEntity.ok()
                 .body(new V1ScheduledOperationResponse(operationId));

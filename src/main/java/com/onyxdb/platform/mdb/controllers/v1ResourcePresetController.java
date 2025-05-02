@@ -1,6 +1,5 @@
 package com.onyxdb.platform.mdb.controllers;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
@@ -11,8 +10,6 @@ import com.onyxdb.platform.generated.openapi.models.V1CreateResourcePresetReques
 import com.onyxdb.platform.generated.openapi.models.V1ListResourcePresetsResponse;
 import com.onyxdb.platform.generated.openapi.models.V1ResourcePresetResponse;
 import com.onyxdb.platform.generated.openapi.models.V1UpdateResourcePresetRequest;
-import com.onyxdb.platform.mdb.resourcePresets.ResourcePreset;
-import com.onyxdb.platform.mdb.resourcePresets.ResourcePresetConverter;
 import com.onyxdb.platform.mdb.resourcePresets.ResourcePresetService;
 
 /**
@@ -28,23 +25,26 @@ public class v1ResourcePresetController implements ResourcePresetsApi {
 
     @Override
     public ResponseEntity<V1ListResourcePresetsResponse> listResourcePresets() {
-        List<ResourcePreset> resourcePresets = resourcePresetService.list();
-        var response = ResourcePresetConverter.toV1ListResourcePresetsResponse(resourcePresets);
-        return ResponseEntity.ok().body(response);
+//        List<ResourcePreset> resourcePresets = resourcePresetService.list();
+//        var response = ResourcePresetConverter.toV1ListResourcePresetsResponse(resourcePresets);
+//        return ResponseEntity.ok().body(response);
+        return null;
     }
 
     @Override
     public ResponseEntity<V1ResourcePresetResponse> getResourcePreset(UUID resourcePresetId) {
-        ResourcePreset resourcePreset = resourcePresetService.getOrThrow(resourcePresetId);
-        var response = ResourcePresetConverter.toV1ResourcePresetResponse(resourcePreset);
-        return ResponseEntity.ok().body(response);
+//        ResourcePreset resourcePreset = resourcePresetService.getOrThrow(resourcePresetId);
+//        var response = ResourcePresetConverter.toV1ResourcePresetResponse(resourcePreset);
+//        return ResponseEntity.ok().body(response);
+        return null;
     }
 
     @Override
     public ResponseEntity<Void> createResourcePreset(V1CreateResourcePresetRequest r) {
-        ResourcePreset resourcePreset = ResourcePresetConverter.fromV1CreateResourcePresetRequest(r);
-        resourcePresetService.create(resourcePreset);
-        return ResponseEntity.ok().build();
+//        ResourcePreset resourcePreset = ResourcePresetConverter.fromV1CreateResourcePresetRequest(r);
+//        resourcePresetService.create(resourcePreset);
+//        return ResponseEntity.ok().build();
+        return null;
     }
 
     @Override
@@ -52,17 +52,19 @@ public class v1ResourcePresetController implements ResourcePresetsApi {
             UUID resourcePresetId,
             V1UpdateResourcePresetRequest r
     ) {
-        ResourcePreset resourcePreset = ResourcePresetConverter.fromV1UpdateResourcePresetRequest(
-                resourcePresetId,
-                r
-        );
-        resourcePresetService.update(resourcePreset);
-        return ResponseEntity.ok().build();
+//        ResourcePreset resourcePreset = ResourcePresetConverter.fromV1UpdateResourcePresetRequest(
+//                resourcePresetId,
+//                r
+//        );
+//        resourcePresetService.update(resourcePreset);
+//        return ResponseEntity.ok().build();
+        return null;
     }
 
     @Override
     public ResponseEntity<Void> deleteResourcePreset(UUID resourcePresetId) {
-        resourcePresetService.delete(resourcePresetId);
-        return ResponseEntity.ok().build();
+//        resourcePresetService.delete(resourcePresetId);
+//        return ResponseEntity.ok().build();
+        return null;
     }
 }

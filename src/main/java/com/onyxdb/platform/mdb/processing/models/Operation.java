@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.onyxdb.platform.mdb.utils.Consts;
+import com.onyxdb.platform.mdb.utils.OnyxdbConsts;
 import com.onyxdb.platform.mdb.utils.TimeUtils;
 
 /**
@@ -35,7 +35,7 @@ public record Operation(
                 type,
                 OperationStatus.SCHEDULED,
                 TimeUtils.now(),
-                Consts.USER_ID,
+                OnyxdbConsts.USER_ID,
                 TimeUtils.now(),
                 null,
                 clusterId
@@ -52,7 +52,7 @@ public record Operation(
                 type,
                 OperationStatus.SCHEDULED,
                 TimeUtils.now(),
-                Consts.USER_ID,
+                OnyxdbConsts.USER_ID,
                 TimeUtils.now(),
                 payload,
                 clusterId

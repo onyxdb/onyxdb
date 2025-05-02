@@ -70,4 +70,14 @@ public class OperationPostgresRepository implements OperationRepository {
                 .forUpdate()
                 .fetchOptional(operationMapper::fromJooqRecord);
     }
+
+    @Override
+    public Operation getOperation(UUID operationId) {
+        return dslContext.select()
+                .from(OPERATIONS)
+                .where(OPERATIONS.ID.eq(operationId))
+                .forUpdate()
+                .fetchOptional(operationMapper::fromJooqRecord)
+                .orElseThrow(() -> new RuntimeException("Operation not found"));
+    }
 }

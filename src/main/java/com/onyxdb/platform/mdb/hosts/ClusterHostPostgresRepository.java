@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.jooq.DSLContext;
 
-import com.onyxdb.platform.generated.jooq.tables.records.ClusterHostsRecord;
+import com.onyxdb.platform.generated.jooq.tables.records.HostsRecord;
 import com.onyxdb.platform.mdb.models.ClusterHost;
 
 public class ClusterHostPostgresRepository implements ClusterHostRepository {
@@ -21,7 +21,7 @@ public class ClusterHostPostgresRepository implements ClusterHostRepository {
 
     @Override
     public void createHosts(List<ClusterHost> hosts) {
-        List<ClusterHostsRecord> records = hosts.stream()
+        List<HostsRecord> records = hosts.stream()
                 .map(clusterHostMapper::toClusterHostsRecord)
                 .toList();
 

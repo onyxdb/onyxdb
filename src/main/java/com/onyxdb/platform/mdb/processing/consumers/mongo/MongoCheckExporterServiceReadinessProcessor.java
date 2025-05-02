@@ -36,7 +36,7 @@
 //    protected TaskProcessingResult internalProcess(Task task, ClusterTaskPayload payload) {
 //        Cluster cluster = clusterService.getCluster(payload.clusterId());
 //
-//        boolean isReady = psmdbExporterServiceClient.resourceExists(DEFAULT_NAMESPACE, cluster.databaseName());
+//        boolean isReady = psmdbExporterServiceClient.resourceExists(DEFAULT_NAMESPACE, cluster.database());
 //        if (!isReady) {
 //            return TaskProcessingResult.scheduled(
 //                    task.getScheduledAtWithDelay(Duration.ofSeconds(30))

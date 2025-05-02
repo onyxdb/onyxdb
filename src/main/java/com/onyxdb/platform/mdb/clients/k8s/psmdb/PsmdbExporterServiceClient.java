@@ -62,42 +62,42 @@ public class PsmdbExporterServiceClient extends AbstractPsmdbFactory {
 //        kubernetesClient.resource(service).delete();
 //    }
 
-//    public boolean resourceExists(String namespace, String databaseName) {
+//    public boolean resourceExists(String namespace, String database) {
 //        return kubernetesClient.services()
 //                .inNamespace(namespace)
-//                .withName(PsmdbExporterServiceClient.getPreparedName(databaseName))
+//                .withName(PsmdbExporterServiceClient.getPreparedName(database))
 //                .get() != null;
 //    }
 
-//    public static String getPreparedName(String databaseName) {
-//        return String.format("managed-mongodb-%s-exporter", databaseName);
+//    public static String getPreparedName(String database) {
+//        return String.format("managed-mongodb-%s-exporter", database);
 //    }
 
     public static String getExporterServiceName(String project, String cluster) {
         return String.format("%s-%s-mongo-exporter", cluster, project);
     }
 
-//    public static Map<String, String> getLabels(String databaseName) {
+//    public static Map<String, String> getLabels(String database) {
 //        return Map.ofEntries(
-//                Map.entry("app.kubernetes.io/instance", getPreparedName(getPreparedName(databaseName)))
+//                Map.entry("app.kubernetes.io/instance", getPreparedName(getPreparedName(database)))
 //        );
 //    }
 
 //    private Service buildService(PsmdbExporterService psmdbExporterService) {
 //        String namespace = psmdbExporterService.namespace();
-//        String databaseName = psmdbExporterService.databaseName();
+//        String database = psmdbExporterService.database();
 //
 //        return new ServiceBuilder()
 //                .withMetadata(
 //                        new ObjectMetaBuilder()
-//                                .withName(getPreparedName(databaseName))
+//                                .withName(getPreparedName(database))
 //                                .withNamespace(namespace)
-//                                .withLabels(getLabels(databaseName))
+//                                .withLabels(getLabels(database))
 //                                .build()
 //                )
 //                .withSpec(
 //                        new ServiceSpecBuilder()
-//                                .withSelector(getLabels(databaseName))
+//                                .withSelector(getLabels(database))
 //                                .withPorts(
 //                                        new ServicePortBuilder()
 //                                                .withName(PORT_NAME)

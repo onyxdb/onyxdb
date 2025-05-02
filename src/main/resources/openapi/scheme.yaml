@@ -2,6 +2,9 @@ openapi: 3.0.0
 info:
   version: 1.0.0
   title: OnyxDB
+tags:
+  - name: Projects
+  - name: Managed MongoDB clusters
 servers:
   - url: http://localhost:9001
     description: localhost
@@ -79,6 +82,43 @@ paths:
       responses:
         '200':
           description: OK
+  # ---------- Managed MongoDB clusters --------------------------------------------------------------------------------
+  /api/mdb/mongodb/clusters:
+#    get:
+#      summary: Get MongoDB clusters
+#      operationId: listClusters
+#      tags:
+#        - v1ManagedMongoDb
+#      responses:
+#        '200':
+#          description: OK
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/V1ListMongoClustersResponse'
+    post:
+      summary: Create MongoDB cluster
+      operationId: createCluster
+      tags:
+        - Managed MongoDB clusters
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMongoClusterRequestDTO'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateMongoClusterResponseDTO'
+
+
+
+
+
   # ---------- Resource presets ----------------------------------------------------------------------------------------
   /api/v1/resource-presets:
     get:
@@ -149,37 +189,6 @@ paths:
         '200':
           description: OK
   # ---------- v1ManagedMongoDb ----------
-  /api/v1/managed-mongodb/clusters:
-    get:
-      summary: Get MongoDB clusters
-      operationId: listClusters
-      tags:
-        - v1ManagedMongoDb
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/V1ListMongoClustersResponse'
-    post:
-      summary: Create MongoDB cluster
-      operationId: createCluster
-      tags:
-        - v1ManagedMongoDb
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/V1CreateMongoClusterRequest'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/V1CreateMongoClusterResponse'
   /api/v1/managed-mongodb/clusters/{clusterId}:
     get:
       summary: Get MongoDB cluster
@@ -604,6 +613,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GetProductQuotaUsageReportResponseOA'
+
+
+
+
+
+
+
+
+
+
+  # ---------- IDM -----------------------------------------------------------------------------------------------------
   /api/v1/auth/login:
     post:
       summary: Аутентификация пользователя
@@ -2767,6 +2787,103 @@ components:
         - name
         - description
         - productId
+    # ---------- Managed MongoDB clusters schemas ----------------------------------------------------------------------
+    CreateMongoClusterRequestDTO:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        projectId:
+          type: string
+          format: uuid
+        config:
+          $ref: '#/components/schemas/MongoConfigDTO'
+        database:
+          $ref: '#/components/schemas/MongoDatabaseDTO'
+        user:
+          $ref: '#/components/schemas/MongoUserDTO'
+      required:
+        - name
+        - description
+        - projectId
+        - config
+        - database
+        - user
+    MongoConfigDTO:
+      type: object
+      properties:
+        version:
+          type: string
+        resources:
+          $ref: '#/components/schemas/ClusterResourcesDTO'
+        replicas:
+          type: integer
+          format: int32
+        backup:
+          $ref: '#/components/schemas/ClusterBackupConfigDTO'
+      required:
+        - version
+        - resources
+        - replicas
+        - backup
+    ClusterResourcesDTO:
+      type: object
+      properties:
+        presetId:
+          type: string
+          format: uuid
+        storageClass:
+          type: string
+        storage:
+          type: integer
+          format: int64
+      required:
+        - presetId
+        - storageClass
+        - storage
+    ClusterBackupConfigDTO:
+      type: object
+      properties:
+        isEnabled:
+          type: boolean
+        schedule:
+          type: string
+      required:
+        - isEnabled
+        - schedule
+    MongoDatabaseDTO:
+      type: object
+      properties:
+        name:
+          type: string
+      required:
+        - name
+    MongoUserDTO:
+      type: object
+      properties:
+        name:
+          type: string
+        password:
+          type: string
+      required:
+        - name
+        - password
+    CreateMongoClusterResponseDTO:
+      type: object
+      properties:
+        clusterId:
+          type: string
+          format: uuid
+        operationId:
+          type: string
+          format: uuid
+      required:
+        - clusterId
+        - operationId
+
+
 
 
 
@@ -2791,8 +2908,8 @@ components:
         type:
           $ref: '#/components/schemas/V1ResourcePresetType'
         vcpu:
-          type: number
-          format: double
+          type: integer
+          format: int64
         ram:
           type: integer
           format: int64
@@ -2810,8 +2927,8 @@ components:
         type:
           $ref: '#/components/schemas/V1ResourcePresetType'
         vcpu:
-          type: number
-          format: double
+          type: integer
+          format: int64
         ram:
           type: integer
           format: int64
@@ -2828,8 +2945,8 @@ components:
         type:
           $ref: '#/components/schemas/V1ResourcePresetType'
         vcpu:
-          type: number
-          format: double
+          type: integer
+          format: int64
         ram:
           type: integer
           format: int64
@@ -2869,7 +2986,7 @@ components:
           type: string
           format: uuid
         config:
-          $ref: '#/components/schemas/V1MongoConfig'
+          $ref: '#/components/schemas/MongoConfigDTO'
       required:
         - id
         - name
@@ -2895,116 +3012,6 @@ components:
       required:
         - value
         - message
-    V1MongoConfig:
-      type: object
-      properties:
-        #        version:
-        #          type: string
-        resources:
-          $ref: '#/components/schemas/V1ClusterResources'
-        replicas:
-          type: integer
-          format: int32
-      #        mongodbV8d0:
-      #          $ref: '#/components/schemas/V1MongoConfigV8d0'
-      required:
-        - resources
-        - replicas
-    #    V1MongoConfigV8d0:
-    #      type: object
-    #      properties:
-    #        mongod:
-    #          $ref: '#/components/schemas/V1MongodV8d0'
-    #      required:
-    #        - mongod
-    #    V1MongodV8d0:
-    #      type: object
-    #      properties:
-    #        resources:
-    #          $ref: '#/components/schemas/V1ClusterResources'
-    #        config:
-    #          $ref: '#/components/schemas/V1MongodConfigV8d0'
-    #      required:
-    #        - resources
-    #        - config
-    V1ClusterResources:
-      type: object
-      properties:
-        presetId:
-          type: string
-          format: uuid
-        storageClass:
-          type: string
-        storage:
-          type: integer
-          format: int64
-      required:
-        - presetId
-        - storageClass
-        - storage
-    #    V1MongodConfigV8d0:
-    #      type: object
-    #      properties:
-    #        net:
-    #          $ref: '#/components/schemas/V1MongodNetV8d0'
-    #      required:
-    #        - net
-    #    V1MongodNetV8d0:
-    #      type: object
-    #      properties:
-    #        maxIncomingConnections:
-    #          type: integer
-    #          format: int32
-    #      required:
-    #        - maxIncomingConnections
-    V1CreateMongoClusterRequest:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-        projectId:
-          type: string
-          format: uuid
-        config:
-          $ref: '#/components/schemas/V1MongoConfig'
-        database:
-          $ref: '#/components/schemas/InitMongoDatabase'
-        user:
-          $ref: '#/components/schemas/InitMongoUser'
-      required:
-        - name
-        - description
-        - projectId
-        - config
-        - database
-        - user
-    InitMongoDatabase:
-      type: object
-      properties:
-        name:
-          type: string
-      required:
-        - name
-    InitMongoUser:
-      type: object
-      properties:
-        name:
-          type: string
-        password:
-          type: string
-      required:
-        - name
-        - password
-    V1CreateMongoClusterResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-      required:
-        - id
     MongoListHostsResponse:
       type: object
       properties:
@@ -3035,7 +3042,7 @@ components:
         name:
           type: string
         config:
-          $ref: '#/components/schemas/V1MongoConfig'
+          $ref: '#/components/schemas/MongoConfigDTO'
       required:
         - name
         - description
@@ -3386,7 +3393,7 @@ components:
           type: string
           format: uuid
         config:
-          $ref: '#/components/schemas/V1MongoConfig'
+          $ref: '#/components/schemas/MongoConfigDTO'
       required:
         - projectId
         - config

@@ -10,9 +10,10 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import com.onyxdb.platform.mdb.clients.k8s.psmdb.PsmdbClient;
 import com.onyxdb.platform.mdb.clusters.ClusterRepository;
-import com.onyxdb.platform.mdb.models.Cluster;
+import com.onyxdb.platform.mdb.clusters.models.Cluster;
+import com.onyxdb.platform.mdb.exceptions.NotImplementedException;
+import com.onyxdb.platform.mdb.models.CreateUser;
 import com.onyxdb.platform.mdb.models.User;
-import com.onyxdb.platform.mdb.models.UserToCreate;
 import com.onyxdb.platform.mdb.processing.models.Operation;
 import com.onyxdb.platform.mdb.processing.models.OperationType;
 import com.onyxdb.platform.mdb.processing.models.payloads.MongoCreateUserPayload;
@@ -35,25 +36,26 @@ public class UserService {
     private final ObjectMapper objectMapper;
 
     public List<User> listUsers(UUID clusterId) {
-        return userRepository.listUsers(clusterId, null);
+//        return userRepository.listUsers(clusterId, null);
+        throw new NotImplementedException();
     }
 
     public User getUser(UUID userId) {
         return userRepository.getUser(userId);
     }
 
-    public UUID createUser(UserToCreate userToCreate) {
-        Cluster cluster = clusterRepository.getCluster(userToCreate.clusterId());
+    public UUID createUser(CreateUser createUser) {
+        Cluster cluster = clusterRepository.getCluster(createUser.clusterId());
 
         String userPasswordSecretName = psmdbClient.applyMongoUserSecret(
                 DEFAULT_NAMESPACE,
                 DEFAULT_PROJECT,
                 cluster.name(),
-                userToCreate.username(),
-                userToCreate.password()
+                createUser.userName(),
+                createUser.password()
         );
 
-        var user = userMapper.userToCreateToUser(userToCreate, userPasswordSecretName);
+        var user = userMapper.userToCreateToUser(createUser, userPasswordSecretName);
         var operation = Operation.scheduledWithPayload(
                 OperationType.MONGO_CREATE_USER,
                 cluster.id(),
@@ -62,7 +64,7 @@ public class UserService {
                         user.name(),
                         userPasswordSecretName,
                         DEFAULT_NAMESPACE,
-                        userToCreate.permissions()
+                        createUser.permissions()
                 )));
 
         transactionTemplate.executeWithoutResult(status -> {

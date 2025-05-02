@@ -1,0 +1,69 @@
+{
+  "name": "mongodb207",
+  "description": "",
+  "environment": "PRODUCTION",
+  "labels": {},
+  "folderId": "b1g7qoivt7gk607hn9ef",
+  "networkId": "enp2iiasqt7ciq55tb1e",
+  "configSpec": {
+    "backupWindowStart": {
+      "hours": 22,
+      "minutes": 0,
+      "seconds": 0,
+      "nanos": 0
+    },
+    "backupRetainPeriodDays": 7,
+    "performanceDiagnostics": {
+      "profilingEnabled": false
+    },
+    "version": "8.0",
+    "mongodbSpec_8_0": {
+      "mongod": {
+        "resources": {
+          "resourcePresetId": "s3-c2-m8",
+          "diskTypeId": "network-ssd",
+          "diskSize": 10737418240
+        }
+      }
+    }
+  },
+  "deletionProtection": false,
+  "maintenanceWindow": {
+    "anytime": {}
+  },
+  "securityGroupIds": [],
+  "databaseSpecs": [
+    {
+      "name": "db1"
+    }
+  ],
+  "userSpecs": [
+    {
+      "name": "user1",
+      "password": "ifr-t4n-NRf-q39",
+      "permissions": [
+        {
+          "databaseName": "admin",
+          "roles": [
+            "mdbShardingManager",
+            "mdbMonitor"
+          ]
+        },
+        {
+          "databaseName": "db1",
+          "roles": [
+            "readWrite"
+          ]
+        }
+      ]
+    }
+  ],
+  "hostSpecs": [
+    {
+      "zoneId": "ru-central1-a",
+      "assignPublicIp": false,
+      "subnetId": "e9b1e1re5mu7uth300s3"
+    }
+  ],
+  "grpcFormattedMongodbConfig": false
+}

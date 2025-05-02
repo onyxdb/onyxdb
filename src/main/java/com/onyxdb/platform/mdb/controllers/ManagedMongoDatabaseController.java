@@ -13,8 +13,8 @@ import com.onyxdb.platform.generated.openapi.models.ListMongoDatabasesResponse;
 import com.onyxdb.platform.generated.openapi.models.V1ScheduledOperationResponse;
 import com.onyxdb.platform.mdb.databases.DatabaseMapper;
 import com.onyxdb.platform.mdb.databases.DatabaseService;
+import com.onyxdb.platform.mdb.models.CreateDatabase;
 import com.onyxdb.platform.mdb.models.Database;
-import com.onyxdb.platform.mdb.models.DatabaseToCreate;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,8 +35,8 @@ public class ManagedMongoDatabaseController implements ManagedMongoDbDatabasesAp
 
     @Override
     public ResponseEntity<V1ScheduledOperationResponse> createDatabase(UUID clusterId, CreateMongoDatabaseRequest rq) {
-        DatabaseToCreate databaseToCreate = databaseMapper.map(clusterId, rq);
-        UUID operationId = databaseService.createDatabase(databaseToCreate);
+        CreateDatabase createDatabase = databaseMapper.map(clusterId, rq);
+        UUID operationId = databaseService.createDatabase(createDatabase);
 
         return ResponseEntity.ok()
                 .body(new V1ScheduledOperationResponse(operationId));

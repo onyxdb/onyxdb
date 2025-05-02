@@ -1,8 +1,9 @@
 package com.onyxdb.platform.mdb.hosts;
 
 import java.util.List;
+import java.util.UUID;
 
-import com.onyxdb.platform.generated.jooq.tables.records.ClusterHostsRecord;
+import com.onyxdb.platform.generated.jooq.tables.records.HostsRecord;
 import com.onyxdb.platform.generated.openapi.models.UpdateMongoHostsRequest;
 import com.onyxdb.platform.mdb.models.EnrichedHost;
 import com.onyxdb.platform.mdb.models.Host;
@@ -39,8 +40,8 @@ public class HostMapper {
         );
     }
 
-    public ClusterHostsRecord map(Host h) {
-        return new ClusterHostsRecord(
+    public HostsRecord map(Host h) {
+        return new HostsRecord(
                 h.name(),
                 h.clusterId()
         );
@@ -64,5 +65,16 @@ public class HostMapper {
                 h.status().value(),
                 h.role().value()
         );
+    }
+
+    public Host hostNameToHost(String hostName, UUID clusterId) {
+        return new Host(
+                hostName,
+                clusterId
+        );
+    }
+
+    public List<Host> hostNamesToHosts(List<String> hostNames, UUID clusterId) {
+        return hostNames.stream().map(h -> hostNameToHost(h, clusterId)).toList();
     }
 }

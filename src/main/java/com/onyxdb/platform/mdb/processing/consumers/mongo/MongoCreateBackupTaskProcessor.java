@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.onyxdb.platform.mdb.clients.k8s.KubernetesAdapter;
 import com.onyxdb.platform.mdb.clusters.ClusterService;
-import com.onyxdb.platform.mdb.models.Cluster;
+import com.onyxdb.platform.mdb.clusters.models.Cluster;
 import com.onyxdb.platform.mdb.processing.consumers.ClusterTaskProcessor;
 import com.onyxdb.platform.mdb.processing.models.Task;
 import com.onyxdb.platform.mdb.processing.models.TaskProcessingResult;

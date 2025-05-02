@@ -14,9 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import com.onyxdb.platform.mdb.operationsOLD.tasks.ProducedTask;
-import com.onyxdb.platform.mdb.processing.TaskProcessingUtils;
 import com.onyxdb.platform.mdb.processing.models.Operation;
-import com.onyxdb.platform.mdb.processing.models.OperationStatus;
 import com.onyxdb.platform.mdb.processing.models.Task;
 import com.onyxdb.platform.mdb.processing.models.TaskStatus;
 import com.onyxdb.platform.mdb.processing.models.TaskType;
@@ -60,26 +58,26 @@ public class ProduceOperationTasksTask {
             lockAtMostFor = "1s"
     )
     public void scheduledTask() {
-        List<Operation> operations = operationRepository.listOperations(null, OperationStatus.SCHEDULED);
-        logger.info("Scheduled operations for {}", operations.size());
-
-        List<TaskWithBlockers> allTasksWithBlockers = new ArrayList<>();
-        for (Operation operation : operations) {
-            List<ProducedTask> producedTasks = handleOperation(operation);
-            logger.info("Produced tasks: {}", producedTasks);
-            List<TaskWithBlockers> taskWithBlockers = prepareProducedTasks(producedTasks);
-
-            allTasksWithBlockers.addAll(taskWithBlockers);
-        }
-
-        transactionTemplate.executeWithoutResult(status -> {
-            List<Task> tasks = TaskProcessingUtils.getTasksFromTasksWithBlockers(allTasksWithBlockers);
-            taskRepository.createBulk(tasks);
-            taskRepository.createBlockerTasksBulk(allTasksWithBlockers);
-            for (var operation : operations) {
-                operationRepository.updateStatus(operation.id(), OperationStatus.IN_PROGRESS);
-            }
-        });
+//        List<Operation> operations = operationRepository.listOperations(null, OperationStatus.SCHEDULED);
+//        logger.info("Scheduled operations for {}", operations.size());
+//
+//        List<TaskWithBlockers> allTasksWithBlockers = new ArrayList<>();
+//        for (Operation operation : operations) {
+//            List<ProducedTask> producedTasks = handleOperation(operation);
+//            logger.info("Produced tasks: {}", producedTasks);
+//            List<TaskWithBlockers> taskWithBlockers = prepareProducedTasks(producedTasks);
+//
+//            allTasksWithBlockers.addAll(taskWithBlockers);
+//        }
+//
+//        transactionTemplate.executeWithoutResult(status -> {
+//            List<Task> tasks = TaskProcessingUtils.getTasksFromTasksWithBlockers(allTasksWithBlockers);
+//            taskRepository.createBulk(tasks);
+//            taskRepository.createBlockerTasksBulk(allTasksWithBlockers);
+//            for (var operation : operations) {
+//                operationRepository.updateStatus(operation.id(), OperationStatus.IN_PROGRESS);
+//            }
+//        });
     }
 
     private List<ProducedTask> handleOperation(Operation operation) {

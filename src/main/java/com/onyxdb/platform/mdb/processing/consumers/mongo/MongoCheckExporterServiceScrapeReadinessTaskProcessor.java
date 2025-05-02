@@ -39,7 +39,7 @@
 //
 //        boolean isReady = vmServiceScrapeClient.resourceExists(
 //                DEFAULT_NAMESPACE,
-//                PsmdbExporterServiceClient.getPreparedName(cluster.databaseName())
+//                PsmdbExporterServiceClient.getPreparedName(cluster.database())
 //        );
 //
 //        if (!isReady) {

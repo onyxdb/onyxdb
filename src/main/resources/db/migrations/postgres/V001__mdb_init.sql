@@ -9,19 +9,19 @@ CREATE TABLE public.resource_presets
     id   uuid                        NOT NULL,
     name varchar                     NOT NULL,
     type public.resource_preset_type NOT NULL,
-    vcpu double precision            NOT NULL,
+    vcpu bigint                      NOT NULL,
     ram  bigint                      NOT NULL,
     PRIMARY KEY (id),
     UNIQUE (name)
 );
 
 INSERT INTO public.resource_presets (id, name, type, vcpu, ram)
-VALUES ('4eaec494-f935-46eb-8a5e-c8e54afa9869', 'co-c2-r4', 'cpu_optimized', 2, 4294967296),
-       ('00551fb9-f935-43e7-a597-565221818b79', 'co-c4-r8', 'cpu_optimized', 4, 8589934592),
-       ('853ec99d-8b5e-469b-94eb-41a88d244223', 's-c2-r4', 'standard', 2, 4294967296),
-       ('06445eb3-e1d9-4b0b-a567-fdff5cdf619a', 's-c4-r8', 'standard', 4, 8589934592),
-       ('c42ba25e-8206-4395-9bf9-5835e6267dac', 'ro-c2-r16', 'ram_optimized', 2, 17179869184),
-       ('05195d23-5385-4887-b1ec-5f7d5b315d5c', 'ro-c4-r32', 'ram_optimized', 4, 34359738368);
+VALUES ('4eaec494-f935-46eb-8a5e-c8e54afa9869', 'co-c2-r4', 'cpu_optimized', 2000, 4294967296),
+       ('00551fb9-f935-43e7-a597-565221818b79', 'co-c4-r8', 'cpu_optimized', 4000, 8589934592),
+       ('853ec99d-8b5e-469b-94eb-41a88d244223', 's-c2-r4', 'standard', 2000, 4294967296),
+       ('06445eb3-e1d9-4b0b-a567-fdff5cdf619a', 's-c4-r8', 'standard', 4000, 8589934592),
+       ('c42ba25e-8206-4395-9bf9-5835e6267dac', 'ro-c2-r16', 'ram_optimized', 2000, 17179869184),
+       ('05195d23-5385-4887-b1ec-5f7d5b315d5c', 'ro-c4-r32', 'ram_optimized', 4000, 34359738368);
 
 CREATE TABLE public.zones
 (
@@ -47,7 +47,7 @@ CREATE TABLE public.projects
 );
 
 
-CREATE UNIQUE INDEX project_name_is_deleted_uniq_idx ON public.projects (name, is_deleted)
+CREATE UNIQUE INDEX projects_project_name_is_deleted_uniq_idx ON public.projects (name, is_deleted)
     WHERE public.projects.is_deleted = false;
 
 CREATE TYPE public.cluster_type AS ENUM (
@@ -60,16 +60,22 @@ CREATE TABLE public.clusters
     name        varchar             NOT NULL,
     description varchar             NOT NULL,
     project_id  uuid                NOT NULL,
+    namespace   varchar             NOT NULL,
     type        public.cluster_type NOT NULL,
     config      jsonb               NOT NULL,
+    created_at  timestamp           NOT NULL,
+    created_by  uuid                NOT NULL,
     is_deleted  bool                NOT NULL DEFAULT false,
     deleted_at  timestamp,
+    deleted_by  uuid,
     PRIMARY KEY (id),
-    FOREIGN KEY (project_id) REFERENCES public.projects (id),
-    UNIQUE (name, project_id)
+    FOREIGN KEY (project_id) REFERENCES public.projects (id)
 );
 
-CREATE TABLE public.cluster_hosts
+CREATE UNIQUE INDEX clusters_cluster_name_is_deleted_uniq_idx ON public.clusters (name, is_deleted)
+    WHERE public.clusters.is_deleted = false;
+
+CREATE TABLE public.hosts
 (
     name       varchar NOT NULL,
     cluster_id uuid    NOT NULL,
@@ -84,13 +90,15 @@ CREATE TABLE public.databases
     cluster_id uuid      NOT NULL,
     created_at timestamp NOT NULL,
     created_by uuid      NOT NULL,
-    is_deleted bool      NOT NULL,
+    is_deleted bool      NOT NULL DEFAULT false,
     deleted_at timestamp,
     deleted_by uuid,
     PRIMARY KEY (id),
-    FOREIGN KEY (cluster_id) REFERENCES public.clusters (id),
-    UNIQUE (name, cluster_id)
+    FOREIGN KEY (cluster_id) REFERENCES public.clusters (id)
 );
+
+CREATE UNIQUE INDEX databases_database_name_cluster_id_is_deleted_uniq_idx ON public.databases (name, cluster_id, is_deleted)
+    WHERE public.databases.is_deleted = false;
 
 CREATE TABLE public.users
 (
@@ -106,24 +114,29 @@ CREATE TABLE public.users
     PRIMARY KEY (id)
 );
 
-CREATE UNIQUE INDEX users_name_cluster_id_uniq_idx ON public.users (name, cluster_id) WHERE (users.is_deleted = false);
+CREATE UNIQUE INDEX users_user_name_cluster_id_is_deleted_uniq_idx ON public.users (name, cluster_id, is_deleted)
+    WHERE public.users.is_deleted = false;
 
 CREATE TABLE public.permissions
 (
-    id          uuid      NOT NULL,
-    user_id     uuid      NOT NULL,
-    database_id uuid      NOT NULL,
-    created_at  timestamp NOT NULL,
-    created_by  uuid      NOT NULL,
-    is_deleted  bool      NOT NULL,
-    deleted_at  timestamp,
-    deleted_by  uuid,
-    data        jsonb     NOT NULL,
-    PRIMARY KEY (id),
-    FOREIGN KEY (user_id) REFERENCES public.users (id),
-    FOREIGN KEY (database_id) REFERENCES public.databases (id),
-    UNIQUE (user_id, database_id)
+    id            uuid      NOT NULL,
+    user_name     varchar   NOT NULL,
+    database_name varchar   NOT NULL,
+    cluster_id    uuid      NOT NULL,
+    created_at    timestamp NOT NULL,
+    created_by    uuid      NOT NULL,
+    is_deleted    bool      NOT NULL DEFAULT false,
+    deleted_at    timestamp,
+    deleted_by    uuid,
+    data          jsonb     NOT NULL,
+    PRIMARY KEY (id)
+--     FOREIGN KEY (user_name) REFERENCES public.users (name),
+--     FOREIGN KEY (database_name) REFERENCES public.databases (name)
 );
+
+CREATE UNIQUE INDEX permissions_u_name_db_name_cluster_id_is_deleted_uniq_idx
+    ON public.permissions (user_name, database_name, cluster_id, is_deleted)
+    WHERE public.permissions.is_deleted = false;
 
 CREATE TABLE public.operations
 (
