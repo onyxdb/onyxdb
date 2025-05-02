@@ -59,6 +59,7 @@ CREATE TABLE public.clusters
     id          uuid                NOT NULL,
     name        varchar             NOT NULL,
     description varchar             NOT NULL,
+    status      varchar             NOT NULL,
     project_id  uuid                NOT NULL,
     namespace   varchar             NOT NULL,
     type        public.cluster_type NOT NULL,

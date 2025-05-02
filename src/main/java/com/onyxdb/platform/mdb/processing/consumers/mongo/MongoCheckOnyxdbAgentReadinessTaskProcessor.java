@@ -34,7 +34,7 @@ public class MongoCheckOnyxdbAgentReadinessTaskProcessor extends ClusterTaskProc
 
     @Override
     protected TaskProcessingResult internalProcess(Task task, ClusterPayload payload) {
-        Cluster cluster = clusterService.getCluster(payload.clusterId());
+        Cluster cluster = clusterService.getClusterOrThrow(payload.clusterId());
 
         boolean isReady = kubernetesAdapter.isOnyxdbAgentReady(
                 DEFAULT_PROJECT,

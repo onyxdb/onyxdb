@@ -34,7 +34,7 @@
 //
 //    @Override
 //    protected TaskProcessingResult internalProcess(Task task, ClusterTaskPayload payload) {
-//        Cluster cluster = clusterService.getCluster(payload.clusterId());
+//        Cluster cluster = clusterService.getCluster(payload.id());
 //
 //        boolean isReady = psmdbExporterServiceClient.resourceExists(DEFAULT_NAMESPACE, cluster.database());
 //        if (!isReady) {

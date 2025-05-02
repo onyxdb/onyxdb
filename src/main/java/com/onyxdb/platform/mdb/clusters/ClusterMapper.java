@@ -10,18 +10,25 @@ import org.jooq.Record;
 import com.onyxdb.platform.generated.jooq.tables.records.ClustersRecord;
 import com.onyxdb.platform.generated.openapi.models.ClusterBackupConfigDTO;
 import com.onyxdb.platform.generated.openapi.models.ClusterResourcesDTO;
+import com.onyxdb.platform.generated.openapi.models.ClusterStatusDTO;
 import com.onyxdb.platform.generated.openapi.models.CreateMongoClusterRequestDTO;
+import com.onyxdb.platform.generated.openapi.models.MongoClusterDTO;
 import com.onyxdb.platform.generated.openapi.models.MongoConfigDTO;
+import com.onyxdb.platform.generated.openapi.models.UpdateMongoClusterRequestDTO;
+import com.onyxdb.platform.generated.openapi.models.UpdateMongoConfigDTO;
 import com.onyxdb.platform.mdb.clusters.models.Cluster;
 import com.onyxdb.platform.mdb.clusters.models.ClusterBackupConfig;
 import com.onyxdb.platform.mdb.clusters.models.ClusterConfig;
 import com.onyxdb.platform.mdb.clusters.models.ClusterResources;
+import com.onyxdb.platform.mdb.clusters.models.ClusterStatus;
 import com.onyxdb.platform.mdb.clusters.models.ClusterType;
 import com.onyxdb.platform.mdb.clusters.models.ClusterVersion;
 import com.onyxdb.platform.mdb.clusters.models.CreateCluster;
+import com.onyxdb.platform.mdb.clusters.models.UpdateCluster;
+import com.onyxdb.platform.mdb.clusters.models.UpdateClusterConfig;
+import com.onyxdb.platform.mdb.clusters.models.UpdateClusterResources;
 import com.onyxdb.platform.mdb.exceptions.InternalServerErrorException;
 import com.onyxdb.platform.mdb.utils.OnyxdbConsts;
-import com.onyxdb.platform.mdb.utils.TimeUtils;
 
 /**
  * @author foxleren
@@ -78,7 +85,7 @@ public class ClusterMapper {
     }
 
     public Cluster createClusterToCluster(CreateCluster c, String namespace) {
-        return new Cluster(
+        return Cluster.create(
                 UUID.randomUUID(),
                 c.name(),
                 c.description(),
@@ -86,11 +93,7 @@ public class ClusterMapper {
                 namespace,
                 c.type(),
                 c.config(),
-                TimeUtils.now(),
-                c.createdBy(),
-                false,
-                null,
-                null
+                c.createdBy()
         );
     }
 
@@ -100,6 +103,7 @@ public class ClusterMapper {
                     c.id(),
                     c.name(),
                     c.description(),
+                    c.status().value(),
                     c.projectId(),
                     c.namespace(),
                     clusterTypeToJooqClusterType(c.type()),
@@ -119,36 +123,6 @@ public class ClusterMapper {
         return com.onyxdb.platform.generated.jooq.enums.ClusterType.lookupLiteral(t.value());
     }
 
-//    public UpdateCluster v1MongoUpdateClusterRequestToUpdateCluster(
-//            UUID clusterId,
-//            V1MongoUpdateClusterRequest r
-//    ) {
-//        MongoConfigDTO v1MongoConfig = r.getConfig();
-//        return new UpdateCluster(
-//                clusterId,
-//                r.getName(),
-//                new ClusterConfig(
-//                        ClusterResourcesDTOtoClusterResources(v1MongoConfig.getResources()),
-//                        v1MongoConfig.getReplicas()
-//                )
-//        );
-//    }
-//    public com.onyxdb.platform.generated.jooq.enums.ClusterType clusterTypeToJooqClusterType(ClusterType t) {
-//        return com.onyxdb.platform.generated.jooq.enums.ClusterType.lookupLiteral(t.value());
-//    }
-
-//    public com.onyxdb.mdb.generated.jooq.enums.ClusterVersion clusterVersionToJooqClusterVersion(ClusterVersion v) {
-//        return com.onyxdb.mdb.generated.jooq.enums.ClusterVersion.lookupLiteral(v.value());
-//    }
-
-//    public MongodV8d0Config v1MongodConfigV8d0ToMongodV8d0Config(V1MongodConfigV8d0 c) {
-//        return new MongodV8d0Config(
-//                new MongodV8d0Net(
-//                        c.getNet().getMaxIncomingConnections()
-//                )
-//        );
-//    }
-
     public Cluster fromJooqRecord(Record r) {
         ClustersRecord rr = r.into(ClustersRecord.class);
 
@@ -157,6 +131,7 @@ public class ClusterMapper {
                     rr.getId(),
                     rr.getName(),
                     rr.getDescription(),
+                    ClusterStatus.R.fromValue(rr.getStatus()),
                     rr.getProjectId(),
                     rr.getNamespace(),
                     ClusterType.R.fromValue(rr.getType().getLiteral()),
@@ -172,29 +147,40 @@ public class ClusterMapper {
         }
     }
 
-//    public V1MongoClusterResponse map(Cluster c) {
-//        return new V1MongoClusterResponse(
-//                c.id(),
-//                c.name(),
-//                c.description(),
-//                new V1ClusterStatusResponse(
-//                        "alive",
-//                        "Все хосты работают нормально, все запущенные операции были успешно выполнены."
-//                ),
-//                c.projectId(),
-//                map(c.config())
-//        );
-//    }
+    public MongoClusterDTO clusterToMongoClusterDTO(Cluster c) {
+        return new MongoClusterDTO(
+                c.id(),
+                c.name(),
+                c.description(),
+                clusterStatusToClusterStatusDTO(c.status()),
+                c.projectId(),
+                c.namespace(),
+                clusterConfigToMongoConfigDTO(c.config()),
+                c.createdAt(),
+                c.createdBy(),
+                c.isDeleted(),
+                c.deletedAt(),
+                c.deletedBy()
+        );
+    }
 
-//    public MongoConfigDTO map(ClusterConfig c) {
-//        return new MongoConfigDTO(
-//                map(c.resources()),
-//                c.replicas(),
-//                new ClusterBackupConfigDTO()
-//        );
-//    }
+    public ClusterStatusDTO clusterStatusToClusterStatusDTO(ClusterStatus s) {
+        return new ClusterStatusDTO(
+                s.value(),
+                s.getDisplayValue()
+        );
+    }
 
-    public ClusterResourcesDTO map(ClusterResources r) {
+    public MongoConfigDTO clusterConfigToMongoConfigDTO(ClusterConfig c) {
+        return new MongoConfigDTO(
+                c.version().getVersion(),
+                clusterResourcesToClusterResourcesDTO(c.resources()),
+                c.replicas(),
+                clusterBackupConfigToClusterBackupConfigDTO(c.backup())
+        );
+    }
+
+    public ClusterResourcesDTO clusterResourcesToClusterResourcesDTO(ClusterResources r) {
         return new ClusterResourcesDTO(
                 r.presetId(),
                 r.storageClass(),
@@ -202,11 +188,33 @@ public class ClusterMapper {
         );
     }
 
-    public String toString(CreateCluster c) {
-        try {
-            return objectMapper.writeValueAsString(c);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+    public ClusterBackupConfigDTO clusterBackupConfigToClusterBackupConfigDTO(ClusterBackupConfig c) {
+        return new ClusterBackupConfigDTO(
+                c.isEnabled(),
+                c.schedule()
+        );
+    }
+
+    public UpdateCluster updateMongoClusterRequestDTOtoUpdateCluster(
+            UUID clusterId,
+            UpdateMongoClusterRequestDTO rq,
+            UUID updatedBy
+    ) {
+        return new UpdateCluster(
+                clusterId,
+                rq.getName(),
+                rq.getDescription(),
+                updateMongoClusterConfigDTOtoUpdateClusterConfig(rq.getConfig()),
+                updatedBy
+        );
+    }
+
+    public UpdateClusterConfig updateMongoClusterConfigDTOtoUpdateClusterConfig(UpdateMongoConfigDTO c) {
+        return new UpdateClusterConfig(
+                ClusterVersion.R.fromValue(ClusterVersion.typeAndVersionAsString(ClusterType.MONGODB, c.getVersion())),
+                new UpdateClusterResources(c.getResources().getPresetId()),
+                c.getReplicas(),
+                clusterBackupConfigDTOtoClusterBackupConfig(c.getBackup())
+        );
     }
 }

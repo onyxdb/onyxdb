@@ -41,7 +41,7 @@ public class MongoCheckPsmdbReadinessProcessor extends ClusterTaskProcessor {
 
     @Override
     protected TaskProcessingResult internalProcess(Task task, ClusterPayload payload) {
-        Cluster cluster = clusterService.getCluster(payload.clusterId());
+        Cluster cluster = clusterService.getClusterOrThrow(payload.clusterId());
 
         boolean isReady = psmdbClient.isResourceReady(DEFAULT_NAMESPACE, DEFAULT_PROJECT, cluster.name());
         if (!isReady) {

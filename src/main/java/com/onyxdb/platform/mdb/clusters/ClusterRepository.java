@@ -6,19 +6,20 @@ import java.util.UUID;
 
 import com.onyxdb.platform.mdb.clusters.models.Cluster;
 import com.onyxdb.platform.mdb.clusters.models.ClusterConfig;
-import com.onyxdb.platform.mdb.models.UpdateCluster;
+import com.onyxdb.platform.mdb.clusters.models.ClusterFilter;
+import com.onyxdb.platform.mdb.clusters.models.UpdateCluster;
 
 /**
  * @author foxleren
  */
 public interface ClusterRepository {
-    List<Cluster> listClusters();
+    List<Cluster> listClusters(ClusterFilter filter);
 
     void createCluster(Cluster cluster);
 
     Optional<Cluster> getClusterO(UUID clusterId);
 
-    Cluster getCluster(UUID clusterId);
+    Cluster getClusterOrThrow(UUID clusterId);
 
     void markClusterDeleted(UUID clusterId);
 

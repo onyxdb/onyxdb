@@ -26,6 +26,10 @@ public enum ClusterVersion implements StringEnum {
         return typeAndVersionAsString(type, version);
     }
 
+    public String getVersion() {
+        return version;
+    }
+
     public static String typeAndVersionAsString(ClusterType type, String version) {
         return String.format("%s_%s", type.value(), version);
     }

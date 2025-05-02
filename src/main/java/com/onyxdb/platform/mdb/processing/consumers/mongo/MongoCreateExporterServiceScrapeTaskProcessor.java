@@ -41,7 +41,7 @@ public class MongoCreateExporterServiceScrapeTaskProcessor extends ClusterTaskPr
 
     @Override
     public TaskProcessingResult internalProcess(Task task, ClusterPayload payload) {
-        Cluster cluster = clusterService.getCluster(payload.clusterId());
+        Cluster cluster = clusterService.getClusterOrThrow(payload.clusterId());
 
         psmdbExporterServiceScrapeClient.applyPsmdbExporterServiceScrape(
                 DEFAULT_NAMESPACE,

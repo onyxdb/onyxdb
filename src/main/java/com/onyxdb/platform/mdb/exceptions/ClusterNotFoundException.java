@@ -5,7 +5,7 @@ import java.util.UUID;
 /**
  * @author foxleren
  */
-public class ClusterNotFoundException extends BadRequestException {
+public class ClusterNotFoundException extends NotFoundException {
     public ClusterNotFoundException(String message) {
         super(message);
     }
