@@ -188,20 +188,19 @@ CREATE TABLE public.tasks
     status        public.task_status NOT NULL,
     operation_id  uuid               NOT NULL,
     created_at    timestamp          NOT NULL,
-    updated_at    timestamp          NOT NULL,
     scheduled_at  timestamp          NOT NULL,
     attempts_left int                NOT NULL,
-    is_first      boolean            NOT NULL,
-    is_last       boolean            NOT NULL,
     payload       jsonb              NOT NULL,
+    started_at    timestamp,
+    finished_at   timestamp,
     PRIMARY KEY (id),
     FOREIGN KEY (operation_id) REFERENCES operations (id)
 );
 
 CREATE TABLE public.tasks_to_blocker_tasks
 (
-    task_id         uuid,
-    blocker_task_id uuid,
+    task_id         uuid NOT NULL,
+    blocker_task_id uuid NOT NULL,
     FOREIGN KEY (task_id) REFERENCES public.tasks (id),
     FOREIGN KEY (blocker_task_id) REFERENCES public.tasks (id),
     PRIMARY KEY (task_id, blocker_task_id)
