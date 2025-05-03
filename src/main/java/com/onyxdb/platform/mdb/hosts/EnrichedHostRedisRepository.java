@@ -11,7 +11,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Pipeline;
 
-import com.onyxdb.platform.mdb.models.EnrichedHost;
+import com.onyxdb.platform.mdb.clusters.models.EnrichedHost;
 
 public class EnrichedHostRedisRepository implements EnrichedHostRepository {
     private final JedisPool jedisPool;

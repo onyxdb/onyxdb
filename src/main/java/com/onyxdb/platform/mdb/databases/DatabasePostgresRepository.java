@@ -10,7 +10,7 @@ import org.jooq.exception.DataAccessException;
 import com.onyxdb.platform.generated.jooq.Indexes;
 import com.onyxdb.platform.generated.jooq.tables.records.DatabasesRecord;
 import com.onyxdb.platform.mdb.exceptions.BadRequestException;
-import com.onyxdb.platform.mdb.models.Database;
+import com.onyxdb.platform.mdb.clusters.models.Database;
 import com.onyxdb.platform.mdb.utils.PsqlUtils;
 import com.onyxdb.platform.mdb.utils.TimeUtils;
 

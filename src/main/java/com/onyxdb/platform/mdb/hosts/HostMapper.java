@@ -5,12 +5,12 @@ import java.util.UUID;
 
 import com.onyxdb.platform.generated.jooq.tables.records.HostsRecord;
 import com.onyxdb.platform.generated.openapi.models.UpdateMongoHostsRequest;
-import com.onyxdb.platform.mdb.models.EnrichedHost;
-import com.onyxdb.platform.mdb.models.Host;
-import com.onyxdb.platform.mdb.models.MongoHost;
-import com.onyxdb.platform.mdb.models.MongoHostRole;
-import com.onyxdb.platform.mdb.models.MongoHostStatus;
-import com.onyxdb.platform.mdb.models.MongoHostType;
+import com.onyxdb.platform.mdb.clusters.models.EnrichedHost;
+import com.onyxdb.platform.mdb.clusters.models.Host;
+import com.onyxdb.platform.mdb.clusters.models.MongoHost;
+import com.onyxdb.platform.mdb.clusters.models.MongoHostRole;
+import com.onyxdb.platform.mdb.clusters.models.MongoHostStatus;
+import com.onyxdb.platform.mdb.clusters.models.MongoHostType;
 
 public class HostMapper {
     public com.onyxdb.platform.generated.openapi.models.MongoHost map(MongoHost h) {
