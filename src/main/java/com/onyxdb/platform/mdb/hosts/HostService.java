@@ -6,9 +6,9 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.onyxdb.platform.mdb.clusters.models.EnrichedHost;
-import com.onyxdb.platform.mdb.clusters.models.Host;
-import com.onyxdb.platform.mdb.clusters.models.MongoHost;
+import com.onyxdb.platform.mdb.models.EnrichedHost;
+import com.onyxdb.platform.mdb.models.Host;
+import com.onyxdb.platform.mdb.models.MongoHost;
 
 public class HostService {
     private final HostRepository hostRepository;

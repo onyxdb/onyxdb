@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import com.onyxdb.platform.mdb.clusters.models.Database;
+import com.onyxdb.platform.mdb.models.Database;
 
 public interface DatabaseRepository {
     List<Database> listDatabases(UUID clusterId);
