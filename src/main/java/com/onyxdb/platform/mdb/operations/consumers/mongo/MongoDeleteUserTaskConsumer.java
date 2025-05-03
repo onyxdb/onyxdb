@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import com.onyxdb.platform.mdb.clients.onyxdbAgent.OnyxdbAgentClient;
 import com.onyxdb.platform.mdb.clients.onyxdbAgent.models.DeleteMongoUserRequestDTO;
 import com.onyxdb.platform.mdb.clusters.ClusterService;
-import com.onyxdb.platform.mdb.models.User;
+import com.onyxdb.platform.mdb.clusters.models.User;
 import com.onyxdb.platform.mdb.operations.consumers.TaskConsumer;
 import com.onyxdb.platform.mdb.operations.models.Task;
 import com.onyxdb.platform.mdb.operations.models.TaskResult;

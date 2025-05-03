@@ -9,7 +9,7 @@ import com.onyxdb.platform.generated.openapi.apis.ManagedMongoDbInternalsApi;
 import com.onyxdb.platform.generated.openapi.models.UpdateMongoHostsRequest;
 import com.onyxdb.platform.mdb.hosts.HostMapper;
 import com.onyxdb.platform.mdb.hosts.HostService;
-import com.onyxdb.platform.mdb.models.MongoHost;
+import com.onyxdb.platform.mdb.clusters.models.MongoHost;
 
 @RestController
 public class ManagedMongoInternalsController implements ManagedMongoDbInternalsApi {

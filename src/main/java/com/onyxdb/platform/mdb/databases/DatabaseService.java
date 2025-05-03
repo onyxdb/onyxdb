@@ -8,8 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import com.onyxdb.platform.mdb.models.CreateDatabase;
-import com.onyxdb.platform.mdb.models.Database;
+import com.onyxdb.platform.mdb.clusters.models.CreateDatabase;
+import com.onyxdb.platform.mdb.clusters.models.Database;
 import com.onyxdb.platform.mdb.operations.models.Operation;
 import com.onyxdb.platform.mdb.operations.models.OperationType;
 import com.onyxdb.platform.mdb.operations.models.payload.MongoCreateDatabasePayload;

@@ -13,8 +13,8 @@ import com.onyxdb.platform.generated.openapi.models.ListMongoDatabasesResponse;
 import com.onyxdb.platform.generated.openapi.models.V1ScheduledOperationResponse;
 import com.onyxdb.platform.mdb.databases.DatabaseMapper;
 import com.onyxdb.platform.mdb.databases.DatabaseService;
-import com.onyxdb.platform.mdb.models.CreateDatabase;
-import com.onyxdb.platform.mdb.models.Database;
+import com.onyxdb.platform.mdb.clusters.models.CreateDatabase;
+import com.onyxdb.platform.mdb.clusters.models.Database;
 
 @RestController
 @RequiredArgsConstructor
