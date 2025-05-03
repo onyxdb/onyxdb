@@ -1,4 +1,4 @@
-package com.onyxdb.platform.mdb.operations.producers.mongo;
+package com.onyxdb.platform.mdb.scheduling.tasks.producers.mongo;
 
 import java.util.List;
 import java.util.UUID;
@@ -7,12 +7,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 
-import com.onyxdb.platform.mdb.operations.models.Operation;
-import com.onyxdb.platform.mdb.operations.models.ProducedTask;
-import com.onyxdb.platform.mdb.operations.models.TaskType;
-import com.onyxdb.platform.mdb.operations.models.payload.ClusterPayload;
-import com.onyxdb.platform.mdb.operations.models.payload.MongoScaleClusterPayload;
-import com.onyxdb.platform.mdb.operations.producers.TaskProducer;
+import com.onyxdb.platform.mdb.scheduling.operations.models.Operation;
+import com.onyxdb.platform.mdb.scheduling.operations.models.payloads.ClusterPayload;
+import com.onyxdb.platform.mdb.scheduling.operations.models.payloads.MongoScaleClusterPayload;
+import com.onyxdb.platform.mdb.scheduling.tasks.models.ProducedTask;
+import com.onyxdb.platform.mdb.scheduling.tasks.models.TaskType;
+import com.onyxdb.platform.mdb.scheduling.tasks.producers.TaskProducer;
 
 @Component
 public class MongoScaleClusterTaskProducer extends TaskProducer<MongoScaleClusterPayload> {

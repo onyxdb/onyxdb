@@ -1,4 +1,4 @@
-package com.onyxdb.platform.mdb.operations.repositories;
+package com.onyxdb.platform.mdb.scheduling.tasks;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -6,10 +6,10 @@ import java.util.UUID;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.onyxdb.platform.mdb.operations.models.Task;
-import com.onyxdb.platform.mdb.operations.models.TaskFilter;
-import com.onyxdb.platform.mdb.operations.models.TaskStatus;
-import com.onyxdb.platform.mdb.operations.models.TaskWithBlockers;
+import com.onyxdb.platform.mdb.scheduling.tasks.models.Task;
+import com.onyxdb.platform.mdb.scheduling.tasks.models.TaskFilter;
+import com.onyxdb.platform.mdb.scheduling.tasks.models.TaskStatus;
+import com.onyxdb.platform.mdb.scheduling.tasks.models.TaskWithBlockers;
 
 /**
  * @author foxleren

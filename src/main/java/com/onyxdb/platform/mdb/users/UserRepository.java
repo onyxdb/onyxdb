@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import com.onyxdb.platform.mdb.models.MongoPermission;
-import com.onyxdb.platform.mdb.models.User;
+import com.onyxdb.platform.mdb.clusters.models.MongoPermission;
+import com.onyxdb.platform.mdb.clusters.models.User;
 
 public interface UserRepository {
     List<User> listUsers(

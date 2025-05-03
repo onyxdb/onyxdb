@@ -17,32 +17,33 @@ import com.onyxdb.platform.mdb.clients.onyxdbAgent.OnyxdbAgentClient;
 import com.onyxdb.platform.mdb.clusters.ClusterService;
 import com.onyxdb.platform.mdb.databases.DatabaseRepository;
 import com.onyxdb.platform.mdb.hosts.HostService;
-import com.onyxdb.platform.mdb.operations.OperationService;
-import com.onyxdb.platform.mdb.operations.consumers.CompositeTaskConsumer;
-import com.onyxdb.platform.mdb.operations.consumers.TaskConsumer;
-import com.onyxdb.platform.mdb.operations.consumers.mongo.FinalTaskConsumer;
-import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoApplyOnyxdbAgentTaskConsumer;
-import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoApplyPsmdbTaskConsumer;
-import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoCheckOnyxdbAgentIsDeletedTaskConsumer;
-import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoCheckOnyxdbAgentReadinessTaskConsumer;
-import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoCheckPsmdbIsDeletedConsumer;
-import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoCheckPsmdbReadinessConsumer;
-import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoCreateBackupTaskConsumer;
-import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoCreateDatabaseTaskConsumer;
-import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoCreateExporterServiceConsumer;
-import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoCreateExporterServiceScrapeTaskConsumer;
-import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoCreateUserTaskConsumer;
-import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoCreateVectorConfigTaskConsumer;
-import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoDeleteDatabaseTaskConsumer;
-import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoDeleteExporterServiceConsumer;
-import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoDeleteExporterServiceScrapeTaskConsumer;
-import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoDeleteOnyxdbAgentTaskConsumer;
-import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoDeletePsmdbTaskConsumer;
-import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoDeleteUserTaskConsumer;
-import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoDeleteVectorConfigTaskConsumer;
-import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoUpdateHostsTaskConsumer;
-import com.onyxdb.platform.mdb.operations.models.TaskType;
 import com.onyxdb.platform.mdb.resourcePresets.ResourcePresetService;
+import com.onyxdb.platform.mdb.scheduling.operations.OperationService;
+import com.onyxdb.platform.mdb.scheduling.tasks.TaskScheduler;
+import com.onyxdb.platform.mdb.scheduling.tasks.consumers.CompositeTaskConsumer;
+import com.onyxdb.platform.mdb.scheduling.tasks.consumers.TaskConsumer;
+import com.onyxdb.platform.mdb.scheduling.tasks.consumers.mongo.FinalTaskConsumer;
+import com.onyxdb.platform.mdb.scheduling.tasks.consumers.mongo.MongoApplyOnyxdbAgentTaskConsumer;
+import com.onyxdb.platform.mdb.scheduling.tasks.consumers.mongo.MongoApplyPsmdbTaskConsumer;
+import com.onyxdb.platform.mdb.scheduling.tasks.consumers.mongo.MongoCheckOnyxdbAgentIsDeletedTaskConsumer;
+import com.onyxdb.platform.mdb.scheduling.tasks.consumers.mongo.MongoCheckOnyxdbAgentReadinessTaskConsumer;
+import com.onyxdb.platform.mdb.scheduling.tasks.consumers.mongo.MongoCheckPsmdbIsDeletedConsumer;
+import com.onyxdb.platform.mdb.scheduling.tasks.consumers.mongo.MongoCheckPsmdbReadinessConsumer;
+import com.onyxdb.platform.mdb.scheduling.tasks.consumers.mongo.MongoCreateBackupTaskConsumer;
+import com.onyxdb.platform.mdb.scheduling.tasks.consumers.mongo.MongoCreateDatabaseTaskConsumer;
+import com.onyxdb.platform.mdb.scheduling.tasks.consumers.mongo.MongoCreateExporterServiceConsumer;
+import com.onyxdb.platform.mdb.scheduling.tasks.consumers.mongo.MongoCreateExporterServiceScrapeTaskConsumer;
+import com.onyxdb.platform.mdb.scheduling.tasks.consumers.mongo.MongoCreateUserTaskConsumer;
+import com.onyxdb.platform.mdb.scheduling.tasks.consumers.mongo.MongoCreateVectorConfigTaskConsumer;
+import com.onyxdb.platform.mdb.scheduling.tasks.consumers.mongo.MongoDeleteDatabaseTaskConsumer;
+import com.onyxdb.platform.mdb.scheduling.tasks.consumers.mongo.MongoDeleteExporterServiceConsumer;
+import com.onyxdb.platform.mdb.scheduling.tasks.consumers.mongo.MongoDeleteExporterServiceScrapeTaskConsumer;
+import com.onyxdb.platform.mdb.scheduling.tasks.consumers.mongo.MongoDeleteOnyxdbAgentTaskConsumer;
+import com.onyxdb.platform.mdb.scheduling.tasks.consumers.mongo.MongoDeletePsmdbTaskConsumer;
+import com.onyxdb.platform.mdb.scheduling.tasks.consumers.mongo.MongoDeleteUserTaskConsumer;
+import com.onyxdb.platform.mdb.scheduling.tasks.consumers.mongo.MongoDeleteVectorConfigTaskConsumer;
+import com.onyxdb.platform.mdb.scheduling.tasks.consumers.mongo.MongoUpdateHostsTaskConsumer;
+import com.onyxdb.platform.mdb.scheduling.tasks.models.TaskType;
 
 @Configuration
 public class TaskProcessorsContextConfiguration {
@@ -338,6 +339,7 @@ public class TaskProcessorsContextConfiguration {
     @Bean
     public CompositeTaskConsumer compositeTaskProcessor(
             OperationService operationService,
+            TaskScheduler taskScheduler,
             TransactionTemplate transactionTemplate,
             MongoCreateVectorConfigTaskConsumer mongoCreateVectorConfigTaskProcessor,
             MongoApplyPsmdbTaskConsumer mongoApplyPsmdbTaskProcessor,
@@ -484,6 +486,7 @@ public class TaskProcessorsContextConfiguration {
 
         return new CompositeTaskConsumer(
                 operationService,
+                taskScheduler,
                 transactionTemplate,
                 taskTypeToTaskProcessors
         );

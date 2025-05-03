@@ -1,13 +1,13 @@
-package com.onyxdb.platform.mdb.operations.consumers;
+package com.onyxdb.platform.mdb.scheduling.tasks.consumers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.onyxdb.platform.mdb.clusters.ClusterService;
-import com.onyxdb.platform.mdb.operations.models.Task;
-import com.onyxdb.platform.mdb.operations.models.TaskResult;
-import com.onyxdb.platform.mdb.operations.models.TaskType;
-import com.onyxdb.platform.mdb.operations.models.payload.Payload;
+import com.onyxdb.platform.mdb.scheduling.operations.models.payloads.Payload;
+import com.onyxdb.platform.mdb.scheduling.tasks.models.Task;
+import com.onyxdb.platform.mdb.scheduling.tasks.models.TaskResult;
+import com.onyxdb.platform.mdb.scheduling.tasks.models.TaskType;
 
 public abstract class TaskConsumer<PAYLOAD extends Payload> {
     protected final ObjectMapper objectMapper;

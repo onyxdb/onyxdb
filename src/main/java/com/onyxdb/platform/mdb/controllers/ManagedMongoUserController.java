@@ -14,9 +14,9 @@ import com.onyxdb.platform.generated.openapi.models.ListMongoUsersResponse;
 import com.onyxdb.platform.generated.openapi.models.MongoUser;
 import com.onyxdb.platform.generated.openapi.models.MongoUserToCreate;
 import com.onyxdb.platform.generated.openapi.models.V1ScheduledOperationResponse;
-import com.onyxdb.platform.mdb.models.CreateUser;
-import com.onyxdb.platform.mdb.models.MongoRole;
-import com.onyxdb.platform.mdb.models.User;
+import com.onyxdb.platform.mdb.clusters.models.CreateUser;
+import com.onyxdb.platform.mdb.clusters.models.MongoRole;
+import com.onyxdb.platform.mdb.clusters.models.User;
 import com.onyxdb.platform.mdb.users.UserMapper;
 import com.onyxdb.platform.mdb.users.UserService;
 

@@ -5,7 +5,7 @@ import java.util.List;
 import org.jooq.DSLContext;
 
 import com.onyxdb.platform.generated.jooq.tables.records.HostsRecord;
-import com.onyxdb.platform.mdb.models.ClusterHost;
+import com.onyxdb.platform.mdb.clusters.models.ClusterHost;
 
 public class ClusterHostPostgresRepository implements ClusterHostRepository {
     private final DSLContext dslContext;

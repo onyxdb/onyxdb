@@ -20,6 +20,9 @@ import com.onyxdb.platform.mdb.resourcePresets.ResourcePresetRepository;
 import com.onyxdb.platform.mdb.resourcePresets.ResourcePresetService;
 import com.onyxdb.platform.mdb.resources.ResourceRepository;
 import com.onyxdb.platform.mdb.resources.ResourceService;
+import com.onyxdb.platform.mdb.scheduling.operations.OperationRepository;
+import com.onyxdb.platform.mdb.scheduling.operations.OperationService;
+import com.onyxdb.platform.mdb.scheduling.tasks.TaskRepository;
 import com.onyxdb.platform.mdb.zones.ZoneRepository;
 import com.onyxdb.platform.mdb.zones.ZoneService;
 
