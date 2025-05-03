@@ -5,11 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onyxdb.platform.mdb.clients.k8s.psmdb.PsmdbExporterServiceClient;
 import com.onyxdb.platform.mdb.clusters.ClusterService;
 import com.onyxdb.platform.mdb.clusters.models.Cluster;
+import com.onyxdb.platform.mdb.scheduling.operations.models.payloads.ClusterPayload;
 import com.onyxdb.platform.mdb.scheduling.tasks.consumers.ClusterTaskConsumer;
 import com.onyxdb.platform.mdb.scheduling.tasks.models.Task;
 import com.onyxdb.platform.mdb.scheduling.tasks.models.TaskResult;
 import com.onyxdb.platform.mdb.scheduling.tasks.models.TaskType;
-import com.onyxdb.platform.mdb.scheduling.operations.models.payloads.ClusterPayload;
 
 import static com.onyxdb.platform.mdb.clusters.ClusterMapper.DEFAULT_NAMESPACE;
 import static com.onyxdb.platform.mdb.clusters.ClusterMapper.DEFAULT_PROJECT;

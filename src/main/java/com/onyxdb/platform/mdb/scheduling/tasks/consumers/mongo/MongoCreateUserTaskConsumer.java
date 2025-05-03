@@ -6,11 +6,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onyxdb.platform.mdb.clients.onyxdbAgent.OnyxdbAgentClient;
 import com.onyxdb.platform.mdb.clusters.ClusterService;
 import com.onyxdb.platform.mdb.databases.DatabaseRepository;
+import com.onyxdb.platform.mdb.scheduling.operations.models.payloads.MongoCreateUserPayload;
 import com.onyxdb.platform.mdb.scheduling.tasks.consumers.TaskConsumer;
 import com.onyxdb.platform.mdb.scheduling.tasks.models.Task;
 import com.onyxdb.platform.mdb.scheduling.tasks.models.TaskResult;
 import com.onyxdb.platform.mdb.scheduling.tasks.models.TaskType;
-import com.onyxdb.platform.mdb.scheduling.operations.models.payloads.MongoCreateUserPayload;
 
 public class MongoCreateUserTaskConsumer extends TaskConsumer<MongoCreateUserPayload> {
     private final OnyxdbAgentClient onyxdbAgentClient;

@@ -8,9 +8,9 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import com.onyxdb.platform.mdb.exceptions.OperationNotFoundException;
 import com.onyxdb.platform.mdb.exceptions.OperationRestartNotAllowedException;
-import com.onyxdb.platform.mdb.scheduling.tasks.TaskRepository;
 import com.onyxdb.platform.mdb.scheduling.operations.models.Operation;
 import com.onyxdb.platform.mdb.scheduling.operations.models.OperationStatus;
+import com.onyxdb.platform.mdb.scheduling.tasks.TaskRepository;
 import com.onyxdb.platform.mdb.scheduling.tasks.models.Task;
 import com.onyxdb.platform.mdb.scheduling.tasks.models.TaskFilter;
 import com.onyxdb.platform.mdb.scheduling.tasks.models.TaskStatus;

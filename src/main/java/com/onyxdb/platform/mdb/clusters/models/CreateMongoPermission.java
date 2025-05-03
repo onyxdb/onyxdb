@@ -1,4 +1,4 @@
-package com.onyxdb.platform.mdb.models;
+package com.onyxdb.platform.mdb.clusters.models;
 
 import java.util.List;
 import java.util.UUID;

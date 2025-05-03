@@ -17,6 +17,7 @@ import com.onyxdb.platform.mdb.clients.onyxdbAgent.OnyxdbAgentClient;
 import com.onyxdb.platform.mdb.clusters.ClusterService;
 import com.onyxdb.platform.mdb.databases.DatabaseRepository;
 import com.onyxdb.platform.mdb.hosts.HostService;
+import com.onyxdb.platform.mdb.resourcePresets.ResourcePresetService;
 import com.onyxdb.platform.mdb.scheduling.operations.OperationService;
 import com.onyxdb.platform.mdb.scheduling.tasks.TaskScheduler;
 import com.onyxdb.platform.mdb.scheduling.tasks.consumers.CompositeTaskConsumer;
@@ -43,7 +44,6 @@ import com.onyxdb.platform.mdb.scheduling.tasks.consumers.mongo.MongoDeleteUserT
 import com.onyxdb.platform.mdb.scheduling.tasks.consumers.mongo.MongoDeleteVectorConfigTaskConsumer;
 import com.onyxdb.platform.mdb.scheduling.tasks.consumers.mongo.MongoUpdateHostsTaskConsumer;
 import com.onyxdb.platform.mdb.scheduling.tasks.models.TaskType;
-import com.onyxdb.platform.mdb.resourcePresets.ResourcePresetService;
 
 @Configuration
 public class TaskProcessorsContextConfiguration {

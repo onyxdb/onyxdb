@@ -7,9 +7,9 @@ import java.util.UUID;
 import org.jetbrains.annotations.Nullable;
 
 import com.onyxdb.platform.mdb.scheduling.tasks.models.Task;
+import com.onyxdb.platform.mdb.scheduling.tasks.models.TaskFilter;
 import com.onyxdb.platform.mdb.scheduling.tasks.models.TaskStatus;
 import com.onyxdb.platform.mdb.scheduling.tasks.models.TaskWithBlockers;
-import com.onyxdb.platform.mdb.scheduling.tasks.models.TaskFilter;
 
 /**
  * @author foxleren

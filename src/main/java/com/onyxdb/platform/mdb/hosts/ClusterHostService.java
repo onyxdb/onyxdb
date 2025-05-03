@@ -2,7 +2,7 @@ package com.onyxdb.platform.mdb.hosts;
 
 import java.util.List;
 
-import com.onyxdb.platform.mdb.models.ClusterHost;
+import com.onyxdb.platform.mdb.clusters.models.ClusterHost;
 
 public class ClusterHostService {
     private final ClusterHostRepository clusterHostRepository;

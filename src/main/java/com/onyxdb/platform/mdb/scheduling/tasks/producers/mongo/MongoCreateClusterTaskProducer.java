@@ -7,7 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 
-import com.onyxdb.platform.mdb.models.CreateMongoPermission;
+import com.onyxdb.platform.mdb.clusters.models.CreateMongoPermission;
 import com.onyxdb.platform.mdb.scheduling.operations.models.Operation;
 import com.onyxdb.platform.mdb.scheduling.operations.models.payloads.ClusterPayload;
 import com.onyxdb.platform.mdb.scheduling.operations.models.payloads.MongoCreateClusterPayload;

@@ -7,11 +7,11 @@ import org.springframework.stereotype.Component;
 import com.onyxdb.platform.mdb.clients.onyxdbAgent.OnyxdbAgentClient;
 import com.onyxdb.platform.mdb.clients.onyxdbAgent.models.CreateMongoDatabaseRequestDTO;
 import com.onyxdb.platform.mdb.clusters.ClusterService;
+import com.onyxdb.platform.mdb.scheduling.operations.models.payloads.MongoCreateDatabasePayload;
 import com.onyxdb.platform.mdb.scheduling.tasks.consumers.TaskConsumer;
 import com.onyxdb.platform.mdb.scheduling.tasks.models.Task;
 import com.onyxdb.platform.mdb.scheduling.tasks.models.TaskResult;
 import com.onyxdb.platform.mdb.scheduling.tasks.models.TaskType;
-import com.onyxdb.platform.mdb.scheduling.operations.models.payloads.MongoCreateDatabasePayload;
 
 @Component
 public class MongoCreateDatabaseTaskConsumer extends TaskConsumer<MongoCreateDatabasePayload> {

@@ -9,12 +9,12 @@ import org.jooq.JSONB;
 import com.onyxdb.platform.generated.jooq.tables.records.PermissionsRecord;
 import com.onyxdb.platform.generated.openapi.models.MongoUser;
 import com.onyxdb.platform.generated.openapi.models.MongoUserToCreate;
-import com.onyxdb.platform.mdb.models.CreateMongoPermission;
-import com.onyxdb.platform.mdb.models.CreateUser;
-import com.onyxdb.platform.mdb.models.CreateUserWithSecret;
-import com.onyxdb.platform.mdb.models.MongoPermission;
-import com.onyxdb.platform.mdb.models.PermissionData;
-import com.onyxdb.platform.mdb.models.User;
+import com.onyxdb.platform.mdb.clusters.models.CreateMongoPermission;
+import com.onyxdb.platform.mdb.clusters.models.CreateUser;
+import com.onyxdb.platform.mdb.clusters.models.CreateUserWithSecret;
+import com.onyxdb.platform.mdb.clusters.models.MongoPermission;
+import com.onyxdb.platform.mdb.clusters.models.PermissionData;
+import com.onyxdb.platform.mdb.clusters.models.User;
 import com.onyxdb.platform.mdb.utils.OnyxdbConsts;
 import com.onyxdb.platform.mdb.utils.TimeUtils;
 

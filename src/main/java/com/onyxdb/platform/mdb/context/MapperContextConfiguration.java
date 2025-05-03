@@ -13,10 +13,10 @@ import com.onyxdb.platform.mdb.billing.BillingMapper;
 import com.onyxdb.platform.mdb.clusters.ClusterMapper;
 import com.onyxdb.platform.mdb.databases.DatabaseMapper;
 import com.onyxdb.platform.mdb.hosts.HostMapper;
-import com.onyxdb.platform.mdb.scheduling.operations.OperationMapper;
 import com.onyxdb.platform.mdb.projects.ProjectMapper;
 import com.onyxdb.platform.mdb.quotas.QuotaMapper;
 import com.onyxdb.platform.mdb.resources.ResourceMapper;
+import com.onyxdb.platform.mdb.scheduling.operations.OperationMapper;
 import com.onyxdb.platform.mdb.users.UserMapper;
 
 /**
