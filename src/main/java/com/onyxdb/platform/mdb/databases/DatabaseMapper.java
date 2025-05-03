@@ -5,8 +5,8 @@ import java.util.UUID;
 import com.onyxdb.platform.generated.jooq.tables.records.DatabasesRecord;
 import com.onyxdb.platform.generated.openapi.models.CreateMongoDatabaseRequest;
 import com.onyxdb.platform.generated.openapi.models.MongoDatabase;
-import com.onyxdb.platform.mdb.clusters.models.CreateDatabase;
-import com.onyxdb.platform.mdb.clusters.models.Database;
+import com.onyxdb.platform.mdb.models.CreateDatabase;
+import com.onyxdb.platform.mdb.models.Database;
 import com.onyxdb.platform.mdb.utils.OnyxdbConsts;
 import com.onyxdb.platform.mdb.utils.TimeUtils;
 

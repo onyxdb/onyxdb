@@ -6,7 +6,7 @@ import java.util.UUID;
 import org.jooq.DSLContext;
 
 import com.onyxdb.platform.generated.jooq.tables.records.HostsRecord;
-import com.onyxdb.platform.mdb.clusters.models.Host;
+import com.onyxdb.platform.mdb.models.Host;
 
 import static com.onyxdb.platform.generated.jooq.Tables.HOSTS;
 
