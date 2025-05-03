@@ -10,11 +10,11 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import com.onyxdb.platform.mdb.models.CreateDatabase;
 import com.onyxdb.platform.mdb.models.Database;
-import com.onyxdb.platform.mdb.scheduling.operations.models.Operation;
-import com.onyxdb.platform.mdb.scheduling.operations.models.OperationType;
-import com.onyxdb.platform.mdb.scheduling.operations.models.payloads.MongoCreateDatabasePayload;
-import com.onyxdb.platform.mdb.scheduling.operations.models.payloads.MongoDeleteDatabasePayload;
-import com.onyxdb.platform.mdb.scheduling.operations.OperationRepository;
+import com.onyxdb.platform.mdb.operations.models.Operation;
+import com.onyxdb.platform.mdb.operations.models.OperationType;
+import com.onyxdb.platform.mdb.operations.models.payload.MongoCreateDatabasePayload;
+import com.onyxdb.platform.mdb.operations.models.payload.MongoDeleteDatabasePayload;
+import com.onyxdb.platform.mdb.operations.repositories.OperationRepository;
 import com.onyxdb.platform.mdb.utils.ObjectMapperUtils;
 
 @Service

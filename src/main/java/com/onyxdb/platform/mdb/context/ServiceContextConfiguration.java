@@ -10,9 +10,6 @@ import com.onyxdb.platform.mdb.hosts.EnrichedHostRepository;
 import com.onyxdb.platform.mdb.hosts.HostMapper;
 import com.onyxdb.platform.mdb.hosts.HostRepository;
 import com.onyxdb.platform.mdb.hosts.HostService;
-import com.onyxdb.platform.mdb.scheduling.operations.OperationService;
-import com.onyxdb.platform.mdb.scheduling.operations.OperationRepository;
-import com.onyxdb.platform.mdb.scheduling.tasks.TaskRepository;
 import com.onyxdb.platform.mdb.projects.ProjectMapper;
 import com.onyxdb.platform.mdb.projects.ProjectRepository;
 import com.onyxdb.platform.mdb.projects.ProjectService;
@@ -75,7 +72,8 @@ public class ServiceContextConfiguration {
 //                clusterMapper,
 //                clusterRepository,
 //                transactionTemplate,
-////                compositeTaskGenerator,
+
+    /// /                compositeTaskGenerator,
 //                operationRepository,
 //                taskRepository,
 //                mongoCreateClusterTaskGenerator,
@@ -90,7 +88,6 @@ public class ServiceContextConfiguration {
 //                mongoDeleteDatabaseTaskGenerator
 //        );
 //    }
-
     @Bean
     public HostService hostService(
             HostRepository hostRepository,
@@ -131,18 +128,5 @@ public class ServiceContextConfiguration {
     @Bean
     public BillingService billingService(BillingRepository billingRepository) {
         return new BillingService(billingRepository);
-    }
-
-    @Bean
-    public OperationService operationService(
-            OperationRepository operationRepository,
-            TaskRepository taskRepository,
-            TransactionTemplate transactionTemplate
-    ) {
-        return new OperationService(
-                operationRepository,
-                taskRepository,
-                transactionTemplate
-        );
     }
 }

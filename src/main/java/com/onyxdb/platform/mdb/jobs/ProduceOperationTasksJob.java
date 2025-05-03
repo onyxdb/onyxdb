@@ -11,12 +11,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import com.onyxdb.platform.mdb.scheduling.operations.OperationRepository;
-import com.onyxdb.platform.mdb.scheduling.operations.models.Operation;
-import com.onyxdb.platform.mdb.scheduling.operations.models.OperationStatus;
-import com.onyxdb.platform.mdb.scheduling.tasks.TaskRepository;
-import com.onyxdb.platform.mdb.scheduling.tasks.TaskScheduler;
-import com.onyxdb.platform.mdb.scheduling.tasks.producers.TaskProducerProvider;
+import com.onyxdb.platform.mdb.operations.OperationService;
+import com.onyxdb.platform.mdb.operations.models.Operation;
+import com.onyxdb.platform.mdb.operations.models.OperationStatus;
+import com.onyxdb.platform.mdb.operations.producers.TaskProducerProvider;
+import com.onyxdb.platform.mdb.operations.repositories.OperationRepository;
+import com.onyxdb.platform.mdb.operations.repositories.TaskRepository;
 
 @Component
 @RequiredArgsConstructor
@@ -28,7 +28,7 @@ public class ProduceOperationTasksJob {
     private final TaskRepository taskRepository;
     private final TransactionTemplate transactionTemplate;
     private final TaskProducerProvider taskProducerProvider;
-    private final TaskScheduler taskScheduler;
+    private final OperationService operationService;
 
     @Scheduled(fixedRateString = "PT2S")
     @SchedulerLock(
@@ -41,7 +41,7 @@ public class ProduceOperationTasksJob {
         logger.info("Scheduled operations for {}", operations.size());
 
         for (Operation operation : operations) {
-            taskScheduler.registerOperation(operation);
+            operationService.registerOperation(operation);
         }
     }
 }

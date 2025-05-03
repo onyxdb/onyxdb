@@ -13,10 +13,10 @@ import com.onyxdb.platform.generated.openapi.models.BackupType;
 import com.onyxdb.platform.generated.openapi.models.ListMongoBackupsResponse;
 import com.onyxdb.platform.generated.openapi.models.MongoBackup;
 import com.onyxdb.platform.generated.openapi.models.V1ScheduledOperationResponse;
-import com.onyxdb.platform.mdb.scheduling.operations.models.Operation;
-import com.onyxdb.platform.mdb.scheduling.operations.models.OperationType;
-import com.onyxdb.platform.mdb.scheduling.operations.models.payloads.ClusterPayload;
-import com.onyxdb.platform.mdb.scheduling.operations.OperationRepository;
+import com.onyxdb.platform.mdb.operations.models.Operation;
+import com.onyxdb.platform.mdb.operations.models.OperationType;
+import com.onyxdb.platform.mdb.operations.models.payload.ClusterPayload;
+import com.onyxdb.platform.mdb.operations.repositories.OperationRepository;
 import com.onyxdb.platform.mdb.utils.ObjectMapperUtils;
 import com.onyxdb.platform.mdb.utils.TimeUtils;
 
