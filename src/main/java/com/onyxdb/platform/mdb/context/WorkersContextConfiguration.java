@@ -8,9 +8,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-import com.onyxdb.platform.mdb.scheduling.tasks.ConsumeTasksWorker;
-import com.onyxdb.platform.mdb.scheduling.tasks.TaskScheduler;
-import com.onyxdb.platform.mdb.scheduling.tasks.consumers.CompositeTaskConsumer;
+import com.onyxdb.platform.mdb.operations.ConsumeTasksWorker;
+import com.onyxdb.platform.mdb.operations.OperationService;
+import com.onyxdb.platform.mdb.operations.consumers.CompositeTaskConsumer;
 
 @Configuration
 public class WorkersContextConfiguration {
@@ -31,14 +31,14 @@ public class WorkersContextConfiguration {
             @Value("${onyxdb.workers.process-cluster-tasks.polling-interval-seconds}")
             int pollingIntervalSeconds,
             CompositeTaskConsumer compositeTaskConsumer,
-            TaskScheduler taskScheduler
+            OperationService operationService
     ) {
         return new ConsumeTasksWorker(
                 minThreads,
                 maxThreads,
                 pollingIntervalSeconds,
                 compositeTaskConsumer,
-                taskScheduler
+                operationService
         );
     }
 }

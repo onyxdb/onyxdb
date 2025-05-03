@@ -15,9 +15,9 @@ import com.onyxdb.platform.generated.jooq.Indexes;
 import com.onyxdb.platform.mdb.clusters.models.Cluster;
 import com.onyxdb.platform.mdb.clusters.models.ClusterConfig;
 import com.onyxdb.platform.mdb.clusters.models.ClusterFilter;
+import com.onyxdb.platform.mdb.clusters.models.UpdateCluster;
 import com.onyxdb.platform.mdb.exceptions.ClusterAlreadyExistsException;
 import com.onyxdb.platform.mdb.exceptions.ClusterNotFoundException;
-import com.onyxdb.platform.mdb.clusters.models.UpdateCluster;
 import com.onyxdb.platform.mdb.utils.PsqlUtils;
 
 import static com.onyxdb.platform.generated.jooq.Tables.CLUSTERS;
