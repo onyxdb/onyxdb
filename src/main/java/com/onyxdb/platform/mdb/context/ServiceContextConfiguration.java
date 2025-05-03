@@ -75,7 +75,8 @@ public class ServiceContextConfiguration {
 //                clusterMapper,
 //                clusterRepository,
 //                transactionTemplate,
-////                compositeTaskGenerator,
+
+    /// /                compositeTaskGenerator,
 //                operationRepository,
 //                taskRepository,
 //                mongoCreateClusterTaskGenerator,
@@ -90,7 +91,6 @@ public class ServiceContextConfiguration {
 //                mongoDeleteDatabaseTaskGenerator
 //        );
 //    }
-
     @Bean
     public HostService hostService(
             HostRepository hostRepository,
@@ -131,18 +131,5 @@ public class ServiceContextConfiguration {
     @Bean
     public BillingService billingService(BillingRepository billingRepository) {
         return new BillingService(billingRepository);
-    }
-
-    @Bean
-    public OperationService operationService(
-            OperationRepository operationRepository,
-            TaskRepository taskRepository,
-            TransactionTemplate transactionTemplate
-    ) {
-        return new OperationService(
-                operationRepository,
-                taskRepository,
-                transactionTemplate
-        );
     }
 }
