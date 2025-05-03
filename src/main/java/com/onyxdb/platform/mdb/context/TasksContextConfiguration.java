@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import com.onyxdb.platform.mdb.billing.BillingService;
 import com.onyxdb.platform.mdb.clusters.ClusterService;
 import com.onyxdb.platform.mdb.quotas.QuotaService;
-import com.onyxdb.platform.mdb.tasks.CollectProductQuotaUsageTask;
+import com.onyxdb.platform.mdb.jobs.CollectProductQuotaUsageTask;
 
 @Configuration
 public class TasksContextConfiguration {

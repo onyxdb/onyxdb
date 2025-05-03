@@ -16,6 +16,7 @@ paths:
       operationId: listProjects
       tags:
         - Projects
+        - MDB
       responses:
         '200':
           description: OK
@@ -28,6 +29,7 @@ paths:
       operationId: createProject
       tags:
         - Projects
+        - MDB
       requestBody:
         required: true
         content:
@@ -47,6 +49,7 @@ paths:
       operationId: getProject
       tags:
         - Projects
+        - MDB
       parameters:
         - $ref: '#/components/parameters/ProjectIdPV'
       responses:
@@ -61,6 +64,7 @@ paths:
       operationId: updateProject
       tags:
         - Projects
+        - MDB
       parameters:
         - $ref: '#/components/parameters/ProjectIdPV'
       requestBody:
@@ -77,6 +81,7 @@ paths:
       operationId: deleteProject
       tags:
         - Projects
+        - MDB
       parameters:
         - $ref: '#/components/parameters/ProjectIdPV'
       responses:
@@ -89,6 +94,7 @@ paths:
       operationId: listClusters
       tags:
         - Managed MongoDB clusters
+        - MDB
       parameters:
         - $ref: '#/components/parameters/ProjectIdsOQP'
         - $ref: '#/components/parameters/IsDeletedOQP'
@@ -104,6 +110,7 @@ paths:
       operationId: createCluster
       tags:
         - Managed MongoDB clusters
+        - MDB
       requestBody:
         required: true
         content:
@@ -123,6 +130,7 @@ paths:
       operationId: getCluster
       tags:
         - Managed MongoDB clusters
+        - MDB
       parameters:
         - $ref: '#/components/parameters/ClusterIdPV'
       responses:
@@ -137,6 +145,7 @@ paths:
       operationId: updateCluster
       tags:
         - Managed MongoDB clusters
+        - MDB
       parameters:
         - $ref: '#/components/parameters/ClusterIdPV'
       requestBody:
@@ -157,6 +166,7 @@ paths:
       operationId: deleteCluster
       tags:
         - Managed MongoDB clusters
+        - MDB
       parameters:
         - $ref: '#/components/parameters/ClusterIdPV'
       responses:
@@ -177,6 +187,7 @@ paths:
       operationId: listResourcePresets
       tags:
         - Resource presets
+        - MDB
       responses:
         '200':
           description: OK
@@ -189,6 +200,7 @@ paths:
       operationId: createResourcePreset
       tags:
         - Resource presets
+        - MDB
       requestBody:
         required: true
         content:
@@ -204,6 +216,7 @@ paths:
       operationId: getResourcePreset
       tags:
         - Resource presets
+        - MDB
       parameters:
         - $ref: '#/components/parameters/ResourcePresetIdPV'
       responses:
@@ -218,6 +231,7 @@ paths:
       operationId: updateResourcePreset
       tags:
         - Resource presets
+        - MDB
       parameters:
         - $ref: '#/components/parameters/ResourcePresetIdPV'
       requestBody:
@@ -234,6 +248,7 @@ paths:
       operationId: deleteResourcePreset
       tags:
         - Resource presets
+        - MDB
       parameters:
         - $ref: '#/components/parameters/ResourcePresetIdPV'
       responses:
@@ -246,6 +261,7 @@ paths:
       operationId: listHosts
       tags:
         - v1ManagedMongoDb
+        - MDB
       parameters:
         - $ref: '#/components/parameters/ClusterIdPV'
       responses:
@@ -262,6 +278,7 @@ paths:
       operationId: listDatabases
       tags:
         - Managed MongoDB databases
+        - MDB
       parameters:
         - $ref: '#/components/parameters/ClusterIdPV'
       responses:
@@ -276,6 +293,7 @@ paths:
       operationId: createDatabase
       tags:
         - Managed MongoDB databases
+        - MDB
       parameters:
         - $ref: '#/components/parameters/ClusterIdPV'
       requestBody:
@@ -297,6 +315,7 @@ paths:
       operationId: deleteDatabase
       tags:
         - Managed MongoDB databases
+        - MDB
       parameters:
         - $ref: '#/components/parameters/ClusterIdPV'
         - $ref: '#/components/parameters/DatabaseIdPV'
@@ -314,6 +333,7 @@ paths:
       operationId: listRoles
       tags:
         - Managed MongoDB users
+        - MDB
       responses:
         '200':
           description: OK
@@ -327,6 +347,7 @@ paths:
       operationId: listUsers
       tags:
         - Managed MongoDB users
+        - MDB
       parameters:
         - $ref: '#/components/parameters/ClusterIdPV'
       responses:
@@ -341,6 +362,7 @@ paths:
       operationId: createUser
       tags:
         - Managed MongoDB users
+        - MDB
       parameters:
         - $ref: '#/components/parameters/ClusterIdPV'
       requestBody:
@@ -362,6 +384,7 @@ paths:
       operationId: getUser
       tags:
         - Managed MongoDB users
+        - MDB
       parameters:
         - $ref: '#/components/parameters/UserIdPV'
       responses:
@@ -376,6 +399,7 @@ paths:
       operationId: deleteUser
       tags:
         - Managed MongoDB users
+        - MDB
       parameters:
         - $ref: '#/components/parameters/UserIdPV'
       responses:
@@ -392,6 +416,7 @@ paths:
       operationId: listBackups
       tags:
         - Managed MongoDB backups
+        - MDB
       parameters:
         - $ref: '#/components/parameters/ClusterIdPV'
       responses:
@@ -406,6 +431,7 @@ paths:
       operationId: createBackup
       tags:
         - Managed MongoDB backups
+        - MDB
       parameters:
         - $ref: '#/components/parameters/ClusterIdPV'
       responses:
@@ -421,6 +447,7 @@ paths:
       operationId: deleteBackup
       tags:
         - Managed MongoDB backups
+        - MDB
       parameters:
         - $ref: '#/components/parameters/ClusterIdPV'
         - $ref: '#/components/parameters/BackupNamePV'
@@ -437,6 +464,7 @@ paths:
       operationId: restoreFromBackup
       tags:
         - Managed MongoDB backups
+        - MDB
       parameters:
         - $ref: '#/components/parameters/ClusterIdPV'
         - $ref: '#/components/parameters/BackupNamePV'
@@ -454,6 +482,7 @@ paths:
       operationId: updateHosts
       tags:
         - Managed MongoDB internals
+        - MDB
       requestBody:
         required: true
         content:
@@ -470,6 +499,7 @@ paths:
       operationId: listQuotasByProducts
       tags:
         - MDB quotas
+        - MDB
       parameters:
         - $ref: '#/components/parameters/ProductIdsOQP'
       responses:
@@ -485,6 +515,7 @@ paths:
       operationId: uploadQuotasToProducts
       tags:
         - MDB quotas
+        - MDB
       requestBody:
         required: true
         content:
@@ -500,6 +531,7 @@ paths:
       operationId: transferQuotasBetweenProducts
       tags:
         - MDB quotas
+        - MDB
       requestBody:
         required: true
         content:
@@ -515,6 +547,7 @@ paths:
       operationId: simulateTransferQuotasBetweenProducts
       tags:
         - MDB quotas
+        - MDB
       requestBody:
         required: true
         content:
@@ -534,6 +567,7 @@ paths:
       operationId: listResources
       tags:
         - MDB quotas
+        - MDB
       responses:
         '200':
           description: OK
@@ -547,6 +581,7 @@ paths:
       operationId: simulateMongoDbQuotasUsage
       tags:
         - MDB quotas
+        - MDB
       requestBody:
         required: true
         content:
@@ -567,6 +602,7 @@ paths:
       operationId: listOperations
       tags:
         - Operations
+        - MDB
       parameters:
         - $ref: '#/components/parameters/ClusterIdOQP'
       responses:
@@ -582,6 +618,7 @@ paths:
       operationId: restartOperation
       tags:
         - Operations
+        - MDB
       parameters:
         - $ref: '#/components/parameters/OperationIdPV'
       responses:
@@ -594,6 +631,7 @@ paths:
       operationId: getProductQuotaUsageReport
       tags:
         - Billing
+        - MDB
       parameters:
         - $ref: '#/components/parameters/ProductIdRQP'
         - name: startDate

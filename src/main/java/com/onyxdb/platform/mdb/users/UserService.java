@@ -14,11 +14,11 @@ import com.onyxdb.platform.mdb.clusters.models.Cluster;
 import com.onyxdb.platform.mdb.exceptions.NotImplementedException;
 import com.onyxdb.platform.mdb.models.CreateUser;
 import com.onyxdb.platform.mdb.models.User;
-import com.onyxdb.platform.mdb.processing.models.Operation;
-import com.onyxdb.platform.mdb.processing.models.OperationType;
-import com.onyxdb.platform.mdb.processing.models.payloads.MongoCreateUserPayload;
-import com.onyxdb.platform.mdb.processing.models.payloads.MongoDeleteUserPayload;
-import com.onyxdb.platform.mdb.processing.repositories.OperationRepository;
+import com.onyxdb.platform.mdb.scheduling.operations.models.Operation;
+import com.onyxdb.platform.mdb.scheduling.operations.models.OperationType;
+import com.onyxdb.platform.mdb.scheduling.operations.models.payloads.MongoCreateUserPayload;
+import com.onyxdb.platform.mdb.scheduling.operations.models.payloads.MongoDeleteUserPayload;
+import com.onyxdb.platform.mdb.scheduling.operations.OperationRepository;
 import com.onyxdb.platform.mdb.utils.ObjectMapperUtils;
 
 import static com.onyxdb.platform.mdb.clusters.ClusterMapper.DEFAULT_NAMESPACE;
