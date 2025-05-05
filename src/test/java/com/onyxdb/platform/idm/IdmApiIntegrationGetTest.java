@@ -1,5 +1,6 @@
 package com.onyxdb.platform.idm;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -8,8 +9,10 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
+import com.onyxdb.platform.generated.openapi.models.JwtResponseDTO;
 import com.onyxdb.platform.generated.openapi.models.PaginatedAccountResponse;
 import com.onyxdb.platform.generated.openapi.models.PaginatedBusinessRoleResponse;
 import com.onyxdb.platform.generated.openapi.models.PaginatedProductResponse;
@@ -19,20 +22,36 @@ import com.onyxdb.platform.generated.openapi.models.RoleWithPermissionsDTO;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@Disabled
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+//@Disabled
+//@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class IdmApiIntegrationGetTest {
-
-    final private String apiAccessToken = "eyJhbGciOiJIUzI1NiJ9.eyJwZXJtaXNzaW9ucyI6WyJnbG9iYWwtYW55Il0sInN1YiI6ImQ3NDliYjMxLTA1NWEtNDdkNi1hZDYwLTMyYzNlZTI3NTVjYiIsImlhdCI6MTc0MTc4NTY2OCwiZXhwIjozNTg3Mjg5NjY4fQ.NJCRSpVyqNjqNAYrAQPwfyjOrSQrUSoQKbH01o9puk0";
 
     @Autowired
     private WebTestClient webTestClient;
 
     @BeforeEach
     public void setup() {
+        WebTestClient webLoginClient = WebTestClient.bindToServer()
+                .baseUrl("http://localhost:9001")
+                .build();
+
+        var loginBody = new HashMap<String, String>();
+        loginBody.put("username", "admin");
+        loginBody.put("password", "admin");
+
+        var loginResponse = webLoginClient.post()
+                .uri("/api/v1/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(loginBody)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(JwtResponseDTO.class)
+                .returnResult()
+                .getResponseBody();
+
         this.webTestClient = WebTestClient.bindToServer()
-                .baseUrl("http://localhost:9003")
-                .defaultHeader("Authorization", "Bearer " + apiAccessToken)
+                .baseUrl("http://localhost:9001")
+                .defaultHeader("Authorization", "Bearer " + loginResponse.getAccessToken())
                 .build();
     }
 

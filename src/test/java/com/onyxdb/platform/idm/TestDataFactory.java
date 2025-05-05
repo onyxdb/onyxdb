@@ -5,24 +5,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.onyxdb.platform.generated.openapi.models.AccountDTO;
-import com.onyxdb.platform.generated.openapi.models.BusinessRoleDTO;
-import com.onyxdb.platform.generated.openapi.models.DomainComponentDTO;
-import com.onyxdb.platform.generated.openapi.models.OrganizationUnitDTO;
-import com.onyxdb.platform.generated.openapi.models.PermissionDTO;
-import com.onyxdb.platform.generated.openapi.models.ProductDTO;
-import com.onyxdb.platform.generated.openapi.models.RoleDTO;
-import com.onyxdb.platform.generated.openapi.models.RoleRequestDTO;
-import com.onyxdb.platform.generated.openapi.models.RoleWithPermissionsDTO;
+import com.onyxdb.platform.generated.openapi.models.AccountCreateDTO;
+import com.onyxdb.platform.generated.openapi.models.BusinessRoleCreateDTO;
+import com.onyxdb.platform.generated.openapi.models.DomainComponentCreateDTO;
+import com.onyxdb.platform.generated.openapi.models.OrganizationUnitCreateDTO;
+import com.onyxdb.platform.generated.openapi.models.PermissionCreateDTO;
+import com.onyxdb.platform.generated.openapi.models.ProductCreateDTO;
+import com.onyxdb.platform.generated.openapi.models.RoleCreateDTO;
+import com.onyxdb.platform.generated.openapi.models.RoleRequestCreateDTO;
+import com.onyxdb.platform.generated.openapi.models.RoleWithPermissionsCreateDTO;
 
 public class TestDataFactory {
 
-    public static AccountDTO createAccountDTO(
-            UUID id, String username, String password, String email, String firstName, String lastName,
+    public static AccountCreateDTO createAccountDTO(
+            String username, String password, String email, String firstName, String lastName,
             Map<String, Object> data
     ) {
-        AccountDTO accountDTO = new AccountDTO();
-        accountDTO.setId(id != null ? id : UUID.randomUUID());
+        AccountCreateDTO accountDTO = new AccountCreateDTO();
         accountDTO.setUsername(username);
         accountDTO.setPassword(password);
         accountDTO.setEmail(email);
@@ -32,11 +31,10 @@ public class TestDataFactory {
         return accountDTO;
     }
 
-    public static RoleDTO createRoleDTO(
-            UUID id, String roleType, String name, String shopName, String description, Boolean isShopHidden, String entity, UUID productId, UUID orgUnitId
+    public static RoleCreateDTO createRoleDTO(
+            String roleType, String name, String shopName, String description, Boolean isShopHidden, String entity, UUID productId, UUID orgUnitId
     ) {
-        RoleDTO roleDTO = new RoleDTO();
-        roleDTO.setId(id != null ? id : UUID.randomUUID());
+        RoleCreateDTO roleDTO = new RoleCreateDTO();
         roleDTO.setRoleType(roleType);
         roleDTO.setName(name);
         roleDTO.setShopName(shopName);
@@ -48,11 +46,10 @@ public class TestDataFactory {
         return roleDTO;
     }
 
-    public static BusinessRoleDTO createBusinessRoleDTO(
-            UUID id, String name, String description, UUID parentId
+    public static BusinessRoleCreateDTO createBusinessRoleDTO(
+            String name, String description, UUID parentId
     ) {
-        BusinessRoleDTO businessRoleDTO = new BusinessRoleDTO();
-        businessRoleDTO.setId(id != null ? id : UUID.randomUUID());
+        BusinessRoleCreateDTO businessRoleDTO = new BusinessRoleCreateDTO();
         businessRoleDTO.setName(name.toLowerCase().replace(' ', '-'));
         businessRoleDTO.setShopName(name);
         businessRoleDTO.setDescription(description);
@@ -60,11 +57,10 @@ public class TestDataFactory {
         return businessRoleDTO;
     }
 
-    public static PermissionDTO createPermissionDTO(
-            UUID id, String actionType, String resourceType, Map<String, Object> data
+    public static PermissionCreateDTO createPermissionDTO(
+            String actionType, String resourceType, Map<String, Object> data
     ) {
-        PermissionDTO permissionDTO = new PermissionDTO();
-        permissionDTO.setId(id != null ? id : UUID.randomUUID());
+        PermissionCreateDTO permissionDTO = new PermissionCreateDTO();
         permissionDTO.setActionType(actionType);
         permissionDTO.setResourceType(resourceType);
         permissionDTO.setData(data != null ? data : new HashMap<>());
@@ -72,34 +68,31 @@ public class TestDataFactory {
     }
 
 
-    public static RoleRequestDTO createRoleRequestDTO(
-            UUID id, UUID roleId, UUID accountId, UUID ownerId, String reason, RoleRequestDTO.StatusEnum status
+    public static RoleRequestCreateDTO createRoleRequestDTO(
+            UUID roleId, UUID accountId, UUID ownerId, String reason
     ) {
-        RoleRequestDTO roleRequestDTO = new RoleRequestDTO();
-        roleRequestDTO.setId(id != null ? id : UUID.randomUUID());
+        RoleRequestCreateDTO roleRequestDTO = new RoleRequestCreateDTO();
         roleRequestDTO.setRoleId(roleId);
         roleRequestDTO.setAccountId(accountId);
         roleRequestDTO.setOwnerId(ownerId);
         roleRequestDTO.setReason(reason);
-        roleRequestDTO.setStatus(status);
+        roleRequestDTO.setStatus(RoleRequestCreateDTO.StatusEnum.WAITING);
         return roleRequestDTO;
     }
 
-    public static DomainComponentDTO createDomainComponentDTO(
-            UUID id, String name, String description
+    public static DomainComponentCreateDTO createDomainComponentDTO(
+            String name, String description
     ) {
-        DomainComponentDTO domainComponentDTO = new DomainComponentDTO();
-        domainComponentDTO.setId(id != null ? id : UUID.randomUUID());
+        DomainComponentCreateDTO domainComponentDTO = new DomainComponentCreateDTO();
         domainComponentDTO.setName(name);
         domainComponentDTO.setDescription(description);
         return domainComponentDTO;
     }
 
-    public static OrganizationUnitDTO createOrganizationUnitDTO(
-            UUID id, String name, String description, UUID ownerId, UUID domainComponentId, UUID parentId
+    public static OrganizationUnitCreateDTO createOrganizationUnitDTO(
+            String name, String description, UUID ownerId, UUID domainComponentId, UUID parentId
     ) {
-        OrganizationUnitDTO organizationUnitDTO = new OrganizationUnitDTO();
-        organizationUnitDTO.setId(id != null ? id : UUID.randomUUID());
+        OrganizationUnitCreateDTO organizationUnitDTO = new OrganizationUnitCreateDTO();
         organizationUnitDTO.setName(name);
         organizationUnitDTO.setOwnerId(ownerId);
         organizationUnitDTO.setDescription(description);
@@ -108,11 +101,10 @@ public class TestDataFactory {
         return organizationUnitDTO;
     }
 
-    public static ProductDTO createProductDTO(
-            UUID id, String name, String description, UUID parentId, UUID ownerId
+    public static ProductCreateDTO createProductDTO(
+            String name, String description, UUID parentId, UUID ownerId
     ) {
-        ProductDTO productDTO = new ProductDTO();
-        productDTO.setId(id != null ? id : UUID.randomUUID());
+        ProductCreateDTO productDTO = new ProductCreateDTO();
         productDTO.setName(name);
         productDTO.setDescription(description);
         productDTO.setParentId(parentId);
@@ -120,8 +112,8 @@ public class TestDataFactory {
         return productDTO;
     }
 
-    public static RoleWithPermissionsDTO createRoleWithPermissionsDTO(RoleDTO role, List<PermissionDTO> permissions) {
-        RoleWithPermissionsDTO roleWithPermissionsDTO = new RoleWithPermissionsDTO();
+    public static RoleWithPermissionsCreateDTO createRoleWithPermissionsDTO(RoleCreateDTO role, List<PermissionCreateDTO> permissions) {
+        RoleWithPermissionsCreateDTO roleWithPermissionsDTO = new RoleWithPermissionsCreateDTO();
         roleWithPermissionsDTO.setRole(role);
         roleWithPermissionsDTO.setPermissions(permissions);
         return roleWithPermissionsDTO;
