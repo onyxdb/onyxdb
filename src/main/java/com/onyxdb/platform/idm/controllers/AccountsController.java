@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.validation.Valid;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.onyxdb.platform.generated.openapi.apis.AccountsApi;
 import com.onyxdb.platform.generated.openapi.models.AccountBusinessRolesHistoryDTO;
+import com.onyxdb.platform.generated.openapi.models.AccountCreateDTO;
 import com.onyxdb.platform.generated.openapi.models.AccountDTO;
 import com.onyxdb.platform.generated.openapi.models.AccountRolesHistoryDTO;
 import com.onyxdb.platform.generated.openapi.models.BusinessRoleDTO;
@@ -37,8 +40,8 @@ public class AccountsController implements AccountsApi {
     private final AccountService accountService;
 
     @Override
-    public ResponseEntity<AccountDTO> createAccount(AccountDTO accountDTO) {
-        Account account = Account.fromDTO(accountDTO);
+    public ResponseEntity<AccountDTO> createAccount(@Valid AccountCreateDTO accountDTO) {
+        Account account = Account.fromCreateDTO(accountDTO);
         Account newAccount = accountService.create(account);
         return new ResponseEntity<>(newAccount.toDTO(), HttpStatus.CREATED);
     }

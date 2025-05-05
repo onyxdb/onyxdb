@@ -121,7 +121,7 @@ public class AccountPostgresRepository implements AccountRepository {
     @Override
     public Account create(Account account) {
         var record = dslContext.insertInto(accountTable)
-                .set(accountTable.ID, account.id())
+                .set(accountTable.ID, UUID.randomUUID())
                 .set(accountTable.LOGIN, account.login())
                 .set(accountTable.PASSWORD, passwordEncoder.encode(account.password()))
                 .set(accountTable.EMAIL, account.email())

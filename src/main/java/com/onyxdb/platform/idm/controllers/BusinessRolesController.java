@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.onyxdb.platform.generated.openapi.apis.BusinessRolesApi;
+import com.onyxdb.platform.generated.openapi.models.BusinessRoleCreateDTO;
 import com.onyxdb.platform.generated.openapi.models.BusinessRoleDTO;
 import com.onyxdb.platform.generated.openapi.models.PaginatedBusinessRoleResponse;
 import com.onyxdb.platform.generated.openapi.models.RoleDTO;
@@ -28,8 +29,8 @@ public class BusinessRolesController implements BusinessRolesApi {
     private final BusinessRoleService businessRoleService;
 
     @Override
-    public ResponseEntity<BusinessRoleDTO> createBusinessRole(@Valid BusinessRoleDTO businessRoleDTO) {
-        BusinessRole businessRole = BusinessRole.fromDTO(businessRoleDTO);
+    public ResponseEntity<BusinessRoleDTO> createBusinessRole(@Valid BusinessRoleCreateDTO businessRoleDTO) {
+        BusinessRole businessRole = BusinessRole.fromCreateDTO(businessRoleDTO);
         BusinessRole createdBusinessRole = businessRoleService.create(businessRole);
         return new ResponseEntity<>(createdBusinessRole.toDTO(), HttpStatus.CREATED);
     }

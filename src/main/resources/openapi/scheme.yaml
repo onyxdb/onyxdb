@@ -883,7 +883,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AccountDTO'
+              $ref: '#/components/schemas/AccountCreateDTO'
       responses:
         '201':
           description: Created
@@ -1299,7 +1299,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DomainComponentDTO'
+              $ref: '#/components/schemas/DomainComponentCreateDTO'
       responses:
         '201':
           description: Created
@@ -1511,7 +1511,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/OrganizationUnitDTO'
+              $ref: '#/components/schemas/OrganizationUnitCreateDTO'
       responses:
         '201':
           description: Created
@@ -1846,7 +1846,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RoleWithPermissionsDTO'
+              $ref: '#/components/schemas/RoleWithPermissionsCreateDTO'
       responses:
         '201':
           description: Created
@@ -2105,7 +2105,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BusinessRoleDTO'
+              $ref: '#/components/schemas/BusinessRoleCreateDTO'
       responses:
         '201':
           description: Created
@@ -2420,7 +2420,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RoleRequestDTO'
+              $ref: '#/components/schemas/RoleRequestCreateDTO'
       responses:
         '201':
           description: Created
@@ -2576,14 +2576,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ProductDTO'
+              $ref: '#/components/schemas/ProductCreateDTO'
       responses:
         '201':
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProductDTOGet'
+                $ref: '#/components/schemas/ProductDTO'
         '400':
           description: Bad Request
           content:
@@ -2604,7 +2604,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ProductDTOGet'
+                  $ref: '#/components/schemas/ProductDTO'
   /api/v1/products-tree:
     get:
       summary: Getting child elements of all products by a tree
@@ -2639,7 +2639,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProductDTOGet'
+                $ref: '#/components/schemas/ProductDTO'
         '404':
           description: Not Found
           content:
@@ -2670,7 +2670,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProductDTOGet'
+                $ref: '#/components/schemas/ProductDTO'
         '404':
           description: Not Found
           content:
@@ -2725,7 +2725,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ProductDTOGet'
+                  $ref: '#/components/schemas/ProductDTO'
   /api/v1/products/{productId}/parents:
     get:
       summary: Getting the parent elements of a product
@@ -2747,7 +2747,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ProductDTOGet'
+                  $ref: '#/components/schemas/ProductDTO'
   /api/v1/products/{productId}/tree:
     get:
       summary: Getting child elements of a product by a tree
@@ -3789,6 +3789,27 @@ components:
         - free
         - timestamp
     # ---------- IDM schemas -------------------------------------------------------------------------------------------
+    AccountCreateDTO:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        email:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        data:
+          type: object
+          additionalProperties: true
+      required:
+        - username
+        - email
+        - firstname
+        - lastname
     AccountDTO:
       type: object
       properties:
@@ -3815,10 +3836,13 @@ components:
           type: string
           format: date-time
       required:
+        - id
         - username
         - email
         - firstname
         - lastname
+        - createdAt
+        - updatedAt
     PaginatedAccountResponse:
       type: object
       properties:
@@ -3837,6 +3861,19 @@ components:
         - startPosition
         - endPosition
         - data
+    PermissionCreateDTO:
+      type: object
+      properties:
+        actionType:
+          type: string
+        resourceType:
+          type: string
+        data:
+          type: object
+          additionalProperties: true
+      required:
+        - actionType
+        - resourceType
     PermissionDTO:
       type: object
       properties:
@@ -3857,8 +3894,39 @@ components:
           type: string
           format: date-time
       required:
+        - id
         - actionType
         - resourceType
+        - createdAt
+        - updatedAt
+    RoleCreateDTO:
+      type: object
+      properties:
+        roleType:
+          type: string
+        name:
+          type: string
+        shopName:
+          type: string
+        isShopHidden:
+          type: boolean
+        description:
+          type: string
+        entity:
+          type: string
+        productId:
+          type: string
+          format: uuid
+        orgUnitId:
+          type: string
+          format: uuid
+      required:
+        - roleType
+        - name
+        - shopName
+        - isShopHidden
+        - description
+        - entity
     RoleDTO:
       type: object
       properties:
@@ -3890,11 +3958,27 @@ components:
           type: string
           format: date-time
       required:
+        - id
         - roleType
         - name
         - shopName
         - isShopHidden
         - description
+        - entity
+        - createdAt
+        - updatedAt
+    RoleWithPermissionsCreateDTO:
+      type: object
+      properties:
+        role:
+          $ref: '#/components/schemas/RoleCreateDTO'
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/PermissionCreateDTO'
+      required:
+        - role
+        - permissions
     RoleWithPermissionsDTO:
       type: object
       properties:
@@ -3933,6 +4017,16 @@ components:
         additionalProperties:
           type: object
           nullable: true
+    DomainComponentCreateDTO:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+      required:
+        - name
+        - description
     DomainComponentDTO:
       type: object
       properties:
@@ -3950,7 +4044,29 @@ components:
           type: string
           format: date-time
       required:
+        - id
         - name
+        - description
+        - createdAt
+        - updatedAt
+    BusinessRoleCreateDTO:
+      type: object
+      properties:
+        name:
+          type: string
+        shopName:
+          type: string
+        description:
+          type: string
+        parentId:
+          type: string
+          format: uuid
+        data:
+          type: object
+          additionalProperties: true
+      required:
+        - name
+        - shopName
         - description
     BusinessRoleDTO:
       type: object
@@ -3977,9 +4093,12 @@ components:
           type: string
           format: date-time
       required:
+        - id
         - name
         - shopName
         - description
+        - createdAt
+        - updatedAt
     PaginatedBusinessRoleResponse:
       type: object
       properties:
@@ -3998,6 +4117,26 @@ components:
         - startPosition
         - endPosition
         - data
+    OrganizationUnitCreateDTO:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        domainComponentId:
+          type: string
+          format: uuid
+        parentId:
+          type: string
+          format: uuid
+        ownerId:
+          type: string
+          format: uuid
+      required:
+        - name
+        - description
+        - domainComponentId
     OrganizationUnitDTO:
       type: object
       properties:
@@ -4014,19 +4153,22 @@ components:
         parentId:
           type: string
           format: uuid
+        ownerId:
+          type: string
+          format: uuid
         createdAt:
           type: string
           format: date-time
         updatedAt:
           type: string
           format: date-time
-        ownerId:
-          type: string
-          format: uuid
       required:
+        - id
         - name
         - description
         - domainComponentId
+        - createdAt
+        - updatedAt
     OrganizationTreeDTO:
       type: object
       properties:
@@ -4069,12 +4211,9 @@ components:
         - startPosition
         - endPosition
         - data
-    ProductDTO:
+    ProductCreateDTO:
       type: object
       properties:
-        id:
-          type: string
-          format: uuid
         name:
           type: string
         description:
@@ -4088,16 +4227,10 @@ components:
         data:
           type: object
           additionalProperties: true
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
       required:
         - name
         - description
-    ProductDTOGet:
+    ProductDTO:
       type: object
       properties:
         id:
@@ -4132,7 +4265,7 @@ components:
       type: object
       properties:
         item:
-          $ref: '#/components/schemas/ProductDTOGet'
+          $ref: '#/components/schemas/ProductDTO'
         children:
           type: array
           items:
@@ -4151,12 +4284,34 @@ components:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/ProductDTOGet'
+            $ref: '#/components/schemas/ProductDTO'
       required:
         - totalCount
         - startPosition
         - endPosition
         - data
+    RoleRequestCreateDTO:
+      type: object
+      properties:
+        roleId:
+          type: string
+          format: uuid
+        accountId:
+          type: string
+          format: uuid
+        ownerId:
+          type: string
+          format: uuid
+        reason:
+          type: string
+        status:
+          type: string
+          enum: [ WAITING, APPROVED, DECLINED ]
+      required:
+        - roleId
+        - accountId
+        - reason
+        - status
     RoleRequestDTO:
       type: object
       properties:
@@ -4184,10 +4339,12 @@ components:
           type: string
           format: date-time
       required:
+        - id
         - roleId
         - accountId
         - reason
         - status
+        - createdAt
     PaginatedRoleRequestResponse:
       type: object
       properties:

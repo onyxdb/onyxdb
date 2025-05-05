@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.onyxdb.platform.generated.openapi.apis.OrganizationUnitsApi;
 import com.onyxdb.platform.generated.openapi.models.AccountDTO;
 import com.onyxdb.platform.generated.openapi.models.OrganizationTreeDTO;
+import com.onyxdb.platform.generated.openapi.models.OrganizationUnitCreateDTO;
 import com.onyxdb.platform.generated.openapi.models.OrganizationUnitDTO;
 import com.onyxdb.platform.generated.openapi.models.PaginatedOrganizationUnitResponse;
 import com.onyxdb.platform.idm.models.Account;
@@ -30,8 +31,8 @@ public class OrganizationUnitsController implements OrganizationUnitsApi {
     private final OrganizationUnitService organizationUnitService;
 
     @Override
-    public ResponseEntity<OrganizationUnitDTO> createOrganizationUnit(@Valid OrganizationUnitDTO organizationUnitDTO) {
-        OrganizationUnit organizationUnit = OrganizationUnit.fromDTO(organizationUnitDTO);
+    public ResponseEntity<OrganizationUnitDTO> createOrganizationUnit(@Valid OrganizationUnitCreateDTO organizationUnitDTO) {
+        OrganizationUnit organizationUnit = OrganizationUnit.fromCreateDTO(organizationUnitDTO);
         OrganizationUnit createdOrganizationUnit = organizationUnitService.create(organizationUnit);
         return new ResponseEntity<>(createdOrganizationUnit.toDTO(), HttpStatus.CREATED);
     }

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.onyxdb.platform.generated.jooq.tables.records.RoleTableRecord;
+import com.onyxdb.platform.generated.openapi.models.RoleCreateDTO;
 import com.onyxdb.platform.generated.openapi.models.RoleDTO;
 
 /**
@@ -35,6 +36,22 @@ public record Role(
                 roleDTO.getProductId(),
                 roleDTO.getCreatedAt(),
                 roleDTO.getUpdatedAt()
+        );
+    }
+
+    public static Role fromCreateDTO(RoleCreateDTO roleDTO) {
+        return new Role(
+                null,
+                roleDTO.getRoleType(),
+                roleDTO.getName(),
+                roleDTO.getShopName(),
+                roleDTO.getDescription(),
+                roleDTO.getIsShopHidden(),
+                roleDTO.getEntity(),
+                roleDTO.getOrgUnitId(),
+                roleDTO.getProductId(),
+                null,
+                null
         );
     }
 

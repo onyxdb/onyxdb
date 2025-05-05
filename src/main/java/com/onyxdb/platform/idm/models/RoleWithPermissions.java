@@ -2,6 +2,7 @@ package com.onyxdb.platform.idm.models;
 
 import java.util.List;
 
+import com.onyxdb.platform.generated.openapi.models.RoleWithPermissionsCreateDTO;
 import com.onyxdb.platform.generated.openapi.models.RoleWithPermissionsDTO;
 
 
@@ -16,6 +17,13 @@ public record RoleWithPermissions(
         return new RoleWithPermissions(
                 Role.fromDTO(roleDTO.getRole()),
                 roleDTO.getPermissions().stream().map(Permission::fromDTO).toList()
+        );
+    }
+
+    public static RoleWithPermissions fromCreateDTO(RoleWithPermissionsCreateDTO roleDTO) {
+        return new RoleWithPermissions(
+                Role.fromCreateDTO(roleDTO.getRole()),
+                roleDTO.getPermissions().stream().map(Permission::fromCreateDTO).toList()
         );
     }
 

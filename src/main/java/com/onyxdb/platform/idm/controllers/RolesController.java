@@ -14,6 +14,7 @@ import com.onyxdb.platform.generated.openapi.apis.RolesApi;
 import com.onyxdb.platform.generated.openapi.models.PaginatedRoleResponse;
 import com.onyxdb.platform.generated.openapi.models.RoleDTO;
 import com.onyxdb.platform.generated.openapi.models.RoleHistoryDTO;
+import com.onyxdb.platform.generated.openapi.models.RoleWithPermissionsCreateDTO;
 import com.onyxdb.platform.generated.openapi.models.RoleWithPermissionsDTO;
 import com.onyxdb.platform.idm.models.PaginatedResult;
 import com.onyxdb.platform.idm.models.Role;
@@ -62,8 +63,8 @@ public class RolesController implements RolesApi {
     }
 
     @Override
-    public ResponseEntity<RoleWithPermissionsDTO> createRole(@Valid RoleWithPermissionsDTO roleDTO) {
-        RoleWithPermissions createdRole = roleService.create(RoleWithPermissions.fromDTO(roleDTO));
+    public ResponseEntity<RoleWithPermissionsDTO> createRole(@Valid RoleWithPermissionsCreateDTO roleDTO) {
+        RoleWithPermissions createdRole = roleService.create(RoleWithPermissions.fromCreateDTO(roleDTO));
         return new ResponseEntity<>(createdRole.toDTO(), HttpStatus.CREATED);
     }
 

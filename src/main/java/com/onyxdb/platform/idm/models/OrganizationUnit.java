@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.onyxdb.platform.generated.jooq.tables.records.OrganizationUnitTableRecord;
+import com.onyxdb.platform.generated.openapi.models.OrganizationUnitCreateDTO;
 import com.onyxdb.platform.generated.openapi.models.OrganizationUnitDTO;
 
 /**
@@ -29,6 +30,19 @@ public record OrganizationUnit(
                 organizationUnitDTO.getOwnerId(),
                 organizationUnitDTO.getCreatedAt(),
                 organizationUnitDTO.getUpdatedAt()
+        );
+    }
+
+    public static OrganizationUnit fromCreateDTO(OrganizationUnitCreateDTO organizationUnitDTO) {
+        return new OrganizationUnit(
+                null,
+                organizationUnitDTO.getName(),
+                organizationUnitDTO.getDescription(),
+                organizationUnitDTO.getDomainComponentId(),
+                organizationUnitDTO.getParentId(),
+                organizationUnitDTO.getOwnerId(),
+                null,
+                null
         );
     }
 

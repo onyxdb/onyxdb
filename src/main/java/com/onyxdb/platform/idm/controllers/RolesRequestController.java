@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.onyxdb.platform.generated.openapi.apis.RolesRequestsApi;
 import com.onyxdb.platform.generated.openapi.models.PaginatedRoleRequestResponse;
+import com.onyxdb.platform.generated.openapi.models.RoleRequestCreateDTO;
 import com.onyxdb.platform.generated.openapi.models.RoleRequestDTO;
 import com.onyxdb.platform.idm.models.PaginatedResult;
 import com.onyxdb.platform.idm.models.RoleRequest;
@@ -27,8 +28,8 @@ public class RolesRequestController implements RolesRequestsApi {
     private final RoleRequestService roleRequestService;
 
     @Override
-    public ResponseEntity<RoleRequestDTO> createRoleRequest(@Valid RoleRequestDTO roleRequestDTO) {
-        RoleRequest roleRequest = RoleRequest.fromDTO(roleRequestDTO);
+    public ResponseEntity<RoleRequestDTO> createRoleRequest(@Valid RoleRequestCreateDTO roleRequestDTO) {
+        RoleRequest roleRequest = RoleRequest.fromCreateDTO(roleRequestDTO);
         RoleRequest createdRoleRequest = roleRequestService.create(roleRequest);
         return new ResponseEntity<>(createdRoleRequest.toDTO(), HttpStatus.CREATED);
     }

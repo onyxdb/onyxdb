@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.onyxdb.platform.generated.jooq.tables.records.RoleRequestTableRecord;
+import com.onyxdb.platform.generated.openapi.models.RoleRequestCreateDTO;
 import com.onyxdb.platform.generated.openapi.models.RoleRequestDTO;
 
 /**
@@ -29,6 +30,19 @@ public record RoleRequest(
                 RoleRequestDTO.getStatus().toString(),
                 RoleRequestDTO.getCreatedAt(),
                 RoleRequestDTO.getResolvedAt()
+        );
+    }
+
+    public static RoleRequest fromCreateDTO(RoleRequestCreateDTO RoleRequestDTO) {
+        return new RoleRequest(
+                null,
+                RoleRequestDTO.getRoleId(),
+                RoleRequestDTO.getAccountId(),
+                RoleRequestDTO.getOwnerId(),
+                RoleRequestDTO.getReason(),
+                RoleRequestDTO.getStatus().toString(),
+                null,
+                null
         );
     }
 

@@ -10,8 +10,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jooq.JSONB;
 
 import com.onyxdb.platform.generated.jooq.tables.records.ProductTableRecord;
+import com.onyxdb.platform.generated.openapi.models.ProductCreateDTO;
 import com.onyxdb.platform.generated.openapi.models.ProductDTO;
-import com.onyxdb.platform.generated.openapi.models.ProductDTOGet;
 
 /**
  * @author ArtemFed
@@ -43,6 +43,19 @@ public record Product(
         );
     }
 
+    public static Product fromCreateDTO(ProductCreateDTO productDTO) {
+        return new Product(
+                null,
+                productDTO.getName(),
+                productDTO.getDescription(),
+                productDTO.getParentId(),
+                productDTO.getOwnerId(),
+                productDTO.getData(),
+                null,
+                null
+        );
+    }
+
     public static Product fromDAO(ProductTableRecord productDAO) {
         Map<String, Object> dataMap = null;
         try {
@@ -61,8 +74,8 @@ public record Product(
         );
     }
 
-    public ProductDTOGet toDTO() {
-        return new ProductDTOGet()
+    public ProductDTO toDTO() {
+        return new ProductDTO()
                 .id(id)
                 .name(name)
                 .description(description)
