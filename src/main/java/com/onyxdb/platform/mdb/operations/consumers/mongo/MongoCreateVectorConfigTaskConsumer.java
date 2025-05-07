@@ -41,6 +41,6 @@ public class MongoCreateVectorConfigTaskConsumer extends ClusterTaskConsumer {
                 cluster.name()
         );
 
-        return TaskResult.error();
+        return TaskResult.success();
     }
 }

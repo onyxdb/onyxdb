@@ -27,7 +27,7 @@ public class MongoCheckOnyxdbAgentReadinessTaskConsumer extends ClusterTaskConsu
 
     @Override
     public TaskType getTaskType() {
-        return TaskType.MONGO_APPLY_ONYXDB_AGENT;
+        return TaskType.MONGO_CHECK_ONYXDB_AGENT_READINESS;
     }
 
     @Override

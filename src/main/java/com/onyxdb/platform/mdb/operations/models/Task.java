@@ -1,12 +1,11 @@
 package com.onyxdb.platform.mdb.operations.models;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import org.jetbrains.annotations.Nullable;
-import org.jooq.JSONB;
 
-import com.onyxdb.platform.generated.jooq.tables.records.TasksRecord;
 import com.onyxdb.platform.mdb.utils.TimeUtils;
 
 /**
@@ -18,9 +17,12 @@ public record Task(
         TaskStatus status,
         UUID operationId,
         LocalDateTime createdAt,
-        LocalDateTime scheduledAt,
+        LocalDateTime updatedAt,
         int attemptsLeft,
         String payload,
+        List<UUID> blockerIds,
+        int postDelaySeconds,
+        int retryDelaySeconds,
         @Nullable
         LocalDateTime startedAt,
         @Nullable
@@ -31,71 +33,26 @@ public record Task(
             TaskType type,
             TaskStatus status,
             UUID operationId,
-            LocalDateTime scheduledAt,
             int attemptsLeft,
-            String payload
+            String payload,
+            List<UUID> blockerIds,
+            int postDelaySeconds,
+            int retryDelaySeconds
     ) {
+        LocalDateTime now = TimeUtils.now();
         return new Task(
                 id,
                 type,
                 status,
                 operationId,
-                TimeUtils.now(),
-                scheduledAt,
+                now,
+                now,
                 attemptsLeft,
                 payload,
+                blockerIds,
+                postDelaySeconds,
+                retryDelaySeconds,
                 null,
-                null
-        );
-    }
-
-    public TasksRecord toJooqClusterTasksRecord() {
-        return new TasksRecord(
-                id,
-                type.value(),
-                com.onyxdb.platform.generated.jooq.enums.TaskStatus.valueOf(status.value()),
-                operationId,
-                createdAt,
-                scheduledAt,
-                attemptsLeft,
-                JSONB.jsonb(payload),
-                startedAt,
-                finishedAt
-        );
-    }
-
-    public static Task fromJooqClusterTasksRecord(TasksRecord r) {
-        return new Task(
-                r.getId(),
-                TaskType.R.fromValue(r.getType()),
-                TaskStatus.fromValue(r.getStatus().getLiteral()),
-                r.getOperationId(),
-                r.getCreatedAt(),
-                r.getScheduledAt(),
-                r.getAttemptsLeft(),
-                r.getPayload().data(),
-                r.getStartedAt(),
-                r.getFinishedAt()
-        );
-    }
-
-    public static Task scheduled(
-            TaskType type,
-            UUID operationId,
-            LocalDateTime scheduledAt,
-            int attemptsLeft,
-            String payload
-    ) {
-        return new Task(
-                UUID.randomUUID(),
-                type,
-                TaskStatus.SCHEDULED,
-                operationId,
-                LocalDateTime.now(),
-                scheduledAt,
-                attemptsLeft,
-                payload,
-                TimeUtils.now(),
                 null
         );
     }
@@ -110,9 +67,12 @@ public record Task(
         private TaskStatus status;
         private UUID operationId;
         private LocalDateTime createdAt;
-        private LocalDateTime scheduledAt;
+        private LocalDateTime updatedAt;
         private int attemptsLeft;
         private String payload;
+        private List<UUID> blockerIds;
+        private int postDelaySeconds;
+        private int retryDelaySeconds;
         private LocalDateTime startedAt;
         private LocalDateTime finishedAt;
 
@@ -122,36 +82,38 @@ public record Task(
             this.status = task.status;
             this.operationId = task.operationId;
             this.createdAt = task.createdAt;
-            this.scheduledAt = task.scheduledAt;
+            this.updatedAt = task.updatedAt;
             this.attemptsLeft = task.attemptsLeft;
             this.payload = task.payload;
+            this.blockerIds = task.blockerIds;
+            this.postDelaySeconds = task.postDelaySeconds;
+            this.retryDelaySeconds = task.retryDelaySeconds;
             this.startedAt = task.startedAt;
             this.finishedAt = task.finishedAt;
-
             return this;
         }
 
-        public Builder withStatus(TaskStatus status) {
+        public Builder status(TaskStatus status) {
             this.status = status;
             return this;
         }
 
-        public Builder withScheduledAt(LocalDateTime scheduledAt) {
-            this.scheduledAt = scheduledAt;
+        public Builder updatedAt(LocalDateTime updatedAt) {
+            this.updatedAt = updatedAt;
             return this;
         }
 
-        public Builder withAttemptsLeft(int attemptsLeft) {
-            this.attemptsLeft = attemptsLeft;
+        public Builder attemptsLeft(int attempts) {
+            this.attemptsLeft = attempts;
             return this;
         }
 
-        public Builder withStartedAt(LocalDateTime startedAt) {
+        public Builder startedAt(LocalDateTime startedAt) {
             this.startedAt = startedAt;
             return this;
         }
 
-        public Builder withFinishedAt(LocalDateTime finishedAt) {
+        public Builder finishedAt(LocalDateTime finishedAt) {
             this.finishedAt = finishedAt;
             return this;
         }
@@ -163,9 +125,12 @@ public record Task(
                     status,
                     operationId,
                     createdAt,
-                    scheduledAt,
+                    updatedAt,
                     attemptsLeft,
                     payload,
+                    blockerIds,
+                    postDelaySeconds,
+                    retryDelaySeconds,
                     startedAt,
                     finishedAt
             );

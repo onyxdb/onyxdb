@@ -44,9 +44,8 @@ public class MongoCreateUserTaskConsumer extends TaskConsumer<MongoCreateUserPay
 //                )).toList()
 //        );
 //        onyxdbAgentClient.createUser(rq);
-        throw new RuntimeException("FIXME");
 
-//        return TaskProcessingResult.success();
+        return TaskResult.error();
     }
 
     @Override

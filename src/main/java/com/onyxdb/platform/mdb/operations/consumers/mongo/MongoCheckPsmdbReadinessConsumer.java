@@ -7,8 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onyxdb.platform.mdb.clients.k8s.psmdb.PsmdbClient;
 import com.onyxdb.platform.mdb.clusters.ClusterService;
 import com.onyxdb.platform.mdb.clusters.models.Cluster;
-import com.onyxdb.platform.mdb.hosts.HostService;
 import com.onyxdb.platform.mdb.clusters.models.Host;
+import com.onyxdb.platform.mdb.hosts.HostService;
 import com.onyxdb.platform.mdb.operations.consumers.ClusterTaskConsumer;
 import com.onyxdb.platform.mdb.operations.models.Task;
 import com.onyxdb.platform.mdb.operations.models.TaskResult;
@@ -53,8 +53,6 @@ public class MongoCheckPsmdbReadinessConsumer extends ClusterTaskConsumer {
                 .toList();
 
         hostService.upsertHosts(hosts);
-
-//        throw new RuntimeException("FIX");
 
         return TaskResult.success();
     }

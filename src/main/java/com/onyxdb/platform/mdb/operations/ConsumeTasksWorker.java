@@ -92,7 +92,7 @@ public class ConsumeTasksWorker implements CommandLineRunner {
                     continue;
                 }
 
-                List<Task> tasks = operationService.getTasksToConsume(freeThreads, scheduledAt);
+                List<Task> tasks = operationService.getTasksToConsume(freeThreads);
                 if (tasks.isEmpty()) {
                     logger.info("There are no tasks to process, waiting next iteration");
                     continue;

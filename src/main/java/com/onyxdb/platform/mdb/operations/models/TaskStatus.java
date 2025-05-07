@@ -7,6 +7,7 @@ import com.onyxdb.platform.mdb.utils.StringEnum;
  */
 public enum TaskStatus implements StringEnum {
     SCHEDULED("scheduled"),
+    RESCHEDULED("rescheduled"),
     IN_PROGRESS("in_progress"),
     ERROR("error"),
     SUCCESS("success"),

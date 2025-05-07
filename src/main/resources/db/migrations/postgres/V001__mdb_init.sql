@@ -158,6 +158,7 @@ CREATE UNIQUE INDEX operations_uniq_idx ON public.operations (cluster_id, status
 
 CREATE TYPE public.task_status AS ENUM (
     'scheduled',
+    'rescheduled',
     'in_progress',
     'error',
     'success'
@@ -183,27 +184,21 @@ CREATE TYPE public.task_status AS ENUM (
 
 CREATE TABLE public.tasks
 (
-    id            uuid               NOT NULL,
-    type          varchar            NOT NULL,
-    status        public.task_status NOT NULL,
-    operation_id  uuid               NOT NULL,
-    created_at    timestamp          NOT NULL,
-    scheduled_at  timestamp          NOT NULL,
-    attempts_left int                NOT NULL,
-    payload       jsonb              NOT NULL,
-    started_at    timestamp,
-    finished_at   timestamp,
+    id                  uuid               NOT NULL,
+    type                varchar            NOT NULL,
+    status              public.task_status NOT NULL,
+    operation_id        uuid               NOT NULL,
+    created_at          timestamp          NOT NULL,
+    updated_at          timestamp          NOT NULL,
+    attempts_left       int                NOT NULL,
+    payload             jsonb              NOT NULL,
+    blocker_ids         uuid[]             NOT NULL,
+    post_delay_seconds  int                NOT NULL,
+    retry_delay_seconds int                NOT NULL,
+    started_at          timestamp,
+    finished_at         timestamp,
     PRIMARY KEY (id),
     FOREIGN KEY (operation_id) REFERENCES operations (id)
-);
-
-CREATE TABLE public.tasks_to_blocker_tasks
-(
-    task_id         uuid NOT NULL,
-    blocker_task_id uuid NOT NULL,
-    FOREIGN KEY (task_id) REFERENCES public.tasks (id),
-    FOREIGN KEY (blocker_task_id) REFERENCES public.tasks (id),
-    PRIMARY KEY (task_id, blocker_task_id)
 );
 
 CREATE TYPE public.resource_type AS ENUM (

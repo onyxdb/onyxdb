@@ -12,11 +12,11 @@ import org.jooq.impl.DSL;
 
 import com.onyxdb.platform.generated.jooq.Indexes;
 import com.onyxdb.platform.generated.jooq.tables.records.PermissionsRecord;
-import com.onyxdb.platform.mdb.exceptions.BadRequestException;
-import com.onyxdb.platform.mdb.exceptions.NotImplementedException;
 import com.onyxdb.platform.mdb.clusters.models.MongoPermission;
 import com.onyxdb.platform.mdb.clusters.models.PermissionData;
 import com.onyxdb.platform.mdb.clusters.models.User;
+import com.onyxdb.platform.mdb.exceptions.BadRequestException;
+import com.onyxdb.platform.mdb.exceptions.NotImplementedException;
 import com.onyxdb.platform.mdb.utils.PsqlUtils;
 import com.onyxdb.platform.mdb.utils.TimeUtils;
 
