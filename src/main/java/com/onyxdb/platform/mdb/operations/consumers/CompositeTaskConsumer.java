@@ -42,17 +42,16 @@ public class CompositeTaskConsumer {
             }
             TaskConsumer<?> taskConsumer = taskTypeToTaskProcessors.get(task.type());
 
-            operationService.markTaskAsStarted(task);
+            Task startedTask = operationService.markTaskAsStarted(task);
 
-            TaskResult taskResult = taskConsumer.process(task);
+            TaskResult taskResult = taskConsumer.process(startedTask);
 
             if (taskResult.ok()) {
-                operationService.markTaskAsFinished(task);
+                operationService.markTaskAsFinished(startedTask);
                 return;
             }
 
-            // TODO recalculate scheduledAt for this and further tasks
-            operationService.rescheduleTask(task);
+            operationService.rescheduleTask(startedTask);
         } catch (Exception e) {
             logger.error("Failed to consume task with id '{}'", task.id(), e);
             operationService.rescheduleTask(task);

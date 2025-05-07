@@ -228,7 +228,7 @@ public class PsmdbClient extends AbstractPsmdbFactory {
     }
 
     public static String getMongoUserSecretName(String project, String cluster, String user) {
-        return String.format("%s-%s-user-%s", cluster, project, user);
+        return String.format("%s-%s-mongo-user-%s", cluster, project, user);
     }
 
 //    public static List<String> getPsmdbPods(String cluster, ) {

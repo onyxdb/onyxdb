@@ -1,6 +1,5 @@
 package com.onyxdb.platform.mdb.clusters;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,19 +16,18 @@ import com.onyxdb.platform.mdb.clusters.models.ClusterConfig;
 import com.onyxdb.platform.mdb.clusters.models.ClusterFilter;
 import com.onyxdb.platform.mdb.clusters.models.CreateCluster;
 import com.onyxdb.platform.mdb.clusters.models.CreateClusterResult;
-import com.onyxdb.platform.mdb.clusters.models.UpdateCluster;
-import com.onyxdb.platform.mdb.databases.DatabaseMapper;
-import com.onyxdb.platform.mdb.databases.DatabaseRepository;
-import com.onyxdb.platform.mdb.hosts.HostMapper;
-import com.onyxdb.platform.mdb.hosts.HostRepository;
 import com.onyxdb.platform.mdb.clusters.models.CreateDatabase;
 import com.onyxdb.platform.mdb.clusters.models.CreateMongoPermission;
 import com.onyxdb.platform.mdb.clusters.models.CreateUserWithSecret;
 import com.onyxdb.platform.mdb.clusters.models.Host;
 import com.onyxdb.platform.mdb.clusters.models.MongoRole;
+import com.onyxdb.platform.mdb.clusters.models.UpdateCluster;
+import com.onyxdb.platform.mdb.databases.DatabaseMapper;
+import com.onyxdb.platform.mdb.databases.DatabaseRepository;
+import com.onyxdb.platform.mdb.hosts.HostMapper;
+import com.onyxdb.platform.mdb.hosts.HostRepository;
 import com.onyxdb.platform.mdb.operations.models.Operation;
 import com.onyxdb.platform.mdb.operations.models.OperationType;
-import com.onyxdb.platform.mdb.operations.models.TaskStatus;
 import com.onyxdb.platform.mdb.operations.models.payload.ClusterPayload;
 import com.onyxdb.platform.mdb.operations.models.payload.MongoCreateClusterPayload;
 import com.onyxdb.platform.mdb.operations.repositories.OperationRepository;
@@ -186,20 +184,6 @@ public class ClusterService {
         operationRepository.createOperation(operation);
 
         return operation.id();
-    }
-
-    public void updateTask(
-            UUID taskId,
-            TaskStatus status,
-            int attemptsLeft,
-            LocalDateTime scheduledAt
-    ) {
-        taskRepository.updateTask(
-                taskId,
-                status,
-                attemptsLeft,
-                scheduledAt
-        );
     }
 
     private boolean isClusterConfigChanged(ClusterConfig current, ClusterConfig requested) {
