@@ -176,6 +176,37 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ScheduledOperationDTO'
+  /api/mdb/mongodb/versions:
+    get:
+      summary: List MongoDB versions
+      operationId: listVersions
+      tags:
+        - Managed MongoDB clusters
+        - MDB
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListMongoVersionsResponseDTO'
+  /api/mdb/mongodb/storage-classes:
+    get:
+      summary: List storage classes
+      operationId: listStorageClasses
+      tags:
+        - Managed MongoDB clusters
+        - MDB
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListStorageClassesResponseDTO'
+
+
+
 
 
 
@@ -3035,11 +3066,24 @@ components:
           format: uuid
       required:
         - presetId
-
-
-
-
-
+    ListStorageClassesResponseDTO:
+      type: object
+      properties:
+        storageClasses:
+          type: array
+          items:
+            type: string
+      required:
+        - storageClasses
+    ListMongoVersionsResponseDTO:
+      type: object
+      properties:
+        versions:
+          type: array
+          items:
+            type: string
+      required:
+        - versions
 
 
 
