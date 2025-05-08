@@ -105,10 +105,16 @@ public class MongoCreateClusterTaskProducer extends TaskProducer<MongoCreateClus
                 List.of(createMongoDatabaseTask.id()),
                 createMongoUserPayload
         );
+        var markClusterReadyTask = ProducedTask.createWithPayload(
+                TaskType.MONGO_MARK_CLUSTER_READY,
+                operationId,
+                List.of(createMongoUserTask.id()),
+                clusterPayload
+        );
         var finalTask = ProducedTask.create(
                 TaskType.FINAL_TASK,
                 operationId,
-                List.of(createMongoUserTask.id())
+                List.of(markClusterReadyTask.id())
         );
 
         return List.of(
@@ -120,6 +126,7 @@ public class MongoCreateClusterTaskProducer extends TaskProducer<MongoCreateClus
                 applyExporterServiceScrapeTask,
                 createMongoDatabaseTask,
                 createMongoUserTask,
+                markClusterReadyTask,
                 finalTask
         );
     }

@@ -1,0 +1,14 @@
+{
+  "description": "Another description of test-1 cluster",
+  "config": {
+    "version": "7.0",
+    "resources": {
+      "presetId": "c92712a0-d344-4b1a-91fb-b27469b72bf5"
+    },
+    "replicas": 2,
+    "backup": {
+      "isEnabled": true,
+      "schedule": "0 0 * * *"
+    }
+  }
+}

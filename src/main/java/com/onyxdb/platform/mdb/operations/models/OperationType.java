@@ -12,7 +12,7 @@ public enum OperationType implements StringEnum {
     MONGO_DELETE_DATABASE("mongo_delete_database", "Delete MongoDB database"),
     MONGO_CREATE_USER("mongo_create_user", "Create MongoDB userName"),
     MONGO_DELETE_USER("mongo_delete_user", "Delete MongoDB userName"),
-    MONGO_SCALE_CLUSTER("mongo_scale_cluster", "Scale MongoDB cluster"),
+    MONGO_MODIFY_CLUSTER("mongo_modify_cluster", "Modify MongoDB cluster"),
     MONGO_DELETE_CLUSTER("mongo_delete_cluster", "Delete MongoDB cluster"),
     MONGO_CREATE_BACKUP("mongo_create_backup", "Create MongoDB backup"),
     ;

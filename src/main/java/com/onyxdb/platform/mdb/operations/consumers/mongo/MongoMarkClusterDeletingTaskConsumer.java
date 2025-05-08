@@ -13,13 +13,12 @@ import com.onyxdb.platform.mdb.operations.models.Task;
 import com.onyxdb.platform.mdb.operations.models.TaskResult;
 import com.onyxdb.platform.mdb.operations.models.TaskType;
 import com.onyxdb.platform.mdb.operations.models.payload.MongoDeleteClusterPayload;
-import com.onyxdb.platform.mdb.utils.TimeUtils;
 
 @Component
-public class MongoMarkClusterDeletedTaskConsumer extends TaskConsumer<MongoDeleteClusterPayload> {
+public class MongoMarkClusterDeletingTaskConsumer extends TaskConsumer<MongoDeleteClusterPayload> {
     private final ClusterRepository clusterRepository;
 
-    public MongoMarkClusterDeletedTaskConsumer(
+    public MongoMarkClusterDeletingTaskConsumer(
             ObjectMapper objectMapper,
             ClusterService clusterService,
             ClusterRepository clusterRepository
@@ -30,7 +29,7 @@ public class MongoMarkClusterDeletedTaskConsumer extends TaskConsumer<MongoDelet
 
     @Override
     public TaskType getTaskType() {
-        return TaskType.MONGO_MARK_CLUSTER_DELETED;
+        return TaskType.MONGO_MARK_CLUSTER_DELETING;
     }
 
     @Override
@@ -39,10 +38,7 @@ public class MongoMarkClusterDeletedTaskConsumer extends TaskConsumer<MongoDelet
 
         Cluster updatedCluster = Cluster.builder()
                 .copy(cluster)
-                .status(ClusterStatus.DELETED)
-                .isDeleted(true)
-                .deletedAt(TimeUtils.now())
-                .deletedBy(payload.deletedBy())
+                .status(ClusterStatus.DELETING)
                 .build();
         clusterRepository.updateCluster(updatedCluster);
 

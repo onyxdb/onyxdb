@@ -12,7 +12,6 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import com.onyxdb.platform.mdb.clients.k8s.psmdb.PsmdbClient;
 import com.onyxdb.platform.mdb.clusters.models.Cluster;
-import com.onyxdb.platform.mdb.clusters.models.ClusterConfig;
 import com.onyxdb.platform.mdb.clusters.models.ClusterFilter;
 import com.onyxdb.platform.mdb.clusters.models.CreateCluster;
 import com.onyxdb.platform.mdb.clusters.models.CreateClusterResult;
@@ -28,8 +27,9 @@ import com.onyxdb.platform.mdb.hosts.HostMapper;
 import com.onyxdb.platform.mdb.hosts.HostRepository;
 import com.onyxdb.platform.mdb.operations.models.Operation;
 import com.onyxdb.platform.mdb.operations.models.OperationType;
-import com.onyxdb.platform.mdb.operations.models.payload.ClusterPayload;
 import com.onyxdb.platform.mdb.operations.models.payload.MongoCreateClusterPayload;
+import com.onyxdb.platform.mdb.operations.models.payload.MongoDeleteClusterPayload;
+import com.onyxdb.platform.mdb.operations.models.payload.MongoModifyClusterPayload;
 import com.onyxdb.platform.mdb.operations.repositories.OperationRepository;
 import com.onyxdb.platform.mdb.operations.repositories.TaskRepository;
 import com.onyxdb.platform.mdb.projects.Project;
@@ -50,7 +50,6 @@ public class ClusterService {
     private final ProjectService projectService;
     private final ClusterMapper clusterMapper;
     private final ClusterConfigValidator clusterConfigValidator;
-
 
     private final ClusterRepository clusterRepository;
     private final TransactionTemplate transactionTemplate;
@@ -149,26 +148,24 @@ public class ClusterService {
     public UUID updateCluster(UpdateCluster updateCluster) {
         Cluster cluster = getClusterOrThrow(updateCluster.id());
 
+        var operation = Operation.scheduledWithPayload(
+                OperationType.MONGO_MODIFY_CLUSTER,
+                updateCluster.id(),
+                ObjectMapperUtils.convertToString(objectMapper, new MongoModifyClusterPayload(
+                        cluster.id(),
+                        updateCluster.config()
+                ))
+        );
+        var updatedCluster = Cluster.builder()
+                .copy(cluster)
+                .overrideWithUpdateCluster(updateCluster)
+                .build();
         transactionTemplate.executeWithoutResult(status -> {
-            clusterRepository.updateCluster(updateCluster);
-//            if (isClusterConfigChanged(cluster.config(), updateCluster.config())) {
-//                logger.info("Cluster config is changed. Creating operation");
-//                logger.info("" + cluster.config());
-//                logger.info("" + updateCluster.config());
-//                var operation = Operation.scheduledWithPayload(
-//                        OperationType.MONGO_SCALE_CLUSTER,
-//                        updateCluster.id(),
-//                        ObjectMapperUtils.convertToString(objectMapper, new MongoScaleClusterPayload(
-//                                cluster.id(),
-//                                updateCluster.config()
-//                        ))
-//                );
-//                operationRepository.createOperation(operation);
-//            }
+            clusterRepository.updateCluster(updatedCluster);
+            operationRepository.createOperation(operation);
         });
 
-        // todo don't return uuid of operation, because we might don't need operation
-        return UUID.randomUUID();
+        return operation.id();
     }
 
     public UUID deleteCluster(UUID clusterId, UUID deletedBy) {
@@ -177,19 +174,13 @@ public class ClusterService {
         var operation = Operation.scheduledWithPayload(
                 OperationType.MONGO_DELETE_CLUSTER,
                 cluster.id(),
-                ObjectMapperUtils.convertToString(objectMapper, new ClusterPayload(
-                        clusterId
+                ObjectMapperUtils.convertToString(objectMapper, new MongoDeleteClusterPayload(
+                        clusterId,
+                        deletedBy
                 ))
         );
         operationRepository.createOperation(operation);
 
         return operation.id();
-    }
-
-    private boolean isClusterConfigChanged(ClusterConfig current, ClusterConfig requested) {
-        return current.replicas() != requested.replicas() ||
-                !current.resources().presetId().equals(requested.resources().presetId()) ||
-                !current.resources().storageClass().equals(requested.resources().storageClass()) ||
-                current.resources().storage() != requested.resources().storage();
     }
 }

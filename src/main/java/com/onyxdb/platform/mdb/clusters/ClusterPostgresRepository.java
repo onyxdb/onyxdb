@@ -4,18 +4,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jooq.DSLContext;
-import org.jooq.JSONB;
 import org.jooq.exception.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
 
 import com.onyxdb.platform.generated.jooq.Indexes;
 import com.onyxdb.platform.mdb.clusters.models.Cluster;
-import com.onyxdb.platform.mdb.clusters.models.ClusterConfig;
 import com.onyxdb.platform.mdb.clusters.models.ClusterFilter;
-import com.onyxdb.platform.mdb.clusters.models.UpdateCluster;
 import com.onyxdb.platform.mdb.exceptions.ClusterAlreadyExistsException;
 import com.onyxdb.platform.mdb.exceptions.ClusterNotFoundException;
 import com.onyxdb.platform.mdb.utils.PsqlUtils;
@@ -90,27 +86,10 @@ public class ClusterPostgresRepository implements ClusterRepository {
     }
 
     @Override
-    public void updateClusterConfig(UUID clusterId, ClusterConfig config) {
-        try {
-            dslContext.update(CLUSTERS)
-                    .set(CLUSTERS.CONFIG, JSONB.jsonb(objectMapper.writeValueAsString(config)))
-                    .where(CLUSTERS.ID.eq(clusterId))
-                    .execute();
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public void updateCluster(UpdateCluster updateCluster) {
-        try {
-            dslContext.update(CLUSTERS)
-                    .set(CLUSTERS.DESCRIPTION, updateCluster.description())
-                    .set(CLUSTERS.CONFIG, JSONB.jsonb(objectMapper.writeValueAsString(updateCluster.config())))
-                    .where(CLUSTERS.ID.eq(updateCluster.id()))
-                    .execute();
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+    public void updateCluster(Cluster cluster) {
+        dslContext.update(CLUSTERS)
+                .set(clusterMapper.clusterToClustersRecord(cluster))
+                .where(CLUSTERS.ID.eq(cluster.id()))
+                .execute();
     }
 }
