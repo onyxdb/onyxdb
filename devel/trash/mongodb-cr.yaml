@@ -100,11 +100,11 @@ spec:
       #      priority: 0
       #    - host: 34.124.76.92
       #    # for more configuration fields refer to https://docs.mongodb.com/manual/reference/configuration-options/
-      configuration: |
-        systemLog:
-          path: /data/db/mongod.log
-          destination: file
-          logAppend: true
+#      configuration: |
+#        systemLog:
+#          path: /data/db/mongod.log
+#          destination: file
+#          logAppend: true
 #        security:
 #            enableEncryption: true
 #            encryptionCipherMode: "AES256-CBC"
@@ -126,10 +126,10 @@ spec:
             requiredDuringSchedulingIgnoredDuringExecution:
               nodeSelectorTerms:
                 - matchExpressions:
-                    - key: kubernetes.io/hostname
+                    - key: kubernetes.io/os
                       operator: In
                       values:
-                        - minikube
+                        - linux
       #    tolerations:
       #    - key: "node.alpha.kubernetes.io/unreachable"
       #      operator: "Exists"

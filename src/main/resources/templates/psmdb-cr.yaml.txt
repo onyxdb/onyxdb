@@ -18,11 +18,12 @@ spec:
   replsets:
     - name: [[${REPLSET_NAME}]]
       size: [[${REPLSET_SIZE}]]
+      labels:
+        onyxdb.com/project: sandbox
+        onyxdb.com/cluster: test-1
       configuration: |
-        systemLog:
-          path: /data/db/mongod.log
-          destination: file
-          logAppend: true
+        processManagement:
+          pidFilePath: /data/db/mongod.pid
         security:
             enableEncryption: true
             encryptionCipherMode: "AES256-CBC"
@@ -62,22 +63,44 @@ spec:
             - "--log.level=debug"
             - "--mongodb.uri=$(MONGODB_URI)"
           name: exporter
-        - name: vector
-          image: timberio/vector:0.31.0-debian
-          command:
-            - "vector"
-          args:
-            - "--config=/etc/vector/vector.yaml"
-          workingDir: /data/db
-          volumeMounts:
-            - name: vector-config-volume
-              mountPath: "/etc/vector"
-            - mountPath: /data/db
-              name: mongod-data
+#        - name: vector
+#          image: timberio/vector:0.31.0-debian
+#          command:
+#            - vector
+#          args:
+#            - --config=/etc/vector/vector.yaml
+#          workingDir: /data/db
+#          volumeMounts:
+#            - name: vector-config
+#              mountPath: /etc/vector
+#            - name: mongod-data
+#              mountPath: /data/db
+#        - name: logrotate
+#          image: docker.io/kicm/logrotate
+#          command:
+#            - tail
+#          args:
+#            - -f
+#            - /dev/null
+#          workingDir: /data/db
+#          volumeMounts:
+#            - name: logrotate-config
+#              mountPath: /etc/logrotate.d
+#            - name: mongod-data
+#              mountPath: /data/db
+#        - name: logrotate
+#          image: foxleren/onyxdb-mongod-logrotate:17
+#          workingDir: /data/db
+#          volumeMounts:
+#            - name: mongod-data
+#              mountPath: /data/db
       sidecarVolumes:
-        - name: vector-config-volume
+        - name: vector-config
           configMap:
             name: [[${VECTOR_CONFIG_NAME}]]
+#        - name: logrotate-config
+#          configMap:
+#            name: mongod-logrotate
       resources:
         limits:
           cpu: "[[${MONGOD_CPU}]]"

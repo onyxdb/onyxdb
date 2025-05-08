@@ -1,0 +1,62 @@
+# Each role is created with the following workloads:
+# Agent = DaemonSet
+# Aggregator = StatefulSet
+# Stateless-Aggregator = Deployment
+role: "Agent"
+
+serviceAccount:
+  create: true
+  name: vector
+
+containerPorts:
+  - containerPort: 80
+    name: http
+
+service:
+  enabled: false
+  type: "ClusterIP"
+  ports:
+    - port: 80
+      name: http
+
+customConfig:
+  data_dir: /vector-data-dir
+  api:
+    enabled: true
+  sources:
+    kubernetes_logs:
+      type: "kubernetes_logs"
+      extra_label_selector: "app.kubernetes.io/instance=test-1-sandbox-mongo"
+  transforms:
+    mongod_logs:
+      type: filter
+      inputs:
+        - kubernetes_logs
+      condition: .kubernetes.container_name == "mongod"
+    processed_mongod_logs:
+      type: remap
+      inputs:
+        - mongod_logs
+      source: |
+        .onyxdb_project = .kubernetes.pod_labels."onyxdb.com/project"
+        .onyxdb_cluster = .kubernetes.pod_labels."onyxdb.com/cluster"
+        .host = .kubernetes.pod_name
+  sinks:
+    vlogs:
+      inputs:
+        - processed_mongod_logs
+      type: http
+      uri: http://vlogs-onyxdb.onyxdb.svc.cluster.local:9428/insert/jsonline?_stream_fields=host,container_name&_msg_field=message&_time_field=timestamp
+      compression: gzip
+      encoding:
+        codec: json
+        only_fields:
+          - timestamp
+          - message
+          - onyxdb_project
+          - onyxdb_cluster
+          - host
+      framing:
+        method: newline_delimited
+      healthcheck:
+        enabled: true
