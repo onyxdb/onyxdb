@@ -4,7 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.onyxdb.platform.mdb.clients.onyxdbAgent.OnyxdbAgentClient;
+import com.onyxdb.platform.mdb.clients.onyxdbAgent.models.CreateMongoUserRequestDTO;
+import com.onyxdb.platform.mdb.clients.onyxdbAgent.models.MongoPermissionDTO;
 import com.onyxdb.platform.mdb.clusters.ClusterService;
+import com.onyxdb.platform.mdb.clusters.models.MongoRole;
 import com.onyxdb.platform.mdb.databases.DatabaseRepository;
 import com.onyxdb.platform.mdb.operations.consumers.TaskConsumer;
 import com.onyxdb.platform.mdb.operations.models.Task;
@@ -34,16 +37,16 @@ public class MongoCreateUserTaskConsumer extends TaskConsumer<MongoCreateUserPay
 
     @Override
     protected TaskResult internalProcess(Task task, MongoCreateUserPayload payload) {
-//        var rq = new CreateMongoUserRequestDTO(
-//                payload.username(),
-//                payload.passwordSecretName(),
-//                payload.passwordSecretNamespace(),
-//                payload.permissions().stream().map(p -> new MongoPermissionDTO(
-//                        databaseRepository.getDatabase(payload, p.databaseId()).name(),
-//                        p.roles().stream().map(MongoRole::value).toList()
-//                )).toList()
-//        );
-//        onyxdbAgentClient.createUser(rq);
+        var rq = new CreateMongoUserRequestDTO(
+                payload.username(),
+                payload.passwordSecretName(),
+                payload.passwordSecretNamespace(),
+                payload.permissions().stream().map(p -> new MongoPermissionDTO(
+                        p.databaseName(),
+                        p.roles().stream().map(MongoRole::value).toList()
+                )).toList()
+        );
+        onyxdbAgentClient.createUser(rq);
 
         return TaskResult.error();
     }
