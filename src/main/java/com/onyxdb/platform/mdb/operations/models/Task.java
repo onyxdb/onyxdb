@@ -108,6 +108,16 @@ public record Task(
             return this;
         }
 
+        public Builder postDelaySeconds(int postDelaySeconds) {
+            this.postDelaySeconds = postDelaySeconds;
+            return this;
+        }
+
+        public Builder retryDelaySeconds(int retryDelaySeconds) {
+            this.retryDelaySeconds = retryDelaySeconds;
+            return this;
+        }
+
         public Builder startedAt(LocalDateTime startedAt) {
             this.startedAt = startedAt;
             return this;
