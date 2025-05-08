@@ -5,7 +5,7 @@
     "resources": {
       "presetId": "c92712a0-d344-4b1a-91fb-b27469b72bf5"
     },
-    "replicas": 2,
+    "replicas": 1,
     "backup": {
       "isEnabled": true,
       "schedule": "0 0 * * *"
