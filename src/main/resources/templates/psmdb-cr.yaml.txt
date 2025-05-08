@@ -66,10 +66,6 @@ spec:
             - "--log.level=debug"
             - "--mongodb.uri=$(MONGODB_URI)"
           name: exporter
-      sidecarVolumes:
-        - name: vector-config
-          configMap:
-            name: [[${VECTOR_CONFIG_NAME}]]
       resources:
         limits:
           cpu: "[[${MONGOD_CPU}]]"

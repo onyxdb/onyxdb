@@ -70,7 +70,6 @@ public class PsmdbClient extends AbstractPsmdbFactory {
                 project,
                 cluster,
                 getSecretName(project, cluster),
-                getVectorConfigMapName(project, cluster),
                 REPLSET_NAME,
                 replsetSize,
                 vcpu,
