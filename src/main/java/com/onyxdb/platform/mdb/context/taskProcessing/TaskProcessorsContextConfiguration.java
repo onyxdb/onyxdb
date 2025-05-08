@@ -322,24 +322,10 @@ public class TaskProcessorsContextConfiguration {
         );
     }
 
-//    @Bean
-//    public MongoCreateUserResultTaskProcessor mongoCreateUserResultTaskProcessor(
-//            ObjectMapper objectMapper,
-//            ClusterService clusterService,
-//            OnyxdbAgentClient onyxdbAgentClient
-//    ) {
-//        return new MongoCreateUserResultTaskProcessor(
-//                objectMapper,
-//                clusterService,
-//                onyxdbAgentClient
-//        );
-//    }
-
     @Bean
     public CompositeTaskConsumer compositeTaskProcessor(
             OperationService operationService,
             TransactionTemplate transactionTemplate,
-            MongoCreateVectorConfigTaskConsumer mongoCreateVectorConfigTaskProcessor,
             MongoApplyPsmdbTaskConsumer mongoApplyPsmdbTaskProcessor,
             MongoCheckPsmdbReadinessConsumer mongoCheckPsmdbReadinessProcessor,
             MongoApplyOnyxdbAgentTaskConsumer mongoApplyOnyxdbAgentTaskProcessor,
@@ -356,18 +342,12 @@ public class TaskProcessorsContextConfiguration {
             MongoCreateDatabaseTaskConsumer mongoCreateDatabaseTaskProcessor,
             MongoDeleteDatabaseTaskConsumer mongoDeleteDatabaseTaskProcessor,
             MongoCreateUserTaskConsumer mongoCreateUserTaskProcessor,
-//            MongoCreateUserResultTaskProcessor mongoCreateUserResultTaskProcessor,
             FinalTaskConsumer finalTaskConsumer,
             MongoUpdateHostsTaskConsumer mongoUpdateHostsTaskProcessor,
             MongoDeleteUserTaskConsumer mongoDeleteUserTaskProcessor,
             MongoCreateBackupTaskConsumer mongoCreateBackupTaskProcessor
-//            MongoDeleteSecretsTaskProcessor mongoDeleteSecretsTaskProcessor
     ) {
         Map<TaskType, TaskConsumer<?>> taskTypeToTaskProcessors = Map.ofEntries(
-                Map.entry(
-                        TaskType.MONGO_APPLY_VECTOR_CONFIG,
-                        mongoCreateVectorConfigTaskProcessor
-                ),
                 Map.entry(
                         TaskType.MONGO_APPLY_PSMDB,
                         mongoApplyPsmdbTaskProcessor
