@@ -1,0 +1,31 @@
+service:
+  ports:
+    - name: http
+      port: 6000
+      targetPort: 6000
+      protocol: TCP
+customConfig:
+  sources:
+    kubernetes-logs:
+      type: "kubernetes_logs"
+      extra_label_selector: "app.kubernetes.io/instance=test-1-sandbox-mongo"
+      self_node_name: minikube
+  sinks:
+    sink-test:
+      type: "console"
+      encoding:
+        codec: "json"
+      inputs:
+        - kubernetes-logs
+#    vlogs:
+#      inputs:
+#        - kubernetes_logs
+#      type: http
+#      uri: http://vlogs-onyxdb.onyxdb.svc.cluster.local:9428/insert/jsonline?_stream_fields=host,container_name&_msg_field=message&_time_field=timestamp
+#      compression: gzip
+#      encoding:
+#        codec: json
+#      framing:
+#        method: newline_delimited
+#      healthcheck:
+#        enabled: true

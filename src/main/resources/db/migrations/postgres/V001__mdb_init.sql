@@ -164,24 +164,6 @@ CREATE TYPE public.task_status AS ENUM (
     'success'
     );
 
--- CREATE TYPE public.task_type AS ENUM (
---     'mongodb_create_vector_config',
---     'mongodb_apply_psmdb',
---     'mongodb_check_psmdb_readiness',
---     'mongodb_apply_onyxdb_agent',
---     'mongodb_check_onyxdb_agent_readiness',
---     'mongodb_create_exporter_service',
---     'mongodb_create_exporter_service_scrape',
---     'mongodb_delete_exporter_service_scrape',
---     'mongodb_delete_exporter_service',
---     'mongodb_delete_onyxdb_agent',
---     'mongodb_check_onyxdb_agent_is_deleted',
---     'mongodb_delete_psmdb',
---     'mongodb_check_psmdb_is_deleted',
---     'mongodb_delete_vector_config',
---     'mongodb_delete_secrets'
---     );
-
 CREATE TABLE public.tasks
 (
     id                  uuid               NOT NULL,
@@ -198,7 +180,7 @@ CREATE TABLE public.tasks
     started_at          timestamp,
     finished_at         timestamp,
     PRIMARY KEY (id),
-    FOREIGN KEY (operation_id) REFERENCES operations (id)
+    FOREIGN KEY (operation_id) REFERENCES public.operations (id)
 );
 
 CREATE TYPE public.resource_type AS ENUM (

@@ -55,16 +55,10 @@ public class MongoCreateClusterTaskProducer extends TaskProducer<MongoCreateClus
         var clusterPayload = new ClusterPayload(
                 payload.clusterId()
         );
-        var applyMongoVectorConfigTask = ProducedTask.createWithPayload(
-                TaskType.MONGO_APPLY_VECTOR_CONFIG,
-                operationId,
-                List.of(),
-                clusterPayload
-        );
         var applyPsmdbTask = ProducedTask.createWithPayload(
                 TaskType.MONGO_APPLY_PSMDB,
                 operationId,
-                List.of(applyMongoVectorConfigTask.id()),
+                List.of(),
                 clusterPayload
         );
         var checkPsmdbReadinessTask = ProducedTask.createWithPayload(
@@ -134,7 +128,6 @@ public class MongoCreateClusterTaskProducer extends TaskProducer<MongoCreateClus
         );
 
         return List.of(
-                applyMongoVectorConfigTask,
                 applyPsmdbTask,
                 checkPsmdbReadinessTask,
                 applyOnyxdbAgentTask,

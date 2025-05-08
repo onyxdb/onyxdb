@@ -2,6 +2,9 @@ apiVersion: psmdb.percona.com/v1
 kind: PerconaServerMongoDB
 metadata:
   name: [[${METADATA_NAME}]]
+  labels:
+    onyxdb.com/project: [[${ONYXDB_PROJECT}]]
+    onyxdb.com/cluster: [[${ONYXDB_CLUSTER}]]
   finalizers:
    - percona.com/delete-psmdb-pvc
 spec:
@@ -18,11 +21,10 @@ spec:
   replsets:
     - name: [[${REPLSET_NAME}]]
       size: [[${REPLSET_SIZE}]]
+      labels:
+        onyxdb.com/project: [[${ONYXDB_PROJECT}]]
+        onyxdb.com/cluster: [[${ONYXDB_CLUSTER}]]
       configuration: |
-        systemLog:
-          path: /data/db/mongod.log
-          destination: file
-          logAppend: true
         security:
             enableEncryption: true
             encryptionCipherMode: "AES256-CBC"
@@ -62,22 +64,6 @@ spec:
             - "--log.level=debug"
             - "--mongodb.uri=$(MONGODB_URI)"
           name: exporter
-        - name: vector
-          image: timberio/vector:0.31.0-debian
-          command:
-            - "vector"
-          args:
-            - "--config=/etc/vector/vector.yaml"
-          workingDir: /data/db
-          volumeMounts:
-            - name: vector-config-volume
-              mountPath: "/etc/vector"
-            - mountPath: /data/db
-              name: mongod-data
-      sidecarVolumes:
-        - name: vector-config-volume
-          configMap:
-            name: [[${VECTOR_CONFIG_NAME}]]
       resources:
         limits:
           cpu: "[[${MONGOD_CPU}]]"
