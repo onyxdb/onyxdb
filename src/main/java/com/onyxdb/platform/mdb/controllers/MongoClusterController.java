@@ -1,9 +1,12 @@
 package com.onyxdb.platform.mdb.controllers;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.Nullable;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,6 +14,8 @@ import com.onyxdb.platform.generated.openapi.apis.ManagedMongoDbClustersApi;
 import com.onyxdb.platform.generated.openapi.models.CreateMongoClusterRequestDTO;
 import com.onyxdb.platform.generated.openapi.models.CreateMongoClusterResponseDTO;
 import com.onyxdb.platform.generated.openapi.models.ListMongoClustersResponseDTO;
+import com.onyxdb.platform.generated.openapi.models.ListMongoVersionsResponseDTO;
+import com.onyxdb.platform.generated.openapi.models.ListStorageClassesResponseDTO;
 import com.onyxdb.platform.generated.openapi.models.MongoClusterDTO;
 import com.onyxdb.platform.generated.openapi.models.ScheduledOperationDTO;
 import com.onyxdb.platform.generated.openapi.models.UpdateMongoClusterRequestDTO;
@@ -21,6 +26,7 @@ import com.onyxdb.platform.mdb.clusters.ClusterService;
 import com.onyxdb.platform.mdb.clusters.models.Cluster;
 import com.onyxdb.platform.mdb.clusters.models.ClusterFilter;
 import com.onyxdb.platform.mdb.clusters.models.ClusterType;
+import com.onyxdb.platform.mdb.clusters.models.ClusterVersion;
 import com.onyxdb.platform.mdb.clusters.models.CreateCluster;
 import com.onyxdb.platform.mdb.clusters.models.CreateClusterResult;
 import com.onyxdb.platform.mdb.clusters.models.UpdateCluster;
@@ -29,10 +35,19 @@ import com.onyxdb.platform.mdb.clusters.models.UpdateCluster;
 public class MongoClusterController implements ManagedMongoDbClustersApi {
     private final ClusterMapper clusterMapper;
     private final ClusterService clusterService;
+    private final List<String> storageClasses;
 
-    public MongoClusterController(ClusterMapper clusterMapper, ClusterService clusterService) {
+    public MongoClusterController(
+            ClusterMapper clusterMapper,
+            ClusterService clusterService,
+            @Value("${onyxdb.mdb.storage-classes:}")
+            String storageClassesString
+    ) {
         this.clusterMapper = clusterMapper;
         this.clusterService = clusterService;
+        this.storageClasses = Arrays.stream(storageClassesString.split(","))
+                .filter(s -> !s.isEmpty()).
+                collect(Collectors.toList());
     }
 
     @Override
@@ -94,5 +109,19 @@ public class MongoClusterController implements ManagedMongoDbClustersApi {
         UUID operationId = clusterService.deleteCluster(clusterId, account.id());
 
         return ResponseEntity.ok(new ScheduledOperationDTO(operationId));
+    }
+
+    @Override
+    public ResponseEntity<ListMongoVersionsResponseDTO> listVersions() {
+        var response = new ListMongoVersionsResponseDTO(List.of(
+                ClusterVersion.MONGODB_7_0.getVersion(),
+                ClusterVersion.MONGODB_8_0.getVersion()
+        ));
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public ResponseEntity<ListStorageClassesResponseDTO> listStorageClasses() {
+        return ResponseEntity.ok(new ListStorageClassesResponseDTO(storageClasses));
     }
 }
