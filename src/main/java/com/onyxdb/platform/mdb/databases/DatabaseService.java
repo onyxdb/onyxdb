@@ -49,16 +49,16 @@ public class DatabaseService {
         return operation.id();
     }
 
-    public UUID deleteDatabase(UUID clusterId, UUID databaseId) {
-        Database database = databaseRepository.getDatabase(clusterId, databaseId);
+    public UUID deleteDatabase(UUID clusterId, String databaseName, UUID deletedBy) {
+        Database database = databaseRepository.getDatabase(clusterId, databaseName);
 
         var operation = Operation.scheduledWithPayload(
                 OperationType.MONGO_DELETE_DATABASE,
                 clusterId,
                 ObjectMapperUtils.convertToString(objectMapper, new MongoDeleteDatabasePayload(
                         clusterId,
-                        databaseId,
-                        database.name()
+                        database.name(),
+                        deletedBy
                 ))
         );
         operationRepository.createOperation(operation);

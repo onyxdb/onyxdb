@@ -8,9 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.onyxdb.platform.generated.openapi.apis.ManagedMongoDbDatabasesApi;
-import com.onyxdb.platform.generated.openapi.models.CreateMongoDatabaseRequest;
-import com.onyxdb.platform.generated.openapi.models.ListMongoDatabasesResponse;
-import com.onyxdb.platform.generated.openapi.models.V1ScheduledOperationResponse;
+import com.onyxdb.platform.generated.openapi.models.CreateMongoDatabaseRequestDTO;
+import com.onyxdb.platform.generated.openapi.models.ListMongoDatabasesResponseDTO;
+import com.onyxdb.platform.generated.openapi.models.ScheduledOperationDTO;
+import com.onyxdb.platform.idm.common.jwt.SecurityContextUtils;
+import com.onyxdb.platform.idm.models.Account;
 import com.onyxdb.platform.mdb.clusters.models.CreateDatabase;
 import com.onyxdb.platform.mdb.clusters.models.Database;
 import com.onyxdb.platform.mdb.databases.DatabaseMapper;
@@ -23,9 +25,9 @@ public class MongoDatabaseController implements ManagedMongoDbDatabasesApi {
     private final DatabaseMapper databaseMapper;
 
     @Override
-    public ResponseEntity<ListMongoDatabasesResponse> listDatabases(UUID clusterId) {
+    public ResponseEntity<ListMongoDatabasesResponseDTO> listDatabases(UUID clusterId) {
         List<Database> databases = databaseService.listDatabases(clusterId);
-        var response = new ListMongoDatabasesResponse(
+        var response = new ListMongoDatabasesResponseDTO(
                 databases.stream().map(databaseMapper::mapToMongoDatabase).toList()
         );
 
@@ -34,19 +36,20 @@ public class MongoDatabaseController implements ManagedMongoDbDatabasesApi {
     }
 
     @Override
-    public ResponseEntity<V1ScheduledOperationResponse> createDatabase(UUID clusterId, CreateMongoDatabaseRequest rq) {
-        CreateDatabase createDatabase = databaseMapper.map(clusterId, rq);
+    public ResponseEntity<ScheduledOperationDTO> createDatabase(UUID clusterId, CreateMongoDatabaseRequestDTO rq) {
+        Account account = SecurityContextUtils.getCurrentAccount();
+
+        CreateDatabase createDatabase = databaseMapper.createMongoDatabaseRqToCreateDatabase(clusterId, rq, account.id());
         UUID operationId = databaseService.createDatabase(createDatabase);
 
-        return ResponseEntity.ok()
-                .body(new V1ScheduledOperationResponse(operationId));
+        return ResponseEntity.ok(new ScheduledOperationDTO(operationId));
     }
 
     @Override
-    public ResponseEntity<V1ScheduledOperationResponse> deleteDatabase(UUID clusterId, UUID databaseId) {
-        UUID operationId = databaseService.deleteDatabase(clusterId, databaseId);
+    public ResponseEntity<ScheduledOperationDTO> deleteDatabase(UUID clusterId, String databaseName) {
+        Account account = SecurityContextUtils.getCurrentAccount();
+        UUID operationId = databaseService.deleteDatabase(clusterId, databaseName, account.id());
 
-        return ResponseEntity.ok()
-                .body(new V1ScheduledOperationResponse(operationId));
+        return ResponseEntity.ok(new ScheduledOperationDTO(operationId));
     }
 }

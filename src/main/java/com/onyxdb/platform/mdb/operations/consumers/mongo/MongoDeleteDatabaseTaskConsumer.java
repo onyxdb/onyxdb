@@ -13,7 +13,6 @@ import com.onyxdb.platform.mdb.operations.models.Task;
 import com.onyxdb.platform.mdb.operations.models.TaskResult;
 import com.onyxdb.platform.mdb.operations.models.TaskType;
 import com.onyxdb.platform.mdb.operations.models.payload.MongoDeleteDatabasePayload;
-import com.onyxdb.platform.mdb.utils.OnyxdbConsts;
 
 @Component
 public class MongoDeleteDatabaseTaskConsumer extends TaskConsumer<MongoDeleteDatabasePayload> {
@@ -22,7 +21,9 @@ public class MongoDeleteDatabaseTaskConsumer extends TaskConsumer<MongoDeleteDat
 
     public MongoDeleteDatabaseTaskConsumer(
             ObjectMapper objectMapper,
-            ClusterService clusterService, OnyxdbAgentClient onyxdbAgentClient, DatabaseRepository databaseRepository
+            ClusterService clusterService,
+            OnyxdbAgentClient onyxdbAgentClient,
+            DatabaseRepository databaseRepository
     ) {
         super(objectMapper, clusterService);
         this.onyxdbAgentClient = onyxdbAgentClient;
@@ -35,21 +36,15 @@ public class MongoDeleteDatabaseTaskConsumer extends TaskConsumer<MongoDeleteDat
     }
 
     @Override
-    protected MongoDeleteDatabasePayload parsePayload(Task task) throws JsonProcessingException {
-        try {
-            return objectMapper.readValue(task.payload(), MongoDeleteDatabasePayload.class);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+    protected TaskResult internalProcess(Task task, MongoDeleteDatabasePayload payload) {
+        onyxdbAgentClient.deleteDatabase(new DeleteMongoDatabaseRequestDTO(payload.databaseName()));
+        databaseRepository.markDatabaseAsDeleted(payload.databaseName(), payload.deletedBy());
+
+        return TaskResult.success();
     }
 
     @Override
-    protected TaskResult internalProcess(Task task, MongoDeleteDatabasePayload payload) {
-        onyxdbAgentClient.deleteDatabase(new DeleteMongoDatabaseRequestDTO(
-                payload.databaseName()
-        ));
-        databaseRepository.markDatabaseAsDeleted(payload.databaseId(), OnyxdbConsts.USER_ID);
-
-        return TaskResult.success();
+    protected MongoDeleteDatabasePayload parsePayload(Task task) throws JsonProcessingException {
+        return objectMapper.readValue(task.payload(), MongoDeleteDatabasePayload.class);
     }
 }

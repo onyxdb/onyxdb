@@ -3,19 +3,22 @@ package com.onyxdb.platform.mdb.databases;
 import java.util.UUID;
 
 import com.onyxdb.platform.generated.jooq.tables.records.DatabasesRecord;
-import com.onyxdb.platform.generated.openapi.models.CreateMongoDatabaseRequest;
-import com.onyxdb.platform.generated.openapi.models.MongoDatabase;
+import com.onyxdb.platform.generated.openapi.models.CreateMongoDatabaseRequestDTO;
+import com.onyxdb.platform.generated.openapi.models.MongoDatabaseDTO;
 import com.onyxdb.platform.mdb.clusters.models.CreateDatabase;
 import com.onyxdb.platform.mdb.clusters.models.Database;
-import com.onyxdb.platform.mdb.utils.OnyxdbConsts;
 import com.onyxdb.platform.mdb.utils.TimeUtils;
 
 public class DatabaseMapper {
-    public CreateDatabase map(UUID clusterId, CreateMongoDatabaseRequest r) {
+    public CreateDatabase createMongoDatabaseRqToCreateDatabase(
+            UUID clusterId,
+            CreateMongoDatabaseRequestDTO rq,
+            UUID createdBy
+    ) {
         return new CreateDatabase(
-                r.getName(),
+                rq.getName(),
                 clusterId,
-                OnyxdbConsts.USER_ID
+                createdBy
         );
     }
 
@@ -58,9 +61,8 @@ public class DatabaseMapper {
         );
     }
 
-    public MongoDatabase mapToMongoDatabase(Database d) {
-        return new MongoDatabase(
-                d.id(),
+    public MongoDatabaseDTO mapToMongoDatabase(Database d) {
+        return new MongoDatabaseDTO(
                 d.name(),
                 d.clusterId(),
                 d.createdAt(),

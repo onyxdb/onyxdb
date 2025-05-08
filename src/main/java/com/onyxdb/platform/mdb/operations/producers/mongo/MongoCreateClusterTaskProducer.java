@@ -36,9 +36,8 @@ public class MongoCreateClusterTaskProducer extends TaskProducer<MongoCreateClus
     public List<ProducedTask> produceTasks(Operation operation, MongoCreateClusterPayload payload) {
         UUID operationId = operation.id();
 
-        var clusterPayload = new ClusterPayload(
-                payload.clusterId()
-        );
+        var clusterPayload = new ClusterPayload(payload.clusterId());
+
         var applyPsmdbTask = ProducedTask.createWithPayload(
                 TaskType.MONGO_APPLY_PSMDB,
                 operationId,

@@ -190,6 +190,60 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ListMongoVersionsResponseDTO'
+  # ---------- Managed MongoDB databases -------------------------------------------------------------------------------
+  /api/mdb/mongodb/databases:
+    get:
+      summary: List MongoDB databases
+      operationId: listDatabases
+      tags:
+        - Managed MongoDB databases
+        - MDB
+      parameters:
+        - $ref: '#/components/parameters/ClusterIdRQP'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListMongoDatabasesResponseDTO'
+    post:
+      summary: Create MongoDB database
+      operationId: createDatabase
+      tags:
+        - Managed MongoDB databases
+        - MDB
+      parameters:
+        - $ref: '#/components/parameters/ClusterIdRQP'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMongoDatabaseRequestDTO'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduledOperationDTO'
+    delete:
+      summary: Delete MongoDB database
+      operationId: deleteDatabase
+      tags:
+        - Managed MongoDB databases
+        - MDB
+      parameters:
+        - $ref: '#/components/parameters/ClusterIdRQP'
+        - $ref: '#/components/parameters/DatabaseNameRQP'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduledOperationDTO'
   # ---------- MDB common ----------------------------------------------------------------------------------------------
   /api/mdb/storage-classes:
     get:
@@ -349,61 +403,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MongoListHostsResponse'
-  # ---------- Managed MongoDB databases -------------------------------------------------------------------------------
-  /api/managed-mongodb/v1/clusters/{clusterId}/databases:
-    get:
-      summary: List MongoDB databases
-      operationId: listDatabases
-      tags:
-        - Managed MongoDB databases
-        - MDB
-      parameters:
-        - $ref: '#/components/parameters/ClusterIdPV'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ListMongoDatabasesResponse'
-    post:
-      summary: Create MongoDB database
-      operationId: createDatabase
-      tags:
-        - Managed MongoDB databases
-        - MDB
-      parameters:
-        - $ref: '#/components/parameters/ClusterIdPV'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateMongoDatabaseRequest'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/V1ScheduledOperationResponse'
-  /api/managed-mongodb/v1/clusters/{clusterId}/databases/{databaseId}:
-    delete:
-      summary: Delete MongoDB database
-      operationId: deleteDatabase
-      tags:
-        - Managed MongoDB databases
-        - MDB
-      parameters:
-        - $ref: '#/components/parameters/ClusterIdPV'
-        - $ref: '#/components/parameters/DatabaseIdPV'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/V1ScheduledOperationResponse'
   # ---------- Managed MongoDB users -----------------------------------------------------------------------------------
   /api/managed-mongodb/v1/users/roles:
     get:
@@ -2791,7 +2790,6 @@ components:
           type: string
       required:
         - message
-    # ---------- Projects schemas --------------------------------------------------------------------------------------
     ListProjectsResponseDTO:
       type: object
       properties:
@@ -2885,7 +2883,6 @@ components:
         - description
         - productId
         - namespace
-    # ---------- Managed MongoDB clusters schemas ----------------------------------------------------------------------
     CreateMongoClusterRequestDTO:
       type: object
       properties:
@@ -2899,9 +2896,9 @@ components:
         config:
           $ref: '#/components/schemas/MongoConfigDTO'
         database:
-          $ref: '#/components/schemas/MongoDatabaseDTO'
+          $ref: '#/components/schemas/CreateMongoDatabaseDTO'
         user:
-          $ref: '#/components/schemas/MongoUserDTO'
+          $ref: '#/components/schemas/CreateMongoUserDTO'
       required:
         - name
         - description
@@ -2951,14 +2948,14 @@ components:
       required:
         - isEnabled
         - schedule
-    MongoDatabaseDTO:
+    CreateMongoDatabaseDTO:
       type: object
       properties:
         name:
           type: string
       required:
         - name
-    MongoUserDTO:
+    CreateMongoUserDTO:
       type: object
       properties:
         name:
@@ -3090,6 +3087,54 @@ components:
           format: uuid
       required:
         - presetId
+    ListMongoDatabasesResponseDTO:
+      type: object
+      properties:
+        databases:
+          type: array
+          items:
+            $ref: '#/components/schemas/MongoDatabaseDTO'
+      required:
+        - databases
+    MongoDatabaseDTO:
+      type: object
+      properties:
+        name:
+          type: string
+        clusterId:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+          format: uuid
+        isDeleted:
+          type: boolean
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+        deletedBy:
+          type: string
+          format: uuid
+          nullable: true
+      required:
+        - name
+        - clusterId
+        - createdAt
+        - createdBy
+        - isDeleted
+        - deletedAt
+        - deletedBy
+    CreateMongoDatabaseRequestDTO:
+      type: object
+      properties:
+        name:
+          type: string
+      required:
+        - name
     ListStorageClassesResponseDTO:
       type: object
       properties:
@@ -3117,6 +3162,66 @@ components:
             type: string
       required:
         - versions
+    ListOperationsResponseDTO:
+      type: object
+      properties:
+        operations:
+          type: array
+          items:
+            $ref: '#/components/schemas/OperationDTO'
+      required:
+        - operations
+    OperationDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          $ref: '#/components/schemas/OperationTypeDTO'
+        status:
+          $ref: '#/components/schemas/OperationStatusDTO'
+        createdAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+          format: uuid
+        updatedAt:
+          type: string
+          format: date-time
+        isRestartAllowed:
+          type: boolean
+      required:
+        - id
+        - type
+        - status
+        - createdAt
+        - createdBy
+        - updatedAt
+        - isRestartAllowed
+    OperationTypeDTO:
+      type: object
+      properties:
+        value:
+          type: string
+        displayValue:
+          type: string
+      required:
+        - value
+        - displayValue
+    OperationStatusDTO:
+      type: object
+      properties:
+        value:
+          type: string
+        displayValue:
+          type: string
+      required:
+        - value
+        - displayValue
+
+
 
 
 
@@ -3271,58 +3376,6 @@ components:
         - unknown
         - primary
         - secondary
-    CreateMongoDatabaseRequest:
-      type: object
-      properties:
-        name:
-          type: string
-      required:
-        - name
-    ListMongoDatabasesResponse:
-      type: object
-      properties:
-        databases:
-          type: array
-          items:
-            $ref: '#/components/schemas/MongoDatabase'
-      required:
-        - databases
-    MongoDatabase:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        name:
-          type: string
-        clusterId:
-          type: string
-          format: uuid
-        createdAt:
-          type: string
-          format: date-time
-        createdBy:
-          type: string
-          format: uuid
-        isDeleted:
-          type: boolean
-        deletedAt:
-          type: string
-          format: date-time
-          nullable: true
-        deletedBy:
-          type: string
-          format: uuid
-          nullable: true
-      required:
-        - id
-        - name
-        - clusterId
-        - createdAt
-        - createdBy
-        - isDeleted
-        - deletedAt
-        - deletedBy
     ListMongoUsersResponse:
       type: object
       properties:
@@ -3705,64 +3758,6 @@ components:
         - usage
         - free
         - timestamp
-    ListOperationsResponseDTO:
-      type: object
-      properties:
-        operations:
-          type: array
-          items:
-            $ref: '#/components/schemas/OperationDTO'
-      required:
-        - operations
-    OperationDTO:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        type:
-          $ref: '#/components/schemas/OperationTypeDTO'
-        status:
-          $ref: '#/components/schemas/OperationStatusDTO'
-        createdAt:
-          type: string
-          format: date-time
-        createdBy:
-          type: string
-          format: uuid
-        updatedAt:
-          type: string
-          format: date-time
-        isRestartAllowed:
-          type: boolean
-      required:
-        - id
-        - type
-        - status
-        - createdAt
-        - createdBy
-        - updatedAt
-        - isRestartAllowed
-    OperationTypeDTO:
-      type: object
-      properties:
-        value:
-          type: string
-        displayValue:
-          type: string
-      required:
-        - value
-        - displayValue
-    OperationStatusDTO:
-      type: object
-      properties:
-        value:
-          type: string
-        displayValue:
-          type: string
-      required:
-        - value
-        - displayValue
     # ---------- IDM schemas -------------------------------------------------------------------------------------------
     AccountDTO:
       type: object
@@ -4345,19 +4340,25 @@ components:
         type: string
         format: uuid
     ClusterIdOQP:
-      name: id
+      name: clusterId
       in: query
       required: false
       schema:
         type: string
         format: uuid
-    DatabaseIdPV:
-      name: databaseId
-      in: path
+    ClusterIdRQP:
+      name: clusterId
+      in: query
       required: true
       schema:
         type: string
         format: uuid
+    DatabaseNameRQP:
+      name: databaseName
+      in: query
+      required: true
+      schema:
+        type: string
     UserIdPV:
       name: userId
       in: path
