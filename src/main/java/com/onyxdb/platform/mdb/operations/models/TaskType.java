@@ -27,6 +27,10 @@ public enum TaskType implements StringEnum {
     MONGO_CHECK_ONYXDB_AGENT_IS_DELETED("mongo_check_onyxdb_agent_is_deleted"),
     MONGO_DELETE_PSMDB("mongo_delete_psmdb"),
     MONGO_CHECK_PSMDB_IS_DELETED("mongo_check_psmdb_is_deleted"),
+    MONGO_DELETE_SECRETS("mongo_delete_secrets"),
+    MONGO_MARK_CLUSTER_DELETED("mongo_mark_cluster_deleted"),
+
+    // TODO delete
     MONGO_DELETE_VECTOR_CONFIG("mongo_delete_vector_config"),
 
     FINAL_TASK("final_task");

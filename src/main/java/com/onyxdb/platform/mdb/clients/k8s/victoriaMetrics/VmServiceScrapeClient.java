@@ -8,6 +8,7 @@ import io.fabric8.kubernetes.client.dsl.base.ResourceDefinitionContext;
 
 import com.onyxdb.platform.mdb.utils.ObjectMapperUtils;
 
+// TODO delete?
 public class VmServiceScrapeClient {
     private static final String GROUP = "operator.victoriametrics.com";
     private static final String VERSION = "v1beta1";

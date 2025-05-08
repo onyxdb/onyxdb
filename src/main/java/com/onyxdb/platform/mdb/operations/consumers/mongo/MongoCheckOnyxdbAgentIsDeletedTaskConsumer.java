@@ -39,11 +39,9 @@ public class MongoCheckOnyxdbAgentIsDeletedTaskConsumer extends ClusterTaskConsu
                 cluster.id(),
                 cluster.name()
         );
+
         if (exists) {
             return TaskResult.error();
-//            return TaskResult.scheduled(
-//                    task.getScheduledAtWithDelay(Duration.ofSeconds(30))
-//            );
         }
 
         return TaskResult.success();
