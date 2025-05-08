@@ -11,6 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import com.onyxdb.platform.mdb.clusters.ClusterRepository;
+import com.onyxdb.platform.mdb.clusters.models.Cluster;
+import com.onyxdb.platform.mdb.clusters.models.ClusterStatus;
 import com.onyxdb.platform.mdb.exceptions.OperationNotFoundException;
 import com.onyxdb.platform.mdb.operations.mappers.TaskMapper;
 import com.onyxdb.platform.mdb.operations.models.Operation;
@@ -43,6 +46,7 @@ public class OperationService {
     private final TransactionTemplate transactionTemplate;
     private final TaskProducerProvider taskProducerProvider;
     private final TaskMapper taskMapper;
+    private final ClusterRepository clusterRepository;
 
     public List<Task> getTasksToConsume(int limit) {
         return taskRepository.getTasksToConsume(limit);
@@ -73,6 +77,8 @@ public class OperationService {
     }
 
     public void rescheduleTask(Task task) {
+        Operation operation = operationRepository.getOperation(task.operationId());
+
         int updatedAttempts = Math.max(task.attemptsLeft() - 1, 0);
         TaskStatus updatedStatus = updatedAttempts > 0 ? TaskStatus.RESCHEDULED : TaskStatus.ERROR;
         LocalDateTime now = TimeUtils.now();
@@ -86,6 +92,14 @@ public class OperationService {
                 .build();
         if (updatedStatus.equalsStringEnum(TaskStatus.ERROR)) {
             transactionTemplate.executeWithoutResult(status -> {
+                if (operation.clusterId() != null) {
+                    Cluster cluster = clusterRepository.getClusterOrThrow(operation.clusterId());
+                    Cluster updatedCluster = Cluster.builder()
+                            .copy(cluster)
+                            .status(ClusterStatus.ERROR)
+                            .build();
+                    clusterRepository.updateCluster(updatedCluster);
+                }
                 taskRepository.updateTask(updatedTask);
                 operationRepository.updateStatus(updatedTask.operationId(), OperationStatus.ERROR);
             });
