@@ -166,10 +166,12 @@ public class PsmdbClient extends AbstractPsmdbFactory {
             String password
     ) {
         String secretName = getMongoUserSecretName(project, cluster, user);
-        // TODO add extra labels
         Secret secret = new SecretBuilder()
                 .withNewMetadata()
                 .withName(secretName)
+                .withLabels(Map.ofEntries(
+                        Map.entry("app.kubernetes.io/instance", getPsmdbName(project, cluster)))
+                )
                 .endMetadata()
                 .addToStringData("username", user)
                 .addToStringData("password", password)
@@ -183,16 +185,17 @@ public class PsmdbClient extends AbstractPsmdbFactory {
         return secretName;
     }
 
-    public boolean deleteMongoUserSecret(
+    public void deleteAllSecrets(
             String namespace,
             String project,
-            String cluster,
-            String user
+            String cluster
     ) {
-        return kubernetesClient.secrets()
+        kubernetesClient.secrets()
                 .inNamespace(namespace)
-                .withName(getMongoUserSecretName(project, cluster, user))
-                .delete().size() == 1;
+                .withLabels((Map.ofEntries(
+                        Map.entry("app.kubernetes.io/instance", getPsmdbName(project, cluster)))
+                ))
+                .delete();
     }
 
     public void deletePsmdbSecrets(

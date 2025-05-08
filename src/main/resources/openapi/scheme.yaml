@@ -4305,7 +4305,7 @@ components:
         type: string
         format: uuid
     ClusterIdPV:
-      name: id
+      name: clusterId
       in: path
       required: true
       schema:

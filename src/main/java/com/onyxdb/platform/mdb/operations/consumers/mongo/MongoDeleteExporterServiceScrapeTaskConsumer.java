@@ -1,10 +1,9 @@
 package com.onyxdb.platform.mdb.operations.consumers.mongo;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Component;
 
 import com.onyxdb.platform.mdb.clients.k8s.psmdb.PsmdbExporterServiceScrapeClient;
-import com.onyxdb.platform.mdb.clients.k8s.victoriaMetrics.VmServiceScrapeClient;
-import com.onyxdb.platform.mdb.clients.k8s.victoriaMetrics.adapters.MongoExporterServiceScrapeAdapter;
 import com.onyxdb.platform.mdb.clusters.ClusterService;
 import com.onyxdb.platform.mdb.clusters.models.Cluster;
 import com.onyxdb.platform.mdb.operations.consumers.ClusterTaskConsumer;
@@ -16,20 +15,16 @@ import com.onyxdb.platform.mdb.operations.models.payload.ClusterPayload;
 import static com.onyxdb.platform.mdb.clusters.ClusterMapper.DEFAULT_NAMESPACE;
 import static com.onyxdb.platform.mdb.clusters.ClusterMapper.DEFAULT_PROJECT;
 
+@Component
 public class MongoDeleteExporterServiceScrapeTaskConsumer extends ClusterTaskConsumer {
-    private final VmServiceScrapeClient vmServiceScrapeClient;
-    private final MongoExporterServiceScrapeAdapter mongoExporterServiceScrapeAdapter;
     private final PsmdbExporterServiceScrapeClient psmdbExporterServiceScrapeClient;
 
     public MongoDeleteExporterServiceScrapeTaskConsumer(
             ObjectMapper objectMapper,
             ClusterService clusterService,
-            VmServiceScrapeClient vmServiceScrapeClient,
-            MongoExporterServiceScrapeAdapter mongoExporterServiceScrapeAdapter, PsmdbExporterServiceScrapeClient psmdbExporterServiceScrapeClient
+            PsmdbExporterServiceScrapeClient psmdbExporterServiceScrapeClient
     ) {
         super(objectMapper, clusterService);
-        this.vmServiceScrapeClient = vmServiceScrapeClient;
-        this.mongoExporterServiceScrapeAdapter = mongoExporterServiceScrapeAdapter;
         this.psmdbExporterServiceScrapeClient = psmdbExporterServiceScrapeClient;
     }
 

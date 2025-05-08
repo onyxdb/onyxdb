@@ -31,14 +31,11 @@ public class OperationService {
     private static final int DEFAULT_TASK_POST_DELAY_SECONDS = 5;
     private static final int DEFAULT_TASK_RETRY_DELAY_SECONDS = 5;
 
-    private static final Set<TaskType> DEPLOY_TASK_TYPES = Set.of(
-            TaskType.MONGO_APPLY_PSMDB,
-            TaskType.MONGO_APPLY_ONYXDB_AGENT
-    );
-
     private static final Set<TaskType> CHECK_RESULT_TASK_TYPES = Set.of(
             TaskType.MONGO_CHECK_PSMDB_READINESS,
-            TaskType.MONGO_APPLY_ONYXDB_AGENT
+            TaskType.MONGO_APPLY_ONYXDB_AGENT,
+            TaskType.MONGO_CHECK_ONYXDB_AGENT_IS_DELETED,
+            TaskType.MONGO_CHECK_PSMDB_IS_DELETED
     );
 
     private final OperationRepository operationRepository;

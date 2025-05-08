@@ -48,7 +48,7 @@ public class MongoCreateUserTaskConsumer extends TaskConsumer<MongoCreateUserPay
         );
         onyxdbAgentClient.createUser(rq);
 
-        return TaskResult.error();
+        return TaskResult.success();
     }
 
     @Override
