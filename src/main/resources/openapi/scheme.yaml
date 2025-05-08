@@ -3031,14 +3031,11 @@ components:
     UpdateMongoClusterRequestDTO:
       type: object
       properties:
-        name:
-          type: string
         description:
           type: string
         config:
           $ref: '#/components/schemas/UpdateMongoConfigDTO'
       required:
-        - name
         - description
         - config
     UpdateMongoConfigDTO:

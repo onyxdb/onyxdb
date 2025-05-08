@@ -11,8 +11,10 @@ public enum ClusterStatus implements StringEnum {
     UNKNOWN("unknown", "Unknown"),
     ERROR("error", "Error"),
     CREATING("creating", "Creating"),
+    READY("ready", "Ready"),
     UPDATING("updating", "Updating"),
     DELETING("deleting", "Deleting"),
+    DELETED("deleted", "Deleted"),
     ;
 
     public static final StringEnumResolver<ClusterStatus> R = new StringEnumResolver<>(ClusterStatus.class);
