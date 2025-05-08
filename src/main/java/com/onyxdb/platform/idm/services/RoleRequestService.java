@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
 
-import com.onyxdb.platform.idm.controllers.ResourceNotFoundException;
+import com.onyxdb.platform.idm.models.exceptions.ResourceNotFoundException;
 import com.onyxdb.platform.idm.models.PaginatedResult;
 import com.onyxdb.platform.idm.models.RoleRequest;
 import com.onyxdb.platform.idm.models.RoleRequestStatus;

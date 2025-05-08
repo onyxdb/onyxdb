@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.onyxdb.platform.generated.openapi.apis.ProductsApi;
 import com.onyxdb.platform.generated.openapi.models.PaginatedProductResponse;
-import com.onyxdb.platform.generated.openapi.models.ProductCreateDTO;
+import com.onyxdb.platform.generated.openapi.models.ProductPostDTO;
 import com.onyxdb.platform.generated.openapi.models.ProductDTO;
 import com.onyxdb.platform.generated.openapi.models.ProductDTO;
 import com.onyxdb.platform.generated.openapi.models.ProductTreeDTO;
@@ -30,8 +30,8 @@ public class ProductsController implements ProductsApi {
     private final ProductService productService;
 
     @Override
-    public ResponseEntity<ProductDTO> createProduct(@Valid ProductCreateDTO productDTO) {
-        Product product = Product.fromCreateDTO(productDTO);
+    public ResponseEntity<ProductDTO> createProduct(@Valid ProductPostDTO productDTO) {
+        Product product = Product.fromPostDTO(productDTO);
         Product createdProduct = productService.create(product);
         return new ResponseEntity<>(createdProduct.toDTO(), HttpStatus.CREATED);
     }
@@ -95,9 +95,9 @@ public class ProductsController implements ProductsApi {
     }
 
     @Override
-    public ResponseEntity<ProductDTO> updateProduct(UUID productId, @Valid ProductDTO productDTO) {
+    public ResponseEntity<ProductDTO> updateProduct(UUID productId, @Valid ProductPostDTO productDTO) {
         productDTO.setId(productId);
-        Product product = Product.fromDTO(productDTO);
+        Product product = Product.fromPostDTO(productDTO);
         Product updatedProduct = productService.update(product);
         return ResponseEntity.ok(updatedProduct.toDTO());
     }

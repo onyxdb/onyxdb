@@ -17,16 +17,16 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.onyxdb.platform.idm.models.Account;
 import com.onyxdb.platform.idm.models.redis.RefreshToken;
 import com.onyxdb.platform.idm.repositories.AccountRepository;
 import com.onyxdb.platform.idm.services.jwt.JwtResponse;
+import com.onyxdb.platform.mdb.exceptions.BadRequestException;
+import com.onyxdb.platform.idm.models.exceptions.UnauthorizedException;
 
 /**
  * @author ArtemFed
@@ -105,12 +105,12 @@ public class AuthService {
     public JwtResponse login(String login, String password) {
         Optional<Account> accountOptional = accountRepository.findByLogin(login);
         if (accountOptional.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неверное имя пользователя или пароль");
+            throw new BadRequestException("Неверное имя пользователя или пароль");
 
         }
         Account account = accountOptional.get();
         if (!passwordEncoder.matches(password, account.password())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неверное имя пользователя или пароль");
+            throw new BadRequestException("Неверное имя пользователя или пароль");
         }
 
         Map<String, Optional<Map<String, Object>>> permissions = accountService.getAllPermissionBits(account.id());
@@ -123,12 +123,12 @@ public class AuthService {
     public JwtResponse generateServiceToken(String login, String password) {
         Optional<Account> accountOptional = accountRepository.findByLogin(login);
         if (accountOptional.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неверное имя пользователя или пароль");
+            throw new BadRequestException("Неверное имя пользователя или пароль");
 
         }
         Account account = accountOptional.get();
         if (!passwordEncoder.matches(password, account.password())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неверное имя пользователя или пароль");
+            throw new BadRequestException("Неверное имя пользователя или пароль");
         }
 
         String accessToken = generateServiceToken(account.id());
@@ -145,13 +145,13 @@ public class AuthService {
     public JwtResponse refresh(String refreshTokenRequest) {
         Optional<RefreshToken> refreshTokenNullable = refreshTokenService.findByToken(refreshTokenRequest);
         if (refreshTokenNullable.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Login is required");
+            throw new UnauthorizedException("Login is required");
         }
 
         RefreshToken refreshToken = refreshTokenService.verifyExpiration(refreshTokenNullable.get());
 
         Account account = accountRepository.findById(refreshToken.accountId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Account not found"));
+                .orElseThrow(() -> new UnauthorizedException("Account not found"));
 
         Map<String, Optional<Map<String, Object>>> permissions = accountService.getAllPermissionBits(account.id());
         String accessToken = generateAccessToken(account.id(), permissions.keySet(), 30);

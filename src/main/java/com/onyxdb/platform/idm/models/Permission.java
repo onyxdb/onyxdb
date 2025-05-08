@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jooq.JSONB;
 
 import com.onyxdb.platform.generated.jooq.tables.records.PermissionTableRecord;
-import com.onyxdb.platform.generated.openapi.models.PermissionCreateDTO;
+import com.onyxdb.platform.generated.openapi.models.PermissionPostDTO;
 import com.onyxdb.platform.generated.openapi.models.PermissionDTO;
 
 /**
@@ -39,7 +39,7 @@ public record Permission(
         );
     }
 
-    public static Permission fromCreateDTO(PermissionCreateDTO permissionDTO) {
+    public static Permission fromPostDTO(PermissionPostDTO permissionDTO) {
         return new Permission(
                 null,
                 permissionDTO.getActionType(),

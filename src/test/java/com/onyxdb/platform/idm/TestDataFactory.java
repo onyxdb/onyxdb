@@ -5,23 +5,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.onyxdb.platform.generated.openapi.models.AccountCreateDTO;
-import com.onyxdb.platform.generated.openapi.models.BusinessRoleCreateDTO;
-import com.onyxdb.platform.generated.openapi.models.DomainComponentCreateDTO;
-import com.onyxdb.platform.generated.openapi.models.OrganizationUnitCreateDTO;
-import com.onyxdb.platform.generated.openapi.models.PermissionCreateDTO;
-import com.onyxdb.platform.generated.openapi.models.ProductCreateDTO;
-import com.onyxdb.platform.generated.openapi.models.RoleCreateDTO;
-import com.onyxdb.platform.generated.openapi.models.RoleRequestCreateDTO;
-import com.onyxdb.platform.generated.openapi.models.RoleWithPermissionsCreateDTO;
+import com.onyxdb.platform.generated.openapi.models.AccountPostDTO;
+import com.onyxdb.platform.generated.openapi.models.BusinessRolePostDTO;
+import com.onyxdb.platform.generated.openapi.models.DomainComponentPostDTO;
+import com.onyxdb.platform.generated.openapi.models.OrganizationUnitPostDTO;
+import com.onyxdb.platform.generated.openapi.models.PermissionPostDTO;
+import com.onyxdb.platform.generated.openapi.models.ProductPostDTO;
+import com.onyxdb.platform.generated.openapi.models.RolePostDTO;
+import com.onyxdb.platform.generated.openapi.models.RoleRequestPostDTO;
+import com.onyxdb.platform.generated.openapi.models.RoleWithPermissionsPostDTO;
 
 public class TestDataFactory {
 
-    public static AccountCreateDTO createAccountDTO(
+    public static AccountPostDTO createAccountDTO(
             String username, String password, String email, String firstName, String lastName,
             Map<String, Object> data
     ) {
-        AccountCreateDTO accountDTO = new AccountCreateDTO();
+        AccountPostDTO accountDTO = new AccountPostDTO();
         accountDTO.setUsername(username);
         accountDTO.setPassword(password);
         accountDTO.setEmail(email);
@@ -31,10 +31,10 @@ public class TestDataFactory {
         return accountDTO;
     }
 
-    public static RoleCreateDTO createRoleDTO(
+    public static RolePostDTO createRoleDTO(
             String roleType, String name, String shopName, String description, Boolean isShopHidden, String entity, UUID productId, UUID orgUnitId
     ) {
-        RoleCreateDTO roleDTO = new RoleCreateDTO();
+        RolePostDTO roleDTO = new RolePostDTO();
         roleDTO.setRoleType(roleType);
         roleDTO.setName(name);
         roleDTO.setShopName(shopName);
@@ -46,10 +46,10 @@ public class TestDataFactory {
         return roleDTO;
     }
 
-    public static BusinessRoleCreateDTO createBusinessRoleDTO(
+    public static BusinessRolePostDTO createBusinessRoleDTO(
             String name, String description, UUID parentId
     ) {
-        BusinessRoleCreateDTO businessRoleDTO = new BusinessRoleCreateDTO();
+        BusinessRolePostDTO businessRoleDTO = new BusinessRolePostDTO();
         businessRoleDTO.setName(name.toLowerCase().replace(' ', '-'));
         businessRoleDTO.setShopName(name);
         businessRoleDTO.setDescription(description);
@@ -57,10 +57,10 @@ public class TestDataFactory {
         return businessRoleDTO;
     }
 
-    public static PermissionCreateDTO createPermissionDTO(
+    public static PermissionPostDTO createPermissionDTO(
             String actionType, String resourceType, Map<String, Object> data
     ) {
-        PermissionCreateDTO permissionDTO = new PermissionCreateDTO();
+        PermissionPostDTO permissionDTO = new PermissionPostDTO();
         permissionDTO.setActionType(actionType);
         permissionDTO.setResourceType(resourceType);
         permissionDTO.setData(data != null ? data : new HashMap<>());
@@ -68,31 +68,31 @@ public class TestDataFactory {
     }
 
 
-    public static RoleRequestCreateDTO createRoleRequestDTO(
+    public static RoleRequestPostDTO createRoleRequestDTO(
             UUID roleId, UUID accountId, UUID ownerId, String reason
     ) {
-        RoleRequestCreateDTO roleRequestDTO = new RoleRequestCreateDTO();
+        RoleRequestPostDTO roleRequestDTO = new RoleRequestPostDTO();
         roleRequestDTO.setRoleId(roleId);
         roleRequestDTO.setAccountId(accountId);
         roleRequestDTO.setOwnerId(ownerId);
         roleRequestDTO.setReason(reason);
-        roleRequestDTO.setStatus(RoleRequestCreateDTO.StatusEnum.WAITING);
+        roleRequestDTO.setStatus(RoleRequestPostDTO.StatusEnum.WAITING);
         return roleRequestDTO;
     }
 
-    public static DomainComponentCreateDTO createDomainComponentDTO(
+    public static DomainComponentPostDTO createDomainComponentDTO(
             String name, String description
     ) {
-        DomainComponentCreateDTO domainComponentDTO = new DomainComponentCreateDTO();
+        DomainComponentPostDTO domainComponentDTO = new DomainComponentPostDTO();
         domainComponentDTO.setName(name);
         domainComponentDTO.setDescription(description);
         return domainComponentDTO;
     }
 
-    public static OrganizationUnitCreateDTO createOrganizationUnitDTO(
+    public static OrganizationUnitPostDTO createOrganizationUnitDTO(
             String name, String description, UUID ownerId, UUID domainComponentId, UUID parentId
     ) {
-        OrganizationUnitCreateDTO organizationUnitDTO = new OrganizationUnitCreateDTO();
+        OrganizationUnitPostDTO organizationUnitDTO = new OrganizationUnitPostDTO();
         organizationUnitDTO.setName(name);
         organizationUnitDTO.setOwnerId(ownerId);
         organizationUnitDTO.setDescription(description);
@@ -101,10 +101,10 @@ public class TestDataFactory {
         return organizationUnitDTO;
     }
 
-    public static ProductCreateDTO createProductDTO(
+    public static ProductPostDTO createProductDTO(
             String name, String description, UUID parentId, UUID ownerId
     ) {
-        ProductCreateDTO productDTO = new ProductCreateDTO();
+        ProductPostDTO productDTO = new ProductPostDTO();
         productDTO.setName(name);
         productDTO.setDescription(description);
         productDTO.setParentId(parentId);
@@ -112,8 +112,8 @@ public class TestDataFactory {
         return productDTO;
     }
 
-    public static RoleWithPermissionsCreateDTO createRoleWithPermissionsDTO(RoleCreateDTO role, List<PermissionCreateDTO> permissions) {
-        RoleWithPermissionsCreateDTO roleWithPermissionsDTO = new RoleWithPermissionsCreateDTO();
+    public static RoleWithPermissionsPostDTO createRoleWithPermissionsDTO(RolePostDTO role, List<PermissionPostDTO> permissions) {
+        RoleWithPermissionsPostDTO roleWithPermissionsDTO = new RoleWithPermissionsPostDTO();
         roleWithPermissionsDTO.setRole(role);
         roleWithPermissionsDTO.setPermissions(permissions);
         return roleWithPermissionsDTO;

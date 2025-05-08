@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jooq.JSONB;
 
 import com.onyxdb.platform.generated.jooq.tables.records.BusinessRoleTableRecord;
-import com.onyxdb.platform.generated.openapi.models.BusinessRoleCreateDTO;
+import com.onyxdb.platform.generated.openapi.models.BusinessRolePostDTO;
 import com.onyxdb.platform.generated.openapi.models.BusinessRoleDTO;
 
 /**
@@ -43,7 +43,7 @@ public record BusinessRole(
         );
     }
 
-    public static BusinessRole fromCreateDTO(BusinessRoleCreateDTO businessRoleDTO) {
+    public static BusinessRole fromPostDTO(BusinessRolePostDTO businessRoleDTO) {
         return new BusinessRole(
                 null,
                 businessRoleDTO.getName(),

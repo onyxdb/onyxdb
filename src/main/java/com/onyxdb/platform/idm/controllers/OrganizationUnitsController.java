@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.onyxdb.platform.generated.openapi.apis.OrganizationUnitsApi;
 import com.onyxdb.platform.generated.openapi.models.AccountDTO;
 import com.onyxdb.platform.generated.openapi.models.OrganizationTreeDTO;
-import com.onyxdb.platform.generated.openapi.models.OrganizationUnitCreateDTO;
+import com.onyxdb.platform.generated.openapi.models.OrganizationUnitPostDTO;
 import com.onyxdb.platform.generated.openapi.models.OrganizationUnitDTO;
 import com.onyxdb.platform.generated.openapi.models.PaginatedOrganizationUnitResponse;
 import com.onyxdb.platform.idm.models.Account;
@@ -31,8 +31,8 @@ public class OrganizationUnitsController implements OrganizationUnitsApi {
     private final OrganizationUnitService organizationUnitService;
 
     @Override
-    public ResponseEntity<OrganizationUnitDTO> createOrganizationUnit(@Valid OrganizationUnitCreateDTO organizationUnitDTO) {
-        OrganizationUnit organizationUnit = OrganizationUnit.fromCreateDTO(organizationUnitDTO);
+    public ResponseEntity<OrganizationUnitDTO> createOrganizationUnit(@Valid OrganizationUnitPostDTO organizationUnitDTO) {
+        OrganizationUnit organizationUnit = OrganizationUnit.fromPostDTO(organizationUnitDTO);
         OrganizationUnit createdOrganizationUnit = organizationUnitService.create(organizationUnit);
         return new ResponseEntity<>(createdOrganizationUnit.toDTO(), HttpStatus.CREATED);
     }
@@ -92,10 +92,10 @@ public class OrganizationUnitsController implements OrganizationUnitsApi {
 
     @Override
     public ResponseEntity<OrganizationUnitDTO> updateOrganizationUnit(
-            UUID ouId, @Valid OrganizationUnitDTO organizationUnitDTO
+            UUID ouId, @Valid OrganizationUnitPostDTO organizationUnitDTO
     ) {
         organizationUnitDTO.setId(ouId);
-        OrganizationUnit organizationUnit = OrganizationUnit.fromDTO(organizationUnitDTO);
+        OrganizationUnit organizationUnit = OrganizationUnit.fromPostDTO(organizationUnitDTO);
         OrganizationUnit updatedOrganizationUnit = organizationUnitService.update(organizationUnit);
         return ResponseEntity.ok(updatedOrganizationUnit.toDTO());
     }

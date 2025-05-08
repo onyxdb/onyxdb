@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jooq.JSONB;
 
 import com.onyxdb.platform.generated.jooq.tables.records.ProductTableRecord;
-import com.onyxdb.platform.generated.openapi.models.ProductCreateDTO;
+import com.onyxdb.platform.generated.openapi.models.ProductPostDTO;
 import com.onyxdb.platform.generated.openapi.models.ProductDTO;
 
 /**
@@ -43,7 +43,7 @@ public record Product(
         );
     }
 
-    public static Product fromCreateDTO(ProductCreateDTO productDTO) {
+    public static Product fromPostDTO(ProductPostDTO productDTO) {
         return new Product(
                 null,
                 productDTO.getName(),

@@ -14,7 +14,7 @@ import com.onyxdb.platform.generated.openapi.apis.RolesApi;
 import com.onyxdb.platform.generated.openapi.models.PaginatedRoleResponse;
 import com.onyxdb.platform.generated.openapi.models.RoleDTO;
 import com.onyxdb.platform.generated.openapi.models.RoleHistoryDTO;
-import com.onyxdb.platform.generated.openapi.models.RoleWithPermissionsCreateDTO;
+import com.onyxdb.platform.generated.openapi.models.RoleWithPermissionsPostDTO;
 import com.onyxdb.platform.generated.openapi.models.RoleWithPermissionsDTO;
 import com.onyxdb.platform.idm.models.PaginatedResult;
 import com.onyxdb.platform.idm.models.Role;
@@ -63,14 +63,14 @@ public class RolesController implements RolesApi {
     }
 
     @Override
-    public ResponseEntity<RoleWithPermissionsDTO> createRole(@Valid RoleWithPermissionsCreateDTO roleDTO) {
-        RoleWithPermissions createdRole = roleService.create(RoleWithPermissions.fromCreateDTO(roleDTO));
+    public ResponseEntity<RoleWithPermissionsDTO> createRole(@Valid RoleWithPermissionsPostDTO roleDTO) {
+        RoleWithPermissions createdRole = roleService.create(RoleWithPermissions.fromPostDTO(roleDTO));
         return new ResponseEntity<>(createdRole.toDTO(), HttpStatus.CREATED);
     }
 
     @Override
-    public ResponseEntity<RoleWithPermissionsDTO> updateRole(UUID roleId, @Valid RoleWithPermissionsDTO roleDTO) {
-        RoleWithPermissions updatedRole = roleService.update(RoleWithPermissions.fromDTO(roleDTO));
+    public ResponseEntity<RoleWithPermissionsDTO> updateRole(UUID roleId, @Valid RoleWithPermissionsPostDTO roleDTO) {
+        RoleWithPermissions updatedRole = roleService.update(RoleWithPermissions.fromPostDTO(roleDTO));
         return ResponseEntity.ok(updatedRole.toDTO());
     }
 

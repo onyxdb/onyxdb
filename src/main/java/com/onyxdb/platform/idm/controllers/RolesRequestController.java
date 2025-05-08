@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.onyxdb.platform.generated.openapi.apis.RolesRequestsApi;
 import com.onyxdb.platform.generated.openapi.models.PaginatedRoleRequestResponse;
-import com.onyxdb.platform.generated.openapi.models.RoleRequestCreateDTO;
+import com.onyxdb.platform.generated.openapi.models.RoleRequestPostDTO;
 import com.onyxdb.platform.generated.openapi.models.RoleRequestDTO;
 import com.onyxdb.platform.idm.models.PaginatedResult;
 import com.onyxdb.platform.idm.models.RoleRequest;
@@ -28,8 +28,8 @@ public class RolesRequestController implements RolesRequestsApi {
     private final RoleRequestService roleRequestService;
 
     @Override
-    public ResponseEntity<RoleRequestDTO> createRoleRequest(@Valid RoleRequestCreateDTO roleRequestDTO) {
-        RoleRequest roleRequest = RoleRequest.fromCreateDTO(roleRequestDTO);
+    public ResponseEntity<RoleRequestDTO> createRoleRequest(@Valid RoleRequestPostDTO roleRequestDTO) {
+        RoleRequest roleRequest = RoleRequest.fromPostDTO(roleRequestDTO);
         RoleRequest createdRoleRequest = roleRequestService.create(roleRequest);
         return new ResponseEntity<>(createdRoleRequest.toDTO(), HttpStatus.CREATED);
     }
@@ -53,9 +53,9 @@ public class RolesRequestController implements RolesRequestsApi {
     }
 
     @Override
-    public ResponseEntity<RoleRequestDTO> updateRoleRequest(UUID roleRequestId, @Valid RoleRequestDTO roleRequestDTO) {
+    public ResponseEntity<RoleRequestDTO> updateRoleRequest(UUID roleRequestId, @Valid RoleRequestPostDTO roleRequestDTO) {
         roleRequestDTO.setId(roleRequestId);
-        RoleRequest roleRequest = RoleRequest.fromDTO(roleRequestDTO);
+        RoleRequest roleRequest = RoleRequest.fromPostDTO(roleRequestDTO);
         RoleRequest updatedRoleRequest = roleRequestService.update(roleRequest);
         return ResponseEntity.ok(updatedRoleRequest.toDTO());
     }

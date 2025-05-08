@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.onyxdb.platform.generated.jooq.tables.records.RoleTableRecord;
-import com.onyxdb.platform.generated.openapi.models.RoleCreateDTO;
+import com.onyxdb.platform.generated.openapi.models.RolePostDTO;
 import com.onyxdb.platform.generated.openapi.models.RoleDTO;
 
 /**
@@ -39,7 +39,7 @@ public record Role(
         );
     }
 
-    public static Role fromCreateDTO(RoleCreateDTO roleDTO) {
+    public static Role fromPostDTO(RolePostDTO roleDTO) {
         return new Role(
                 null,
                 roleDTO.getRoleType(),

@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.onyxdb.platform.generated.jooq.tables.records.DomainComponentTableRecord;
-import com.onyxdb.platform.generated.openapi.models.DomainComponentCreateDTO;
+import com.onyxdb.platform.generated.openapi.models.DomainComponentPostDTO;
 import com.onyxdb.platform.generated.openapi.models.DomainComponentDTO;
 
 /**
@@ -27,7 +27,7 @@ public record DomainComponent(
         );
     }
 
-    public static DomainComponent fromCreateDTO(DomainComponentCreateDTO domainComponentDTO) {
+    public static DomainComponent fromPostDTO(DomainComponentPostDTO domainComponentDTO) {
         return new DomainComponent(
                 null,
                 domainComponentDTO.getName(),

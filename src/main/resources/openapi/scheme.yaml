@@ -883,7 +883,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AccountCreateDTO'
+              $ref: '#/components/schemas/AccountPostDTO'
       responses:
         '201':
           description: Created
@@ -940,7 +940,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AccountDTO'
+              $ref: '#/components/schemas/AccountPostDTO'
       responses:
         '200':
           description: OK
@@ -1299,7 +1299,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DomainComponentCreateDTO'
+              $ref: '#/components/schemas/DomainComponentPostDTO'
       responses:
         '201':
           description: Created
@@ -1356,7 +1356,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DomainComponentDTO'
+              $ref: '#/components/schemas/DomainComponentPostDTO'
       responses:
         '200':
           description: OK
@@ -1511,7 +1511,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/OrganizationUnitCreateDTO'
+              $ref: '#/components/schemas/OrganizationUnitPostDTO'
       responses:
         '201':
           description: Created
@@ -1574,7 +1574,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/OrganizationUnitDTO'
+              $ref: '#/components/schemas/OrganizationUnitPostDTO'
       responses:
         '200':
           description: OK
@@ -1846,7 +1846,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RoleWithPermissionsCreateDTO'
+              $ref: '#/components/schemas/RoleWithPermissionsPostDTO'
       responses:
         '201':
           description: Created
@@ -1903,7 +1903,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RoleWithPermissionsDTO'
+              $ref: '#/components/schemas/RoleWithPermissionsPostDTO'
       responses:
         '200':
           description: OK
@@ -2105,7 +2105,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BusinessRoleCreateDTO'
+              $ref: '#/components/schemas/BusinessRolePostDTO'
       responses:
         '201':
           description: Created
@@ -2162,7 +2162,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BusinessRoleDTO'
+              $ref: '#/components/schemas/BusinessRolePostDTO'
       responses:
         '200':
           description: OK
@@ -2420,7 +2420,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RoleRequestCreateDTO'
+              $ref: '#/components/schemas/RoleRequestPostDTO'
       responses:
         '201':
           description: Created
@@ -2477,7 +2477,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RoleRequestDTO'
+              $ref: '#/components/schemas/RoleRequestPostDTO'
       responses:
         '200':
           description: OK
@@ -2576,7 +2576,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ProductCreateDTO'
+              $ref: '#/components/schemas/ProductPostDTO'
       responses:
         '201':
           description: Created
@@ -2663,7 +2663,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ProductDTO'
+              $ref: '#/components/schemas/ProductPostDTO'
       responses:
         '200':
           description: OK
@@ -3789,9 +3789,12 @@ components:
         - free
         - timestamp
     # ---------- IDM schemas -------------------------------------------------------------------------------------------
-    AccountCreateDTO:
+    AccountPostDTO:
       type: object
       properties:
+        id:
+          type: string
+          format: uuid
         username:
           type: string
         password:
@@ -3861,9 +3864,12 @@ components:
         - startPosition
         - endPosition
         - data
-    PermissionCreateDTO:
+    PermissionPostDTO:
       type: object
       properties:
+        id:
+          type: string
+          format: uuid
         actionType:
           type: string
         resourceType:
@@ -3899,9 +3905,12 @@ components:
         - resourceType
         - createdAt
         - updatedAt
-    RoleCreateDTO:
+    RolePostDTO:
       type: object
       properties:
+        id:
+          type: string
+          format: uuid
         roleType:
           type: string
         name:
@@ -3967,15 +3976,15 @@ components:
         - entity
         - createdAt
         - updatedAt
-    RoleWithPermissionsCreateDTO:
+    RoleWithPermissionsPostDTO:
       type: object
       properties:
         role:
-          $ref: '#/components/schemas/RoleCreateDTO'
+          $ref: '#/components/schemas/RolePostDTO'
         permissions:
           type: array
           items:
-            $ref: '#/components/schemas/PermissionCreateDTO'
+            $ref: '#/components/schemas/PermissionPostDTO'
       required:
         - role
         - permissions
@@ -4017,9 +4026,12 @@ components:
         additionalProperties:
           type: object
           nullable: true
-    DomainComponentCreateDTO:
+    DomainComponentPostDTO:
       type: object
       properties:
+        id:
+          type: string
+          format: uuid
         name:
           type: string
         description:
@@ -4049,9 +4061,12 @@ components:
         - description
         - createdAt
         - updatedAt
-    BusinessRoleCreateDTO:
+    BusinessRolePostDTO:
       type: object
       properties:
+        id:
+          type: string
+          format: uuid
         name:
           type: string
         shopName:
@@ -4117,9 +4132,12 @@ components:
         - startPosition
         - endPosition
         - data
-    OrganizationUnitCreateDTO:
+    OrganizationUnitPostDTO:
       type: object
       properties:
+        id:
+          type: string
+          format: uuid
         name:
           type: string
         description:
@@ -4211,9 +4229,12 @@ components:
         - startPosition
         - endPosition
         - data
-    ProductCreateDTO:
+    ProductPostDTO:
       type: object
       properties:
+        id:
+          type: string
+          format: uuid
         name:
           type: string
         description:
@@ -4290,9 +4311,12 @@ components:
         - startPosition
         - endPosition
         - data
-    RoleRequestCreateDTO:
+    RoleRequestPostDTO:
       type: object
       properties:
+        id:
+          type: string
+          format: uuid
         roleId:
           type: string
           format: uuid

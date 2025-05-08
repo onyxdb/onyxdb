@@ -13,22 +13,22 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-import com.onyxdb.platform.generated.openapi.models.AccountCreateDTO;
+import com.onyxdb.platform.generated.openapi.models.AccountPostDTO;
 import com.onyxdb.platform.generated.openapi.models.AccountDTO;
-import com.onyxdb.platform.generated.openapi.models.BusinessRoleCreateDTO;
+import com.onyxdb.platform.generated.openapi.models.BusinessRolePostDTO;
 import com.onyxdb.platform.generated.openapi.models.BusinessRoleDTO;
-import com.onyxdb.platform.generated.openapi.models.DomainComponentCreateDTO;
+import com.onyxdb.platform.generated.openapi.models.DomainComponentPostDTO;
 import com.onyxdb.platform.generated.openapi.models.DomainComponentDTO;
 import com.onyxdb.platform.generated.openapi.models.JwtResponseDTO;
-import com.onyxdb.platform.generated.openapi.models.OrganizationUnitCreateDTO;
+import com.onyxdb.platform.generated.openapi.models.OrganizationUnitPostDTO;
 import com.onyxdb.platform.generated.openapi.models.OrganizationUnitDTO;
-import com.onyxdb.platform.generated.openapi.models.PermissionCreateDTO;
-import com.onyxdb.platform.generated.openapi.models.ProductCreateDTO;
+import com.onyxdb.platform.generated.openapi.models.PermissionPostDTO;
+import com.onyxdb.platform.generated.openapi.models.ProductPostDTO;
 import com.onyxdb.platform.generated.openapi.models.ProductDTO;
-import com.onyxdb.platform.generated.openapi.models.RoleCreateDTO;
-import com.onyxdb.platform.generated.openapi.models.RoleRequestCreateDTO;
+import com.onyxdb.platform.generated.openapi.models.RolePostDTO;
+import com.onyxdb.platform.generated.openapi.models.RoleRequestPostDTO;
 import com.onyxdb.platform.generated.openapi.models.RoleRequestDTO;
-import com.onyxdb.platform.generated.openapi.models.RoleWithPermissionsCreateDTO;
+import com.onyxdb.platform.generated.openapi.models.RoleWithPermissionsPostDTO;
 import com.onyxdb.platform.generated.openapi.models.RoleWithPermissionsDTO;
 
 import static com.onyxdb.platform.idm.TestDataFactory.createRoleRequestDTO;
@@ -350,82 +350,82 @@ public class IdmApiIntegrationCreateTest {
         linkRoleToBusinessRole(devOps.getId(), monitoringLoggingRoles.get("editor").getRole().getId());
 
         // Заявка на роль Connectify Admin
-        RoleRequestCreateDTO roleRequestConnectifyAdminCreate = createRoleRequestDTO(connectifyRoles.get("admin").getRole().getId(), account1.getId(), account1.getId(), "I'm the admin");
+        RoleRequestPostDTO roleRequestConnectifyAdminCreate = createRoleRequestDTO(connectifyRoles.get("admin").getRole().getId(), account1.getId(), account1.getId(), "I'm the admin");
         RoleRequestDTO roleRequestConnectifyAdmin = createRoleRequest(roleRequestConnectifyAdminCreate);
         updateRoleRequestStatus(roleRequestConnectifyAdmin.getId(), RoleRequestDTO.StatusEnum.APPROVED);
 
         // Заявка на роль Production Admin
-        RoleRequestCreateDTO roleRequestProductionAdminCreate = createRoleRequestDTO(productionRoles.get("admin").getRole().getId(), account1.getId(), account1.getId(), "I'm the admin");
+        RoleRequestPostDTO roleRequestProductionAdminCreate = createRoleRequestDTO(productionRoles.get("admin").getRole().getId(), account1.getId(), account1.getId(), "I'm the admin");
         RoleRequestDTO roleRequestProductionAdmin = createRoleRequest(roleRequestProductionAdminCreate);
         updateRoleRequestStatus(roleRequestProductionAdmin.getId(), RoleRequestDTO.StatusEnum.APPROVED);
 
         // Заявка на роль Account Management Editor
-        RoleRequestCreateDTO roleRequestAccountManagementEditorCreate = createRoleRequestDTO(accountManagementRoles.get("editor").getRole().getId(), account2.getId(), account1.getId(), "I'm a developer");
+        RoleRequestPostDTO roleRequestAccountManagementEditorCreate = createRoleRequestDTO(accountManagementRoles.get("editor").getRole().getId(), account2.getId(), account1.getId(), "I'm a developer");
         RoleRequestDTO roleRequestAccountManagementEditor = createRoleRequest(roleRequestAccountManagementEditorCreate);
         updateRoleRequestStatus(roleRequestAccountManagementEditor.getId(), RoleRequestDTO.StatusEnum.APPROVED);
 
         // Заявка на роль Messenger Editor
-        RoleRequestCreateDTO roleRequestMessengerEditorCreate = createRoleRequestDTO(messengerRoles.get("editor").getRole().getId(), account2.getId(), account1.getId(), "I'm a developer");
+        RoleRequestPostDTO roleRequestMessengerEditorCreate = createRoleRequestDTO(messengerRoles.get("editor").getRole().getId(), account2.getId(), account1.getId(), "I'm a developer");
         RoleRequestDTO roleRequestMessengerEditor = createRoleRequest(roleRequestMessengerEditorCreate);
         updateRoleRequestStatus(roleRequestMessengerEditor.getId(), RoleRequestDTO.StatusEnum.APPROVED);
 
         // Заявка на роль Backoffice Viewer
-        RoleRequestCreateDTO roleRequestBackofficeViewerCreate = createRoleRequestDTO(backofficeRoles.get("viewer").getRole().getId(), account3.getId(), account1.getId(), "I'm a backofficer");
+        RoleRequestPostDTO roleRequestBackofficeViewerCreate = createRoleRequestDTO(backofficeRoles.get("viewer").getRole().getId(), account3.getId(), account1.getId(), "I'm a backofficer");
         RoleRequestDTO roleRequestBackofficeViewer = createRoleRequest(roleRequestBackofficeViewerCreate);
         updateRoleRequestStatus(roleRequestBackofficeViewer.getId(), RoleRequestDTO.StatusEnum.APPROVED);
 
         // Заявка на роль Account Management Owner
-        RoleRequestCreateDTO roleRequestAccountManagementOwnerCreate = createRoleRequestDTO(accountManagementRoles.get("owner").getRole().getId(), account4.getId(), account1.getId(), "I'm a manager");
+        RoleRequestPostDTO roleRequestAccountManagementOwnerCreate = createRoleRequestDTO(accountManagementRoles.get("owner").getRole().getId(), account4.getId(), account1.getId(), "I'm a manager");
         RoleRequestDTO roleRequestAccountManagementOwner = createRoleRequest(roleRequestAccountManagementOwnerCreate);
         updateRoleRequestStatus(roleRequestAccountManagementOwner.getId(), RoleRequestDTO.StatusEnum.APPROVED);
 
         // Заявка на роль K8s Management Owner
-        RoleRequestCreateDTO roleRequestK8sManagementOwnerCreate = createRoleRequestDTO(k8sManagementRoles.get("owner").getRole().getId(), account4.getId(), account1.getId(), "I'm a manager");
+        RoleRequestPostDTO roleRequestK8sManagementOwnerCreate = createRoleRequestDTO(k8sManagementRoles.get("owner").getRole().getId(), account4.getId(), account1.getId(), "I'm a manager");
         RoleRequestDTO roleRequestK8sManagementOwner = createRoleRequest(roleRequestK8sManagementOwnerCreate);
         updateRoleRequestStatus(roleRequestK8sManagementOwner.getId(), RoleRequestDTO.StatusEnum.APPROVED);
 
         // Заявка на роль User Analytics Viewer
-        RoleRequestCreateDTO roleRequestUserAnalyticsViewerCreate = createRoleRequestDTO(userAnalyticsRoles.get("viewer").getRole().getId(), account5.getId(), account1.getId(), "I'm an analyst");
+        RoleRequestPostDTO roleRequestUserAnalyticsViewerCreate = createRoleRequestDTO(userAnalyticsRoles.get("viewer").getRole().getId(), account5.getId(), account1.getId(), "I'm an analyst");
         RoleRequestDTO roleRequestUserAnalyticsViewer = createRoleRequest(roleRequestUserAnalyticsViewerCreate);
         updateRoleRequestStatus(roleRequestUserAnalyticsViewer.getId(), RoleRequestDTO.StatusEnum.APPROVED);
 
         // Заявка на роль Business Intelligence Viewer
-        RoleRequestCreateDTO roleRequestBusinessIntelligenceViewerCreate = createRoleRequestDTO(businessIntelligenceRoles.get("viewer").getRole().getId(), account5.getId(), account1.getId(), "I'm an analyst");
+        RoleRequestPostDTO roleRequestBusinessIntelligenceViewerCreate = createRoleRequestDTO(businessIntelligenceRoles.get("viewer").getRole().getId(), account5.getId(), account1.getId(), "I'm an analyst");
         RoleRequestDTO roleRequestBusinessIntelligenceViewer = createRoleRequest(roleRequestBusinessIntelligenceViewerCreate);
         updateRoleRequestStatus(roleRequestBusinessIntelligenceViewer.getId(), RoleRequestDTO.StatusEnum.APPROVED);
 
         // Заявка на роль Account Management Editor
-        RoleRequestCreateDTO roleRequestAccountManagementEditor2Create = createRoleRequestDTO(accountManagementRoles.get("editor").getRole().getId(), account7.getId(), account1.getId(), "I'm a backend developer");
+        RoleRequestPostDTO roleRequestAccountManagementEditor2Create = createRoleRequestDTO(accountManagementRoles.get("editor").getRole().getId(), account7.getId(), account1.getId(), "I'm a backend developer");
         RoleRequestDTO roleRequestAccountManagementEditor2 = createRoleRequest(roleRequestAccountManagementEditor2Create);
         updateRoleRequestStatus(roleRequestAccountManagementEditor2.getId(), RoleRequestDTO.StatusEnum.APPROVED);
 
         // Заявка на роль Marketing Editor
-        RoleRequestCreateDTO roleRequestMarketingEditorCreate = createRoleRequestDTO(marketingRoles1.get("editor").getRole().getId(), account6.getId(), account1.getId(), "I'm a marketer");
+        RoleRequestPostDTO roleRequestMarketingEditorCreate = createRoleRequestDTO(marketingRoles1.get("editor").getRole().getId(), account6.getId(), account1.getId(), "I'm a marketer");
         RoleRequestDTO roleRequestMarketingEditor = createRoleRequest(roleRequestMarketingEditorCreate);
         updateRoleRequestStatus(roleRequestMarketingEditor.getId(), RoleRequestDTO.StatusEnum.APPROVED);
 
         // Заявка на роль Notifications Editor
-        RoleRequestCreateDTO roleRequestNotificationsEditorCreate = createRoleRequestDTO(notificationsRoles.get("editor").getRole().getId(), account7.getId(), account1.getId(), "I'm a backend developer");
+        RoleRequestPostDTO roleRequestNotificationsEditorCreate = createRoleRequestDTO(notificationsRoles.get("editor").getRole().getId(), account7.getId(), account1.getId(), "I'm a backend developer");
         RoleRequestDTO roleRequestNotificationsEditor = createRoleRequest(roleRequestNotificationsEditorCreate);
         updateRoleRequestStatus(roleRequestNotificationsEditor.getId(), RoleRequestDTO.StatusEnum.APPROVED);
 
         // Заявка на роль Content Feed Editor
-        RoleRequestCreateDTO roleRequestContentFeedEditorCreate = createRoleRequestDTO(contentFeedRoles.get("editor").getRole().getId(), account8.getId(), account1.getId(), "I'm a frontend developer");
+        RoleRequestPostDTO roleRequestContentFeedEditorCreate = createRoleRequestDTO(contentFeedRoles.get("editor").getRole().getId(), account8.getId(), account1.getId(), "I'm a frontend developer");
         RoleRequestDTO roleRequestContentFeedEditor = createRoleRequest(roleRequestContentFeedEditorCreate);
         updateRoleRequestStatus(roleRequestContentFeedEditor.getId(), RoleRequestDTO.StatusEnum.APPROVED);
 
         // Заявка на роль Messenger Editor
-        RoleRequestCreateDTO roleRequestMessengerEditor3Create = createRoleRequestDTO(messengerRoles.get("editor").getRole().getId(), account8.getId(), account1.getId(), "I'm a frontend developer");
+        RoleRequestPostDTO roleRequestMessengerEditor3Create = createRoleRequestDTO(messengerRoles.get("editor").getRole().getId(), account8.getId(), account1.getId(), "I'm a frontend developer");
         RoleRequestDTO roleRequestMessengerEditor3 = createRoleRequest(roleRequestMessengerEditor3Create);
         updateRoleRequestStatus(roleRequestMessengerEditor3.getId(), RoleRequestDTO.StatusEnum.APPROVED);
 
         // Заявка на роль K8s Management Editor
-        RoleRequestCreateDTO roleRequestK8sManagementEditorCreate = createRoleRequestDTO(k8sManagementRoles.get("editor").getRole().getId(), account9.getId(), account1.getId(), "I'm a DevOps engineer");
+        RoleRequestPostDTO roleRequestK8sManagementEditorCreate = createRoleRequestDTO(k8sManagementRoles.get("editor").getRole().getId(), account9.getId(), account1.getId(), "I'm a DevOps engineer");
         RoleRequestDTO roleRequestK8sManagementEditor = createRoleRequest(roleRequestK8sManagementEditorCreate);
         updateRoleRequestStatus(roleRequestK8sManagementEditor.getId(), RoleRequestDTO.StatusEnum.APPROVED);
 
         // Заявка на роль Monitoring Logging Editor
-        RoleRequestCreateDTO roleRequestMonitoringLoggingEditorCreate = createRoleRequestDTO(monitoringLoggingRoles.get("editor").getRole().getId(), account9.getId(), account1.getId(), "I'm a DevOps engineer");
+        RoleRequestPostDTO roleRequestMonitoringLoggingEditorCreate = createRoleRequestDTO(monitoringLoggingRoles.get("editor").getRole().getId(), account9.getId(), account1.getId(), "I'm a DevOps engineer");
         RoleRequestDTO roleRequestMonitoringLoggingEditor = createRoleRequest(roleRequestMonitoringLoggingEditorCreate);
         updateRoleRequestStatus(roleRequestMonitoringLoggingEditor.getId(), RoleRequestDTO.StatusEnum.APPROVED);
 
@@ -466,20 +466,20 @@ public class IdmApiIntegrationCreateTest {
      * @return Map<String, RoleWithPermissionsDTO>, содержащий созданные роли.
      */
     public Map<String, RoleWithPermissionsDTO> createProductRoles(UUID productId, String productName) {
-        PermissionCreateDTO anyPermission = TestDataFactory.createPermissionDTO("ANY", "IDM", null);
-        PermissionCreateDTO createPermission = TestDataFactory.createPermissionDTO("CREATE", "IDM", null);
-        PermissionCreateDTO patchPermission = TestDataFactory.createPermissionDTO("PATCH", "IDM", null);
-        PermissionCreateDTO getPermission = TestDataFactory.createPermissionDTO("GET", "IDM", null);
+        PermissionPostDTO anyPermission = TestDataFactory.createPermissionDTO("ANY", "IDM", null);
+        PermissionPostDTO createPermission = TestDataFactory.createPermissionDTO("CREATE", "IDM", null);
+        PermissionPostDTO patchPermission = TestDataFactory.createPermissionDTO("PATCH", "IDM", null);
+        PermissionPostDTO getPermission = TestDataFactory.createPermissionDTO("GET", "IDM", null);
 
         // Создаем роли
-        RoleCreateDTO viewerRoleCreate = TestDataFactory.createRoleDTO("VIEWER", productName + " Viewer", productName + " Viewer", "Viewer role for " + productName, false, "product", productId, null);
-        RoleCreateDTO editorRoleCreate = TestDataFactory.createRoleDTO("EDITOR", productName + " Editor", productName + " Editor", "Editor role for " + productName, false, "product", productId, null);
-        RoleCreateDTO ownerRoleCreate = TestDataFactory.createRoleDTO("OWNER", productName + " Owner", productName + " Owner", "Owner role for " + productName, false, "product", productId, null);
+        RolePostDTO viewerRoleCreate = TestDataFactory.createRoleDTO("VIEWER", productName + " Viewer", productName + " Viewer", "Viewer role for " + productName, false, "product", productId, null);
+        RolePostDTO editorRoleCreate = TestDataFactory.createRoleDTO("EDITOR", productName + " Editor", productName + " Editor", "Editor role for " + productName, false, "product", productId, null);
+        RolePostDTO ownerRoleCreate = TestDataFactory.createRoleDTO("OWNER", productName + " Owner", productName + " Owner", "Owner role for " + productName, false, "product", productId, null);
 
         // Создаем RoleWithPermissions
-        RoleWithPermissionsCreateDTO viewerRoleWPCreate = TestDataFactory.createRoleWithPermissionsDTO(viewerRoleCreate, List.of(getPermission));
-        RoleWithPermissionsCreateDTO editorRoleWPCreate = TestDataFactory.createRoleWithPermissionsDTO(editorRoleCreate, List.of(getPermission, createPermission, patchPermission));
-        RoleWithPermissionsCreateDTO ownerRoleWPCreate = TestDataFactory.createRoleWithPermissionsDTO(ownerRoleCreate, List.of(anyPermission));
+        RoleWithPermissionsPostDTO viewerRoleWPCreate = TestDataFactory.createRoleWithPermissionsDTO(viewerRoleCreate, List.of(getPermission));
+        RoleWithPermissionsPostDTO editorRoleWPCreate = TestDataFactory.createRoleWithPermissionsDTO(editorRoleCreate, List.of(getPermission, createPermission, patchPermission));
+        RoleWithPermissionsPostDTO ownerRoleWPCreate = TestDataFactory.createRoleWithPermissionsDTO(ownerRoleCreate, List.of(anyPermission));
 
         // Вызываем createRole
         RoleWithPermissionsDTO viewerRoleWP = createRole(viewerRoleWPCreate);
@@ -502,19 +502,19 @@ public class IdmApiIntegrationCreateTest {
      * @return Map<String, RoleWithPermissionsDTO>, содержащий созданные роли.
      */
     public Map<String, RoleWithPermissionsDTO> createAdminAndAuditorRoles(UUID productId, String productName) {
-        PermissionCreateDTO anyPermission = TestDataFactory.createPermissionDTO("ANY", "IDM", null);
-        PermissionCreateDTO createPermission = TestDataFactory.createPermissionDTO("CREATE", "IDM", null);
-        PermissionCreateDTO patchPermission = TestDataFactory.createPermissionDTO("PATCH", "IDM", null);
-        PermissionCreateDTO getPermission = TestDataFactory.createPermissionDTO("GET", "IDM", null);
-        PermissionCreateDTO deletePermission = TestDataFactory.createPermissionDTO("DELETE", "IDM", null);
+        PermissionPostDTO anyPermission = TestDataFactory.createPermissionDTO("ANY", "IDM", null);
+        PermissionPostDTO createPermission = TestDataFactory.createPermissionDTO("CREATE", "IDM", null);
+        PermissionPostDTO patchPermission = TestDataFactory.createPermissionDTO("PATCH", "IDM", null);
+        PermissionPostDTO getPermission = TestDataFactory.createPermissionDTO("GET", "IDM", null);
+        PermissionPostDTO deletePermission = TestDataFactory.createPermissionDTO("DELETE", "IDM", null);
 
         // Создаем роли
-        RoleCreateDTO adminRoleCreate = TestDataFactory.createRoleDTO("ADMIN", productName + " Admin", productName + " Admin", "Admin role for " + productName, false, "product", productId, null);
-        RoleCreateDTO auditorRoleCreate = TestDataFactory.createRoleDTO("AUDITOR", productName + " Auditor", productName + " Auditor", "Auditor role for " + productName, false, "product", productId, null);
+        RolePostDTO adminRoleCreate = TestDataFactory.createRoleDTO("ADMIN", productName + " Admin", productName + " Admin", "Admin role for " + productName, false, "product", productId, null);
+        RolePostDTO auditorRoleCreate = TestDataFactory.createRoleDTO("AUDITOR", productName + " Auditor", productName + " Auditor", "Auditor role for " + productName, false, "product", productId, null);
 
         // Создаем RoleWithPermissions
-        RoleWithPermissionsCreateDTO adminRoleWPCreate = TestDataFactory.createRoleWithPermissionsDTO(adminRoleCreate, List.of(getPermission, createPermission, patchPermission, deletePermission));
-        RoleWithPermissionsCreateDTO auditorRoleWPCreate = TestDataFactory.createRoleWithPermissionsDTO(auditorRoleCreate, List.of(getPermission));
+        RoleWithPermissionsPostDTO adminRoleWPCreate = TestDataFactory.createRoleWithPermissionsDTO(adminRoleCreate, List.of(getPermission, createPermission, patchPermission, deletePermission));
+        RoleWithPermissionsPostDTO auditorRoleWPCreate = TestDataFactory.createRoleWithPermissionsDTO(auditorRoleCreate, List.of(getPermission));
 
         // Вызываем createRole
         RoleWithPermissionsDTO adminRoleWP = createRole(adminRoleWPCreate);
@@ -527,7 +527,7 @@ public class IdmApiIntegrationCreateTest {
         );
     }
 
-    private DomainComponentDTO createDomainComponent(DomainComponentCreateDTO domainComponentDTO) {
+    private DomainComponentDTO createDomainComponent(DomainComponentPostDTO domainComponentDTO) {
         return webTestClient.post()
                 .uri("/api/v1/domain-components")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -539,7 +539,7 @@ public class IdmApiIntegrationCreateTest {
                 .getResponseBody();
     }
 
-    private OrganizationUnitDTO createOrganizationUnit(OrganizationUnitCreateDTO organizationUnitDTO) {
+    private OrganizationUnitDTO createOrganizationUnit(OrganizationUnitPostDTO organizationUnitDTO) {
         return webTestClient.post()
                 .uri("/api/v1/organization-units")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -551,7 +551,7 @@ public class IdmApiIntegrationCreateTest {
                 .getResponseBody();
     }
 
-    private ProductDTO createProduct(ProductCreateDTO productDTO) {
+    private ProductDTO createProduct(ProductPostDTO productDTO) {
         return webTestClient.post()
                 .uri("/api/v1/products")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -563,7 +563,7 @@ public class IdmApiIntegrationCreateTest {
                 .getResponseBody();
     }
 
-    private AccountDTO createAccount(AccountCreateDTO accountDTO) {
+    private AccountDTO createAccount(AccountPostDTO accountDTO) {
         return webTestClient.post()
                 .uri("/api/v1/accounts")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -575,7 +575,7 @@ public class IdmApiIntegrationCreateTest {
                 .getResponseBody();
     }
 
-    private RoleWithPermissionsDTO createRole(RoleWithPermissionsCreateDTO roleWithPermissionsDTO) {
+    private RoleWithPermissionsDTO createRole(RoleWithPermissionsPostDTO roleWithPermissionsDTO) {
         return webTestClient.post()
                 .uri("/api/v1/roles")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -587,7 +587,7 @@ public class IdmApiIntegrationCreateTest {
                 .getResponseBody();
     }
 
-    private BusinessRoleDTO createBusinessRole(BusinessRoleCreateDTO businessRoleDTO) {
+    private BusinessRoleDTO createBusinessRole(BusinessRolePostDTO businessRoleDTO) {
         return webTestClient.post()
                 .uri("/api/v1/business-roles")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -599,7 +599,7 @@ public class IdmApiIntegrationCreateTest {
                 .getResponseBody();
     }
 
-    private RoleRequestDTO createRoleRequest(RoleRequestCreateDTO roleRequestDTO) {
+    private RoleRequestDTO createRoleRequest(RoleRequestPostDTO roleRequestDTO) {
         return webTestClient.post()
                 .uri("/api/v1/roles-requests")
                 .contentType(MediaType.APPLICATION_JSON)
