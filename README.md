@@ -33,17 +33,26 @@ Deploy VictoriaMetrics according to [docs](https://docs.victoriametrics.com/oper
 kubectl apply -f ./deploy/vm-operator.yaml
 ```
 
+### Deploy VictoriaMetrics
+
+```shell
+kubectl apply -f ./deploy/vm-cluster.yaml
+kubectl apply -f ./deploy/vm-agent.yaml
+```
+
 ### Deploy VictoriaLogs
 
 ```shell
 kubectl apply -f ./deploy/vlogs.yaml
 ```
 
-### Deploy VictoriaMetrics
+### Deploy Vector agent
 
 ```shell
-kubectl apply -f ./deploy/vm-cluster.yaml
-kubectl apply -f ./deploy/vm-agent.yaml
+helm repo add vector https://helm.vector.dev
+helm repo update
+
+helm install -f ./deploy/vector/values.yaml vector vector/vector
 ```
 
 ### Deploy Grafana

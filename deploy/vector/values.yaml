@@ -1,7 +1,3 @@
-# Each role is created with the following workloads:
-# Agent = DaemonSet
-# Aggregator = StatefulSet
-# Stateless-Aggregator = Deployment
 role: "Agent"
 
 serviceAccount:
@@ -26,7 +22,7 @@ customConfig:
   sources:
     kubernetes_logs:
       type: "kubernetes_logs"
-      extra_label_selector: "app.kubernetes.io/instance=test-1-sandbox-mongo"
+      extra_label_selector: "app.kubernetes.io/managed-by=percona-server-mongodb-operator,app.kubernetes.io/component=mongod"
   transforms:
     mongod_logs:
       type: filter
