@@ -41,6 +41,9 @@ import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoDeletePsmdbTaskCo
 import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoDeleteSecretsConsumer;
 import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoDeleteUserTaskConsumer;
 import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoMarkClusterDeletedTaskConsumer;
+import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoMarkClusterDeletingTaskConsumer;
+import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoMarkClusterReadyTaskConsumer;
+import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoMarkClusterUpdatingTaskConsumer;
 import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoUpdateHostsTaskConsumer;
 import com.onyxdb.platform.mdb.operations.models.TaskType;
 import com.onyxdb.platform.mdb.resourcePresets.ResourcePresetService;
@@ -237,6 +240,9 @@ public class TaskProcessorsContextConfiguration {
             MongoDeleteUserTaskConsumer mongoDeleteUserTaskProcessor,
             MongoCreateBackupTaskConsumer mongoCreateBackupTaskProcessor,
             MongoDeleteSecretsConsumer mongoDeleteSecretsConsumer,
+            MongoMarkClusterReadyTaskConsumer mongoMarkClusterReadyTaskProcessor,
+            MongoMarkClusterUpdatingTaskConsumer mongoMarkClusterUpdatingTaskProcessor,
+            MongoMarkClusterDeletingTaskConsumer mongoMarkClusterDeletingTaskProcessor,
             MongoMarkClusterDeletedTaskConsumer mongoMarkClusterDeletedTaskConsumer
     ) {
         Map<TaskType, TaskConsumer<?>> taskTypeToTaskProcessors = Map.ofEntries(
@@ -319,6 +325,18 @@ public class TaskProcessorsContextConfiguration {
                 Map.entry(
                         TaskType.MONGO_DELETE_SECRETS,
                         mongoDeleteSecretsConsumer
+                ),
+                Map.entry(
+                        TaskType.MONGO_MARK_CLUSTER_READY,
+                        mongoMarkClusterReadyTaskProcessor
+                ),
+                Map.entry(
+                        TaskType.MONGO_MARK_CLUSTER_UPDATING,
+                        mongoMarkClusterUpdatingTaskProcessor
+                ),
+                Map.entry(
+                        TaskType.MONGO_MARK_CLUSTER_DELETING,
+                        mongoMarkClusterDeletingTaskProcessor
                 ),
                 Map.entry(
                         TaskType.MONGO_MARK_CLUSTER_DELETED,

@@ -21,6 +21,11 @@ public enum TaskType implements StringEnum {
     MONGO_DELETE_USER("mongo_delete_user"),
     MONGO_CREATE_BACKUP("mongo_apply_backup"),
 
+    MONGO_MARK_CLUSTER_READY("mongo_mark_cluster_ready"),
+    MONGO_MARK_CLUSTER_UPDATING("mongo_mark_cluster_updating"),
+    MONGO_MARK_CLUSTER_DELETING("mongo_mark_cluster_deleting"),
+    MONGO_MARK_CLUSTER_DELETED("mongo_mark_cluster_deleted"),
+
     MONGO_DELETE_EXPORTER_SERVICE_SCRAPE("mongo_delete_exporter_service_scrape"),
     MONGO_DELETE_EXPORTER_SERVICE("mongo_delete_exporter_service"),
     MONGO_DELETE_ONYXDB_AGENT("mongo_delete_onyxdb_agent"),
@@ -28,13 +33,11 @@ public enum TaskType implements StringEnum {
     MONGO_DELETE_PSMDB("mongo_delete_psmdb"),
     MONGO_CHECK_PSMDB_IS_DELETED("mongo_check_psmdb_is_deleted"),
     MONGO_DELETE_SECRETS("mongo_delete_secrets"),
-    MONGO_MARK_CLUSTER_DELETED("mongo_mark_cluster_deleted"),
 
     // TODO delete
     MONGO_DELETE_VECTOR_CONFIG("mongo_delete_vector_config"),
 
-    FINAL_TASK("final_task");
-    ;
+    FINAL_TASK("final_task");;
 
     public static final StringEnumResolver<TaskType> R = new StringEnumResolver<>(TaskType.class);
 

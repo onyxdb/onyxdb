@@ -13,7 +13,7 @@ import com.onyxdb.platform.mdb.operations.producers.mongo.MongoCreateUserTaskPro
 import com.onyxdb.platform.mdb.operations.producers.mongo.MongoDeleteClusterTaskProducer;
 import com.onyxdb.platform.mdb.operations.producers.mongo.MongoDeleteDatabaseTaskProducer;
 import com.onyxdb.platform.mdb.operations.producers.mongo.MongoDeleteUserTaskProducer;
-import com.onyxdb.platform.mdb.operations.producers.mongo.MongoScaleClusterTaskProducer;
+import com.onyxdb.platform.mdb.operations.producers.mongo.MongoModifyClusterTaskProducer;
 
 @Component
 public class TaskProducerProvider {
@@ -22,7 +22,7 @@ public class TaskProducerProvider {
     public TaskProducerProvider(
             MongoCreateClusterTaskProducer mongoCreateClusterTaskProducer,
             MongoDeleteClusterTaskProducer mongoDeleteClusterTaskProducer,
-            MongoScaleClusterTaskProducer mongoScaleClusterTaskProducer,
+            MongoModifyClusterTaskProducer mongoModifyClusterTaskProducer,
             MongoCreateDatabaseTaskProducer mongoCreateDatabaseTaskProducer,
             MongoDeleteDatabaseTaskProducer mongoDeleteDatabaseTaskProducer,
             MongoCreateUserTaskProducer mongoCreateUserTaskProducer,
@@ -39,8 +39,8 @@ public class TaskProducerProvider {
                         mongoDeleteClusterTaskProducer
                 ),
                 Map.entry(
-                        OperationType.MONGO_SCALE_CLUSTER,
-                        mongoScaleClusterTaskProducer
+                        OperationType.MONGO_MODIFY_CLUSTER,
+                        mongoModifyClusterTaskProducer
                 ),
                 Map.entry(
                         OperationType.MONGO_CREATE_DATABASE,

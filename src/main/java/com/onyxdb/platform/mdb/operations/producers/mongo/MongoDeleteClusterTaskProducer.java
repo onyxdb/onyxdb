@@ -10,32 +10,29 @@ import org.springframework.stereotype.Component;
 import com.onyxdb.platform.mdb.operations.models.Operation;
 import com.onyxdb.platform.mdb.operations.models.ProducedTask;
 import com.onyxdb.platform.mdb.operations.models.TaskType;
-import com.onyxdb.platform.mdb.operations.models.payload.ClusterPayload;
+import com.onyxdb.platform.mdb.operations.models.payload.MongoDeleteClusterPayload;
 import com.onyxdb.platform.mdb.operations.producers.TaskProducer;
 
 @Component
-public class MongoDeleteClusterTaskProducer extends TaskProducer<ClusterPayload> {
+public class MongoDeleteClusterTaskProducer extends TaskProducer<MongoDeleteClusterPayload> {
     public MongoDeleteClusterTaskProducer(ObjectMapper objectMapper) {
         super(objectMapper);
     }
 
     @Override
-    public ClusterPayload parsePayload(String payload) {
-        try {
-            return objectMapper.readValue(payload, ClusterPayload.class);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public List<ProducedTask> produceTasks(Operation operation, ClusterPayload payload) {
+    public List<ProducedTask> produceTasks(Operation operation, MongoDeleteClusterPayload payload) {
         UUID operationId = operation.id();
 
+        var markClusterDeletingTask = ProducedTask.createWithPayload(
+                TaskType.MONGO_MARK_CLUSTER_DELETING,
+                operationId,
+                List.of(),
+                payload
+        );
         var deleteExporterServiceScrapeTask = ProducedTask.createWithPayload(
                 TaskType.MONGO_DELETE_EXPORTER_SERVICE_SCRAPE,
                 operationId,
-                List.of(),
+                List.of(markClusterDeletingTask.id()),
                 payload
         );
         var deleteExporterServiceTask = ProducedTask.createWithPayload(
@@ -74,13 +71,20 @@ public class MongoDeleteClusterTaskProducer extends TaskProducer<ClusterPayload>
                 List.of(checkPsmdbIsDeletedTask.id()),
                 payload
         );
+        var markClusterDeletedTask = ProducedTask.createWithPayload(
+                TaskType.MONGO_MARK_CLUSTER_DELETED,
+                operationId,
+                List.of(deleteSecretsTask.id()),
+                payload
+        );
         var finalTask = ProducedTask.create(
                 TaskType.FINAL_TASK,
                 operationId,
-                List.of(deleteSecretsTask.id())
+                List.of(markClusterDeletedTask.id())
         );
 
         return List.of(
+                markClusterDeletingTask,
                 deleteExporterServiceScrapeTask,
                 deleteExporterServiceTask,
                 deleteOnyxdbAgentTask,
@@ -88,7 +92,13 @@ public class MongoDeleteClusterTaskProducer extends TaskProducer<ClusterPayload>
                 deletePsmdbTask,
                 checkPsmdbIsDeletedTask,
                 deleteSecretsTask,
+                markClusterDeletedTask,
                 finalTask
         );
+    }
+
+    @Override
+    public MongoDeleteClusterPayload parsePayload(String payload) throws JsonProcessingException {
+        return objectMapper.readValue(payload, MongoDeleteClusterPayload.class);
     }
 }

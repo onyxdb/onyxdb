@@ -202,7 +202,6 @@ public class ClusterMapper {
     ) {
         return new UpdateCluster(
                 clusterId,
-                rq.getName(),
                 rq.getDescription(),
                 updateMongoClusterConfigDTOtoUpdateClusterConfig(rq.getConfig()),
                 updatedBy
