@@ -24,8 +24,8 @@ import com.onyxdb.platform.generated.openapi.models.ClusterResourcesDTO;
 import com.onyxdb.platform.generated.openapi.models.CreateMongoClusterRequestDTO;
 import com.onyxdb.platform.generated.openapi.models.CreateMongoClusterResponseDTO;
 import com.onyxdb.platform.generated.openapi.models.MongoConfigDTO;
-import com.onyxdb.platform.generated.openapi.models.MongoDatabaseDTO;
-import com.onyxdb.platform.generated.openapi.models.MongoUserDTO;
+import com.onyxdb.platform.generated.openapi.models.MongoInitDatabaseDTO;
+import com.onyxdb.platform.generated.openapi.models.MongoInitUserDTO;
 import com.onyxdb.platform.idm.services.ProductService;
 import com.onyxdb.platform.mdb.clients.k8s.psmdb.PsmdbClient;
 import com.onyxdb.platform.mdb.clusters.ClusterRepository;
@@ -35,18 +35,18 @@ import com.onyxdb.platform.mdb.clusters.models.ClusterConfig;
 import com.onyxdb.platform.mdb.clusters.models.ClusterResources;
 import com.onyxdb.platform.mdb.clusters.models.ClusterType;
 import com.onyxdb.platform.mdb.clusters.models.ClusterVersion;
-import com.onyxdb.platform.mdb.databases.DatabaseRepository;
-import com.onyxdb.platform.mdb.exceptions.ClusterAlreadyExistsException;
-import com.onyxdb.platform.mdb.exceptions.ProjectNotFoundException;
-import com.onyxdb.platform.mdb.exceptions.ResourcePresetNotFoundException;
-import com.onyxdb.platform.mdb.hosts.HostMapper;
-import com.onyxdb.platform.mdb.hosts.HostRepository;
 import com.onyxdb.platform.mdb.clusters.models.CreateMongoPermission;
 import com.onyxdb.platform.mdb.clusters.models.CreateUserWithSecret;
 import com.onyxdb.platform.mdb.clusters.models.Database;
 import com.onyxdb.platform.mdb.clusters.models.Host;
 import com.onyxdb.platform.mdb.clusters.models.MongoRole;
 import com.onyxdb.platform.mdb.clusters.models.User;
+import com.onyxdb.platform.mdb.databases.DatabaseRepository;
+import com.onyxdb.platform.mdb.exceptions.ClusterAlreadyExistsException;
+import com.onyxdb.platform.mdb.exceptions.ProjectNotFoundException;
+import com.onyxdb.platform.mdb.exceptions.ResourcePresetNotFoundException;
+import com.onyxdb.platform.mdb.hosts.HostMapper;
+import com.onyxdb.platform.mdb.hosts.HostRepository;
 import com.onyxdb.platform.mdb.operations.models.Operation;
 import com.onyxdb.platform.mdb.operations.models.OperationType;
 import com.onyxdb.platform.mdb.operations.models.payload.MongoCreateClusterPayload;
@@ -119,10 +119,10 @@ public class ManagedMongoDbControllerTests extends BaseTest {
                                     "0 0 * * *"
                             )
                     ),
-                    new MongoDatabaseDTO(
+                    new MongoInitDatabaseDTO(
                             "db1"
                     ),
-                    new MongoUserDTO(
+                    new MongoInitUserDTO(
                             "u1",
                             "p1"
                     )
@@ -296,10 +296,10 @@ public class ManagedMongoDbControllerTests extends BaseTest {
                                 "0 0 * * *"
                         )
                 ),
-                new MongoDatabaseDTO(
+                new MongoInitDatabaseDTO(
                         "db1"
                 ),
-                new MongoUserDTO(
+                new MongoInitUserDTO(
                         "u1",
                         "p1"
                 )
@@ -363,10 +363,10 @@ public class ManagedMongoDbControllerTests extends BaseTest {
                                 "0 0 * * *"
                         )
                 ),
-                new MongoDatabaseDTO(
+                new MongoInitDatabaseDTO(
                         "db1"
                 ),
-                new MongoUserDTO(
+                new MongoInitUserDTO(
                         "u1",
                         "p1"
                 )
@@ -407,10 +407,10 @@ public class ManagedMongoDbControllerTests extends BaseTest {
                                 "0 0 * * *"
                         )
                 ),
-                new MongoDatabaseDTO(
+                new MongoInitDatabaseDTO(
                         "db1"
                 ),
-                new MongoUserDTO(
+                new MongoInitUserDTO(
                         "u1",
                         "p1"
                 )

@@ -2896,9 +2896,9 @@ components:
         config:
           $ref: '#/components/schemas/MongoConfigDTO'
         database:
-          $ref: '#/components/schemas/CreateMongoDatabaseDTO'
+          $ref: '#/components/schemas/MongoInitDatabaseDTO'
         user:
-          $ref: '#/components/schemas/CreateMongoUserDTO'
+          $ref: '#/components/schemas/MongoInitUserDTO'
       required:
         - name
         - description
@@ -2948,14 +2948,14 @@ components:
       required:
         - isEnabled
         - schedule
-    CreateMongoDatabaseDTO:
+    MongoInitDatabaseDTO:
       type: object
       properties:
         name:
           type: string
       required:
         - name
-    CreateMongoUserDTO:
+    MongoInitUserDTO:
       type: object
       properties:
         name:
