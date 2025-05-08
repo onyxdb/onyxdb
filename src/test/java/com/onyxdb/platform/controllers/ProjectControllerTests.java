@@ -47,12 +47,14 @@ public class ProjectControllerTests extends BaseTest {
                 "project1",
                 "project1 desc",
                 TestUtils.PARENT_PRODUCT_ID,
+                TestUtils.DEFAULT_NAMESPACE,
                 TestUtils.ADMIN_ID
         );
         var project2 = Project.create(
                 "project2",
                 "project2 desc",
                 TestUtils.CHILD_PRODUCT_ID,
+                TestUtils.DEFAULT_NAMESPACE,
                 TestUtils.ADMIN_ID
         );
 
@@ -85,6 +87,7 @@ public class ProjectControllerTests extends BaseTest {
                 "project",
                 "project desc",
                 TestUtils.PARENT_PRODUCT_ID,
+                TestUtils.DEFAULT_NAMESPACE,
                 TestUtils.ADMIN_ID
         );
 
@@ -132,7 +135,8 @@ public class ProjectControllerTests extends BaseTest {
         var rq = new CreateProjectRequestDTO(
                 "project",
                 "project description",
-                TestUtils.PARENT_PRODUCT_ID
+                TestUtils.PARENT_PRODUCT_ID,
+                TestUtils.DEFAULT_NAMESPACE
         );
 
         ResponseEntity<CreateProjectResponseDTO> createResponse = restTemplate.postForEntity(
@@ -153,6 +157,7 @@ public class ProjectControllerTests extends BaseTest {
                 rq.getName(),
                 rq.getDescription(),
                 rq.getProductId(),
+                TestUtils.DEFAULT_NAMESPACE,
                 TestUtils.ADMIN_ID
         );
 
@@ -168,6 +173,7 @@ public class ProjectControllerTests extends BaseTest {
                 "project",
                 "project desc",
                 TestUtils.PARENT_PRODUCT_ID,
+                TestUtils.DEFAULT_NAMESPACE,
                 TestUtils.ADMIN_ID
         );
         projectRepository.createProject(project);
@@ -175,7 +181,8 @@ public class ProjectControllerTests extends BaseTest {
         var rq = new CreateProjectRequestDTO(
                 project.name(),
                 "duplicate project desc",
-                project.productId()
+                project.productId(),
+                TestUtils.DEFAULT_NAMESPACE
         );
 
         ResponseEntity<BadRequestResponse> response = restTemplate.exchange(
@@ -198,6 +205,7 @@ public class ProjectControllerTests extends BaseTest {
                 "name before",
                 "desc before",
                 TestUtils.PARENT_PRODUCT_ID,
+                TestUtils.DEFAULT_NAMESPACE,
                 TestUtils.ADMIN_ID
         );
         projectRepository.createProject(projectBefore);
@@ -205,7 +213,8 @@ public class ProjectControllerTests extends BaseTest {
         var rq = new UpdateProjectRequestDTO(
                 "updated name",
                 "updated desc",
-                TestUtils.CHILD_PRODUCT_ID
+                TestUtils.CHILD_PRODUCT_ID,
+                TestUtils.DEFAULT_NAMESPACE
         );
 
         ResponseEntity<Void> response = restTemplate.exchange(
@@ -223,6 +232,7 @@ public class ProjectControllerTests extends BaseTest {
                 rq.getName(),
                 rq.getDescription(),
                 rq.getProductId(),
+                TestUtils.DEFAULT_NAMESPACE,
                 TestUtils.ADMIN_ID
         );
 
@@ -240,7 +250,8 @@ public class ProjectControllerTests extends BaseTest {
         var rq = new UpdateProjectRequestDTO(
                 "updated name",
                 "updated desc",
-                TestUtils.PARENT_PRODUCT_ID
+                TestUtils.PARENT_PRODUCT_ID,
+                TestUtils.DEFAULT_NAMESPACE
         );
 
         ResponseEntity<BadRequestResponse> response = restTemplate.exchange(
@@ -264,12 +275,14 @@ public class ProjectControllerTests extends BaseTest {
                 "project1",
                 "desc1",
                 TestUtils.PARENT_PRODUCT_ID,
+                TestUtils.DEFAULT_NAMESPACE,
                 TestUtils.ADMIN_ID
         );
         var project2 = Project.create(
                 "project2",
                 "desc2",
                 TestUtils.CHILD_PRODUCT_ID,
+                TestUtils.DEFAULT_NAMESPACE,
                 TestUtils.ADMIN_ID
         );
         projectRepository.createProject(project1);
@@ -278,7 +291,8 @@ public class ProjectControllerTests extends BaseTest {
         var rq = new UpdateProjectRequestDTO(
                 project1.name(),
                 "updated desc",
-                TestUtils.CHILD_PRODUCT_ID
+                TestUtils.CHILD_PRODUCT_ID,
+                TestUtils.DEFAULT_NAMESPACE
         );
 
         ResponseEntity<BadRequestResponse> response = restTemplate.exchange(
@@ -302,6 +316,7 @@ public class ProjectControllerTests extends BaseTest {
                 "name",
                 "desc",
                 TestUtils.PARENT_PRODUCT_ID,
+                TestUtils.DEFAULT_NAMESPACE,
                 TestUtils.ADMIN_ID
         );
         projectRepository.createProject(project);
@@ -346,6 +361,7 @@ public class ProjectControllerTests extends BaseTest {
                 "name",
                 "desc",
                 TestUtils.PARENT_PRODUCT_ID,
+                TestUtils.DEFAULT_NAMESPACE,
                 TestUtils.ADMIN_ID
         );
         projectRepository.createProject(project);

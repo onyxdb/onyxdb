@@ -21,6 +21,8 @@ public class TestUtils {
     public static final UUID TEST_1_RESOURCE_PRESET_ID = UUID.fromString("99d2a60a-fe72-4203-8c01-de9b602cb758");
     public static final UUID NOT_EXISTING_RESOURCE_PRESET_ID = UUID.fromString("7f673db3-b272-4f89-bdbc-74006d37a17a");
 
+    public static final String DEFAULT_NAMESPACE = "onyxdb";
+
     public static final Product PRODUCT = new Product(
             PARENT_PRODUCT_ID,
             "Connectify",
@@ -45,6 +47,7 @@ public class TestUtils {
             "sandbox",
             "sandbox project",
             TestUtils.CHILD_PRODUCT_ID,
+            DEFAULT_NAMESPACE,
             TestUtils.ADMIN_ID
     );
 }
