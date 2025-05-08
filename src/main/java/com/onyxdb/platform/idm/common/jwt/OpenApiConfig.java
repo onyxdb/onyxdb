@@ -13,9 +13,9 @@ public class OpenApiConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("IDM - Role Based Access Control API")
+                        .title("OnyxDB - DBaaS platform in Kubernetes")
                         .version("1.0.0")
-                        .description("API documentation for IDM role-based access control"))
+                )
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth")) // Использование схемы авторизации
                 .components(new io.swagger.v3.oas.models.Components()
                         .addSecuritySchemes("bearerAuth",
