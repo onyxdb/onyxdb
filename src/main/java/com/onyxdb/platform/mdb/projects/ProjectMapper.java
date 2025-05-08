@@ -19,6 +19,7 @@ public class ProjectMapper {
                 p.name(),
                 p.description(),
                 p.productId(),
+                p.namespace(),
                 p.createdAt(),
                 p.createdBy(),
                 p.isDeleted(),
@@ -34,6 +35,7 @@ public class ProjectMapper {
                 rr.getName(),
                 rr.getDescription(),
                 rr.getProductId(),
+                rr.getNamespace(),
                 rr.getCreatedAt(),
                 rr.getCreatedBy(),
                 rr.getIsDeleted(),
@@ -48,6 +50,7 @@ public class ProjectMapper {
                 p.name(),
                 p.description(),
                 p.productId(),
+                p.namespace(),
                 p.createdAt(),
                 p.createdBy(),
                 p.isDeleted(),
@@ -61,7 +64,8 @@ public class ProjectMapper {
                 productId,
                 rq.getName(),
                 rq.getDescription(),
-                rq.getProductId()
+                rq.getProductId(),
+                rq.getNamespace()
         );
     }
 
@@ -70,6 +74,7 @@ public class ProjectMapper {
                 r.getName(),
                 r.getDescription(),
                 r.getProductId(),
+                r.getNamespace(),
                 createdBy
         );
     }
@@ -79,6 +84,7 @@ public class ProjectMapper {
                 c.name(),
                 c.description(),
                 c.productId(),
+                c.namespace(),
                 c.createdBy()
         );
     }

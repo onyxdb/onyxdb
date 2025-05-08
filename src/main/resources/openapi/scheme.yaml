@@ -190,12 +190,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ListMongoVersionsResponseDTO'
-  /api/mdb/mongodb/storage-classes:
+  # ---------- MDB common ----------------------------------------------------------------------------------------------
+  /api/mdb/storage-classes:
     get:
       summary: List storage classes
       operationId: listStorageClasses
       tags:
-        - Managed MongoDB clusters
+        - MDB common
         - MDB
       responses:
         '200':
@@ -204,8 +205,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ListStorageClassesResponseDTO'
-
-
+  /api/mdb/namespaces:
+    get:
+      summary: List namespaces
+      operationId: listNamespaces
+      tags:
+        - MDB common
+        - MDB
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListNamespacesResponseDTO'
 
 
 
@@ -2796,6 +2809,8 @@ components:
         productId:
           type: string
           format: uuid
+        namespace:
+          type: string
         createdAt:
           type: string
           format: date-time
@@ -2817,6 +2832,7 @@ components:
         - name
         - description
         - productId
+        - namespace
         - createdAt
         - createdBy
         - isDeleted
@@ -2832,10 +2848,13 @@ components:
         productId:
           type: string
           format: uuid
+        namespace:
+          type: string
       required:
         - name
         - description
         - productId
+        - namespace
     CreateProjectResponseDTO:
       type: object
       properties:
@@ -2854,10 +2873,13 @@ components:
         productId:
           type: string
           format: uuid
+        namespace:
+          type: string
       required:
         - name
         - description
         - productId
+        - namespace
     # ---------- Managed MongoDB clusters schemas ----------------------------------------------------------------------
     CreateMongoClusterRequestDTO:
       type: object
@@ -3072,6 +3094,15 @@ components:
             type: string
       required:
         - storageClasses
+    ListNamespacesResponseDTO:
+      type: object
+      properties:
+        namespaces:
+          type: array
+          items:
+            type: string
+      required:
+        - namespaces
     ListMongoVersionsResponseDTO:
       type: object
       properties:

@@ -18,7 +18,7 @@ import com.onyxdb.platform.mdb.databases.DatabaseService;
 
 @RestController
 @RequiredArgsConstructor
-public class ManagedMongoDatabaseController implements ManagedMongoDbDatabasesApi {
+public class MongoDatabaseController implements ManagedMongoDbDatabasesApi {
     private final DatabaseService databaseService;
     private final DatabaseMapper databaseMapper;
 

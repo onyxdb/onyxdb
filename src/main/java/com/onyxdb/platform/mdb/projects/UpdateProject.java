@@ -9,6 +9,7 @@ public record UpdateProject(
         UUID id,
         String name,
         String description,
-        UUID productId
+        UUID productId,
+        String namespace
 ) {
 }

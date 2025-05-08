@@ -30,6 +30,9 @@ logging:
         Constants: off
 
 onyxdb:
+  mdb:
+    namespaces: onyxdb
+    storage-classes: standard
   base-url: http://host.minikube.internal:9001
   agent:
     base-url: http://localhost:9004

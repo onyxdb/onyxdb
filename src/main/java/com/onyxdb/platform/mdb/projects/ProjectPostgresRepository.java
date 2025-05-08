@@ -75,6 +75,7 @@ public class ProjectPostgresRepository implements ProjectRepository {
                     .set(PROJECTS.NAME, updateProject.name())
                     .set(PROJECTS.DESCRIPTION, updateProject.description())
                     .set(PROJECTS.PRODUCT_ID, updateProject.productId())
+                    .set(PROJECTS.NAMESPACE, updateProject.namespace())
                     .where(PROJECTS.ID.eq(updateProject.id()))
                     .returningResult(PROJECTS.ID)
                     .fetchOne();

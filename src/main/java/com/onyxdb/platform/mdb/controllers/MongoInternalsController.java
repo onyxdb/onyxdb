@@ -12,11 +12,11 @@ import com.onyxdb.platform.mdb.hosts.HostMapper;
 import com.onyxdb.platform.mdb.hosts.HostService;
 
 @RestController
-public class ManagedMongoInternalsController implements ManagedMongoDbInternalsApi {
+public class MongoInternalsController implements ManagedMongoDbInternalsApi {
     private final HostService hostService;
     private final HostMapper hostMapper;
 
-    public ManagedMongoInternalsController(HostService hostService, HostMapper hostMapper) {
+    public MongoInternalsController(HostService hostService, HostMapper hostMapper) {
         this.hostService = hostService;
         this.hostMapper = hostMapper;
     }

@@ -22,7 +22,7 @@ import com.onyxdb.platform.mdb.users.UserService;
 
 @RestController
 @RequiredArgsConstructor
-public class ManagedMongoUserController implements ManagedMongoDbUsersApi {
+public class MongoUserController implements ManagedMongoDbUsersApi {
     private final UserService userService;
     private final UserMapper userMapper;
 
