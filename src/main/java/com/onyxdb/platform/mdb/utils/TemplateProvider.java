@@ -36,6 +36,8 @@ public class TemplateProvider {
 
     public String buildPsmdbCr(
             String metadataName,
+            String project,
+            String cluster,
             String secretsUsersName,
             String vectorConfigName,
             String replsetName,
@@ -48,6 +50,8 @@ public class TemplateProvider {
         Context context = new Context();
         context.setVariables(Map.ofEntries(
                 Map.entry("METADATA_NAME", metadataName),
+                Map.entry("ONYXDB_PROJECT", project),
+                Map.entry("ONYXDB_CLUSTER", cluster),
                 Map.entry("SECRETS_USERS_NAME", secretsUsersName),
                 Map.entry("VECTOR_CONFIG_NAME", vectorConfigName),
                 Map.entry("REPLSET_NAME", replsetName),

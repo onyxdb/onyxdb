@@ -67,6 +67,8 @@ public class PsmdbClient extends AbstractPsmdbFactory {
     ) {
         String resource = templateProvider.buildPsmdbCr(
                 getPsmdbName(project, cluster),
+                project,
+                cluster,
                 getSecretName(project, cluster),
                 getVectorConfigMapName(project, cluster),
                 REPLSET_NAME,

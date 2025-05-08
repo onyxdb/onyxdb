@@ -49,7 +49,6 @@ public class MongoApplyPsmdbTaskConsumer extends ClusterTaskConsumer {
                 resourcePreset.vcpu(),
                 resourcePreset.ram()
         );
-//        throw new RuntimeException();
 
         return TaskResult.success();
     }

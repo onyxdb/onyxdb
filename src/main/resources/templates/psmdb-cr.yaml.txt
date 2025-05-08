@@ -2,6 +2,9 @@ apiVersion: psmdb.percona.com/v1
 kind: PerconaServerMongoDB
 metadata:
   name: [[${METADATA_NAME}]]
+  labels:
+    onyxdb.com/project: [[${ONYXDB_PROJECT}]]
+    onyxdb.com/cluster: [[${ONYXDB_CLUSTER}]]
   finalizers:
    - percona.com/delete-psmdb-pvc
 spec:
@@ -19,8 +22,8 @@ spec:
     - name: [[${REPLSET_NAME}]]
       size: [[${REPLSET_SIZE}]]
       labels:
-        onyxdb.com/project: sandbox
-        onyxdb.com/cluster: test-1
+        onyxdb.com/project: [[${ONYXDB_PROJECT}]]
+        onyxdb.com/cluster: [[${ONYXDB_CLUSTER}]]
       configuration: |
         processManagement:
           pidFilePath: /data/db/mongod.pid
@@ -63,44 +66,10 @@ spec:
             - "--log.level=debug"
             - "--mongodb.uri=$(MONGODB_URI)"
           name: exporter
-#        - name: vector
-#          image: timberio/vector:0.31.0-debian
-#          command:
-#            - vector
-#          args:
-#            - --config=/etc/vector/vector.yaml
-#          workingDir: /data/db
-#          volumeMounts:
-#            - name: vector-config
-#              mountPath: /etc/vector
-#            - name: mongod-data
-#              mountPath: /data/db
-#        - name: logrotate
-#          image: docker.io/kicm/logrotate
-#          command:
-#            - tail
-#          args:
-#            - -f
-#            - /dev/null
-#          workingDir: /data/db
-#          volumeMounts:
-#            - name: logrotate-config
-#              mountPath: /etc/logrotate.d
-#            - name: mongod-data
-#              mountPath: /data/db
-#        - name: logrotate
-#          image: foxleren/onyxdb-mongod-logrotate:17
-#          workingDir: /data/db
-#          volumeMounts:
-#            - name: mongod-data
-#              mountPath: /data/db
       sidecarVolumes:
         - name: vector-config
           configMap:
             name: [[${VECTOR_CONFIG_NAME}]]
-#        - name: logrotate-config
-#          configMap:
-#            name: mongod-logrotate
       resources:
         limits:
           cpu: "[[${MONGOD_CPU}]]"
