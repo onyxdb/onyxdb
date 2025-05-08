@@ -23,22 +23,6 @@ public class MongoCreateClusterTaskProducer extends TaskProducer<MongoCreateClus
         super(objectMapper);
     }
 
-//    @Override
-//    public List<TaskType> getTaskTypesInOrder() {
-//        return List.of(
-//                TaskType.MONGO_APPLY_VECTOR_CONFIG,
-//                TaskType.MONGO_APPLY_PSMDB,
-//                TaskType.MONGO_CHECK_PSMDB_READINESS,
-//                TaskType.MONGO_APPLY_ONYXDB_AGENT,
-//                TaskType.MONGO_CHECK_ONYXDB_AGENT_READINESS,
-//                TaskType.MONGO_APPLY_EXPORTER_SERVICE,
-//                TaskType.MONGO_APPLY_EXPORTER_SERVICE_SCRAPE,
-//                TaskType.MONGO_CREATE_DATABASE,
-//                TaskType.MONGO_CREATE_USER,
-//                TaskType.FINAL_TASK
-//        );
-//    }
-
     @Override
     public MongoCreateClusterPayload parsePayload(String payload) {
         try {
@@ -109,8 +93,8 @@ public class MongoCreateClusterTaskProducer extends TaskProducer<MongoCreateClus
                 payload.passwordSecretName(),
                 payload.passwordSecretNamespace(),
                 List.of(new CreateMongoPermission(
-                        payload.databaseName(),
                         payload.userName(),
+                        payload.databaseName(),
                         payload.clusterId(),
                         payload.roles()
                 ))

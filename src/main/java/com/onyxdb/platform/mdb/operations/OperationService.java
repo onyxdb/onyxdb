@@ -87,7 +87,14 @@ public class OperationService {
                 .status(updatedStatus)
                 .finishedAt(now)
                 .build();
-        taskRepository.updateTask(updatedTask);
+        if (updatedStatus.equalsStringEnum(TaskStatus.ERROR)) {
+            transactionTemplate.executeWithoutResult(status -> {
+                taskRepository.updateTask(updatedTask);
+                operationRepository.updateStatus(updatedTask.operationId(), OperationStatus.ERROR);
+            });
+        } else {
+            taskRepository.updateTask(updatedTask);
+        }
     }
 
     public void registerOperation(Operation operation) {
