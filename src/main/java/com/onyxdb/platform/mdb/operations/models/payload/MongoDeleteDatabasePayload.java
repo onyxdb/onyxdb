@@ -4,7 +4,7 @@ import java.util.UUID;
 
 public record MongoDeleteDatabasePayload(
         UUID clusterId,
-        UUID databaseId,
-        String databaseName
+        String databaseName,
+        UUID deletedBy
 ) implements Payload {
 }

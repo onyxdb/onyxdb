@@ -32,9 +32,7 @@ public class MongoCreateDatabaseTaskConsumer extends TaskConsumer<MongoCreateDat
 
     @Override
     protected TaskResult internalProcess(Task task, MongoCreateDatabasePayload payload) {
-        var rq = new CreateMongoDatabaseRequestDTO(
-                payload.databaseName()
-        );
+        var rq = new CreateMongoDatabaseRequestDTO(payload.databaseName());
         onyxdbAgentClient.createDatabase(rq);
 
         return TaskResult.success();
@@ -42,10 +40,6 @@ public class MongoCreateDatabaseTaskConsumer extends TaskConsumer<MongoCreateDat
 
     @Override
     protected MongoCreateDatabasePayload parsePayload(Task task) throws JsonProcessingException {
-        try {
-            return objectMapper.readValue(task.payload(), MongoCreateDatabasePayload.class);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        return objectMapper.readValue(task.payload(), MongoCreateDatabasePayload.class);
     }
 }
