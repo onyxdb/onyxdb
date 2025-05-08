@@ -6,10 +6,10 @@ import org.jooq.JSONB;
 import org.jooq.Record;
 
 import com.onyxdb.platform.generated.jooq.tables.records.OperationsRecord;
-import com.onyxdb.platform.generated.openapi.models.ListOperationsResponseOA;
-import com.onyxdb.platform.generated.openapi.models.OperationOA;
-import com.onyxdb.platform.generated.openapi.models.OperationStatusOA;
-import com.onyxdb.platform.generated.openapi.models.OperationTypeOA;
+import com.onyxdb.platform.generated.openapi.models.ListOperationsResponseDTO;
+import com.onyxdb.platform.generated.openapi.models.OperationDTO;
+import com.onyxdb.platform.generated.openapi.models.OperationStatusDTO;
+import com.onyxdb.platform.generated.openapi.models.OperationTypeDTO;
 import com.onyxdb.platform.mdb.operations.models.Operation;
 import com.onyxdb.platform.mdb.operations.models.OperationStatus;
 import com.onyxdb.platform.mdb.operations.models.OperationType;
@@ -43,16 +43,16 @@ public class OperationMapper {
         );
     }
 
-    public ListOperationsResponseOA toListOperationsResponseOA(List<Operation> os) {
-        List<OperationOA> mappedOperations = os.stream().map(this::toOperationOA).toList();
-        return new ListOperationsResponseOA(mappedOperations);
+    public ListOperationsResponseDTO toListOperationsResponseDTO(List<Operation> os) {
+        List<OperationDTO> mappedOperations = os.stream().map(this::toOperationOA).toList();
+        return new ListOperationsResponseDTO(mappedOperations);
     }
 
-    public OperationOA toOperationOA(Operation o) {
-        return new OperationOA(
+    public OperationDTO toOperationOA(Operation o) {
+        return new OperationDTO(
                 o.id(),
-                toOperationTypeOA(o.type()),
-                toOperationStatusOA(o.status()),
+                toOperationTypeDTO(o.type()),
+                toOperationStatusDTO(o.status()),
                 o.createdAt(),
                 o.createdBy(),
                 o.updatedAt(),
@@ -60,15 +60,15 @@ public class OperationMapper {
         );
     }
 
-    public OperationTypeOA toOperationTypeOA(OperationType t) {
-        return new OperationTypeOA(
+    public OperationTypeDTO toOperationTypeDTO(OperationType t) {
+        return new OperationTypeDTO(
                 t.value(),
                 t.getDisplayValue()
         );
     }
 
-    public OperationStatusOA toOperationStatusOA(OperationStatus s) {
-        return new OperationStatusOA(
+    public OperationStatusDTO toOperationStatusDTO(OperationStatus s) {
+        return new OperationStatusDTO(
                 s.value(),
                 s.getDisplayValue()
         );

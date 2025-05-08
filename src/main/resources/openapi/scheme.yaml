@@ -219,6 +219,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ListNamespacesResponseDTO'
+  # ---------- Operations ----------------------------------------------------------------------------------------------
+  /api/mdb/operations:
+    get:
+      summary: List operations
+      operationId: listOperations
+      tags:
+        - Operations
+        - MDB
+      parameters:
+        - $ref: '#/components/parameters/ClusterIdOQP'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOperationsResponseDTO'
+  /api/mdb/operations/{operationId}/restart:
+    put:
+      summary: Restart operation
+      operationId: restartOperation
+      tags:
+        - Operations
+        - MDB
+      parameters:
+        - $ref: '#/components/parameters/OperationIdPV'
+      responses:
+        '200':
+          description: OK
+
+
+
+
+
 
 
 
@@ -639,35 +673,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SimulateMongoDBQuotasUsageResponse'
-  # ---------- Operations ----------------------------------------------------------------------------------------------
-  /api/operations:
-    get:
-      summary: List operations
-      operationId: listOperations
-      tags:
-        - Operations
-        - MDB
-      parameters:
-        - $ref: '#/components/parameters/ClusterIdOQP'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ListOperationsResponseOA'
-  /api/operations/{operationId}/restart:
-    put:
-      summary: Restart operation
-      operationId: restartOperation
-      tags:
-        - Operations
-        - MDB
-      parameters:
-        - $ref: '#/components/parameters/OperationIdPV'
-      responses:
-        '200':
-          description: OK
   # ---------- Billing -------------------------------------------------------------------------------------------------
   /api/billing/product-quota-usage-report:
     get:
@@ -3700,25 +3705,25 @@ components:
         - usage
         - free
         - timestamp
-    ListOperationsResponseOA:
+    ListOperationsResponseDTO:
       type: object
       properties:
         operations:
           type: array
           items:
-            $ref: '#/components/schemas/OperationOA'
+            $ref: '#/components/schemas/OperationDTO'
       required:
         - operations
-    OperationOA:
+    OperationDTO:
       type: object
       properties:
         id:
           type: string
           format: uuid
         type:
-          $ref: '#/components/schemas/OperationTypeOA'
+          $ref: '#/components/schemas/OperationTypeDTO'
         status:
-          $ref: '#/components/schemas/OperationStatusOA'
+          $ref: '#/components/schemas/OperationStatusDTO'
         createdAt:
           type: string
           format: date-time
@@ -3738,7 +3743,7 @@ components:
         - createdBy
         - updatedAt
         - isRestartAllowed
-    OperationTypeOA:
+    OperationTypeDTO:
       type: object
       properties:
         value:
@@ -3748,7 +3753,7 @@ components:
       required:
         - value
         - displayValue
-    OperationStatusOA:
+    OperationStatusDTO:
       type: object
       properties:
         value:

@@ -10,8 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.onyxdb.platform.generated.openapi.apis.OperationsApi;
-import com.onyxdb.platform.generated.openapi.models.ListOperationsResponseOA;
-import com.onyxdb.platform.mdb.exceptions.BadRequestException;
+import com.onyxdb.platform.generated.openapi.models.ListOperationsResponseDTO;
 import com.onyxdb.platform.mdb.operations.OperationService;
 import com.onyxdb.platform.mdb.operations.mappers.OperationMapper;
 import com.onyxdb.platform.mdb.operations.models.Operation;
@@ -23,16 +22,9 @@ public class OperationsController implements OperationsApi {
     private final OperationMapper operationMapper;
 
     @Override
-    public ResponseEntity<ListOperationsResponseOA> listOperations(
-            @Nullable
-            UUID clusterId
-    ) {
-        if (clusterId == null) {
-            throw new BadRequestException("Nullable id will be supported later");
-        }
-
+    public ResponseEntity<ListOperationsResponseDTO> listOperations(@Nullable UUID clusterId) {
         List<Operation> operations = operationService.listOperations(clusterId);
-        return ResponseEntity.ok(operationMapper.toListOperationsResponseOA(operations));
+        return ResponseEntity.ok(operationMapper.toListOperationsResponseDTO(operations));
     }
 
     @Override

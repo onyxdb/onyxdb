@@ -12,6 +12,7 @@ import com.onyxdb.platform.generated.jooq.tables.Tasks;
 import com.onyxdb.platform.generated.jooq.tables.records.TasksRecord;
 import com.onyxdb.platform.mdb.operations.mappers.TaskMapper;
 import com.onyxdb.platform.mdb.operations.models.Task;
+import com.onyxdb.platform.mdb.operations.models.TaskFilter;
 import com.onyxdb.platform.mdb.operations.models.TaskStatus;
 
 import static com.onyxdb.platform.generated.jooq.Tables.TASKS;
@@ -74,5 +75,23 @@ public class TaskPostgresRepository implements TaskRepository {
                 .set(taskMapper.taskToTasksRecord(task))
                 .where(TASKS.ID.eq(task.id()))
                 .execute();
+    }
+
+    @Override
+    public void updateTasks(List<Task> tasks) {
+        dslContext.batchUpdate(tasks.stream().map(taskMapper::taskToTasksRecord).toList()).execute();
+    }
+
+    @Override
+    public List<Task> listTasks(TaskFilter filter) {
+        return dslContext.select()
+                .from(TASKS)
+                .where(filter.buildCondition())
+                .fetchMany()
+                .stream()
+                .map(result -> result.into(TasksRecord.class))
+                .flatMap(List::stream)
+                .map(taskMapper::tasksRecordToTask)
+                .toList();
     }
 }
