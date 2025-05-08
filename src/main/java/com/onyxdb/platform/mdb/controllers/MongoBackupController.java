@@ -21,13 +21,13 @@ import com.onyxdb.platform.mdb.utils.ObjectMapperUtils;
 import com.onyxdb.platform.mdb.utils.TimeUtils;
 
 @RestController
-public class ManagedMongoBackupController implements ManagedMongoDbBackupsApi {
+public class MongoBackupController implements ManagedMongoDbBackupsApi {
     private final OperationRepository operationRepository;
     private final ObjectMapper objectMapper;
     private boolean isStarted = false;
     private LocalDateTime lastBackupTime;
 
-    public ManagedMongoBackupController(OperationRepository operationRepository, ObjectMapper objectMapper) {
+    public MongoBackupController(OperationRepository operationRepository, ObjectMapper objectMapper) {
         this.operationRepository = operationRepository;
         this.objectMapper = objectMapper;
     }

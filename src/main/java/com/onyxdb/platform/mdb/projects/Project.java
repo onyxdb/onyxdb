@@ -15,6 +15,7 @@ public record Project(
         String name,
         String description,
         UUID productId,
+        String namespace,
         LocalDateTime createdAt,
         UUID createdBy,
         boolean isDeleted,
@@ -27,6 +28,7 @@ public record Project(
             String name,
             String description,
             UUID productId,
+            String namespace,
             UUID createdBy
     ) {
         return new Project(
@@ -34,6 +36,7 @@ public record Project(
                 name,
                 description,
                 productId,
+                namespace,
                 TimeUtils.now(),
                 createdBy,
                 false,
@@ -47,6 +50,7 @@ public record Project(
             String name,
             String description,
             UUID productId,
+            String namespace,
             UUID createdBy
     ) {
         return new Project(
@@ -54,6 +58,7 @@ public record Project(
                 name,
                 description,
                 productId,
+                namespace,
                 TimeUtils.now(),
                 createdBy,
                 false,

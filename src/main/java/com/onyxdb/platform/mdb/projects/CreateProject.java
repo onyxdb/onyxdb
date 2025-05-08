@@ -9,6 +9,7 @@ public record CreateProject(
         String name,
         String description,
         UUID productId,
+        String namespace,
         UUID createdBy
 ) {
 }
