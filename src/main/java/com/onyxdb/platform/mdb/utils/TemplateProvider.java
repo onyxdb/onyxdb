@@ -58,7 +58,7 @@ public class TemplateProvider {
                 Map.entry("MONGOD_MEMORY", mongodMemory)
         ));
 
-        return templateEngine.process("psmdb-cr.yaml.txt", context);
+        return templateEngine.process("psmdb.yaml.txt", context);
     }
 
     public String buildOnyxdbAgent(

@@ -78,3 +78,22 @@ spec:
               storage: 1Gi
   sharding:
     enabled: false
+  backup:
+    enabled: true
+    image: perconalab/percona-server-mongodb-operator:main-backup
+    storages:
+        minio:
+          type: s3
+          s3:
+            bucket: onyxdb
+            prefix: mongodb/[[${ONYXDB_PROJECT}]]/[[${ONYXDB_CLUSTER}]]
+            region: us-east-1
+            credentialsSecret: minio-onyxdb
+            endpointUrl: http://minio.onyxdb.svc.cluster.local:9000
+    tasks:
+      - name: "backup"
+        enabled: true
+        schedule: "* * * * *"
+        keep: 3
+        type: logical
+        storageName: minio
