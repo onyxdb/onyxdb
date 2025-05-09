@@ -94,7 +94,7 @@ spec:
     tasks:
       - name: "backup"
         enabled: true
-        schedule: [[${BACKUP_SCHEDULE}]]
+        schedule: "[[${BACKUP_SCHEDULE}]]"
         keep: [[${BACKUP_LIMIT}]]
         type: logical
         storageName: minio

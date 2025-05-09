@@ -12,7 +12,7 @@
     "replicas": 3,
     "backup": {
       "isEnabled": true,
-      "schedule": "0 0 * * *",
+      "schedule": "* * * * *",
       "limit": 5
     }
   },

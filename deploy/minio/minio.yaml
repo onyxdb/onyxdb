@@ -30,7 +30,8 @@ spec:
     spec:
       containers:
         - name: minio
-          image: quay.io/minio/minio:latest
+          image: minio/minio:RELEASE.2025-04-08T15-41-24Z
+          imagePullPolicy: IfNotPresent
           command:
             - /bin/bash
             - -c
@@ -39,7 +40,6 @@ spec:
           ports:
             - containerPort: 9000
             - containerPort: 9001
-          imagePullPolicy: IfNotPresent
           resources:
             requests:
               cpu: "0.5"

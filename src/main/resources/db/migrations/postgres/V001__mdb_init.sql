@@ -154,8 +154,8 @@ CREATE TABLE public.operations
     FOREIGN KEY (cluster_id) REFERENCES public.clusters (id)
 );
 
-CREATE UNIQUE INDEX operations_uniq_idx ON public.operations (cluster_id, status)
-    WHERE public.operations.status = 'in_progress';
+CREATE UNIQUE INDEX operations_scheduled_uniq_idx ON public.operations (cluster_id, status)
+    WHERE public.operations.status in ('scheduled', 'in_progress');
 
 CREATE TYPE public.task_status AS ENUM (
     'scheduled',

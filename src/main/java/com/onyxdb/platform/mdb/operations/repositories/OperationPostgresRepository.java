@@ -8,12 +8,17 @@ import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Nullable;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
+import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DSL;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
+import com.onyxdb.platform.generated.jooq.Indexes;
+import com.onyxdb.platform.mdb.exceptions.BadRequestException;
 import com.onyxdb.platform.mdb.operations.mappers.OperationMapper;
 import com.onyxdb.platform.mdb.operations.models.Operation;
 import com.onyxdb.platform.mdb.operations.models.OperationStatus;
+import com.onyxdb.platform.mdb.utils.PsqlUtils;
 import com.onyxdb.platform.mdb.utils.TimeUtils;
 
 import static com.onyxdb.platform.generated.jooq.tables.Operations.OPERATIONS;
@@ -29,21 +34,43 @@ public class OperationPostgresRepository implements OperationRepository {
 
     @Override
     public void createOperation(Operation operation) {
-        dslContext.insertInto(OPERATIONS)
-                .set(operationMapper.toOperationsRecord(operation))
-                .execute();
+        try {
+            dslContext.insertInto(OPERATIONS)
+                    .set(operationMapper.toOperationsRecord(operation))
+                    .execute();
+        } catch (DataAccessException | DuplicateKeyException e) {
+            PsqlUtils.handleDataAccessEx(
+                    e,
+                    OPERATIONS,
+                    Indexes.OPERATIONS_SCHEDULED_UNIQ_IDX,
+                    () -> new BadRequestException("Can't start operation because there is an operation in progress")
+            );
+
+            throw e;
+        }
     }
 
     @Override
     public void updateStatus(UUID id, OperationStatus status) {
-        dslContext.update(OPERATIONS)
-                .set(
-                        OPERATIONS.STATUS,
-                        status.value()
-                )
-                .set(OPERATIONS.UPDATED_AT, TimeUtils.now())
-                .where(OPERATIONS.ID.eq(id))
-                .execute();
+        try {
+            dslContext.update(OPERATIONS)
+                    .set(
+                            OPERATIONS.STATUS,
+                            status.value()
+                    )
+                    .set(OPERATIONS.UPDATED_AT, TimeUtils.now())
+                    .where(OPERATIONS.ID.eq(id))
+                    .execute();
+        } catch (DataAccessException | DuplicateKeyException e) {
+            PsqlUtils.handleDataAccessEx(
+                    e,
+                    OPERATIONS,
+                    Indexes.OPERATIONS_SCHEDULED_UNIQ_IDX,
+                    () -> new BadRequestException("Can't start operation because there is an operation in progress")
+            );
+
+            throw e;
+        }
     }
 
     @Override
