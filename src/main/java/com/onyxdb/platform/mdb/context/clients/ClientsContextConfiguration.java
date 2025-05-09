@@ -34,7 +34,7 @@ public class ClientsContextConfiguration {
     public KubernetesAdapter kubernetesAdapter(
             KubernetesClient kubernetesClient,
             TemplateProvider templateProvider,
-            @Value("${onyxdb.base-url}")
+            @Value("${onyxdb.mdb.self-url}")
             String onyxdbBaseUrl
     ) {
         return new KubernetesAdapter(

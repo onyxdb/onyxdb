@@ -80,7 +80,8 @@ public class ClusterMapper {
     public ClusterBackupConfig clusterBackupConfigDTOtoClusterBackupConfig(ClusterBackupConfigDTO c) {
         return new ClusterBackupConfig(
                 c.getIsEnabled(),
-                c.getSchedule()
+                c.getSchedule(),
+                c.getLimit()
         );
     }
 
@@ -191,7 +192,8 @@ public class ClusterMapper {
     public ClusterBackupConfigDTO clusterBackupConfigToClusterBackupConfigDTO(ClusterBackupConfig c) {
         return new ClusterBackupConfigDTO(
                 c.isEnabled(),
-                c.schedule()
+                c.schedule(),
+                c.limit()
         );
     }
 

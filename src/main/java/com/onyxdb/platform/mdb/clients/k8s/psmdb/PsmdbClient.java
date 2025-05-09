@@ -63,7 +63,15 @@ public class PsmdbClient extends AbstractPsmdbFactory {
             String cluster,
             int replsetSize,
             double vcpu,
-            long ram
+            long ram,
+            String storageClass,
+            long storage,
+            boolean backupEnabled,
+            String backupSchedule,
+            int backupLimit,
+            String minioUrl,
+            String minioSecret,
+            String minioBucket
     ) {
         String resource = templateProvider.buildPsmdbCr(
                 getPsmdbName(project, cluster),
@@ -73,7 +81,15 @@ public class PsmdbClient extends AbstractPsmdbFactory {
                 REPLSET_NAME,
                 replsetSize,
                 vcpu,
-                ram
+                ram,
+                storageClass,
+                storage,
+                backupEnabled,
+                backupSchedule,
+                backupLimit,
+                minioUrl,
+                minioSecret,
+                minioBucket
         );
 
         kubernetesClient.resource(resource)

@@ -116,7 +116,8 @@ public class ManagedMongoDbControllerTests extends BaseTest {
                             3,
                             new ClusterBackupConfigDTO(
                                     true,
-                                    "0 0 * * *"
+                                    "0 0 * * *",
+                                    5
                             )
                     ),
                     new MongoInitDatabaseDTO(
@@ -172,7 +173,8 @@ public class ManagedMongoDbControllerTests extends BaseTest {
                             rq.getConfig().getReplicas(),
                             new ClusterBackupConfig(
                                     rq.getConfig().getBackup().getIsEnabled(),
-                                    rq.getConfig().getBackup().getSchedule()
+                                    rq.getConfig().getBackup().getSchedule(),
+                                    5
                             )
                     ),
                     createdBy
@@ -294,7 +296,8 @@ public class ManagedMongoDbControllerTests extends BaseTest {
                         3,
                         new ClusterBackupConfigDTO(
                                 true,
-                                "0 0 * * *"
+                                "0 0 * * *",
+                                5
                         )
                 ),
                 new MongoInitDatabaseDTO(
@@ -361,7 +364,8 @@ public class ManagedMongoDbControllerTests extends BaseTest {
                         3,
                         new ClusterBackupConfigDTO(
                                 true,
-                                "0 0 * * *"
+                                "0 0 * * *",
+                                5
                         )
                 ),
                 new MongoInitDatabaseDTO(
@@ -405,7 +409,8 @@ public class ManagedMongoDbControllerTests extends BaseTest {
                         3,
                         new ClusterBackupConfigDTO(
                                 true,
-                                "0 0 * * *"
+                                "0 0 * * *",
+                                5
                         )
                 ),
                 new MongoInitDatabaseDTO(

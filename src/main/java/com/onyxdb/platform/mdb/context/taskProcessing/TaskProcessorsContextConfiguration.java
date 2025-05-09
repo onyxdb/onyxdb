@@ -64,21 +64,6 @@ public class TaskProcessorsContextConfiguration {
     }
 
     @Bean
-    public MongoApplyPsmdbTaskConsumer mongoApplyPsmdbCrTaskProcessor(
-            ObjectMapper objectMapper,
-            ClusterService clusterService,
-            PsmdbClient psmdbClient,
-            ResourcePresetService resourcePresetService
-    ) {
-        return new MongoApplyPsmdbTaskConsumer(
-                objectMapper,
-                clusterService,
-                psmdbClient,
-                resourcePresetService
-        );
-    }
-
-    @Bean
     public MongoCheckPsmdbReadinessConsumer mongoCheckClusterReadinessProcessor(
             ObjectMapper objectMapper,
             ClusterService clusterService,

@@ -75,7 +75,26 @@ http://vmselect-onyxdb.onyxdb.svc.cluster.local:8481/select/0:0/prometheus
 
 ### Deploy MinIO
 
+Deploy MinIO:
+```shell
+kubectl apply -f ./deploy/minio/minio.yaml
+```
+
+Port forward service 9001 port
+```shell
 TODO
+```
+
+Login with default credentials:
+```shell
+user: minioadmin
+password: minioadmin
+```
+
+Create access key via UI, place key data to ./deploy/minio/onyxdb-minio.yaml and then apply secret:
+```shell
+kubectl apply -f ./deploy/minio/onyxdb-secret.yaml
+```
 
 ### Deploy OnyxDB components
 
