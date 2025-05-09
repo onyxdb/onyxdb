@@ -42,9 +42,18 @@ public class TemplateProvider {
             String replsetName,
             int replsetSize,
             double vcpu,
-            long ram
+            long ram,
+            String storageClass,
+            long storage,
+            boolean backupEnabled,
+            String backupSchedule,
+            int backupLimit,
+            String minioUrl,
+            String minioSecret,
+            String minioBucket
     ) {
         var mongodMemory = Quantity.fromNumericalAmount(BigDecimal.valueOf(ram), "Gi");
+        var mongodStorage = Quantity.fromNumericalAmount(BigDecimal.valueOf(storage), "Gi");
 
         Context context = new Context();
         context.setVariables(Map.ofEntries(
@@ -55,7 +64,15 @@ public class TemplateProvider {
                 Map.entry("REPLSET_NAME", replsetName),
                 Map.entry("REPLSET_SIZE", replsetSize),
                 Map.entry("MONGOD_CPU", vcpu),
-                Map.entry("MONGOD_MEMORY", mongodMemory)
+                Map.entry("MONGOD_MEMORY", mongodMemory),
+                Map.entry("MONGOD_STORAGE_CLASS", storageClass),
+                Map.entry("MONGOD_STORAGE", mongodStorage),
+                Map.entry("BACKUP_ENABLED", backupEnabled),
+                Map.entry("MINIO_BUCKET", minioBucket),
+                Map.entry("MINIO_SECRET", minioSecret),
+                Map.entry("MINIO_URL", minioUrl),
+                Map.entry("BACKUP_SCHEDULE", backupSchedule),
+                Map.entry("BACKUP_LIMIT", backupLimit)
         ));
 
         return templateEngine.process("psmdb.yaml.txt", context);

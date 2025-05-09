@@ -2936,9 +2936,13 @@ components:
           type: boolean
         schedule:
           type: string
+        limit:
+          type: integer
+          format: int32
       required:
         - isEnabled
         - schedule
+        - limit
     MongoInitDatabaseDTO:
       type: object
       properties:

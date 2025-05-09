@@ -73,27 +73,28 @@ spec:
           memory: "[[${MONGOD_MEMORY}]]"
       volumeSpec:
         persistentVolumeClaim:
+          storageClassName: "[[${MONGOD_STORAGE_CLASS}]]"
           resources:
             requests:
-              storage: 1Gi
+              storage: "[[${MONGOD_STORAGE}]]"
   sharding:
     enabled: false
   backup:
-    enabled: true
+    enabled: [[${BACKUP_ENABLED}]]
     image: perconalab/percona-server-mongodb-operator:main-backup
     storages:
         minio:
           type: s3
           s3:
-            bucket: onyxdb
+            bucket: [[${MINIO_BUCKET}]]
             prefix: mongodb/[[${ONYXDB_PROJECT}]]/[[${ONYXDB_CLUSTER}]]
             region: us-east-1
-            credentialsSecret: minio-onyxdb
-            endpointUrl: http://minio.onyxdb.svc.cluster.local:9000
+            credentialsSecret: [[${MINIO_SECRET}]]
+            endpointUrl: [[${MINIO_URL}]]
     tasks:
       - name: "backup"
         enabled: true
-        schedule: "* * * * *"
-        keep: 3
+        schedule: [[${BACKUP_SCHEDULE}]]
+        keep: [[${BACKUP_LIMIT}]]
         type: logical
         storageName: minio
