@@ -1,22 +1,27 @@
 package com.onyxdb.platform.mdb.users;
 
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jooq.DSLContext;
 import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DSL;
+import org.springframework.dao.DuplicateKeyException;
 
 import com.onyxdb.platform.generated.jooq.Indexes;
 import com.onyxdb.platform.generated.jooq.tables.records.PermissionsRecord;
 import com.onyxdb.platform.mdb.clusters.models.MongoPermission;
 import com.onyxdb.platform.mdb.clusters.models.PermissionData;
 import com.onyxdb.platform.mdb.clusters.models.User;
-import com.onyxdb.platform.mdb.exceptions.BadRequestException;
-import com.onyxdb.platform.mdb.exceptions.NotImplementedException;
+import com.onyxdb.platform.mdb.exceptions.UserAlreadyExistsException;
+import com.onyxdb.platform.mdb.exceptions.UserNotFoundException;
 import com.onyxdb.platform.mdb.utils.PsqlUtils;
 import com.onyxdb.platform.mdb.utils.TimeUtils;
 
@@ -44,21 +49,18 @@ public class UserPostgresRepository implements UserRepository {
             UUID clusterId,
             String userName
     ) {
-//        throw new RuntimeException("FIXME");
         var condition = DSL.trueCondition()
                 .and(USERS.IS_DELETED.eq(false)
                         .and(PERMISSIONS.IS_DELETED.eq(false)));
 
-//        if (id != null) {
+        if (clusterId != null) {
             condition = condition.and(USERS.CLUSTER_ID.eq(clusterId));
-//        }
-//        if (userId != null) {
+        }
+        if (userName != null) {
             condition = condition.and(USERS.NAME.eq(userName));
-//        }
-//
-//        USERS.CLUSTER_ID.eq(id)
-//                .and(USERS.IS_DELETED.eq(false));
-        return dslContext.select()
+        }
+
+        Map<UUID, List<User>> userIdToUsers = dslContext.select()
                 .from(USERS)
                 .join(PERMISSIONS)
                 .on(USERS.CLUSTER_ID.eq(PERMISSIONS.CLUSTER_ID).and(USERS.NAME.eq(PERMISSIONS.USER_NAME)))
@@ -91,31 +93,59 @@ public class UserPostgresRepository implements UserRepository {
                                 r.get(USERS.DELETED_BY),
                                 List.of(permission)
                         );
+
+
+//                        @Nullable
+//                        User userFromMap = userIdToUser.get(user.id());
+//                        if (userFromMap != null) {
+//                            userFromMap.permissions().add(permission);
+//                            userIdToUser.put(user.id(), userFromMap);
+//                        } else {
+//                            userIdToUser.put(user.id(), user);
+//                        }
+
                     } catch (JsonProcessingException e) {
                         throw new RuntimeException(e);
                     }
-                });
+                })
+                .stream()
+                .collect(Collectors.groupingBy(User::id));
+
+        return userIdToUsers.values().stream().map(groupedUsers -> {
+                    User firstUser = groupedUsers.getFirst();
+                    List<MongoPermission> permissions = groupedUsers.stream()
+                            .map(User::permissions)
+                            .flatMap(Collection::stream)
+                            .toList();
+
+                    return User.builder()
+                            .copy(firstUser)
+                            .permissions(permissions)
+                            .build();
+                })
+                .sorted(Comparator.comparing(User::createdAt))
+                .toList();
     }
 
-    @Override
-    public Optional<User> getUserO(UUID userId) {
-//        return listUsers(null, userId).stream().findFirst();
-        throw new NotImplementedException();
-    }
+//    @Override
+//    public Optional<User> getUserO(UUID userId) {
 
+    /// /        return listUsers(null, userId).stream().findFirst();
+//        throw new NotImplementedException();
+//    }
     @Override
     public Optional<User> getUserO(UUID clusterId, String userName) {
         return listUsers(clusterId, userName).stream().findFirst();
     }
 
-    @Override
-    public User getUser(UUID userId) {
-        return getUserO(userId).orElseThrow(() -> new BadRequestException("User not found"));
-    }
+//    @Override
+//    public User getUser(UUID userId) {
+//        return getUserO(userId).orElseThrow(() -> new UserNotFoundException(userId));
+//    }
 
     @Override
     public User getUser(UUID clusterId, String userName) {
-        return getUserO(clusterId, userName).orElseThrow(() -> new BadRequestException("User not found"));
+        return getUserO(clusterId, userName).orElseThrow(() -> new UserNotFoundException(userName));
     }
 
     @Override
@@ -145,15 +175,12 @@ public class UserPostgresRepository implements UserRepository {
                             user.deletedBy()
                     )
                     .execute();
-        } catch (DataAccessException e) {
+        } catch (DataAccessException | DuplicateKeyException e) {
             PsqlUtils.handleDataAccessEx(
                     e,
                     USERS,
                     Indexes.USERS_USER_NAME_CLUSTER_ID_IS_DELETED_UNIQ_IDX,
-                    () -> new BadRequestException(String.format(
-                            "User with database '%s' already exists",
-                            user.name()
-                    ))
+                    () -> new UserAlreadyExistsException(user.name())
             );
 
             throw e;
@@ -172,16 +199,18 @@ public class UserPostgresRepository implements UserRepository {
 
     @Override
     public void createPermissions(List<MongoPermission> permissions) {
-        List<PermissionsRecord> records = permissions.stream().map(userMapper::mapToPermissionsRecord).toList();
+        List<PermissionsRecord> records = permissions.stream().map(userMapper::mongoPermissionToPermissionsRecord).toList();
         dslContext.batchInsert(records).execute();
     }
 
     @Override
-    public void markPermissionsAsDeleted(UUID userId) {
-//        dslContext.update(PERMISSIONS)
-//                .set(PERMISSIONS.IS_DELETED, true)
-//                .where(PERMISSIONS.USER_ID.eq(userId))
-//                .execute();
-        throw new RuntimeException("FIXME");
+    public void markPermissionsAsDeleted(List<UUID> permissionIds, UUID deletedBy) {
+        dslContext.update(PERMISSIONS)
+                .set(PERMISSIONS.IS_DELETED, true)
+                .set(PERMISSIONS.DELETED_AT, TimeUtils.now())
+                .set(PERMISSIONS.DELETED_BY, deletedBy)
+                .where(PERMISSIONS.ID.in(permissionIds))
+                .execute();
+//        throw new RuntimeException("FIXME");
     }
 }

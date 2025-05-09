@@ -302,6 +302,80 @@ paths:
       responses:
         '200':
           description: OK
+  # ---------- Managed MongoDB users -----------------------------------------------------------------------------------
+  /api/mdb/mongodb/users/roles:
+    get:
+      summary: List available MongoDB roles
+      operationId: listRoles
+      tags:
+        - Managed MongoDB users
+        - MDB
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListMongoRolesResponseDTO'
+  /api/mdb/mongodb/users:
+    get:
+      summary: List MongoDB users
+      operationId: listUsers
+      tags:
+        - Managed MongoDB users
+        - MDB
+      parameters:
+        - $ref: '#/components/parameters/ClusterIdRQP'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListMongoUsersResponseDTO'
+    post:
+      summary: Create MongoDB user
+      operationId: createUser
+      tags:
+        - Managed MongoDB users
+        - MDB
+      parameters:
+        - $ref: '#/components/parameters/ClusterIdRQP'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMongoUserRequestDTO'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduledOperationDTO'
+    delete:
+      summary: Delete MongoDB user
+      operationId: deleteUser
+      tags:
+        - Managed MongoDB users
+        - MDB
+      parameters:
+        - $ref: '#/components/parameters/ClusterIdRQP'
+        - $ref: '#/components/parameters/UserNameRQP'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduledOperationDTO'
+
+
+
+
+
+
 
 
 
@@ -403,89 +477,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MongoListHostsResponse'
-  # ---------- Managed MongoDB users -----------------------------------------------------------------------------------
-  /api/managed-mongodb/v1/users/roles:
-    get:
-      summary: List available MongoDB roles
-      operationId: listRoles
-      tags:
-        - Managed MongoDB users
-        - MDB
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ListMongoRolesResponse'
-  /api/managed-mongodb/v1/clusters/{clusterId}/users:
-    get:
-      summary: List MongoDB users in cluster
-      operationId: listUsers
-      tags:
-        - Managed MongoDB users
-        - MDB
-      parameters:
-        - $ref: '#/components/parameters/ClusterIdPV'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ListMongoUsersResponse'
-    post:
-      summary: Create MongoDB user in cluster
-      operationId: createUser
-      tags:
-        - Managed MongoDB users
-        - MDB
-      parameters:
-        - $ref: '#/components/parameters/ClusterIdPV'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/MongoUserToCreate'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/V1ScheduledOperationResponse'
-  /api/managed-mongodb/v1/clusters/users/{userId}:
-    get:
-      summary: Get MongoDB user
-      operationId: getUser
-      tags:
-        - Managed MongoDB users
-        - MDB
-      parameters:
-        - $ref: '#/components/parameters/UserIdPV'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MongoUser'
-    delete:
-      summary: Delete MongoDB user
-      operationId: deleteUser
-      tags:
-        - Managed MongoDB users
-        - MDB
-      parameters:
-        - $ref: '#/components/parameters/UserIdPV'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/V1ScheduledOperationResponse'
   # ---------- Managed MongoDB backups ---------------------------------------------------------------------------------
   /api/managed-mongodb/v1/clusters/{clusterId}/backups:
     get:
@@ -3220,6 +3211,119 @@ components:
       required:
         - value
         - displayValue
+    ListMongoUsersResponseDTO:
+      type: object
+      properties:
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/MongoUserDTO'
+      required:
+        - users
+    MongoUserDTO:
+      type: object
+      properties:
+        name:
+          type: string
+        clusterId:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+          format: uuid
+        isDeleted:
+          type: boolean
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+        deletedBy:
+          type: string
+          format: uuid
+          nullable: true
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/MongoPermissionDTO'
+      required:
+        - name
+        - clusterId
+        - createdAt
+        - createdBy
+        - isDeleted
+        - deletedAt
+        - deletedBy
+        - permissions
+    MongoPermissionDTO:
+      type: object
+      properties:
+        databaseName:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+          format: uuid
+        isDeleted:
+          type: boolean
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+        deletedBy:
+          type: string
+          format: uuid
+          nullable: true
+        roles:
+          type: array
+          items:
+            type: string
+      required:
+        - databaseName
+        - createdAt
+        - createdBy
+        - isDeleted
+        - deletedAt
+        - deletedBy
+        - roles
+    CreateMongoUserRequestDTO:
+      type: object
+      properties:
+        name:
+          type: string
+        password:
+          type: string
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateMongoPermissionDTO'
+      required:
+        - name
+        - password
+        - permissions
+    CreateMongoPermissionDTO:
+      type: object
+      properties:
+        databaseName:
+          type: string
+        roles:
+          type: array
+          items:
+            type: string
+      required:
+        - databaseName
+        - roles
+
+
+
+
+
+
+
 
 
 
@@ -3376,122 +3480,6 @@ components:
         - unknown
         - primary
         - secondary
-    ListMongoUsersResponse:
-      type: object
-      properties:
-        users:
-          type: array
-          items:
-            $ref: '#/components/schemas/MongoUser'
-      required:
-        - users
-    MongoUser:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        name:
-          type: string
-        clusterId:
-          type: string
-          format: uuid
-        createdAt:
-          type: string
-          format: date-time
-        createdBy:
-          type: string
-          format: uuid
-        isDeleted:
-          type: boolean
-        deletedAt:
-          type: string
-          format: date-time
-          nullable: true
-        deletedBy:
-          type: string
-          format: uuid
-          nullable: true
-        permissions:
-          type: array
-          items:
-            $ref: '#/components/schemas/MongoPermission'
-      required:
-        - id
-        - name
-        - clusterId
-        - createdAt
-        - createdBy
-        - isDeleted
-        - deletedAt
-        - deletedBy
-        - permissions
-    MongoPermission:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        databaseId:
-          type: string
-          format: uuid
-        createdAt:
-          type: string
-          format: date-time
-        createdBy:
-          type: string
-          format: uuid
-        isDeleted:
-          type: boolean
-        deletedAt:
-          type: string
-          format: date-time
-          nullable: true
-        deletedBy:
-          type: string
-          format: uuid
-          nullable: true
-        roles:
-          type: array
-          items:
-            type: string
-      required:
-        - id
-        - databaseId
-        - createdAt
-        - createdBy
-        - isDeleted
-        - deletedAt
-        - deletedBy
-        - roles
-    MongoUserToCreate:
-      type: object
-      properties:
-        name:
-          type: string
-        password:
-          type: string
-        permissions:
-          type: array
-          items:
-            $ref: '#/components/schemas/MongoPermissionToCreate'
-      required:
-        - name
-        - password
-        - permissions
-    MongoPermissionToCreate:
-      type: object
-      properties:
-        databaseId:
-          type: string
-          format: uuid
-        roles:
-          type: array
-          items:
-            type: string
-      required:
-        - databaseId
-        - roles
     ListMongoBackupsResponse:
       type: object
       properties:
@@ -3528,7 +3516,7 @@ components:
       enum:
         - automated
         - manual
-    ListMongoRolesResponse:
+    ListMongoRolesResponseDTO:
       type: object
       properties:
         roles:
@@ -4359,13 +4347,12 @@ components:
       required: true
       schema:
         type: string
-    UserIdPV:
-      name: userId
-      in: path
+    UserNameRQP:
+      name: userName
+      in: query
       required: true
       schema:
         type: string
-        format: uuid
     BackupNamePV:
       name: backupName
       in: path

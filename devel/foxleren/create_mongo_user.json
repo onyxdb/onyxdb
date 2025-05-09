@@ -1,0 +1,20 @@
+{
+  "name": "u3",
+  "password": "p3",
+  "permissions": [
+    {
+      "databaseName": "db2",
+      "roles": [
+        "read",
+        "readWrite"
+      ]
+    },
+    {
+      "databaseName": "db3",
+      "roles": [
+        "read",
+        "readWrite"
+      ]
+    }
+  ]
+}

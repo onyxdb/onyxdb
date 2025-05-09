@@ -7,6 +7,7 @@ public record CreateUser(
         String userName,
         String password,
         UUID clusterId,
-        List<CreateMongoPermission> permissions
+        List<CreateMongoPermission> permissions,
+        UUID createdBy
 ) {
 }

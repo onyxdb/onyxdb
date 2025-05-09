@@ -36,12 +36,11 @@ public class UserService {
     private final ObjectMapper objectMapper;
 
     public List<User> listUsers(UUID clusterId) {
-//        return userRepository.listUsers(id, null);
-        throw new NotImplementedException();
+        return userRepository.listUsers(clusterId, null);
     }
 
-    public User getUser(UUID userId) {
-        return userRepository.getUser(userId);
+    public User getUser(UUID clusterId, String userName) {
+        return userRepository.getUser(clusterId, userName);
     }
 
     public UUID createUser(CreateUser createUser) {
@@ -76,8 +75,8 @@ public class UserService {
         return operation.id();
     }
 
-    public UUID deleteUser(UUID userId) {
-        User user = getUser(userId);
+    public UUID deleteUser(UUID clusterId, String userName, UUID deletedBy) {
+        User user = getUser(clusterId, userName);
 
         var operation = Operation.scheduledWithPayload(
                 OperationType.MONGO_DELETE_USER,
@@ -85,7 +84,8 @@ public class UserService {
                 ObjectMapperUtils.convertToString(objectMapper, new MongoDeleteUserPayload(
                         user.clusterId(),
                         user.id(),
-                        user.name()
+                        user.name(),
+                        deletedBy
                 ))
         );
         operationRepository.createOperation(operation);

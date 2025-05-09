@@ -106,7 +106,8 @@ public class ClusterService {
                         database.name(),
                         cluster.id(),
                         userRoles
-                ))
+                )),
+                createCluster.createdBy()
         );
         var user = userMapper.createUserWithSecretToUser(createUser);
 

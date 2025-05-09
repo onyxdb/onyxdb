@@ -173,7 +173,7 @@ public class PsmdbClient extends AbstractPsmdbFactory {
                         Map.entry("app.kubernetes.io/instance", getPsmdbName(project, cluster)))
                 )
                 .endMetadata()
-                .addToStringData("username", user)
+                .addToStringData("userName", user)
                 .addToStringData("password", password)
                 .build();
 
