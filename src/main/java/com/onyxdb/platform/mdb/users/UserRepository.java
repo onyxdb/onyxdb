@@ -13,11 +13,11 @@ public interface UserRepository {
             String userName
     );
 
-    Optional<User> getUserO(UUID userId);
+//    Optional<User> getUserO(UUID userId);
 
     Optional<User> getUserO(UUID clusterId, String userName);
 
-    User getUser(UUID userId);
+//    User getUser(UUID userId);
 
     User getUser(UUID clusterId, String userName);
 
@@ -27,5 +27,5 @@ public interface UserRepository {
 
     void createPermissions(List<MongoPermission> permissions);
 
-    void markPermissionsAsDeleted(UUID permissions);
+    void markPermissionsAsDeleted(List<UUID> permissionIds, UUID deletedBy);
 }

@@ -209,7 +209,8 @@ public class ManagedMongoDbControllerTests extends BaseTest {
                                     createdClusterId,
                                     userRoles
                             )
-                    )
+                    ),
+                    createdBy
             ));
 
             Cluster createdCluster = clusterRepository.getClusterOrThrow(expectedCluster.id());

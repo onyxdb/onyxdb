@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import com.onyxdb.platform.mdb.operations.models.Operation;
 import com.onyxdb.platform.mdb.operations.models.ProducedTask;
 import com.onyxdb.platform.mdb.operations.models.TaskType;
+import com.onyxdb.platform.mdb.operations.models.payload.ClusterPayload;
 import com.onyxdb.platform.mdb.operations.models.payload.MongoCreateUserPayload;
 import com.onyxdb.platform.mdb.operations.producers.TaskProducer;
 
@@ -20,33 +21,45 @@ public class MongoCreateUserTaskProducer extends TaskProducer<MongoCreateUserPay
     }
 
     @Override
-    public MongoCreateUserPayload parsePayload(String payload) {
-        try {
-            return objectMapper.readValue(payload, MongoCreateUserPayload.class);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
     public List<ProducedTask> produceTasks(Operation operation, MongoCreateUserPayload payload) {
         UUID operationId = operation.id();
 
-        var createDatabaseTask = ProducedTask.createWithPayload(
-                TaskType.MONGO_CREATE_USER,
+        var clusterPayload = new ClusterPayload(payload.clusterId());
+
+        var markClusterUpdatingTask = ProducedTask.createWithPayload(
+                TaskType.MONGO_MARK_CLUSTER_UPDATING,
                 operationId,
                 List.of(),
+                clusterPayload
+        );
+        var createUserTask = ProducedTask.createWithPayload(
+                TaskType.MONGO_CREATE_USER,
+                operationId,
+                List.of(markClusterUpdatingTask.id()),
                 payload
+        );
+        var markClusterReadyTask = ProducedTask.createWithPayload(
+                TaskType.MONGO_MARK_CLUSTER_READY,
+                operationId,
+                List.of(createUserTask.id()),
+                clusterPayload
         );
         var finalTask = ProducedTask.create(
                 TaskType.FINAL_TASK,
                 operationId,
-                List.of(createDatabaseTask.id())
+                List.of(markClusterReadyTask.id())
         );
 
         return List.of(
-                createDatabaseTask,
+                markClusterUpdatingTask,
+                createUserTask,
+                markClusterReadyTask,
                 finalTask
         );
+    }
+
+    @Override
+    public MongoCreateUserPayload parsePayload(String payload) throws JsonProcessingException {
+        return objectMapper.readValue(payload, MongoCreateUserPayload.class);
     }
 }

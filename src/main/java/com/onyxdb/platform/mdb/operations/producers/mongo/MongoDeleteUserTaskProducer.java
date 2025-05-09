@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import com.onyxdb.platform.mdb.operations.models.Operation;
 import com.onyxdb.platform.mdb.operations.models.ProducedTask;
 import com.onyxdb.platform.mdb.operations.models.TaskType;
+import com.onyxdb.platform.mdb.operations.models.payload.ClusterPayload;
 import com.onyxdb.platform.mdb.operations.models.payload.MongoDeleteUserPayload;
 import com.onyxdb.platform.mdb.operations.producers.TaskProducer;
 
@@ -20,33 +21,45 @@ public class MongoDeleteUserTaskProducer extends TaskProducer<MongoDeleteUserPay
     }
 
     @Override
-    public MongoDeleteUserPayload parsePayload(String payload) {
-        try {
-            return objectMapper.readValue(payload, MongoDeleteUserPayload.class);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
     public List<ProducedTask> produceTasks(Operation operation, MongoDeleteUserPayload payload) {
         UUID operationId = operation.id();
 
+        var clusterPayload = new ClusterPayload(payload.clusterId());
+
+        var markClusterUpdatingTask = ProducedTask.createWithPayload(
+                TaskType.MONGO_MARK_CLUSTER_UPDATING,
+                operationId,
+                List.of(),
+                clusterPayload
+        );
         var deleteDatabaseTask = ProducedTask.createWithPayload(
                 TaskType.MONGO_DELETE_USER,
                 operationId,
-                List.of(),
+                List.of(markClusterUpdatingTask.id()),
                 payload
+        );
+        var markClusterReadyTask = ProducedTask.createWithPayload(
+                TaskType.MONGO_MARK_CLUSTER_READY,
+                operationId,
+                List.of(deleteDatabaseTask.id()),
+                clusterPayload
         );
         var finalTask = ProducedTask.create(
                 TaskType.FINAL_TASK,
                 operationId,
-                List.of(deleteDatabaseTask.id())
+                List.of(markClusterReadyTask.id())
         );
 
         return List.of(
+                markClusterUpdatingTask,
                 deleteDatabaseTask,
+                markClusterReadyTask,
                 finalTask
         );
+    }
+
+    @Override
+    public MongoDeleteUserPayload parsePayload(String payload) throws JsonProcessingException {
+        return objectMapper.readValue(payload, MongoDeleteUserPayload.class);
     }
 }
