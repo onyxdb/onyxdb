@@ -19,8 +19,12 @@ public enum TaskType implements StringEnum {
     MONGO_CREATE_USER("mongo_create_user"),
     MONGO_DELETE_DATABASE("mongo_delete_database"),
     MONGO_DELETE_USER("mongo_delete_user"),
+
+
     MONGO_CREATE_BACKUP("mongo_apply_backup"),
     MONGO_CHECK_BACKUP_IS_READY("mongo_check_backup_is_ready"),
+    MONGO_DELETE_BACKUP("mongo_delete_backup"),
+    MONGO_CHECK_BACKUP_IS_DELETED("mongo_check_backup_is_deleted"),
 
     MONGO_MARK_CLUSTER_READY("mongo_mark_cluster_ready"),
     MONGO_MARK_CLUSTER_UPDATING("mongo_mark_cluster_updating"),

@@ -43,7 +43,8 @@ public class OperationService {
             TaskType.MONGO_APPLY_ONYXDB_AGENT,
             TaskType.MONGO_CHECK_ONYXDB_AGENT_IS_DELETED,
             TaskType.MONGO_CHECK_PSMDB_IS_DELETED,
-            TaskType.MONGO_CHECK_BACKUP_IS_READY
+            TaskType.MONGO_CHECK_BACKUP_IS_READY,
+            TaskType.MONGO_CHECK_BACKUP_IS_DELETED
     );
 
     private final OperationRepository operationRepository;

@@ -41,7 +41,8 @@ public class MongoBackupController implements ManagedMongoDbBackupsApi {
 
     @Override
     public ResponseEntity<ScheduledOperationDTO> deleteBackup(UUID clusterId, String backupName) {
-        return null;
+        UUID operationId = backupService.deleteBackup(clusterId, backupName);
+        return ResponseEntity.ok(new ScheduledOperationDTO(operationId));
     }
 
 //    @Override
