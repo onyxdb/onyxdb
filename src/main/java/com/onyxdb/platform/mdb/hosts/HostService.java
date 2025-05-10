@@ -29,7 +29,7 @@ public class HostService {
         return listEnrichedHosts(clusterId).stream().map(hostMapper::map).toList();
     }
 
-    public List<EnrichedHost> listEnrichedHosts(UUID clusterId) {
+    private List<EnrichedHost> listEnrichedHosts(UUID clusterId) {
         List<Host> hosts = hostRepository.listHosts(clusterId);
         List<String> hostNames = hosts.stream().map(Host::name).toList();
 

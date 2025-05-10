@@ -454,6 +454,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ScheduledOperationDTO'
+  # ---------- Managed MongoDB hosts -----------------------------------------------------------------------------------
+  /api/mdb/mongodb/clusters/{clusterId}/hosts:
+    get:
+      summary: List MongoDB hosts
+      operationId: listHosts
+      tags:
+        - Managed MongoDB hosts
+        - MDB
+      parameters:
+        - $ref: '#/components/parameters/ClusterIdPV'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListMongoHostsResponseDTO'
+  # ---------- Managed MongoDB internals -------------------------------------------------------------------------------
+  /api/mdb/mongodb/internal/hosts:
+    put:
+      summary: Update MongoDB hosts
+      operationId: updateHosts
+      tags:
+        - Managed MongoDB internals
+        - MDB
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMongoHostsRequestDTO'
+      responses:
+        '200':
+          description: OK
   # ---------- MDB common ----------------------------------------------------------------------------------------------
   /api/mdb/storage-classes:
     get:
@@ -534,47 +568,6 @@ paths:
 
 
 
-
-
-
-
-
-
-
-  # ---------- v1ManagedMongoDb ----------
-  /api/managed-mongodb/v1/clusters/{clusterId}/hosts:
-    get:
-      summary: Get MongoDB hosts
-      operationId: listHosts
-      tags:
-        - v1ManagedMongoDb
-        - MDB
-      parameters:
-        - $ref: '#/components/parameters/ClusterIdPV'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MongoListHostsResponse'
-  # ---------- Managed MongoDB internals -------------------------------------------------------------------------------
-  /api/managed-mongodb/v1/internal/hosts:
-    put:
-      summary: Update MongoDB hosts
-      operationId: updateHosts
-      tags:
-        - Managed MongoDB internals
-        - MDB
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateMongoHostsRequest'
-      responses:
-        '200':
-          description: OK
   # ---------- MDB Quotas ----------------------------------------------------------------------------------------------
   /api/quotas/mdb/by-products:
     get:
@@ -3471,40 +3464,16 @@ components:
         - type
         - vcpu
         - ram
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    MongoListHostsResponse:
+    ListMongoHostsResponseDTO:
       type: object
       properties:
         hosts:
           type: array
           items:
-            $ref: '#/components/schemas/MongoHost'
+            $ref: '#/components/schemas/MongoHostDTO'
       required:
         - hosts
-    UpdateMongoHostsRequest:
-      type: object
-      properties:
-        hosts:
-          type: array
-          items:
-            $ref: '#/components/schemas/MongoHost'
-    MongoHost:
+    MongoHostDTO:
       type: object
       properties:
         name:
@@ -3513,34 +3482,48 @@ components:
           type: string
           format: uuid
         type:
-          $ref: '#/components/schemas/MongoHostType'
+          type: string
         status:
-          $ref: '#/components/schemas/MongoHostStatus'
+          type: string
         role:
-          $ref: '#/components/schemas/MongoHostRole'
+          type: string
       required:
         - name
         - clusterId
         - type
         - status
         - role
-    MongoHostType:
-      type: string
-      enum:
-        - unknown
-        - mongod
-    MongoHostStatus:
-      type: string
-      enum:
-        - unknown
-        - alive
-        - dead
-    MongoHostRole:
-      type: string
-      enum:
-        - unknown
-        - primary
-        - secondary
+    UpdateMongoHostsRequestDTO:
+      type: object
+      properties:
+        hosts:
+          type: array
+          items:
+            $ref: '#/components/schemas/MongoHostDTO'
+      required:
+        - hosts
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     ListQuotasByProductResponse:
       type: object
       properties:
@@ -3762,6 +3745,17 @@ components:
         - usage
         - free
         - timestamp
+
+
+
+
+
+
+
+
+
+
+
     # ---------- IDM schemas -------------------------------------------------------------------------------------------
     AccountPostDTO:
       type: object

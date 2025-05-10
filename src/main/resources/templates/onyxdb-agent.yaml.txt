@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: agent
-          image: foxleren/onyxdb-agent:foxleren-create-and-delete-databases-75e6da0
+          image: foxleren/onyxdb-agent:s.mokhov-fix-agent-2e5c33d
           imagePullPolicy: Always
           ports:
             - containerPort: 9004
@@ -27,7 +27,12 @@ spec:
             - name: ONYXDB_MDB__BASE_URL
               value: [[${ONYXDB_BASE_URL}]]
             - name: ONYXDB_MDB__CLUSTER_ID
-              value: [[${CLUSTER_ID}]]
+              value: [[${ONYXDB_CLUSTER_ID}]]
+            - name: ONYXDB_MDB__ACCESS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: [[${ONYXDB_ROBOT_SECRET}]]
+                  key: accessToken
             - name: MONGO_USER
               valueFrom:
                 secretKeyRef:
