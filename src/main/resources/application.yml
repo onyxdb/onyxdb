@@ -35,7 +35,7 @@ onyxdb:
     self-namespace: onyxdb
     namespaces: onyxdb
     storage-classes: standard
-    disabled-kube: true
+    disabled-kube: false
   agent:
     base-url: http://localhost:9002
   postgres:
