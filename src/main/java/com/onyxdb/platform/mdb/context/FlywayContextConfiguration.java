@@ -10,7 +10,10 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class FlywayContextConfiguration {
-    @Bean
+    public static final String POSTGRES_FLYWAY_BEAN_NAME = "postgresFlyway";
+    public static final String CLICKHOUSE_FLYWAY_BEAN_NAME = "clickhouseFlyway";
+
+    @Bean(POSTGRES_FLYWAY_BEAN_NAME)
     public Flyway postgresFlyway(
             @Qualifier(DatasourceContextConfiguration.POSTGRES_DATASOURCE_BEAN)
             DataSource dataSource,
@@ -27,7 +30,7 @@ public class FlywayContextConfiguration {
         return flyway;
     }
 
-    @Bean
+    @Bean(CLICKHOUSE_FLYWAY_BEAN_NAME)
     public Flyway clickhouseFlyway(
             @Qualifier(DatasourceContextConfiguration.CLICKHOUSE_DATASOURCE_BEAN)
             DataSource dataSource,

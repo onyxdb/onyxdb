@@ -1,3 +1,12 @@
+CREATE TABLE public.initialization
+(
+    is_initialized bool NOT NULL,
+    initialized_at timestamp
+);
+
+INSERT INTO public.initialization(is_initialized)
+VALUES (false);
+
 CREATE TYPE public.resource_preset_type AS ENUM (
     'cpu_optimized',
     'standard',
