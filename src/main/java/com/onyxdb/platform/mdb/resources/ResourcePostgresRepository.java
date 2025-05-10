@@ -22,6 +22,6 @@ public class ResourcePostgresRepository implements ResourceRepository {
         return dslContext.select()
                 .from(RESOURCES)
                 .where(filter.buildCondition())
-                .fetch(r -> resourceMapper.map(r.into(ResourcesRecord.class)));
+                .fetch(r -> resourceMapper.resourceRecordToResource(r.into(ResourcesRecord.class)));
     }
 }

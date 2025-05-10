@@ -10,9 +10,9 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.onyxdb.platform.generated.openapi.models.GetProductQuotaUsageReportResponseOA;
-import com.onyxdb.platform.generated.openapi.models.ProductQuotaUsageByResourceOA;
-import com.onyxdb.platform.generated.openapi.models.ProductQuotaUsageReportItemOA;
+import com.onyxdb.platform.generated.openapi.models.GetProductQuotaUsageReportResponseDTO;
+import com.onyxdb.platform.generated.openapi.models.ProductQuotaUsageByResourceDTO;
+import com.onyxdb.platform.generated.openapi.models.ProductQuotaUsageReportItemDTO;
 import com.onyxdb.platform.mdb.quotas.QuotaProvider;
 import com.onyxdb.platform.mdb.resources.Resource;
 import com.onyxdb.platform.mdb.resources.ResourceMapper;
@@ -20,8 +20,8 @@ import com.onyxdb.platform.mdb.resources.ResourceMapper;
 public class BillingMapper {
     private static final Logger logger = LoggerFactory.getLogger(BillingMapper.class);
 
-    public ProductQuotaUsageReportItemOA toProductQuotaUsageReportItemOA(ProductQuotaUsageReportItem i) {
-        return new ProductQuotaUsageReportItemOA(
+    public ProductQuotaUsageReportItemDTO toProductQuotaUsageReportItemOA(ProductQuotaUsageReportItem i) {
+        return new ProductQuotaUsageReportItemDTO(
                 i.productId(),
                 QuotaProvider.MDB.value(),
                 i.limit(),
@@ -31,7 +31,7 @@ public class BillingMapper {
         );
     }
 
-    public GetProductQuotaUsageReportResponseOA toGetProductQuotaUsageReportResponse(
+    public GetProductQuotaUsageReportResponseDTO toGetProductQuotaUsageReportResponse(
             List<Resource> resources,
             List<ProductQuotaUsageReportItem> items,
             ResourceMapper resourceMapper
@@ -42,7 +42,7 @@ public class BillingMapper {
         Map<UUID, List<ProductQuotaUsageReportItem>> resourceIdToReportItems = items.stream()
                 .collect(Collectors.groupingBy(ProductQuotaUsageReportItem::resourceId, Collectors.toList()));
 
-        List<ProductQuotaUsageByResourceOA> productQuotaUsageByResourceOAList = new ArrayList<>();
+        List<ProductQuotaUsageByResourceDTO> productQuotaUsageByResourceOAList = new ArrayList<>();
 
         resourceIdToReportItems.forEach((resourceId, value) -> {
             if (!resourceIdToResource.containsKey(resourceId)) {
@@ -51,14 +51,14 @@ public class BillingMapper {
             }
 
             productQuotaUsageByResourceOAList.add(
-                    new ProductQuotaUsageByResourceOA(
-                            resourceMapper.map(resourceIdToResource.get(resourceId)),
+                    new ProductQuotaUsageByResourceDTO(
+                            resourceMapper.resourceToResourceDTO(resourceIdToResource.get(resourceId)),
                             value.stream().map(this::toProductQuotaUsageReportItemOA).toList()
                     )
             );
         });
 
-        return new GetProductQuotaUsageReportResponseOA(
+        return new GetProductQuotaUsageReportResponseDTO(
                 productQuotaUsageByResourceOAList
         );
     }

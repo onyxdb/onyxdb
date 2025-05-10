@@ -2,9 +2,6 @@ openapi: 3.0.0
 info:
   version: 1.0.0
   title: OnyxDB
-tags:
-  - name: Projects
-  - name: Managed MongoDB clusters
 servers:
   - url: http://localhost:9001
     description: localhost
@@ -546,32 +543,10 @@ paths:
       responses:
         '200':
           description: OK
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  # ---------- MDB Quotas ----------------------------------------------------------------------------------------------
-  /api/quotas/mdb/by-products:
+  # ---------- MDB quotas ----------------------------------------------------------------------------------------------
+  /api/mdb/quotas/list-by-products:
     get:
-      summary: List MDB quotas by products
+      summary: List quotas by products
       operationId: listQuotasByProducts
       tags:
         - MDB quotas
@@ -584,10 +559,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ListQuotasByProductsResponse'
-  /api/quotas/mdb/upload-to-products:
+                $ref: '#/components/schemas/ListQuotasByProductsResponseDTO'
+  /api/mdb/quotas/upload-to-products:
     put:
-      summary: Upload MDB quotas to multiple products
+      summary: Upload quotas to multiple products
       operationId: uploadQuotasToProducts
       tags:
         - MDB quotas
@@ -597,13 +572,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UploadQuotasToProductsRequest'
+              $ref: '#/components/schemas/UploadQuotasToProductsRequestDTO'
       responses:
         '200':
           description: OK
-  /api/quotas/mdb/transfer-between-products:
+  /api/mdb/quotas/transfer-between-products:
     put:
-      summary: Exchange MDB quotas between products
+      summary: Exchange quotas between products
       operationId: transferQuotasBetweenProducts
       tags:
         - MDB quotas
@@ -613,13 +588,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TransferQuotasBetweenProductsRequest'
+              $ref: '#/components/schemas/TransferQuotasBetweenProductsRequestDTO'
       responses:
         '200':
           description: OK
-  /api/quotas/mdb/simulate-transfer-between-products:
+  /api/mdb/quotas/simulate-transfer-between-products:
     post:
-      summary: Simulate transfer of MDB quotas between products
+      summary: Simulate transfer of quotas between products
       operationId: simulateTransferQuotasBetweenProducts
       tags:
         - MDB quotas
@@ -629,15 +604,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TransferQuotasBetweenProductsRequest'
+              $ref: '#/components/schemas/TransferQuotasBetweenProductsRequestDTO'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SimulateTransferQuotasBetweenProductsResponse'
-  /api/quotas/mdb/resources:
+                $ref: '#/components/schemas/SimulateTransferQuotasBetweenProductsResponseDTO'
+  /api/mdb/resources:
     get:
       summary: List MDB resources
       operationId: listResources
@@ -650,8 +625,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ListResourcesResponse'
-  /api/quotas/mdb/managed-mongodb/simulate-usage:
+                $ref: '#/components/schemas/ListResourcesResponseDTO'
+  /api/mdb/quotas/mongodb/simulate-usage:
     post:
       summary: Simulate usage of quotas for MongoDB cluster
       operationId: simulateMongoDbQuotasUsage
@@ -663,16 +638,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SimulateMongoDBQuotasUsageRequest'
+              $ref: '#/components/schemas/SimulateMongoDBQuotasUsageRequestDTO'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SimulateMongoDBQuotasUsageResponse'
+                $ref: '#/components/schemas/SimulateMongoDBQuotasUsageResponseDTO'
   # ---------- Billing -------------------------------------------------------------------------------------------------
-  /api/billing/product-quota-usage-report:
+  /api/mdb/billing/product-quota-usage-report:
     get:
       summary: Get product quota usage report
       operationId: getProductQuotaUsageReport
@@ -699,24 +674,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetProductQuotaUsageReportResponseOA'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                $ref: '#/components/schemas/GetProductQuotaUsageReportResponseDTO'
   # ---------- IDM -----------------------------------------------------------------------------------------------------
   /api/v1/auth/login:
     post:
@@ -3502,51 +3460,33 @@ components:
             $ref: '#/components/schemas/MongoHostDTO'
       required:
         - hosts
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    ListQuotasByProductResponse:
-      type: object
-      properties:
-        quotas:
-          type: array
-          items:
-            $ref: '#/components/schemas/Quota'
-      required:
-        - quotas
-    ListQuotasByProductsResponse:
+    ListQuotasByProductsResponseDTO:
       type: object
       properties:
         products:
           type: array
           items:
-            $ref: '#/components/schemas/ProductQuotas'
+            $ref: '#/components/schemas/ProductQuotasDTO'
       required:
         - products
-    Quota:
+    ProductQuotasDTO:
+      type: object
+      properties:
+        productId:
+          type: string
+          format: uuid
+        quotas:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuotaDTO'
+      required:
+        - productId
+        - quotas
+    QuotaDTO:
       type: object
       properties:
         resource:
-          $ref: '#/components/schemas/Resource'
+          $ref: '#/components/schemas/ResourceDTO'
         limit:
           type: integer
           format: int64
@@ -3563,20 +3503,7 @@ components:
         - limit
         - usage
         - free
-    ProductQuotas:
-      type: object
-      properties:
-        productId:
-          type: string
-          format: uuid
-        quotas:
-          type: array
-          items:
-            $ref: '#/components/schemas/Quota'
-      required:
-        - productId
-        - quotas
-    Resource:
+    ResourceDTO:
       type: object
       properties:
         id:
@@ -3587,26 +3514,25 @@ components:
         description:
           type: string
         type:
-          $ref: '#/components/schemas/ResourceType'
+          type: string
         unit:
-          $ref: '#/components/schemas/ResourceUnit'
+          type: string
       required:
         - id
         - name
         - description
         - type
         - unit
-    ResourceType:
-      type: string
-      enum:
-        - vcpu
-        - ram
-    ResourceUnit:
-      type: string
-      enum:
-        - cores
-        - bytes
-    SimulateMongoDBQuotasUsageRequest:
+    ListQuotasByProductResponseDTO:
+      type: object
+      properties:
+        quotas:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuotaDTO'
+      required:
+        - quotas
+    SimulateMongoDBQuotasUsageRequestDTO:
       type: object
       properties:
         projectId:
@@ -3617,25 +3543,25 @@ components:
       required:
         - projectId
         - config
-    SimulateMongoDBQuotasUsageResponse:
+    SimulateMongoDBQuotasUsageResponseDTO:
       type: object
       properties:
         quotas:
           type: array
           items:
-            $ref: '#/components/schemas/Quota'
+            $ref: '#/components/schemas/QuotaDTO'
       required:
         - quotas
-    UploadQuotasToProductsRequest:
+    UploadQuotasToProductsRequestDTO:
       type: object
       properties:
         products:
           type: array
           items:
-            $ref: '#/components/schemas/ProductQuotasToTransfer'
+            $ref: '#/components/schemas/ProductQuotasToTransferDTO'
       required:
         - products
-    ProductQuotasToTransfer:
+    ProductQuotasToTransferDTO:
       type: object
       properties:
         productId:
@@ -3644,11 +3570,11 @@ components:
         quotas:
           type: array
           items:
-            $ref: '#/components/schemas/QuotaToTransfer'
+            $ref: '#/components/schemas/QuotaToTransferDTO'
       required:
         - productId
         - quotas
-    QuotaToTransfer:
+    QuotaToTransferDTO:
       type: object
       properties:
         resourceId:
@@ -3661,7 +3587,7 @@ components:
       required:
         - resourceId
         - limit
-    TransferQuotasBetweenProductsRequest:
+    TransferQuotasBetweenProductsRequestDTO:
       type: object
       properties:
         srcProductId:
@@ -3673,52 +3599,52 @@ components:
         quotas:
           type: array
           items:
-            $ref: '#/components/schemas/QuotaToTransfer'
+            $ref: '#/components/schemas/QuotaToTransferDTO'
       required:
         - srcProductId
         - dstProductId
         - quotas
-    SimulateTransferQuotasBetweenProductsResponse:
+    SimulateTransferQuotasBetweenProductsResponseDTO:
       type: object
       properties:
         srcProduct:
-          $ref: '#/components/schemas/ProductQuotas'
+          $ref: '#/components/schemas/ProductQuotasDTO'
         dstProduct:
-          $ref: '#/components/schemas/ProductQuotas'
+          $ref: '#/components/schemas/ProductQuotasDTO'
       required:
         - srcProduct
         - dstProduct
-    ListResourcesResponse:
+    ListResourcesResponseDTO:
       type: object
       properties:
         resources:
           type: array
           items:
-            $ref: '#/components/schemas/Resource'
+            $ref: '#/components/schemas/ResourceDTO'
       required:
         - resources
-    GetProductQuotaUsageReportResponseOA:
+    GetProductQuotaUsageReportResponseDTO:
       type: object
       properties:
         resources:
           type: array
           items:
-            $ref: '#/components/schemas/ProductQuotaUsageByResourceOA'
+            $ref: '#/components/schemas/ProductQuotaUsageByResourceDTO'
       required:
         - resources
-    ProductQuotaUsageByResourceOA:
+    ProductQuotaUsageByResourceDTO:
       type: object
       properties:
         resource:
-          $ref: '#/components/schemas/Resource'
+          $ref: '#/components/schemas/ResourceDTO'
         items:
           type: array
           items:
-            $ref: '#/components/schemas/ProductQuotaUsageReportItemOA'
+            $ref: '#/components/schemas/ProductQuotaUsageReportItemDTO'
       required:
         - resource
         - items
-    ProductQuotaUsageReportItemOA:
+    ProductQuotaUsageReportItemDTO:
       type: object
       properties:
         productId:
@@ -3745,17 +3671,6 @@ components:
         - usage
         - free
         - timestamp
-
-
-
-
-
-
-
-
-
-
-
     # ---------- IDM schemas -------------------------------------------------------------------------------------------
     AccountPostDTO:
       type: object
@@ -4601,20 +4516,6 @@ components:
       required: true
       schema:
         type: string
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     QuotaIdPV:
       name: quotaId
       in: path
