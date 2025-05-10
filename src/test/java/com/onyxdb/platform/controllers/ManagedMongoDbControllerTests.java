@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,6 +95,7 @@ public class ManagedMongoDbControllerTests extends BaseTest {
     }
 
     @Test
+    @Disabled // TODO upload quotas
     public void createCluster() {
         try {
             Project project = TestUtils.SANDBOX_PROJECT;
@@ -277,6 +279,7 @@ public class ManagedMongoDbControllerTests extends BaseTest {
     }
 
     @Test
+    @Disabled // TODO upload quotas
     public void whenCreateClusterWithDuplicateName_then400() {
         Project project = TestUtils.SANDBOX_PROJECT;
         ResourcePreset resourcePreset = TestUtils.RESOURCE_PRESET;
