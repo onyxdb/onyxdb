@@ -9,6 +9,80 @@ servers:
   - url: http://localhost:9001
     description: localhost
 paths:
+  # ---------- Resource presets ----------------------------------------------------------------------------------------
+  /api/mdb/resource-presets:
+    get:
+      summary: List resource presets
+      operationId: listResourcePresets
+      tags:
+        - Resource presets
+        - MDB
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListResourcePresetsResponseDTO'
+    post:
+      summary: Create resource preset
+      operationId: createResourcePreset
+      tags:
+        - Resource presets
+        - MDB
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateResourcePresetRequestDTO'
+      responses:
+        '200':
+          description: OK
+  /api/mdb/resource-presets/{resourcePresetId}:
+    get:
+      summary: Get resource preset
+      operationId: getResourcePreset
+      tags:
+        - Resource presets
+        - MDB
+      parameters:
+        - $ref: '#/components/parameters/ResourcePresetIdPV'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourcePresetResponseDTO'
+    put:
+      summary: Update resource preset
+      operationId: updateResourcePreset
+      tags:
+        - Resource presets
+        - MDB
+      parameters:
+        - $ref: '#/components/parameters/ResourcePresetIdPV'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateResourcePresetRequestDTO'
+      responses:
+        '200':
+          description: OK
+    delete:
+      summary: Delete resource preset
+      operationId: deleteResourcePreset
+      tags:
+        - Resource presets
+        - MDB
+      parameters:
+        - $ref: '#/components/parameters/ResourcePresetIdPV'
+      responses:
+        '200':
+          description: OK
   # ---------- Projects ------------------------------------------------------------------------------------------------
   /api/mdb/projects:
     get:
@@ -454,80 +528,19 @@ paths:
 
 
 
-  # ---------- Resource presets ----------------------------------------------------------------------------------------
-  /api/v1/resource-presets:
-    get:
-      summary: Get resource presets
-      operationId: listResourcePresets
-      tags:
-        - Resource presets
-        - MDB
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/V1ListResourcePresetsResponse'
-    post:
-      summary: Create resource preset
-      operationId: createResourcePreset
-      tags:
-        - Resource presets
-        - MDB
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/V1CreateResourcePresetRequest'
-      responses:
-        '200':
-          description: OK
-  /api/v1/resource-presets/{resourcePresetId}:
-    get:
-      summary: Get resource preset
-      operationId: getResourcePreset
-      tags:
-        - Resource presets
-        - MDB
-      parameters:
-        - $ref: '#/components/parameters/ResourcePresetIdPV'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/V1ResourcePresetResponse'
-    put:
-      summary: Update resource preset
-      operationId: updateResourcePreset
-      tags:
-        - Resource presets
-        - MDB
-      parameters:
-        - $ref: '#/components/parameters/ResourcePresetIdPV'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/V1UpdateResourcePresetRequest'
-      responses:
-        '200':
-          description: OK
-    delete:
-      summary: Delete resource preset
-      operationId: deleteResourcePreset
-      tags:
-        - Resource presets
-        - MDB
-      parameters:
-        - $ref: '#/components/parameters/ResourcePresetIdPV'
-      responses:
-        '200':
-          description: OK
+
+
+
+
+
+
+
+
+
+
+
+
+
   # ---------- v1ManagedMongoDb ----------
   /api/managed-mongodb/v1/clusters/{clusterId}/hosts:
     get:
@@ -2930,7 +2943,6 @@ components:
       properties:
         presetId:
           type: string
-          format: uuid
         storageClass:
           type: string
         storage:
@@ -3090,7 +3102,6 @@ components:
       properties:
         presetId:
           type: string
-          format: uuid
       required:
         - presetId
     ListMongoDatabasesResponseDTO:
@@ -3226,6 +3237,15 @@ components:
       required:
         - value
         - displayValue
+    ListMongoRolesResponseDTO:
+      type: object
+      properties:
+        roles:
+          type: array
+          items:
+            type: string
+      required:
+        - roles
     ListMongoUsersResponseDTO:
       type: object
       properties:
@@ -3388,46 +3408,22 @@ components:
       required:
         - value
         - displayValue
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # ---------- v1ResourcePresets schemas ----------
-    V1ListResourcePresetsResponse:
+    ListResourcePresetsResponseDTO:
       type: object
       properties:
         resourcePresets:
           type: array
           items:
-            $ref: '#/components/schemas/V1ResourcePresetResponse'
+            $ref: '#/components/schemas/ResourcePresetResponseDTO'
       required:
         - resourcePresets
-    V1ResourcePresetResponse:
+    ResourcePresetResponseDTO:
       type: object
       properties:
         id:
           type: string
-          format: uuid
-        name:
-          type: string
         type:
-          $ref: '#/components/schemas/V1ResourcePresetType'
+          type: string
         vcpu:
           type: integer
           format: int64
@@ -3436,17 +3432,16 @@ components:
           format: int64
       required:
         - id
-        - name
         - type
         - vcpu
         - ram
-    V1CreateResourcePresetRequest:
+    CreateResourcePresetRequestDTO:
       type: object
       properties:
-        name:
+        id:
           type: string
         type:
-          $ref: '#/components/schemas/V1ResourcePresetType'
+          type: string
         vcpu:
           type: integer
           format: int64
@@ -3454,17 +3449,15 @@ components:
           type: integer
           format: int64
       required:
-        - name
+        - id
         - type
         - vcpu
         - ram
-    V1UpdateResourcePresetRequest:
+    UpdateResourcePresetRequestDTO:
       type: object
       properties:
-        name:
-          type: string
         type:
-          $ref: '#/components/schemas/V1ResourcePresetType'
+          type: string
         vcpu:
           type: integer
           format: int64
@@ -3472,24 +3465,22 @@ components:
           type: integer
           format: int64
       required:
-        - name
         - type
         - vcpu
         - ram
-    V1ResourcePresetType:
-      type: string
-      enum:
-        - cpu_optimized
-        - standard
-        - ram_optimized
-    V1DeleteMongoClusterResponse:
-      type: object
-      properties:
-        operationId:
-          type: string
-          format: uuid
-      required:
-        - operationId
+
+
+
+
+
+
+
+
+
+
+
+
+
     MongoListHostsResponse:
       type: object
       properties:
@@ -3499,21 +3490,6 @@ components:
             $ref: '#/components/schemas/MongoHost'
       required:
         - hosts
-    V1MongoScaleHostsRequest:
-      type: object
-      properties:
-        replicas:
-          type: integer
-      required:
-        - replicas
-    V1ScheduledOperationResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-      required:
-        - id
     UpdateMongoHostsRequest:
       type: object
       properties:
@@ -3558,15 +3534,6 @@ components:
         - unknown
         - primary
         - secondary
-    ListMongoRolesResponseDTO:
-      type: object
-      properties:
-        roles:
-          type: array
-          items:
-            type: string
-      required:
-        - roles
     ListQuotasByProductResponse:
       type: object
       properties:
@@ -4409,6 +4376,13 @@ components:
       required: true
       schema:
         type: string
+    OperationIdPV:
+      name: operationId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
 
 
 
@@ -4430,7 +4404,6 @@ components:
       required: true
       schema:
         type: string
-        format: uuid
     QuotaIdPV:
       name: quotaId
       in: path
@@ -4441,13 +4414,6 @@ components:
     ProductIdRQP:
       name: productId
       in: query
-      required: true
-      schema:
-        type: string
-        format: uuid
-    OperationIdPV:
-      name: operationId
-      in: path
       required: true
       schema:
         type: string

@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.scheduling.annotation.Async;
 
-import com.onyxdb.platform.mdb.context.WorkersContextConfiguration;
+import com.onyxdb.platform.mdb.context.OnyxdbCommonContextConfiguration;
 import com.onyxdb.platform.mdb.operations.consumers.CompositeTaskConsumer;
 import com.onyxdb.platform.mdb.operations.models.Task;
 
@@ -46,7 +46,7 @@ public class ConsumeTasksWorker implements CommandLineRunner {
     }
 
     @Override
-    @Async(WorkersContextConfiguration.CONSUME_TASKS_WORKER_EXECUTOR_BEAN)
+    @Async(OnyxdbCommonContextConfiguration.CONSUME_TASKS_WORKER_EXECUTOR_BEAN)
     public void run(String... args) {
         try {
             logger.info("Started processing tasks");

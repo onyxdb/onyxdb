@@ -69,11 +69,11 @@ public class ClusterMapper {
         );
     }
 
-    public ClusterResources clusterResourcesDTOtoClusterResources(ClusterResourcesDTO r) {
+    public ClusterResources clusterResourcesDTOtoClusterResources(ClusterResourcesDTO rq) {
         return new ClusterResources(
-                r.getPresetId(),
-                r.getStorageClass(),
-                r.getStorage()
+                rq.getPresetId(),
+                rq.getStorageClass(),
+                rq.getStorage()
         );
     }
 
