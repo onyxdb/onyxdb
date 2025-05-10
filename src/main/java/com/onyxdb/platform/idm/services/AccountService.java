@@ -12,7 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.onyxdb.platform.idm.controllers.ResourceNotFoundException;
+import com.onyxdb.platform.idm.models.exceptions.ResourceNotFoundException;
 import com.onyxdb.platform.idm.models.Account;
 import com.onyxdb.platform.idm.models.BusinessRole;
 import com.onyxdb.platform.idm.models.OrganizationUnit;
@@ -44,6 +44,10 @@ public class AccountService {
         return accountRepository
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
+    }
+
+    public Optional<Account> findByIdOptional(UUID id) {
+        return accountRepository.findById(id);
     }
 
     public PaginatedResult<Account> findAll(String query, Integer limit, Integer offset) {

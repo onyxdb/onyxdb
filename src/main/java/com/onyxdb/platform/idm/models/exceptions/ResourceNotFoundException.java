@@ -1,4 +1,4 @@
-package com.onyxdb.platform.idm.controllers;
+package com.onyxdb.platform.idm.models.exceptions;
 
 /**
  * @author ArtemFed

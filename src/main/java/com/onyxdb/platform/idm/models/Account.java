@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jooq.JSONB;
 
 import com.onyxdb.platform.generated.jooq.tables.records.AccountTableRecord;
+import com.onyxdb.platform.generated.openapi.models.AccountPostDTO;
 import com.onyxdb.platform.generated.openapi.models.AccountDTO;
 
 /**
@@ -41,6 +42,20 @@ public record Account(
                 accountDTO.getData(),
                 accountDTO.getCreatedAt(),
                 accountDTO.getUpdatedAt()
+        );
+    }
+
+    public static Account fromPostDTO(AccountPostDTO accountDTO) {
+        return new Account(
+                null,
+                accountDTO.getUsername(),
+                accountDTO.getPassword(),
+                accountDTO.getEmail(),
+                accountDTO.getFirstName(),
+                accountDTO.getLastName(),
+                accountDTO.getData(),
+                null,
+                null
         );
     }
 

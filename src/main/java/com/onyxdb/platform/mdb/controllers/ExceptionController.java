@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import com.onyxdb.platform.generated.openapi.models.BadRequestResponse;
 import com.onyxdb.platform.generated.openapi.models.InternalServerErrorResponse;
 import com.onyxdb.platform.generated.openapi.models.NotFoundResponse;
-import com.onyxdb.platform.idm.controllers.ResourceNotFoundException;
+import com.onyxdb.platform.generated.openapi.models.UnauthorizedResponse;
+import com.onyxdb.platform.idm.models.exceptions.ResourceNotFoundException;
 import com.onyxdb.platform.mdb.exceptions.BadRequestException;
 import com.onyxdb.platform.mdb.exceptions.NotFoundException;
+import com.onyxdb.platform.idm.models.exceptions.UnauthorizedException;
 
 /**
  * @author foxleren
@@ -48,6 +50,13 @@ public class ExceptionController {
         NotFoundResponse notFoundResponse = new NotFoundResponse();
         notFoundResponse.setMessage(e.getMessage());
         return new ResponseEntity<>(notFoundResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = UnauthorizedException.class)
+    public ResponseEntity<UnauthorizedResponse> handleUnauthorizedException(UnauthorizedException e) {
+        UnauthorizedResponse response = new UnauthorizedResponse();
+        response.setMessage(e.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(value = Exception.class)

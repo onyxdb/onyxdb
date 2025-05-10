@@ -65,7 +65,9 @@ public class AuthController implements AuthApi {
 
     @Override
     public ResponseEntity<GetCurrentUser200Response> getCurrentUser() {
+        System.out.println("getCurrentUser");
         Account account = SecurityContextUtils.getCurrentAccount();
+        System.out.println("getCurrentUser context" + account.id());
         AccountDTO accountDTO = account.toDTO();
 
         Map<String, Map<String, Object>> data = accountService.getAllPermissionBitsResponse(account.id());
