@@ -3,12 +3,13 @@
   "config": {
     "version": "7.0",
     "resources": {
-      "presetId": "c92712a0-d344-4b1a-91fb-b27469b72bf5"
+      "presetId": "dev"
     },
     "replicas": 1,
     "backup": {
       "isEnabled": true,
-      "schedule": "0 0 * * *"
+      "schedule": "0 0 * * *",
+      "limit": 5
     }
   }
 }
