@@ -23,6 +23,7 @@ import com.onyxdb.platform.idm.services.RoleService;
 import com.onyxdb.platform.idm.services.jwt.JwtResponse;
 import com.onyxdb.platform.mdb.initialization.InitializationRepository;
 import com.onyxdb.platform.mdb.utils.PasswordGenerator;
+import com.onyxdb.platform.mdb.utils.SpringProfileManager;
 
 
 /**
@@ -35,6 +36,7 @@ public class OnyxdbInitializer implements CommandLineRunner {
     public static final UUID ADMIN_ID = UUID.fromString("4a2770da-c806-4ae2-8e02-3b54641463df");
     public static final String ONYXDB_ROBOT_SECRET = "onyxdb-robot";
 
+    private final boolean disabledKube;
     private final String selfNamespace;
     private final TransactionTemplate transactionTemplate;
     private final InitializationRepository initializationRepository;
@@ -42,16 +44,20 @@ public class OnyxdbInitializer implements CommandLineRunner {
     private final RoleService roleService;
     private final KubernetesClient kubernetesClient;
     private final AuthService authService;
+    private final SpringProfileManager springProfileManager;
 
     public OnyxdbInitializer(
+            boolean disabledKube,
             String selfNamespace,
             TransactionTemplate transactionTemplate,
             InitializationRepository initializationRepository,
             AccountRepository accountRepository,
             RoleService roleService,
             KubernetesClient kubernetesClient,
-            AuthService authService
+            AuthService authService,
+            SpringProfileManager springProfileManager
     ) {
+        this.disabledKube = disabledKube;
         this.selfNamespace = selfNamespace;
         this.transactionTemplate = transactionTemplate;
         this.initializationRepository = initializationRepository;
@@ -59,6 +65,7 @@ public class OnyxdbInitializer implements CommandLineRunner {
         this.roleService = roleService;
         this.kubernetesClient = kubernetesClient;
         this.authService = authService;
+        this.springProfileManager = springProfileManager;
     }
 
     @Override
@@ -114,20 +121,22 @@ public class OnyxdbInitializer implements CommandLineRunner {
 
         JwtResponse tokens = authService.generateServiceToken(login, password);
 
-        Secret secret = new SecretBuilder()
-                .withNewMetadata()
-                .withName(ONYXDB_ROBOT_SECRET)
-                .endMetadata()
-                .addToStringData("login", login)
-                .addToStringData("password", password)
-                .addToStringData("accessToken", tokens.getAccessToken())
-                .addToStringData("refreshToken", tokens.getRefreshToken())
-                .build();
+        if (!springProfileManager.isTestProfile() && !disabledKube) {
+            Secret secret = new SecretBuilder()
+                    .withNewMetadata()
+                    .withName(ONYXDB_ROBOT_SECRET)
+                    .endMetadata()
+                    .addToStringData("login", login)
+                    .addToStringData("password", password)
+                    .addToStringData("accessToken", tokens.getAccessToken())
+                    .addToStringData("refreshToken", tokens.getRefreshToken())
+                    .build();
 
-        kubernetesClient.secrets()
-                .inNamespace(selfNamespace)
-                .resource(secret)
-                .serverSideApply();
+            kubernetesClient.secrets()
+                    .inNamespace(selfNamespace)
+                    .resource(secret)
+                    .serverSideApply();
+        }
     }
 
     private void createAdminAccount(

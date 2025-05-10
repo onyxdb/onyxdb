@@ -21,6 +21,7 @@ import com.onyxdb.platform.mdb.initialization.InitializationRepository;
 import com.onyxdb.platform.mdb.operations.ConsumeTasksWorker;
 import com.onyxdb.platform.mdb.operations.OperationService;
 import com.onyxdb.platform.mdb.operations.consumers.CompositeTaskConsumer;
+import com.onyxdb.platform.mdb.utils.SpringProfileManager;
 
 @Configuration
 public class OnyxdbCommonContextConfiguration {
@@ -28,6 +29,8 @@ public class OnyxdbCommonContextConfiguration {
 
     @Bean
     public OnyxdbInitializer onyxdbInitializer(
+            @Value("${onyxdb.mdb.disabled-kube}")
+            boolean disabledKube,
             @Value("${onyxdb.mdb.self-namespace}")
             String selfNamespace,
             @Qualifier(FlywayContextConfiguration.POSTGRES_FLYWAY_BEAN_NAME)
@@ -39,16 +42,19 @@ public class OnyxdbCommonContextConfiguration {
             AccountRepository accountRepository,
             RoleService roleService,
             KubernetesClient kubernetesClient,
-            AuthService authService
+            AuthService authService,
+            SpringProfileManager springProfileManager
     ) {
         return new OnyxdbInitializer(
+                disabledKube,
                 selfNamespace,
                 transactionTemplate,
                 initializationRepository,
                 accountRepository,
                 roleService,
                 kubernetesClient,
-                authService
+                authService,
+                springProfileManager
         );
     }
 
