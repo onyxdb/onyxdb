@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.onyxdb.platform.generated.openapi.apis.DomainComponentsApi;
+import com.onyxdb.platform.generated.openapi.models.DomainComponentPostDTO;
 import com.onyxdb.platform.generated.openapi.models.DomainComponentDTO;
 import com.onyxdb.platform.generated.openapi.models.DomainTreeDTO;
 import com.onyxdb.platform.generated.openapi.models.OrganizationUnitDTO;
@@ -28,8 +29,8 @@ public class DomainComponentsController implements DomainComponentsApi {
     private final DomainComponentService domainComponentService;
 
     @Override
-    public ResponseEntity<DomainComponentDTO> createDomainComponent(@Valid DomainComponentDTO domainComponentDTO) {
-        DomainComponent domainComponent = DomainComponent.fromDTO(domainComponentDTO);
+    public ResponseEntity<DomainComponentDTO> createDomainComponent(@Valid DomainComponentPostDTO domainComponentDTO) {
+        DomainComponent domainComponent = DomainComponent.fromPostDTO(domainComponentDTO);
         DomainComponent createdDomainComponent = domainComponentService.create(domainComponent);
         return new ResponseEntity<>(createdDomainComponent.toDTO(), HttpStatus.CREATED);
     }
@@ -68,10 +69,10 @@ public class DomainComponentsController implements DomainComponentsApi {
 
     @Override
     public ResponseEntity<DomainComponentDTO> updateDomainComponent(
-            UUID domainComponentId, @Valid DomainComponentDTO domainComponentDTO
+            UUID domainComponentId, @Valid DomainComponentPostDTO domainComponentDTO
     ) {
         domainComponentDTO.setId(domainComponentId);
-        DomainComponent domainComponent = DomainComponent.fromDTO(domainComponentDTO);
+        DomainComponent domainComponent = DomainComponent.fromPostDTO(domainComponentDTO);
         DomainComponent updatedDomainComponent = domainComponentService.update(domainComponent);
         return ResponseEntity.ok(updatedDomainComponent.toDTO());
     }

@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.onyxdb.platform.generated.openapi.apis.ProductsApi;
 import com.onyxdb.platform.generated.openapi.models.PaginatedProductResponse;
+import com.onyxdb.platform.generated.openapi.models.ProductPostDTO;
 import com.onyxdb.platform.generated.openapi.models.ProductDTO;
-import com.onyxdb.platform.generated.openapi.models.ProductDTOGet;
+import com.onyxdb.platform.generated.openapi.models.ProductDTO;
 import com.onyxdb.platform.generated.openapi.models.ProductTreeDTO;
 import com.onyxdb.platform.idm.models.PaginatedResult;
 import com.onyxdb.platform.idm.models.Product;
@@ -29,8 +30,8 @@ public class ProductsController implements ProductsApi {
     private final ProductService productService;
 
     @Override
-    public ResponseEntity<ProductDTOGet> createProduct(@Valid ProductDTO productDTO) {
-        Product product = Product.fromDTO(productDTO);
+    public ResponseEntity<ProductDTO> createProduct(@Valid ProductPostDTO productDTO) {
+        Product product = Product.fromPostDTO(productDTO);
         Product createdProduct = productService.create(product);
         return new ResponseEntity<>(createdProduct.toDTO(), HttpStatus.CREATED);
     }
@@ -51,7 +52,7 @@ public class ProductsController implements ProductsApi {
     @Override
     public ResponseEntity<PaginatedProductResponse> getAllProducts(String search, Integer limit, Integer offset) {
         PaginatedResult<Product> products = productService.findAll(search, limit, offset);
-        List<ProductDTOGet> productDTOs = products.data().stream().map(Product::toDTO).toList();
+        List<ProductDTO> productDTOs = products.data().stream().map(Product::toDTO).toList();
         return ResponseEntity.ok(new PaginatedProductResponse()
                 .data(productDTOs)
                 .totalCount(products.totalCount())
@@ -61,22 +62,22 @@ public class ProductsController implements ProductsApi {
     }
 
     @Override
-    public ResponseEntity<ProductDTOGet> getProductById(UUID productId) {
+    public ResponseEntity<ProductDTO> getProductById(UUID productId) {
         Product product = productService.findById(productId);
         return ResponseEntity.ok(product.toDTO());
     }
 
     @Override
-    public ResponseEntity<List<ProductDTOGet>> getProductChildren(UUID productId) {
+    public ResponseEntity<List<ProductDTO>> getProductChildren(UUID productId) {
         List<Product> products = productService.findChildren(productId);
-        List<ProductDTOGet> productDTOs = products.stream().map(Product::toDTO).toList();
+        List<ProductDTO> productDTOs = products.stream().map(Product::toDTO).toList();
         return ResponseEntity.ok(productDTOs);
     }
 
     @Override
-    public ResponseEntity<List<ProductDTOGet>> getProductParents(UUID productId) {
+    public ResponseEntity<List<ProductDTO>> getProductParents(UUID productId) {
         List<Product> products = productService.findAllParentProducts(productId);
-        List<ProductDTOGet> productDTOs = products.stream().map(Product::toDTO).toList();
+        List<ProductDTO> productDTOs = products.stream().map(Product::toDTO).toList();
         return ResponseEntity.ok(productDTOs);
     }
 
@@ -87,16 +88,16 @@ public class ProductsController implements ProductsApi {
     }
 
     @Override
-    public ResponseEntity<List<ProductDTOGet>> getProductsRoots() {
+    public ResponseEntity<List<ProductDTO>> getProductsRoots() {
         List<Product> products = productService.findRootProducts();
-        List<ProductDTOGet> productDTOs = products.stream().map(Product::toDTO).toList();
+        List<ProductDTO> productDTOs = products.stream().map(Product::toDTO).toList();
         return ResponseEntity.ok(productDTOs);
     }
 
     @Override
-    public ResponseEntity<ProductDTOGet> updateProduct(UUID productId, @Valid ProductDTO productDTO) {
+    public ResponseEntity<ProductDTO> updateProduct(UUID productId, @Valid ProductPostDTO productDTO) {
         productDTO.setId(productId);
-        Product product = Product.fromDTO(productDTO);
+        Product product = Product.fromPostDTO(productDTO);
         Product updatedProduct = productService.update(product);
         return ResponseEntity.ok(updatedProduct.toDTO());
     }

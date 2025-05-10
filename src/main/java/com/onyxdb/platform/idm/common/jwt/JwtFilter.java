@@ -13,12 +13,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.onyxdb.platform.idm.models.exceptions.ResourceNotFoundException;
 import com.onyxdb.platform.idm.models.Account;
 import com.onyxdb.platform.idm.services.AccountService;
 import com.onyxdb.platform.idm.services.AuthService;
@@ -64,8 +66,11 @@ public class JwtFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
-        } catch (ExpiredJwtException e) {
-//            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token expired");
+        } catch (ExpiredJwtException | ResourceNotFoundException e) {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.setContentType("application/json");
+            response.getWriter().write("{\"error\": \"" + e.getMessage() + "\"}");
+            return;
         }
 
         chain.doFilter(request, response);

@@ -34,49 +34,61 @@ public class AdminInitializer {
             RoleService roleService
     ) {
         return args -> {
-            // Проверяем, пустая ли база
-            if (accountRepository.count() == 0) {
-                String login = "admin";
-                String password = "admin";
-                Account admin = new Account(
-                        ADMIN_ID,
-                        login,
-                        password,
-                        "admin@example.com",
-                        "Admin",
-                        "Admin",
-                        Map.of(),
-                        LocalDateTime.now(),
-                        LocalDateTime.now()
-                );
+            int attempts = 5;
+            logger.info("Start creating first admin");
+            while (attempts > 0) {
+                try {
 
-                Account newAccount = accountRepository.create(admin);
+                    // Проверяем, пустая ли база
+                    if (accountRepository.count() == 0) {
+                        String login = "admin";
+                        String password = "admin";
+                        Account admin = new Account(
+                                ADMIN_ID,
+                                login,
+                                password,
+                                "admin@example.com",
+                                "Admin",
+                                "Admin",
+                                Map.of(),
+                                LocalDateTime.now(),
+                                LocalDateTime.now()
+                        );
 
-                Role role = new Role(
-                        UUID.randomUUID(),
-                        "Admin",
-                        "admin",
-                        "admin",
-                        "Initial admin",
-                        true,
-                        null,
-                        null,
-                        null,
-                        LocalDateTime.now(),
-                        LocalDateTime.now()
-                );
-                Permission permission = new Permission(
-                        UUID.randomUUID(),
-                        "any",
-                        null,
-                        Map.of(),
-                        LocalDateTime.now(),
-                        LocalDateTime.now()
-                );
-                RoleWithPermissions newRole = roleService.create(new RoleWithPermissions(role, List.of(permission)));
-                accountRepository.addRole(newAccount.id(), newRole.role().id());
+                        Account newAccount = accountRepository.create(admin);
 
-                logger.info("Created admin account: login={}, password={}", login, password);
+                        Role role = new Role(
+                                null,
+                                "Admin",
+                                "admin",
+                                "admin",
+                                "Initial admin",
+                                true,
+                                null,
+                                null,
+                                null,
+                                LocalDateTime.now(),
+                                LocalDateTime.now()
+                        );
+                        Permission permission = new Permission(
+                                null,
+                                "any",
+                                null,
+                                Map.of(),
+                                LocalDateTime.now(),
+                                LocalDateTime.now()
+                        );
+                        RoleWithPermissions newRole = roleService.create(new RoleWithPermissions(role, List.of(permission)));
+                        accountRepository.addRole(newAccount.id(), newRole.role().id());
+
+                        logger.info("Created admin account: login={}, password={}", login, password);
+                        break;
+                    }
+                } catch (Exception e) {
+                    logger.error("Error creating admin: ", e);
+                }
+                attempts = attempts - 1;
+                Thread.sleep(2000);
             }
         };
     }

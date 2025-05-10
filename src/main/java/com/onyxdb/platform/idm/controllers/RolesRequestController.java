@@ -12,9 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.onyxdb.platform.generated.openapi.apis.RolesRequestsApi;
 import com.onyxdb.platform.generated.openapi.models.PaginatedRoleRequestResponse;
+import com.onyxdb.platform.generated.openapi.models.RoleRequestFullDTO;
+import com.onyxdb.platform.generated.openapi.models.RoleRequestPostDTO;
 import com.onyxdb.platform.generated.openapi.models.RoleRequestDTO;
 import com.onyxdb.platform.idm.models.PaginatedResult;
 import com.onyxdb.platform.idm.models.RoleRequest;
+import com.onyxdb.platform.idm.models.RoleRequestFull;
 import com.onyxdb.platform.idm.models.RoleRequestStatus;
 import com.onyxdb.platform.idm.services.RoleRequestService;
 
@@ -27,16 +30,16 @@ public class RolesRequestController implements RolesRequestsApi {
     private final RoleRequestService roleRequestService;
 
     @Override
-    public ResponseEntity<RoleRequestDTO> createRoleRequest(@Valid RoleRequestDTO roleRequestDTO) {
-        RoleRequest roleRequest = RoleRequest.fromDTO(roleRequestDTO);
+    public ResponseEntity<RoleRequestDTO> createRoleRequest(@Valid RoleRequestPostDTO roleRequestDTO) {
+        RoleRequest roleRequest = RoleRequest.fromPostDTO(roleRequestDTO);
         RoleRequest createdRoleRequest = roleRequestService.create(roleRequest);
         return new ResponseEntity<>(createdRoleRequest.toDTO(), HttpStatus.CREATED);
     }
 
     @Override
     public ResponseEntity<PaginatedRoleRequestResponse> getAllRolesRequests(UUID ownerId, String status, UUID accountId, UUID roleId, Integer limit, Integer offset) {
-        PaginatedResult<RoleRequest> roleRequests = roleRequestService.findAll(status, accountId, ownerId, roleId, limit, offset);
-        List<RoleRequestDTO> roleRequestDTOs = roleRequests.data().stream().map(RoleRequest::toDTO).toList();
+        PaginatedResult<RoleRequestFull> roleRequests = roleRequestService.findAll(status, accountId, ownerId, roleId, limit, offset);
+        List<RoleRequestFullDTO> roleRequestDTOs = roleRequests.data().stream().map(RoleRequestFull::toDTO).toList();
         return ResponseEntity.ok(new PaginatedRoleRequestResponse()
                 .data(roleRequestDTOs)
                 .totalCount(roleRequests.totalCount())
@@ -52,9 +55,9 @@ public class RolesRequestController implements RolesRequestsApi {
     }
 
     @Override
-    public ResponseEntity<RoleRequestDTO> updateRoleRequest(UUID roleRequestId, @Valid RoleRequestDTO roleRequestDTO) {
+    public ResponseEntity<RoleRequestDTO> updateRoleRequest(UUID roleRequestId, @Valid RoleRequestPostDTO roleRequestDTO) {
         roleRequestDTO.setId(roleRequestId);
-        RoleRequest roleRequest = RoleRequest.fromDTO(roleRequestDTO);
+        RoleRequest roleRequest = RoleRequest.fromPostDTO(roleRequestDTO);
         RoleRequest updatedRoleRequest = roleRequestService.update(roleRequest);
         return ResponseEntity.ok(updatedRoleRequest.toDTO());
     }
