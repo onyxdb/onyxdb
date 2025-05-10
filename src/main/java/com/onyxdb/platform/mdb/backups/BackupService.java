@@ -1,7 +1,9 @@
 package com.onyxdb.platform.mdb.backups;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,9 +12,11 @@ import org.springframework.stereotype.Service;
 import com.onyxdb.platform.mdb.clients.k8s.psmdb.PsmdbClient;
 import com.onyxdb.platform.mdb.clusters.ClusterRepository;
 import com.onyxdb.platform.mdb.clusters.models.Cluster;
+import com.onyxdb.platform.mdb.exceptions.BadRequestException;
 import com.onyxdb.platform.mdb.operations.models.Operation;
 import com.onyxdb.platform.mdb.operations.models.OperationType;
 import com.onyxdb.platform.mdb.operations.models.payload.MongoCreateBackupPayload;
+import com.onyxdb.platform.mdb.operations.models.payload.MongoDeleteBackupPayload;
 import com.onyxdb.platform.mdb.operations.repositories.OperationRepository;
 import com.onyxdb.platform.mdb.projects.Project;
 import com.onyxdb.platform.mdb.projects.ProjectRepository;
@@ -82,6 +86,31 @@ public class BackupService {
                 OperationType.MONGO_CREATE_BACKUP,
                 clusterId,
                 ObjectMapperUtils.convertToString(objectMapper, new MongoCreateBackupPayload(clusterId, TimeUtils.now()))
+        );
+
+        operationRepository.createOperation(operation);
+
+        return operation.id();
+    }
+
+    public UUID deleteBackup(UUID clusterId, String backupName) {
+        Cluster cluster = clusterRepository.getClusterOrThrow(clusterId);
+        Project project = projectRepository.getProjectOrThrow(cluster.projectId(), false);
+
+        Set<String> existingBackupNames = psmdbClient.listBackups(
+                cluster.namespace(),
+                project.name(),
+                cluster.name()
+        ).stream().map(Backup::name).collect(Collectors.toSet());
+
+        if (!existingBackupNames.contains(backupName)) {
+            throw new BadRequestException("Backup with name '%s' is not found".formatted(backupName));
+        }
+
+        var operation = Operation.scheduledWithPayload(
+                OperationType.MONGO_DELETE_BACKUP,
+                clusterId,
+                ObjectMapperUtils.convertToString(objectMapper, new MongoDeleteBackupPayload(clusterId, backupName))
         );
 
         operationRepository.createOperation(operation);

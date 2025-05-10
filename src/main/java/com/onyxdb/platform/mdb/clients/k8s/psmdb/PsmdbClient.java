@@ -307,6 +307,20 @@ public class PsmdbClient extends AbstractPsmdbFactory {
         return parsePsmdbBackupStatusFromGenericResource(resource).equalsStringEnum(BackupStatus.READY);
     }
 
+    public void deletePsmdbBackup(String namespace, String backupName) {
+        kubernetesClient.genericKubernetesResources(PSMDB_BACKUP_CONTEXT)
+                .inNamespace(namespace)
+                .withName(backupName)
+                .delete();
+    }
+
+    public boolean isPsmdbBackupExists(String namespace, String backupName) {
+        return kubernetesClient.genericKubernetesResources(PSMDB_BACKUP_CONTEXT)
+                .inNamespace(namespace)
+                .withName(backupName)
+                .get() != null;
+    }
+
     public static String getPsmdbName(String project, String cluster) {
         return String.format("%s-%s-mongo", cluster, project);
     }
