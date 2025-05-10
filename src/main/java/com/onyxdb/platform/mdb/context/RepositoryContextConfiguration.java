@@ -35,8 +35,6 @@ import com.onyxdb.platform.mdb.resources.ResourcePostgresRepository;
 import com.onyxdb.platform.mdb.users.UserMapper;
 import com.onyxdb.platform.mdb.users.UserPostgresRepository;
 import com.onyxdb.platform.mdb.users.UserRepository;
-import com.onyxdb.platform.mdb.zones.ZonePostgresRepository;
-import com.onyxdb.platform.mdb.zones.ZoneRepository;
 
 /**
  * @author foxleren
@@ -49,11 +47,6 @@ public class RepositoryContextConfiguration {
             ResourcePresetMapper resourcePresetMapper
     ) {
         return new ResourcePresetPostgresRepository(dslContext, resourcePresetMapper);
-    }
-
-    @Bean
-    public ZoneRepository zoneRepository(DSLContext dslContext) {
-        return new ZonePostgresRepository(dslContext);
     }
 
     @Bean
