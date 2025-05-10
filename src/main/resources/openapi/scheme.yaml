@@ -4369,6 +4369,36 @@ components:
         - reason
         - status
         - createdAt
+    RoleRequestFullDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        role:
+          $ref: '#/components/schemas/RoleDTO'
+        account:
+          $ref: '#/components/schemas/AccountDTO'
+        owner:
+          $ref: '#/components/schemas/AccountDTO'
+        reason:
+          type: string
+        status:
+          type: string
+          enum: [ WAITING, APPROVED, DECLINED ]
+        createdAt:
+          type: string
+          format: date-time
+        resolvedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - roleId
+        - accountId
+        - reason
+        - status
+        - createdAt
     PaginatedRoleRequestResponse:
       type: object
       properties:
@@ -4381,7 +4411,7 @@ components:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/RoleRequestDTO'
+            $ref: '#/components/schemas/RoleRequestFullDTO'
       required:
         - totalCount
         - startPosition

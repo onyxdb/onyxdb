@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
 
+import com.onyxdb.platform.idm.models.RoleRequestFull;
 import com.onyxdb.platform.idm.models.exceptions.ResourceNotFoundException;
 import com.onyxdb.platform.idm.models.PaginatedResult;
 import com.onyxdb.platform.idm.models.RoleRequest;
@@ -25,7 +26,7 @@ public class RoleRequestService {
                 .orElseThrow(() -> new ResourceNotFoundException("RoleRequest not found"));
     }
 
-    public PaginatedResult<RoleRequest> findAll(String status, UUID accountId, UUID ownerId, UUID roleId, Integer limit, Integer offset) {
+    public PaginatedResult<RoleRequestFull> findAll(String status, UUID accountId, UUID ownerId, UUID roleId, Integer limit, Integer offset) {
         return roleRequestRepository.findAll(status, accountId, ownerId, roleId, limit, offset);
     }
 

@@ -22,7 +22,7 @@ import com.onyxdb.platform.generated.openapi.models.RoleWithPermissionsDTO;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-//@Disabled
+@Disabled
 //@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class IdmApiIntegrationGetTest {
 

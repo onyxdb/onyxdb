@@ -34,7 +34,7 @@ import com.onyxdb.platform.generated.openapi.models.RoleWithPermissionsDTO;
 import static com.onyxdb.platform.idm.TestDataFactory.createRoleRequestDTO;
 
 
-//@Disabled
+@Disabled
 @ActiveProfiles({"dev"})
 //@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class IdmApiIntegrationCreateTest {

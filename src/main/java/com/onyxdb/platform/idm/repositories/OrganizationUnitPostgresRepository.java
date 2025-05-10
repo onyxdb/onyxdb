@@ -174,7 +174,6 @@ public class OrganizationUnitPostgresRepository implements OrganizationUnitRepos
 
         return dslContext.withRecursive(cte)
                 .selectFrom(cte)
-                .orderBy(organizationUnitTable.CREATED_AT)
                 .fetch()
                 .map(record -> OrganizationUnit.fromDAO(record.into(OrganizationUnitTableRecord.class)));
     }
