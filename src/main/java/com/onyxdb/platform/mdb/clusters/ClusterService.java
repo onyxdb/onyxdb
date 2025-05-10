@@ -30,6 +30,7 @@ import com.onyxdb.platform.mdb.operations.models.OperationType;
 import com.onyxdb.platform.mdb.operations.models.payload.MongoCreateClusterPayload;
 import com.onyxdb.platform.mdb.operations.models.payload.MongoDeleteClusterPayload;
 import com.onyxdb.platform.mdb.operations.models.payload.MongoModifyClusterPayload;
+import com.onyxdb.platform.mdb.operations.models.payload.MongoRestoreClusterPayload;
 import com.onyxdb.platform.mdb.operations.repositories.OperationRepository;
 import com.onyxdb.platform.mdb.operations.repositories.TaskRepository;
 import com.onyxdb.platform.mdb.projects.Project;
@@ -178,6 +179,22 @@ public class ClusterService {
                 ObjectMapperUtils.convertToString(objectMapper, new MongoDeleteClusterPayload(
                         clusterId,
                         deletedBy
+                ))
+        );
+        operationRepository.createOperation(operation);
+
+        return operation.id();
+    }
+
+    public UUID restoreCluster(UUID clusterId, String backupName) {
+        Cluster cluster = getClusterOrThrow(clusterId);
+
+        var operation = Operation.scheduledWithPayload(
+                OperationType.MONGO_RESTORE_CLUSTER,
+                cluster.id(),
+                ObjectMapperUtils.convertToString(objectMapper, new MongoRestoreClusterPayload(
+                        clusterId,
+                        backupName
                 ))
         );
         operationRepository.createOperation(operation);
