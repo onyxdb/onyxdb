@@ -176,7 +176,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ScheduledOperationDTO'
-  /api/mdb/mongodb/clusters/{clusterId}/restore:
+  /api/mdb/mongodb/clusters/{clusterId}/restore/{backupName}:
     post:
       summary: Restore MongoDB cluster
       operationId: restoreCluster
@@ -185,7 +185,7 @@ paths:
         - MDB
       parameters:
         - $ref: '#/components/parameters/ClusterIdPV'
-        - $ref: '#/components/parameters/BackupNameRQP'
+        - $ref: '#/components/parameters/BackupNamePV'
       responses:
         '200':
           description: OK
@@ -208,7 +208,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ListMongoVersionsResponseDTO'
   # ---------- Managed MongoDB databases -------------------------------------------------------------------------------
-  /api/mdb/mongodb/databases:
+  /api/mdb/mongodb/clusters/{clusterId}/databases:
     get:
       summary: List MongoDB databases
       operationId: listDatabases
@@ -216,7 +216,7 @@ paths:
         - Managed MongoDB databases
         - MDB
       parameters:
-        - $ref: '#/components/parameters/ClusterIdRQP'
+        - $ref: '#/components/parameters/ClusterIdPV'
       responses:
         '200':
           description: OK
@@ -231,7 +231,7 @@ paths:
         - Managed MongoDB databases
         - MDB
       parameters:
-        - $ref: '#/components/parameters/ClusterIdRQP'
+        - $ref: '#/components/parameters/ClusterIdPV'
       requestBody:
         required: true
         content:
@@ -245,6 +245,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ScheduledOperationDTO'
+  /api/mdb/mongodb/clusters/{clusterId}/databases/{databaseName}:
     delete:
       summary: Delete MongoDB database
       operationId: deleteDatabase
@@ -252,8 +253,8 @@ paths:
         - Managed MongoDB databases
         - MDB
       parameters:
-        - $ref: '#/components/parameters/ClusterIdRQP'
-        - $ref: '#/components/parameters/DatabaseNameRQP'
+        - $ref: '#/components/parameters/ClusterIdPV'
+        - $ref: '#/components/parameters/DatabaseNamePV'
       responses:
         '200':
           description: OK
@@ -276,7 +277,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ListMongoRolesResponseDTO'
-  /api/mdb/mongodb/users:
+  /api/mdb/mongodb/clusters/{clusterId}/users:
     get:
       summary: List MongoDB users
       operationId: listUsers
@@ -284,7 +285,7 @@ paths:
         - Managed MongoDB users
         - MDB
       parameters:
-        - $ref: '#/components/parameters/ClusterIdRQP'
+        - $ref: '#/components/parameters/ClusterIdPV'
       responses:
         '200':
           description: OK
@@ -299,7 +300,7 @@ paths:
         - Managed MongoDB users
         - MDB
       parameters:
-        - $ref: '#/components/parameters/ClusterIdRQP'
+        - $ref: '#/components/parameters/ClusterIdPV'
       requestBody:
         required: true
         content:
@@ -313,6 +314,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ScheduledOperationDTO'
+  /api/mdb/mongodb/clusters/{clusterId}/users/{userName}:
     delete:
       summary: Delete MongoDB user
       operationId: deleteUser
@@ -320,8 +322,8 @@ paths:
         - Managed MongoDB users
         - MDB
       parameters:
-        - $ref: '#/components/parameters/ClusterIdRQP'
-        - $ref: '#/components/parameters/UserNameRQP'
+        - $ref: '#/components/parameters/ClusterIdPV'
+        - $ref: '#/components/parameters/UserNamePV'
       responses:
         '200':
           description: OK
@@ -330,7 +332,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ScheduledOperationDTO'
   # ---------- Managed MongoDB backups ---------------------------------------------------------------------------------
-  /api/mdb/mongodb/backups:
+  /api/mdb/mongodb/clusters/{clusterId}/backups:
     get:
       summary: List MongoDB backups
       operationId: listBackups
@@ -338,7 +340,7 @@ paths:
         - Managed MongoDB backups
         - MDB
       parameters:
-        - $ref: '#/components/parameters/ClusterIdRQP'
+        - $ref: '#/components/parameters/ClusterIdPV'
       responses:
         '200':
           description: OK
@@ -353,7 +355,7 @@ paths:
         - Managed MongoDB backups
         - MDB
       parameters:
-        - $ref: '#/components/parameters/ClusterIdRQP'
+        - $ref: '#/components/parameters/ClusterIdPV'
       responses:
         '200':
           description: OK
@@ -361,6 +363,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ScheduledOperationDTO'
+  /api/mdb/mongodb/clusters/{clusterId}/backups/{backupName}:
     delete:
       summary: Delete backup of MongoDB cluster
       operationId: deleteBackup
@@ -368,8 +371,8 @@ paths:
         - Managed MongoDB backups
         - MDB
       parameters:
-        - $ref: '#/components/parameters/ClusterIdRQP'
-        - $ref: '#/components/parameters/BackupNameRQP'
+        - $ref: '#/components/parameters/ClusterIdPV'
+        - $ref: '#/components/parameters/BackupNamePV'
       responses:
         '200':
           description: OK
@@ -691,6 +694,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GetProductQuotaUsageReportResponseOA'
+
+
+
+
+
+
+
 
 
 
@@ -4369,15 +4379,33 @@ components:
       required: true
       schema:
         type: string
+    DatabaseNamePV:
+      name: databaseName
+      in: path
+      required: true
+      schema:
+        type: string
     UserNameRQP:
       name: userName
       in: query
       required: true
       schema:
         type: string
+    UserNamePV:
+      name: userName
+      in: path
+      required: true
+      schema:
+        type: string
     BackupNameRQP:
       name: backupName
       in: query
+      required: true
+      schema:
+        type: string
+    BackupNamePV:
+      name: backupName
+      in: path
       required: true
       schema:
         type: string
