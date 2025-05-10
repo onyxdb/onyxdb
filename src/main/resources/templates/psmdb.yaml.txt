@@ -24,10 +24,6 @@ spec:
       labels:
         onyxdb.com/project: [[${ONYXDB_PROJECT}]]
         onyxdb.com/cluster: [[${ONYXDB_CLUSTER}]]
-      configuration: |
-        security:
-            enableEncryption: true
-            encryptionCipherMode: "AES256-CBC"
       affinity:
         advanced:
           nodeAffinity:
