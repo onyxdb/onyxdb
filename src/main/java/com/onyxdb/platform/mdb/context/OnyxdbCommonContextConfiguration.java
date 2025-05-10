@@ -4,6 +4,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
+import io.fabric8.kubernetes.client.KubernetesClient;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,6 +15,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import com.onyxdb.platform.idm.repositories.AccountRepository;
+import com.onyxdb.platform.idm.services.AuthService;
 import com.onyxdb.platform.idm.services.RoleService;
 import com.onyxdb.platform.mdb.initialization.InitializationRepository;
 import com.onyxdb.platform.mdb.operations.ConsumeTasksWorker;
@@ -26,6 +28,8 @@ public class OnyxdbCommonContextConfiguration {
 
     @Bean
     public OnyxdbInitializer onyxdbInitializer(
+            @Value("${onyxdb.mdb.self-namespace}")
+            String selfNamespace,
             @Qualifier(FlywayContextConfiguration.POSTGRES_FLYWAY_BEAN_NAME)
             Flyway postgresFlyway,
             @Qualifier(FlywayContextConfiguration.CLICKHOUSE_FLYWAY_BEAN_NAME)
@@ -33,13 +37,18 @@ public class OnyxdbCommonContextConfiguration {
             TransactionTemplate transactionTemplate,
             InitializationRepository initializationRepository,
             AccountRepository accountRepository,
-            RoleService roleService
+            RoleService roleService,
+            KubernetesClient kubernetesClient,
+            AuthService authService
     ) {
         return new OnyxdbInitializer(
+                selfNamespace,
                 transactionTemplate,
                 initializationRepository,
                 accountRepository,
-                roleService
+                roleService,
+                kubernetesClient,
+                authService
         );
     }
 

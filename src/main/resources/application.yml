@@ -32,6 +32,7 @@ logging:
 onyxdb:
   mdb:
     self-url: http://host.minikube.internal:9001
+    self-namespace: onyxdb
     namespaces: onyxdb
     storage-classes: standard
   agent:
