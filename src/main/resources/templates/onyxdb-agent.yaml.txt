@@ -20,7 +20,7 @@ spec:
       containers:
         - name: agent
           image: foxleren/onyxdb-agent:master-feb840b
-          imagePullPolicy: IfNotPreset
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 9002
           env:
