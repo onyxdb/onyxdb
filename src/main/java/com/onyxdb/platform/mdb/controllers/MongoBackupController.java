@@ -1,86 +1,56 @@
 package com.onyxdb.platform.mdb.controllers;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.onyxdb.platform.generated.openapi.apis.ManagedMongoDbBackupsApi;
-import com.onyxdb.platform.generated.openapi.models.BackupType;
-import com.onyxdb.platform.generated.openapi.models.ListMongoBackupsResponse;
-import com.onyxdb.platform.generated.openapi.models.MongoBackup;
-import com.onyxdb.platform.generated.openapi.models.V1ScheduledOperationResponse;
-import com.onyxdb.platform.mdb.operations.models.Operation;
-import com.onyxdb.platform.mdb.operations.models.OperationType;
-import com.onyxdb.platform.mdb.operations.models.payload.ClusterPayload;
-import com.onyxdb.platform.mdb.operations.repositories.OperationRepository;
-import com.onyxdb.platform.mdb.utils.ObjectMapperUtils;
-import com.onyxdb.platform.mdb.utils.TimeUtils;
+import com.onyxdb.platform.generated.openapi.models.ListMongoBackupsResponseDTO;
+import com.onyxdb.platform.generated.openapi.models.ScheduledOperationDTO;
+import com.onyxdb.platform.mdb.backups.Backup;
+import com.onyxdb.platform.mdb.backups.BackupMapper;
+import com.onyxdb.platform.mdb.backups.BackupService;
 
 @RestController
 public class MongoBackupController implements ManagedMongoDbBackupsApi {
-    private final OperationRepository operationRepository;
-    private final ObjectMapper objectMapper;
-    private boolean isStarted = false;
-    private LocalDateTime lastBackupTime;
+    private final BackupService backupService;
+    private final BackupMapper backupMapper;
 
-    public MongoBackupController(OperationRepository operationRepository, ObjectMapper objectMapper) {
-        this.operationRepository = operationRepository;
-        this.objectMapper = objectMapper;
+    public MongoBackupController(BackupService backupService, BackupMapper backupMapper) {
+        this.backupService = backupService;
+        this.backupMapper = backupMapper;
     }
 
     @Override
-    public ResponseEntity<ListMongoBackupsResponse> listBackups(UUID clusterId) {
-        if (!isStarted) {
-            return ResponseEntity.ok(new ListMongoBackupsResponse(List.of()));
-        }
-
-        return ResponseEntity.ok(new ListMongoBackupsResponse(
-                List.of(
-//                        new MongoBackup(
-//                                "cron-test-backup7-san-20250419160900-fcdgh",
-//                                UUID.randomUUID(),
-//                                BackupType.AUTOMATED,
-//                                TimeUtils.now(),
-//                                TimeUtils.now()
-//                        ),
-                        new MongoBackup(
-                                "cron-backup-20250419160800-cjllk",
-                                UUID.randomUUID(),
-                                BackupType.MANUAL,
-                                lastBackupTime,
-                                null
-//                                TimeUtils.now()
-                        )
-                )
-        ));
-    }
-
-    @Override
-    public ResponseEntity<V1ScheduledOperationResponse> createBackup(UUID clusterId) {
-        var operation = Operation.scheduledWithPayload(
-                OperationType.MONGO_CREATE_BACKUP,
-                clusterId,
-                ObjectMapperUtils.convertToString(objectMapper, new ClusterPayload(
-                        clusterId
-                ))
+    public ResponseEntity<ListMongoBackupsResponseDTO> listBackups(UUID clusterId) {
+        List<Backup> backups = backupService.listBackups(clusterId);
+        var response = new ListMongoBackupsResponseDTO(
+                backups.stream().map(backup -> backupMapper.backupToMongoBackupDTO(backup, clusterId)).toList()
         );
-        operationRepository.createOperation(operation);
-        isStarted = true;
-        lastBackupTime = TimeUtils.now();
-        return ResponseEntity.ok(new V1ScheduledOperationResponse(UUID.randomUUID()));
+
+        return ResponseEntity.ok(response);
     }
 
     @Override
-    public ResponseEntity<V1ScheduledOperationResponse> deleteBackup(UUID clusterId, String backupName) {
-        return ResponseEntity.ok(new V1ScheduledOperationResponse(UUID.randomUUID()));
+    public ResponseEntity<ScheduledOperationDTO> createBackup(UUID clusterId) {
+        UUID operationId = backupService.createBackup(clusterId);
+        return ResponseEntity.ok(new ScheduledOperationDTO(operationId));
     }
 
     @Override
-    public ResponseEntity<V1ScheduledOperationResponse> restoreFromBackup(UUID clusterId, String backupName) {
-        return ResponseEntity.ok(new V1ScheduledOperationResponse(UUID.randomUUID()));
+    public ResponseEntity<ScheduledOperationDTO> deleteBackup(UUID clusterId, String backupName) {
+        return null;
     }
+
+//    @Override
+//    public ResponseEntity<V1ScheduledOperationResponse> deleteBackup(UUID clusterId, String backupName) {
+//        return ResponseEntity.ok(new V1ScheduledOperationResponse(UUID.randomUUID()));
+//    }
+//
+//    @Override
+//    public ResponseEntity<V1ScheduledOperationResponse> restoreFromBackup(UUID clusterId, String backupName) {
+//        return ResponseEntity.ok(new V1ScheduledOperationResponse(UUID.randomUUID()));
+//    }
 }

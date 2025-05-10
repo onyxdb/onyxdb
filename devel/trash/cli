@@ -1,6 +1,6 @@
 kubectl -n onyxdb run -i --rm --tty percona-client --image=percona/percona-server-mongodb:7.0.14-8 --restart=Never -- bash -il
 
-mongosh "mongodb+srv://databaseAdmin:bNd1zYmXsTHoJjEQFvC@demo-sandbox-mongo-rs0.onyxdb.svc.cluster.local/admin?replicaSet=rs0&ssl=false"
+mongosh "mongodb+srv://databaseAdmin:JI64aw3j4Ymh3oi3rw@test-1-sandbox-mongo-rs0.onyxdb.svc.cluster.local/admin?replicaSet=rs0&ssl=false"
 mongosh "mongodb+srv://u1:p1@test-1-sandbox-mongo-rs0.onyxdb.svc.cluster.local/admin?replicaSet=rs0&ssl=false"
 
 db.adminCommand( { replSetGetStatus: 1 } )

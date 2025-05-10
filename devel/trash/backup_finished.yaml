@@ -1,0 +1,50 @@
+apiVersion: psmdb.percona.com/v1
+kind: PerconaServerMongoDBBackup
+metadata:
+  creationTimestamp: '2025-05-09T21:18:00Z'
+  finalizers:
+    - percona.com/delete-backup
+  generateName: cron-test-1-sandbox-m-20250509211800-
+  generation: 1
+  labels:
+    app.kubernetes.io/instance: test-1-sandbox-mongo
+    app.kubernetes.io/managed-by: percona-server-mongodb-operator
+    app.kubernetes.io/name: percona-server-mongodb
+    app.kubernetes.io/part-of: percona-server-mongodb
+    percona.com/backup-ancestor: backup
+    percona.com/backup-type: cron
+    percona.com/cluster: test-1-sandbox-mongo
+  name: cron-test-1-sandbox-m-20250509211800-sst6x
+  namespace: onyxdb
+  resourceVersion: '699583'
+  uid: 88519ddd-80f7-4940-ab24-f4b6c7f9701e
+  selfLink: >-
+    /apis/psmdb.percona.com/v1/namespaces/onyxdb/perconaservermongodbbackups/cron-test-1-sandbox-m-20250509211800-sst6x
+status:
+  completed: '2025-05-09T21:18:26Z'
+  destination: s3://onyxdb/mongodb/sandbox/test-1/2025-05-09T21:18:21Z
+  lastTransition: '2025-05-09T21:18:26Z'
+  pbmName: '2025-05-09T21:18:21Z'
+  pbmPod: >-
+    test-1-sandbox-mongo-rs0-0.test-1-sandbox-mongo-rs0.onyxdb.svc.cluster.local:27017
+  pbmPods:
+    rs0: >-
+      test-1-sandbox-mongo-rs0-0.test-1-sandbox-mongo-rs0.onyxdb.svc.cluster.local:27017
+  replsetNames:
+    - rs0
+  s3:
+    bucket: onyxdb
+    credentialsSecret: minio-onyxdb
+    endpointUrl: http://minio.onyxdb.svc.cluster.local:9000
+    prefix: mongodb/sandbox/test-1
+    region: us-east-1
+    serverSideEncryption: {}
+  start: '2025-05-09T21:18:21Z'
+  state: ready
+  storageName: minio
+  type: logical
+spec:
+  clusterName: test-1-sandbox-mongo
+  compressionType: gzip
+  storageName: minio
+  type: logical

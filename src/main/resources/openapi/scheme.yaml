@@ -244,64 +244,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ScheduledOperationDTO'
-  # ---------- MDB common ----------------------------------------------------------------------------------------------
-  /api/mdb/storage-classes:
-    get:
-      summary: List storage classes
-      operationId: listStorageClasses
-      tags:
-        - MDB common
-        - MDB
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ListStorageClassesResponseDTO'
-  /api/mdb/namespaces:
-    get:
-      summary: List namespaces
-      operationId: listNamespaces
-      tags:
-        - MDB common
-        - MDB
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ListNamespacesResponseDTO'
-  # ---------- Operations ----------------------------------------------------------------------------------------------
-  /api/mdb/operations:
-    get:
-      summary: List operations
-      operationId: listOperations
-      tags:
-        - Operations
-        - MDB
-      parameters:
-        - $ref: '#/components/parameters/ClusterIdOQP'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ListOperationsResponseDTO'
-  /api/mdb/operations/{operationId}/restart:
-    put:
-      summary: Restart operation
-      operationId: restartOperation
-      tags:
-        - Operations
-        - MDB
-      parameters:
-        - $ref: '#/components/parameters/OperationIdPV'
-      responses:
-        '200':
-          description: OK
   # ---------- Managed MongoDB users -----------------------------------------------------------------------------------
   /api/mdb/mongodb/users/roles:
     get:
@@ -370,6 +312,112 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ScheduledOperationDTO'
+  # ---------- Managed MongoDB backups ---------------------------------------------------------------------------------
+  /api/mdb/mongodb/backups:
+    get:
+      summary: List MongoDB backups
+      operationId: listBackups
+      tags:
+        - Managed MongoDB backups
+        - MDB
+      parameters:
+        - $ref: '#/components/parameters/ClusterIdRQP'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListMongoBackupsResponseDTO'
+    post:
+      summary: Create MongoDB backup
+      operationId: createBackup
+      tags:
+        - Managed MongoDB backups
+        - MDB
+      parameters:
+        - $ref: '#/components/parameters/ClusterIdRQP'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduledOperationDTO'
+    delete:
+      summary: Delete backup of MongoDB cluster
+      operationId: deleteBackup
+      tags:
+        - Managed MongoDB backups
+        - MDB
+      parameters:
+        - $ref: '#/components/parameters/ClusterIdRQP'
+        - $ref: '#/components/parameters/BackupNameRQP'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduledOperationDTO'
+  # ---------- MDB common ----------------------------------------------------------------------------------------------
+  /api/mdb/storage-classes:
+    get:
+      summary: List storage classes
+      operationId: listStorageClasses
+      tags:
+        - MDB common
+        - MDB
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListStorageClassesResponseDTO'
+  /api/mdb/namespaces:
+    get:
+      summary: List namespaces
+      operationId: listNamespaces
+      tags:
+        - MDB common
+        - MDB
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListNamespacesResponseDTO'
+  # ---------- Operations ----------------------------------------------------------------------------------------------
+  /api/mdb/operations:
+    get:
+      summary: List operations
+      operationId: listOperations
+      tags:
+        - Operations
+        - MDB
+      parameters:
+        - $ref: '#/components/parameters/ClusterIdOQP'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOperationsResponseDTO'
+  /api/mdb/operations/{operationId}/restart:
+    put:
+      summary: Restart operation
+      operationId: restartOperation
+      tags:
+        - Operations
+        - MDB
+      parameters:
+        - $ref: '#/components/parameters/OperationIdPV'
+      responses:
+        '200':
+          description: OK
 
 
 
@@ -477,72 +525,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MongoListHostsResponse'
-  # ---------- Managed MongoDB backups ---------------------------------------------------------------------------------
-  /api/managed-mongodb/v1/clusters/{clusterId}/backups:
-    get:
-      summary: List backups of MongoDB cluster
-      operationId: listBackups
-      tags:
-        - Managed MongoDB backups
-        - MDB
-      parameters:
-        - $ref: '#/components/parameters/ClusterIdPV'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ListMongoBackupsResponse'
-    post:
-      summary: Create backup of MongoDB cluster
-      operationId: createBackup
-      tags:
-        - Managed MongoDB backups
-        - MDB
-      parameters:
-        - $ref: '#/components/parameters/ClusterIdPV'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/V1ScheduledOperationResponse'
-  /api/managed-mongodb/v1/clusters/{clusterId}/backups/{backupName}:
-    delete:
-      summary: Delete backup of MongoDB cluster
-      operationId: deleteBackup
-      tags:
-        - Managed MongoDB backups
-        - MDB
-      parameters:
-        - $ref: '#/components/parameters/ClusterIdPV'
-        - $ref: '#/components/parameters/BackupNamePV'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/V1ScheduledOperationResponse'
-  /api/managed-mongodb/v1/clusters/{clusterId}/backups/{backupName}/restore:
-    post:
-      summary: Restore MongoDB cluster from backup
-      operationId: restoreFromBackup
-      tags:
-        - Managed MongoDB backups
-        - MDB
-      parameters:
-        - $ref: '#/components/parameters/ClusterIdPV'
-        - $ref: '#/components/parameters/BackupNamePV'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/V1ScheduledOperationResponse'
   # ---------- Managed MongoDB internals -------------------------------------------------------------------------------
   /api/managed-mongodb/v1/internal/hosts:
     put:
@@ -3321,6 +3303,69 @@ components:
       required:
         - databaseName
         - roles
+    ListMongoBackupsResponseDTO:
+      type: object
+      properties:
+        backups:
+          type: array
+          items:
+            $ref: '#/components/schemas/MongoBackupDTO'
+      required:
+        - backups
+    MongoBackupDTO:
+      type: object
+      properties:
+        name:
+          type: string
+        clusterId:
+          type: string
+          format: uuid
+        type:
+          $ref: '#/components/schemas/BackupTypeDTO'
+        status:
+          $ref: '#/components/schemas/BackupStatusDTO'
+        startedAt:
+          type: string
+          format: date-time
+          nullable: true
+        finishedAt:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - name
+        - clusterId
+        - type
+        - status
+        - startedAt
+        - finishedAt
+    BackupTypeDTO:
+      type: object
+      properties:
+        value:
+          type: string
+        displayValue:
+          type: string
+      required:
+        - value
+        - displayValue
+    BackupStatusDTO:
+      type: object
+      properties:
+        value:
+          type: string
+        displayValue:
+          type: string
+      required:
+        - value
+        - displayValue
+
+
+
+
+
+
+
 
 
 
@@ -3484,42 +3529,6 @@ components:
         - unknown
         - primary
         - secondary
-    ListMongoBackupsResponse:
-      type: object
-      properties:
-        backups:
-          type: array
-          items:
-            $ref: '#/components/schemas/MongoBackup'
-      required:
-        - backups
-    MongoBackup:
-      type: object
-      properties:
-        name:
-          type: string
-        clusterId:
-          type: string
-          format: uuid
-        type:
-          $ref: '#/components/schemas/BackupType'
-        startedAt:
-          type: string
-          format: date-time
-        finishedAt:
-          type: string
-          format: date-time
-      required:
-        - name
-        - clusterId
-        - type
-        - startedAt
-        - finishedAt
-    BackupType:
-      type: string
-      enum:
-        - automated
-        - manual
     ListMongoRolesResponseDTO:
       type: object
       properties:
@@ -4357,12 +4366,21 @@ components:
       required: true
       schema:
         type: string
-    BackupNamePV:
+    BackupNameRQP:
       name: backupName
-      in: path
+      in: query
       required: true
       schema:
         type: string
+
+
+
+
+
+
+
+
+
     QuotaIdPV:
       name: quotaId
       in: path

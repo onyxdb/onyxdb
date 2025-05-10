@@ -135,4 +135,14 @@ public class TemplateProvider {
 
         return templateEngine.process("psmdb-exporter-service-scrape.yaml.txt", context);
     }
+
+    public String buildPsmdbBackup(String metadataName, String clusterName) {
+        Context context = new Context();
+        context.setVariables(Map.ofEntries(
+                Map.entry("METADATA_NAME", metadataName),
+                Map.entry("CLUSTER_NAME", clusterName)
+        ));
+
+        return templateEngine.process("psmdb-backup.yaml.txt", context);
+    }
 }

@@ -13,7 +13,6 @@ import com.onyxdb.platform.mdb.clusters.ClusterRepository;
 import com.onyxdb.platform.mdb.clusters.models.Cluster;
 import com.onyxdb.platform.mdb.clusters.models.CreateUser;
 import com.onyxdb.platform.mdb.clusters.models.User;
-import com.onyxdb.platform.mdb.exceptions.NotImplementedException;
 import com.onyxdb.platform.mdb.operations.models.Operation;
 import com.onyxdb.platform.mdb.operations.models.OperationType;
 import com.onyxdb.platform.mdb.operations.models.payload.MongoCreateUserPayload;

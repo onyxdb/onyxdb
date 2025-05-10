@@ -8,13 +8,14 @@ import com.onyxdb.platform.mdb.utils.StringEnumResolver;
  */
 public enum OperationType implements StringEnum {
     MONGO_CREATE_CLUSTER("mongo_create_cluster", "Create MongoDB cluster"),
+    MONGO_MODIFY_CLUSTER("mongo_modify_cluster", "Modify MongoDB cluster"),
+    MONGO_DELETE_CLUSTER("mongo_delete_cluster", "Delete MongoDB cluster"),
     MONGO_CREATE_DATABASE("mongo_create_database", "Create MongoDB database"),
     MONGO_DELETE_DATABASE("mongo_delete_database", "Delete MongoDB database"),
     MONGO_CREATE_USER("mongo_create_user", "Create MongoDB userName"),
     MONGO_DELETE_USER("mongo_delete_user", "Delete MongoDB userName"),
-    MONGO_MODIFY_CLUSTER("mongo_modify_cluster", "Modify MongoDB cluster"),
-    MONGO_DELETE_CLUSTER("mongo_delete_cluster", "Delete MongoDB cluster"),
     MONGO_CREATE_BACKUP("mongo_create_backup", "Create MongoDB backup"),
+    MONGO_DELETE_BACKUP("mongo_delete_backup", "Delete MongoDB backup"),
     ;
 
     public static final StringEnumResolver<OperationType> R = new StringEnumResolver<>(OperationType.class);

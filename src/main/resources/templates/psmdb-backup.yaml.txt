@@ -1,0 +1,12 @@
+apiVersion: psmdb.percona.com/v1
+kind: PerconaServerMongoDBBackup
+metadata:
+  name: [[${METADATA_NAME}]]
+  labels:
+    app.kubernetes.io/instance: [[${CLUSTER_NAME}]]
+  finalizers:
+    - percona.com/delete-backup
+spec:
+  clusterName: [[${CLUSTER_NAME}]]
+  storageName: minio
+  type: logical
