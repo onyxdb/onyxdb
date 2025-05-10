@@ -95,7 +95,7 @@ dependencies {
 
 openApiGenerate {
 	generatorName.set("spring")
-	inputSpec.set("$projectDir/src/main/resources/openapi/scheme.yaml")
+	inputSpec.set("$projectDir/src/main/resources/openapi/schema.yaml")
 	outputDir.set("$buildDir/generated/openapi")
 	apiPackage.set("${project.group}.platform.generated.openapi.apis")
 	modelPackage.set("${project.group}.platform.generated.openapi.models")
