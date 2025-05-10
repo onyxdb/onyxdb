@@ -9,6 +9,5 @@ spec:
     - name: [[${PORT_NAME}]]
       port: [[${PORT_NUMBER}]]
       targetPort: [[${PORT_NUMBER}]]
-      protocol: TCP
   selector:
     app.kubernetes.io/instance: [[${SELECTOR_INSTANCE_LABEL}]]

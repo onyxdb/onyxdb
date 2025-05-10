@@ -16,11 +16,11 @@ import com.onyxdb.platform.mdb.projects.Project;
 import com.onyxdb.platform.mdb.projects.ProjectRepository;
 
 @Component
-public class MongoCreateBackupTaskConsumer extends TaskConsumer<MongoCreateBackupPayload> {
+public class MongoCheckBackupIsReadyTaskConsumer extends TaskConsumer<MongoCreateBackupPayload> {
     private final PsmdbClient psmdbClient;
     private final ProjectRepository projectRepository;
 
-    public MongoCreateBackupTaskConsumer(
+    public MongoCheckBackupIsReadyTaskConsumer(
             ObjectMapper objectMapper,
             ClusterService clusterService,
             PsmdbClient psmdbClient,
@@ -33,7 +33,7 @@ public class MongoCreateBackupTaskConsumer extends TaskConsumer<MongoCreateBacku
 
     @Override
     public TaskType getTaskType() {
-        return TaskType.MONGO_CREATE_BACKUP;
+        return TaskType.MONGO_CHECK_BACKUP_IS_READY;
     }
 
     @Override
@@ -41,12 +41,16 @@ public class MongoCreateBackupTaskConsumer extends TaskConsumer<MongoCreateBacku
         Cluster cluster = clusterService.getClusterOrThrow(payload.clusterId());
         Project project = projectRepository.getProjectOrThrow(cluster.projectId(), false);
 
-        psmdbClient.applyPsmdbBackup(
+        boolean isReady = psmdbClient.isPsmdbBackupReady(
                 cluster.namespace(),
                 project.name(),
                 cluster.name(),
                 payload.createdAt()
         );
+
+        if (!isReady) {
+            return TaskResult.error();
+        }
 
         return TaskResult.success();
     }

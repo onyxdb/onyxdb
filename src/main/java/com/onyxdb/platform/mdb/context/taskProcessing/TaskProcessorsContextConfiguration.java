@@ -23,6 +23,7 @@ import com.onyxdb.platform.mdb.operations.consumers.TaskConsumer;
 import com.onyxdb.platform.mdb.operations.consumers.mongo.FinalTaskConsumer;
 import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoApplyOnyxdbAgentTaskConsumer;
 import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoApplyPsmdbTaskConsumer;
+import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoCheckBackupIsReadyTaskConsumer;
 import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoCheckOnyxdbAgentIsDeletedTaskConsumer;
 import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoCheckOnyxdbAgentReadinessTaskConsumer;
 import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoCheckPsmdbIsDeletedConsumer;
@@ -46,7 +47,6 @@ import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoMarkClusterReadyT
 import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoMarkClusterUpdatingTaskConsumer;
 import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoUpdateHostsTaskConsumer;
 import com.onyxdb.platform.mdb.operations.models.TaskType;
-import com.onyxdb.platform.mdb.resourcePresets.ResourcePresetService;
 
 @Configuration
 public class TaskProcessorsContextConfiguration {
@@ -223,12 +223,13 @@ public class TaskProcessorsContextConfiguration {
             FinalTaskConsumer finalTaskConsumer,
             MongoUpdateHostsTaskConsumer mongoUpdateHostsTaskProcessor,
             MongoDeleteUserTaskConsumer mongoDeleteUserTaskProcessor,
-            MongoCreateBackupTaskConsumer mongoCreateBackupTaskProcessor,
             MongoDeleteSecretsConsumer mongoDeleteSecretsConsumer,
             MongoMarkClusterReadyTaskConsumer mongoMarkClusterReadyTaskProcessor,
             MongoMarkClusterUpdatingTaskConsumer mongoMarkClusterUpdatingTaskProcessor,
             MongoMarkClusterDeletingTaskConsumer mongoMarkClusterDeletingTaskProcessor,
-            MongoMarkClusterDeletedTaskConsumer mongoMarkClusterDeletedTaskConsumer
+            MongoMarkClusterDeletedTaskConsumer mongoMarkClusterDeletedTaskConsumer,
+            MongoCreateBackupTaskConsumer mongoCreateBackupTaskProcessor,
+            MongoCheckBackupIsReadyTaskConsumer mongoCheckBackupIsReadyTaskConsumer
     ) {
         Map<TaskType, TaskConsumer<?>> taskTypeToTaskProcessors = Map.ofEntries(
                 Map.entry(
@@ -306,6 +307,10 @@ public class TaskProcessorsContextConfiguration {
                 Map.entry(
                         TaskType.MONGO_CREATE_BACKUP,
                         mongoCreateBackupTaskProcessor
+                ),
+                Map.entry(
+                        TaskType.MONGO_CHECK_BACKUP_IS_READY,
+                        mongoCheckBackupIsReadyTaskConsumer
                 ),
                 Map.entry(
                         TaskType.MONGO_DELETE_SECRETS,

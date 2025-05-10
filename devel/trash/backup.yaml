@@ -1,0 +1,27 @@
+apiVersion: psmdb.percona.com/v1
+kind: PerconaServerMongoDBBackup
+metadata:
+  creationTimestamp: '2025-05-09T21:20:00Z'
+  finalizers:
+    - percona.com/delete-backup
+  generateName: cron-test-1-sandbox-m-20250509212000-
+  generation: 1
+  labels:
+    app.kubernetes.io/instance: test-1-sandbox-mongo
+    app.kubernetes.io/managed-by: percona-server-mongodb-operator
+    app.kubernetes.io/name: percona-server-mongodb
+    app.kubernetes.io/part-of: percona-server-mongodb
+    percona.com/backup-ancestor: backup
+    percona.com/backup-type: cron
+    percona.com/cluster: test-1-sandbox-mongo
+  name: cron-test-1-sandbox-m-20250509212000-wxq9h
+  namespace: onyxdb
+  resourceVersion: '699751'
+  uid: 62f994ca-0ab2-4492-b4e4-d7cfd65602d3
+  selfLink: >-
+    /apis/psmdb.percona.com/v1/namespaces/onyxdb/perconaservermongodbbackups/cron-test-1-sandbox-m-20250509212000-wxq9h
+spec:
+  clusterName: test-1-sandbox-mongo
+  compressionType: gzip
+  storageName: minio
+  type: logical

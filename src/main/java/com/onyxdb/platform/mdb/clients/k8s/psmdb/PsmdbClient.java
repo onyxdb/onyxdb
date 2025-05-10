@@ -1,8 +1,13 @@
 package com.onyxdb.platform.mdb.clients.k8s.psmdb;
 
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.fabric8.kubernetes.api.model.GenericKubernetesResource;
@@ -12,7 +17,11 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.dsl.base.ResourceDefinitionContext;
 import org.jetbrains.annotations.Nullable;
 
+import com.onyxdb.platform.mdb.backups.Backup;
+import com.onyxdb.platform.mdb.backups.BackupStatus;
+import com.onyxdb.platform.mdb.backups.BackupType;
 import com.onyxdb.platform.mdb.clients.k8s.victoriaLogs.VictoriaLogsClient;
+import com.onyxdb.platform.mdb.utils.ObjectMapperUtils;
 import com.onyxdb.platform.mdb.utils.TemplateProvider;
 
 // TODO rewrite all
@@ -27,6 +36,13 @@ public class PsmdbClient extends AbstractPsmdbFactory {
             .withKind(KIND)
             .withNamespaced(true)
             .build();
+    private static final ResourceDefinitionContext PSMDB_BACKUP_CONTEXT = new ResourceDefinitionContext.Builder()
+            .withGroup(GROUP)
+            .withVersion(VERSION)
+            .withKind("PerconaServerMongoDBBackup")
+            .withNamespaced(true)
+            .build();
+    private static final DateTimeFormatter BACKUP_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
 
     private final KubernetesClient kubernetesClient;
     private final TemplateProvider templateProvider;
@@ -214,21 +230,81 @@ public class PsmdbClient extends AbstractPsmdbFactory {
                 .delete();
     }
 
-    public void deletePsmdbSecrets(
+    public List<Backup> listBackups(
             String namespace,
             String project,
             String cluster
     ) {
-        System.err.println(getPsmdbName(project, cluster));
-        var r = kubernetesClient.secrets()
+        return kubernetesClient.genericKubernetesResources(PSMDB_BACKUP_CONTEXT)
                 .inNamespace(namespace)
                 .withLabels(Map.ofEntries(
                         Map.entry("app.kubernetes.io/instance", getPsmdbName(project, cluster))
                 ))
-//                .withLabel("app.kubernetes.io/instance", getPsmdbName(project, cluster))
-//                .withName(getSecretName(project, cluster))
-                .delete();
-        System.err.println(r);
+                .list()
+                .getItems().stream().map(item -> {
+                    BackupType type = Optional.ofNullable(item.getMetadata().getLabels().get("percona.com/backup-type"))
+                            .map(rawType -> {
+                                if (rawType.equals("cron")) {
+                                    return BackupType.AUTOMATED;
+                                }
+                                return BackupType.MANUAL;
+                            })
+                            .orElse(BackupType.MANUAL);
+
+                    Object statusObj = item.getAdditionalProperties().get("status");
+                    BackupStatus status = parsePsmdbBackupStatusFromGenericResource(item);
+                    @Nullable
+                    LocalDateTime startedAt = null;
+                    @Nullable
+                    LocalDateTime finishedAt = null;
+                    if (statusObj != null) {
+                        Map<String, Object> statusMap = ObjectMapperUtils.convertToMap(objectMapper, statusObj);
+                        startedAt = Optional.ofNullable(objectMapper.convertValue(statusMap.get("start"), String.class))
+                                .map(ZonedDateTime::parse).map(ZonedDateTime::toLocalDateTime).orElse(null);
+                        finishedAt = Optional.ofNullable(objectMapper.convertValue(statusMap.get("completed"), String.class))
+                                .map(ZonedDateTime::parse).map(ZonedDateTime::toLocalDateTime).orElse(null);
+                    }
+                    return new Backup(
+                            item.getMetadata().getName(),
+                            type,
+                            status,
+                            startedAt,
+                            finishedAt
+                    );
+                })
+                .sorted(Comparator.comparing(Backup::startedAt, Comparator.nullsLast(Comparator.naturalOrder()))
+                        .reversed()
+                )
+                .toList();
+    }
+
+    public void applyPsmdbBackup(
+            String namespace,
+            String projectName,
+            String clusterName,
+            LocalDateTime createdAt
+    ) {
+        String resource = templateProvider.buildPsmdbBackup(
+                getManualPsmdbBackupName(projectName, clusterName, createdAt),
+                getPsmdbName(projectName, clusterName)
+        );
+        kubernetesClient.resource(resource)
+                .inNamespace(namespace)
+                .serverSideApply();
+    }
+
+    public boolean isPsmdbBackupReady(
+            String namespace,
+            String projectName,
+            String clusterName,
+            LocalDateTime createdAt
+    ) {
+        GenericKubernetesResource resource = kubernetesClient.genericKubernetesResources(PSMDB_BACKUP_CONTEXT)
+                .inNamespace(namespace)
+                .withName(getManualPsmdbBackupName(projectName, clusterName, createdAt))
+                .get();
+
+        return parsePsmdbBackupStatusFromGenericResource(resource).equalsStringEnum(BackupStatus.READY);
     }
 
     public static String getPsmdbName(String project, String cluster) {
@@ -249,6 +325,37 @@ public class PsmdbClient extends AbstractPsmdbFactory {
 
     public static String getMongoUserSecretName(String project, String cluster, String user) {
         return String.format("%s-%s-mongo-user-%s", cluster, project, user);
+    }
+
+    public static String getManualPsmdbBackupName(
+            String project,
+            String cluster,
+            LocalDateTime createdAt
+    ) {
+        return "manual-%s-%s".formatted(getPsmdbName(project, cluster), createdAt.format(BACKUP_DATE_TIME_FORMATTER));
+    }
+
+    private BackupStatus parsePsmdbBackupStatusFromGenericResource(GenericKubernetesResource resource) {
+        Object statusObj = resource.getAdditionalProperties().get("status");
+
+        BackupStatus status = BackupStatus.UNKNOWN;
+        if (statusObj != null) {
+            Map<String, Object> statusMap = ObjectMapperUtils.convertToMap(objectMapper, statusObj);
+
+            @Nullable
+            Object stateObj = statusMap.get("state");
+            if (stateObj != null) {
+                String rawState = objectMapper.convertValue(stateObj, String.class);
+                if (rawState.equals("ready")) {
+                    status = BackupStatus.READY;
+                } else if (rawState.equals("running")) {
+                    status = BackupStatus.RUNNING;
+                }
+            }
+
+        }
+
+        return status;
     }
 
 //    public static List<String> getPsmdbPods(String cluster, ) {
