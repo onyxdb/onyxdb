@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: agent
-          image: foxleren/onyxdb-agent:s.mokhov-fix-agent-2e5c33d
+          image: foxleren/onyxdb-agent:master-feb840b
           imagePullPolicy: Always
           ports:
             - containerPort: 9002
