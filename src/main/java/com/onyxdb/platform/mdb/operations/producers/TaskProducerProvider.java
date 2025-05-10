@@ -15,6 +15,7 @@ import com.onyxdb.platform.mdb.operations.producers.mongo.MongoDeleteClusterTask
 import com.onyxdb.platform.mdb.operations.producers.mongo.MongoDeleteDatabaseTaskProducer;
 import com.onyxdb.platform.mdb.operations.producers.mongo.MongoDeleteUserTaskProducer;
 import com.onyxdb.platform.mdb.operations.producers.mongo.MongoModifyClusterTaskProducer;
+import com.onyxdb.platform.mdb.operations.producers.mongo.MongoRestoreClusterTaskProducer;
 
 @Component
 public class TaskProducerProvider {
@@ -29,7 +30,8 @@ public class TaskProducerProvider {
             MongoCreateUserTaskProducer mongoCreateUserTaskProducer,
             MongoDeleteUserTaskProducer mongoDeleteUserTaskProducer,
             MongoCreateBackupTaskProducer mongoCreateBackupTaskProducer,
-            MongoDeleteBackupTaskProducer mongoDeleteBackupTaskProducer
+            MongoDeleteBackupTaskProducer mongoDeleteBackupTaskProducer,
+            MongoRestoreClusterTaskProducer mongoRestoreClusterTaskProducer
     ) {
         this.operationTypeToTaskProducer = Map.ofEntries(
                 Map.entry(
@@ -67,6 +69,10 @@ public class TaskProducerProvider {
                 Map.entry(
                         OperationType.MONGO_DELETE_BACKUP,
                         mongoDeleteBackupTaskProducer
+                ),
+                Map.entry(
+                        OperationType.MONGO_RESTORE_CLUSTER,
+                        mongoRestoreClusterTaskProducer
                 )
         );
     }

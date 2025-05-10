@@ -1,0 +1,19 @@
+apiVersion: psmdb.percona.com/v1
+kind: PerconaServerMongoDBRestore
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: >
+      {"apiVersion":"psmdb.percona.com/v1","kind":"PerconaServerMongoDBRestore","metadata":{"annotations":{},"labels":{"app.kubernetes.io/instance":"test-1-sandbox-mongo"},"name":"restore-test-1-sandbox-mongo","namespace":"onyxdb"},"spec":{"backupName":"manual-test-1-sandbox-mongo-20250510040526","clusterName":"test-1-sandbox-mongo"}}
+  creationTimestamp: '2025-05-10T01:09:02Z'
+  generation: 1
+  labels:
+    app.kubernetes.io/instance: test-1-sandbox-mongo
+  name: restore-test-1-sandbox-mongo
+  namespace: onyxdb
+  resourceVersion: '725338'
+  uid: 480d198c-a1b2-45d1-8880-2382ee69fb4d
+  selfLink: >-
+    /apis/psmdb.percona.com/v1/namespaces/onyxdb/perconaservermongodbrestores/restore-test-1-sandbox-mongo
+spec:
+  backupName: manual-test-1-sandbox-mongo-20250510040526
+  clusterName: test-1-sandbox-mongo

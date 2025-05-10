@@ -109,4 +109,10 @@ public class MongoClusterController implements ManagedMongoDbClustersApi {
         ));
         return ResponseEntity.ok(response);
     }
+
+    @Override
+    public ResponseEntity<ScheduledOperationDTO> restoreCluster(UUID clusterId, String backupName) {
+        UUID operationId = clusterService.restoreCluster(clusterId, backupName);
+        return ResponseEntity.ok(new ScheduledOperationDTO(operationId));
+    }
 }

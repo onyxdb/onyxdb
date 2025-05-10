@@ -1,0 +1,9 @@
+apiVersion: psmdb.percona.com/v1
+kind: PerconaServerMongoDBRestore
+metadata:
+  name: [[${METADATA_NAME}]]
+  labels:
+    app.kubernetes.io/instance: [[${CLUSTER_NAME}]]
+spec:
+  clusterName: [[${CLUSTER_NAME}]]
+  backupName: [[${BACKUP_NAME}]]

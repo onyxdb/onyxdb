@@ -25,6 +25,7 @@ import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoApplyOnyxdbAgentT
 import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoApplyPsmdbTaskConsumer;
 import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoCheckBackupIsDeletedTaskConsumer;
 import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoCheckBackupIsReadyTaskConsumer;
+import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoCheckClusterIsRestoredTaskConsumer;
 import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoCheckOnyxdbAgentIsDeletedTaskConsumer;
 import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoCheckOnyxdbAgentReadinessTaskConsumer;
 import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoCheckPsmdbIsDeletedConsumer;
@@ -47,6 +48,7 @@ import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoMarkClusterDelete
 import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoMarkClusterDeletingTaskConsumer;
 import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoMarkClusterReadyTaskConsumer;
 import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoMarkClusterUpdatingTaskConsumer;
+import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoRestoreClusterTaskConsumer;
 import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoUpdateHostsTaskConsumer;
 import com.onyxdb.platform.mdb.operations.models.TaskType;
 
@@ -233,7 +235,9 @@ public class TaskProcessorsContextConfiguration {
             MongoCreateBackupTaskConsumer mongoCreateBackupTaskProcessor,
             MongoCheckBackupIsReadyTaskConsumer mongoCheckBackupIsReadyTaskConsumer,
             MongoDeleteBackupTaskConsumer mongoDeleteBackupTaskConsumer,
-            MongoCheckBackupIsDeletedTaskConsumer mongoCheckBackupIsDeletedTaskConsumer
+            MongoCheckBackupIsDeletedTaskConsumer mongoCheckBackupIsDeletedTaskConsumer,
+            MongoRestoreClusterTaskConsumer mongoRestoreClusterTaskConsumer,
+            MongoCheckClusterIsRestoredTaskConsumer mongoCheckClusterIsRestoredTaskConsumer
     ) {
         Map<TaskType, TaskConsumer<?>> taskTypeToTaskProcessors = Map.ofEntries(
                 Map.entry(
@@ -323,6 +327,14 @@ public class TaskProcessorsContextConfiguration {
                 Map.entry(
                         TaskType.MONGO_CHECK_BACKUP_IS_DELETED,
                         mongoCheckBackupIsDeletedTaskConsumer
+                ),
+                Map.entry(
+                        TaskType.MONGO_RESTORE_CLUSTER,
+                        mongoRestoreClusterTaskConsumer
+                ),
+                Map.entry(
+                        TaskType.MONGO_CHECK_CLUSTER_IS_RESTORED,
+                        mongoCheckClusterIsRestoredTaskConsumer
                 ),
                 Map.entry(
                         TaskType.MONGO_DELETE_SECRETS,

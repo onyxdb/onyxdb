@@ -176,6 +176,23 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ScheduledOperationDTO'
+  /api/mdb/mongodb/clusters/{clusterId}/restore:
+    post:
+      summary: Restore MongoDB cluster
+      operationId: restoreCluster
+      tags:
+        - Managed MongoDB clusters
+        - MDB
+      parameters:
+        - $ref: '#/components/parameters/ClusterIdPV'
+        - $ref: '#/components/parameters/BackupNameRQP'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduledOperationDTO'
   /api/mdb/mongodb/versions:
     get:
       summary: List MongoDB versions
@@ -2746,6 +2763,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProductTreeDTO'
+security:
+  - bearerAuth: [ ]
 # ---------- components ------------------------------------------------------------------------------------------------
 components:
   securitySchemes:
@@ -4323,16 +4342,6 @@ components:
         items:
           type: string
           format: uuid
-
-
-
-    ResourcePresetIdPV:
-      name: resourcePresetId
-      in: path
-      required: true
-      schema:
-        type: string
-        format: uuid
     ClusterIdPV:
       name: clusterId
       in: path
@@ -4381,6 +4390,19 @@ components:
 
 
 
+
+
+
+
+
+
+    ResourcePresetIdPV:
+      name: resourcePresetId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
     QuotaIdPV:
       name: quotaId
       in: path
@@ -4402,6 +4424,3 @@ components:
       schema:
         type: string
         format: uuid
-
-security:
-  - bearerAuth: [ ]

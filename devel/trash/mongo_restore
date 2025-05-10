@@ -1,0 +1,7 @@
+db.somedata.find()
+
+db.somedata.insertOne({ key: "somekey", number: "somevalue" })
+
+db.somedata.deleteOne({ key: "somekey" })
+
+db.somedata.find()
