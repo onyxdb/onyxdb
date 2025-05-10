@@ -3373,6 +3373,8 @@ components:
           $ref: '#/components/schemas/BackupTypeDTO'
         status:
           $ref: '#/components/schemas/BackupStatusDTO'
+        isReady:
+          type: boolean
         startedAt:
           type: string
           format: date-time
@@ -3386,6 +3388,7 @@ components:
         - clusterId
         - type
         - status
+        - isReady
         - startedAt
         - finishedAt
     BackupTypeDTO:

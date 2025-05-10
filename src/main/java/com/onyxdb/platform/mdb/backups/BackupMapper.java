@@ -22,6 +22,7 @@ public class BackupMapper {
                         backup.status().value(),
                         backup.status().getDisplayValue()
                 ),
+                backup.status().equalsStringEnum(BackupStatus.READY),
                 backup.startedAt(),
                 backup.finishedAt()
         );
