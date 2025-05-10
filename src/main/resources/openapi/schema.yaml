@@ -3481,6 +3481,10 @@ components:
 
 
 
+
+
+
+
     MongoListHostsResponse:
       type: object
       properties:
@@ -4594,27 +4598,26 @@ components:
       schema:
         type: string
         format: uuid
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     ResourcePresetIdPV:
       name: resourcePresetId
       in: path
       required: true
       schema:
         type: string
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     QuotaIdPV:
       name: quotaId
       in: path
