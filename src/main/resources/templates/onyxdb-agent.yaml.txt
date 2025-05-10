@@ -22,7 +22,7 @@ spec:
           image: foxleren/onyxdb-agent:s.mokhov-fix-agent-2e5c33d
           imagePullPolicy: Always
           ports:
-            - containerPort: 9004
+            - containerPort: 9002
           env:
             - name: ONYXDB_MDB__BASE_URL
               value: [[${ONYXDB_BASE_URL}]]
