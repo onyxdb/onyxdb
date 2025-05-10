@@ -151,6 +151,21 @@ public class QuotaService {
         );
     }
 
+    public void validateQuotaByClusterConfig(UUID projectId, ClusterConfig clusterConfig) {
+        List<EnrichedProductQuota> quotas = simulateMongoDbQuotasUsage(projectId, clusterConfig);
+        quotas.forEach(q -> {
+            if (q.free() < 0) {
+                throw new BadRequestException(String.format(
+                        "Quota is exhausted. Requires extra %d %s of resource '%s' (id='%s')",
+                        Math.abs(q.free()),
+                        q.resource().type().getUnit().value(),
+                        q.resource().name(),
+                        q.resource().id()
+                ));
+            }
+        });
+    }
+
     public List<EnrichedProductQuota> simulateMongoDbQuotasUsage(
             UUID projectId,
             ClusterConfig clusterConfig
@@ -192,7 +207,7 @@ public class QuotaService {
 
         return List.of(
                 vcpuQuota.addUsage(Double.valueOf(Math.ceil(preset.vcpu())).longValue() * clusterConfig.replicas()),
-                ramQuota.addUsage(Double.valueOf(Math.ceil(preset.ram())).longValue()  * clusterConfig.replicas())
+                ramQuota.addUsage(Double.valueOf(Math.ceil(preset.ram())).longValue() * clusterConfig.replicas())
         );
     }
 }

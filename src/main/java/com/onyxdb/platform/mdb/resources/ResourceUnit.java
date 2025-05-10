@@ -5,7 +5,7 @@ import com.onyxdb.platform.mdb.utils.StringEnumResolver;
 
 public enum ResourceUnit implements StringEnum {
     UNKNOWN("unknown"),
-    CORES("cores"),
+    MILLICORES("millicores"),
     BYTES("bytes"),
     ;
 
