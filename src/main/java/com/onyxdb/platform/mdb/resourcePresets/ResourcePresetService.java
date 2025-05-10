@@ -2,7 +2,6 @@ package com.onyxdb.platform.mdb.resourcePresets;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import com.onyxdb.platform.mdb.exceptions.ResourcePresetNotFoundException;
 
@@ -20,25 +19,29 @@ public class ResourcePresetService {
         return resourcePresetRepository.list();
     }
 
-    public Optional<ResourcePreset> getO(UUID id) {
-        return resourcePresetRepository.getO(id);
+    public Optional<ResourcePreset> getO(String resourcePresetId) {
+        return resourcePresetRepository.getO(resourcePresetId);
     }
 
-    public ResourcePreset getOrThrow(UUID id) {
-        return getO(id).orElseThrow(() -> new ResourcePresetNotFoundException(id));
+    public ResourcePreset getOrThrow(String resourcePresetId) {
+        return getO(resourcePresetId).orElseThrow(() -> new ResourcePresetNotFoundException(resourcePresetId));
     }
 
-    public UUID create(ResourcePreset resourcePreset) {
+    public void create(ResourcePreset resourcePreset) {
         resourcePresetRepository.create(resourcePreset);
-
-        return resourcePreset.id();
     }
 
     public void update(ResourcePreset resourcePreset) {
-        resourcePresetRepository.update(resourcePreset);
+        boolean isUpdated = resourcePresetRepository.update(resourcePreset);
+        if (!isUpdated) {
+            throw new ResourcePresetNotFoundException(resourcePreset.id());
+        }
     }
 
-    public void delete(UUID id) {
-        resourcePresetRepository.delete(id);
+    public void delete(String resourcePresetId) {
+        boolean isDeleted = resourcePresetRepository.delete(resourcePresetId);
+        if (!isDeleted) {
+            throw new ResourcePresetNotFoundException(resourcePresetId);
+        }
     }
 }

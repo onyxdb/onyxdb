@@ -27,6 +27,7 @@ import com.onyxdb.platform.mdb.projects.ProjectRepository;
 import com.onyxdb.platform.mdb.quotas.QuotaMapper;
 import com.onyxdb.platform.mdb.quotas.QuotaPostgresRepository;
 import com.onyxdb.platform.mdb.quotas.QuotaRepository;
+import com.onyxdb.platform.mdb.resourcePresets.ResourcePresetMapper;
 import com.onyxdb.platform.mdb.resourcePresets.ResourcePresetPostgresRepository;
 import com.onyxdb.platform.mdb.resourcePresets.ResourcePresetRepository;
 import com.onyxdb.platform.mdb.resources.ResourceMapper;
@@ -43,8 +44,11 @@ import com.onyxdb.platform.mdb.zones.ZoneRepository;
 @Configuration
 public class RepositoryContextConfiguration {
     @Bean
-    public ResourcePresetRepository resourcePresetRepository(DSLContext dslContext) {
-        return new ResourcePresetPostgresRepository(dslContext);
+    public ResourcePresetRepository resourcePresetRepository(
+            DSLContext dslContext,
+            ResourcePresetMapper resourcePresetMapper
+    ) {
+        return new ResourcePresetPostgresRepository(dslContext, resourcePresetMapper);
     }
 
     @Bean

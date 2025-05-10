@@ -18,8 +18,8 @@ public class TestUtils {
 
     public static final UUID ADMIN_ID = AdminInitializer.ADMIN_ID;
 
-    public static final UUID TEST_1_RESOURCE_PRESET_ID = UUID.fromString("99d2a60a-fe72-4203-8c01-de9b602cb758");
-    public static final UUID NOT_EXISTING_RESOURCE_PRESET_ID = UUID.fromString("7f673db3-b272-4f89-bdbc-74006d37a17a");
+    public static final String TEST_1_RESOURCE_PRESET_ID = "s-c2-r8";
+    public static final String NOT_EXISTING_RESOURCE_PRESET_ID = "not-existing-preset";
 
     public static final String DEFAULT_NAMESPACE = "onyxdb";
 
@@ -36,7 +36,6 @@ public class TestUtils {
 
     public static ResourcePreset RESOURCE_PRESET = new ResourcePreset(
             TEST_1_RESOURCE_PRESET_ID,
-            "test-1",
             ResourcePresetType.STANDARD,
             1000,
             1073741824

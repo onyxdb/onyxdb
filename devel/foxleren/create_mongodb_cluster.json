@@ -5,7 +5,7 @@
   "config": {
     "version": "8.0",
     "resources": {
-      "presetId": "c92712a0-d344-4b1a-91fb-b27469b72bf5",
+      "presetId": "dev",
       "storageClass": "standard",
       "storage": 1073741824
     },

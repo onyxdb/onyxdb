@@ -1,13 +1,12 @@
 package com.onyxdb.platform.mdb.clusters.models;
 
 import java.util.Objects;
-import java.util.UUID;
 
 /**
  * @author foxleren
  */
 public record ClusterResources(
-        UUID presetId,
+        String presetId,
         String storageClass,
         long storage
 ) {
@@ -16,7 +15,7 @@ public record ClusterResources(
     }
 
     public static class Builder {
-        private UUID presetId;
+        private String presetId;
         private String storageClass;
         private long storage;
 

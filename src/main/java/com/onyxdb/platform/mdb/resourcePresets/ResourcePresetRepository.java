@@ -2,7 +2,6 @@ package com.onyxdb.platform.mdb.resourcePresets;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * @author foxleren
@@ -10,11 +9,11 @@ import java.util.UUID;
 public interface ResourcePresetRepository {
     List<ResourcePreset> list();
 
-    Optional<ResourcePreset> getO(UUID id);
+    Optional<ResourcePreset> getO(String resourcePresetId);
 
     void create(ResourcePreset resourcePreset);
 
-    void update(ResourcePreset resourcePreset);
+    boolean update(ResourcePreset resourcePreset);
 
-    void delete(UUID id);
+    boolean delete(String resourcePresetId);
 }

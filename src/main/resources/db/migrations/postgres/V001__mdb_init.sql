@@ -6,23 +6,57 @@ CREATE TYPE public.resource_preset_type AS ENUM (
 
 CREATE TABLE public.resource_presets
 (
-    id   uuid                        NOT NULL,
-    name varchar                     NOT NULL,
+    id   varchar                     NOT NULL,
     type public.resource_preset_type NOT NULL,
     vcpu bigint                      NOT NULL,
     ram  bigint                      NOT NULL,
-    PRIMARY KEY (id),
-    UNIQUE (name)
+    PRIMARY KEY (id)
 );
 
-INSERT INTO public.resource_presets (id, name, type, vcpu, ram)
-VALUES ('4eaec494-f935-46eb-8a5e-c8e54afa9869', 'co-c2-r4', 'cpu_optimized', 2000, 4294967296),
-       ('00551fb9-f935-43e7-a597-565221818b79', 'co-c4-r8', 'cpu_optimized', 4000, 8589934592),
-       ('853ec99d-8b5e-469b-94eb-41a88d244223', 's-c2-r4', 'standard', 2000, 4294967296),
-       ('06445eb3-e1d9-4b0b-a567-fdff5cdf619a', 's-c4-r8', 'standard', 4000, 8589934592),
-       ('c42ba25e-8206-4395-9bf9-5835e6267dac', 'ro-c2-r16', 'ram_optimized', 2000, 17179869184),
-       ('05195d23-5385-4887-b1ec-5f7d5b315d5c', 'ro-c4-r32', 'ram_optimized', 4000, 34359738368);
+INSERT INTO public.resource_presets (id, type, vcpu, ram)
+VALUES
+    -- standard
+    ('s-c2-r8', 'standard', 2000, 8589934592),
+    ('s-c4-r16', 'standard', 4000, 17179869184),
+    ('s-c8-r32', 'standard', 8000, 34359738368),
+    ('s-c12-r48', 'standard', 12000, 51539607552),
+    ('s-c16-r64', 'standard', 16000, 68719476736),
+    ('s-c24-r96', 'standard', 24000, 103079215104),
+    ('s-c32-r128', 'standard', 32000, 137438953472),
+    ('s-c40-r160', 'standard', 40000, 171798691840),
+    ('s-c48-r192', 'standard', 48000, 206158430208),
+    ('s-c64-r256', 'standard', 64000, 274877906944),
+    ('s-c80-r320', 'standard', 80000, 343597383680),
+    ('s-c96-r576', 'standard', 96000, 618475290624),
+    -- cpu_optimized
+    ('co-c2-r4', 'cpu_optimized', 2000, 4294967296),
+    ('co-c4-r8', 'cpu_optimized', 4000, 8589934592),
+    ('co-c8-r16', 'cpu_optimized', 8000, 17179869184),
+    ('co-c12-r24', 'cpu_optimized', 12000, 25769803776),
+    ('co-c16-r32', 'cpu_optimized', 16000, 34359738368),
+    ('co-c24-r48', 'cpu_optimized', 24000, 51539607552),
+    ('co-c32-r64', 'cpu_optimized', 32000, 68719476736),
+    ('co-c40-r80', 'cpu_optimized', 40000, 85899345920),
+    ('co-c48-r96', 'cpu_optimized', 48000, 103079215104),
+    ('co-c64-r128', 'cpu_optimized', 64000, 137438953472),
+    ('co-c80-r160', 'cpu_optimized', 80000, 171798691840),
+    ('co-c96-r192', 'cpu_optimized', 96000, 206158430208),
+    -- ram_optimized
+    ('ro-c2-r16', 'ram_optimized', 2000, 17179869184),
+    ('ro-c4-r32', 'ram_optimized', 4000, 34359738368),
+    ('ro-c6-r48', 'ram_optimized', 6000, 51539607552),
+    ('ro-c8-r64', 'ram_optimized', 8000, 68719476736),
+    ('ro-c12-r96', 'ram_optimized', 12000, 103079215104),
+    ('ro-c16-r128', 'ram_optimized', 16000, 137438953472),
+    ('ro-c24-r192', 'ram_optimized', 24000, 206158430208),
+    ('ro-c32-r256', 'ram_optimized', 32000, 274877906944),
+    ('ro-c40-r320', 'ram_optimized', 40000, 343597383680),
+    ('ro-c48-r384', 'ram_optimized', 48000, 412316860416),
+    ('ro-c56-r448', 'ram_optimized', 56000, 481036337152),
+    ('ro-c64-r512', 'ram_optimized', 64000, 549755813888),
+    ('ro-c80-r640', 'ram_optimized', 80000, 687194767360);
 
+-- TODO remove
 CREATE TABLE public.zones
 (
     id          varchar NOT NULL,
@@ -261,13 +295,6 @@ CREATE TABLE public.shedlock
     locked_by  VARCHAR(255),
     PRIMARY KEY (name)
 );
-
-INSERT INTO public.resource_presets (id, name, type, vcpu, ram)
-VALUES ('c92712a0-d344-4b1a-91fb-b27469b72bf5', 'dev', 'standard', 0.5, 536870912);
-
-INSERT INTO public.resource_presets (id, name, type, vcpu, ram)
-VALUES ('155df930-243d-4b57-b24b-607992f8c3d1', 'dev-2', 'standard', 0.35, 805306368);
-
 
 INSERT INTO public.projects (id, name, description, product_id, namespace, created_at, created_by)
 VALUES ('5cb0ca1c-e6c1-47ab-b832-0074312490a3',

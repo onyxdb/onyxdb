@@ -41,10 +41,10 @@ public class TemplateProvider {
             String secretsUsersName,
             String replsetName,
             int replsetSize,
-            double vcpu,
-            long ram,
+            long vcpuMillis,
+            long ramBytes,
             String storageClass,
-            long storage,
+            long storageBytes,
             boolean backupEnabled,
             String backupSchedule,
             int backupLimit,
@@ -52,8 +52,8 @@ public class TemplateProvider {
             String minioSecret,
             String minioBucket
     ) {
-        var mongodMemory = Quantity.fromNumericalAmount(BigDecimal.valueOf(ram), "Gi");
-        var mongodStorage = Quantity.fromNumericalAmount(BigDecimal.valueOf(storage), "Gi");
+        var mongodMemory = Quantity.fromNumericalAmount(BigDecimal.valueOf(ramBytes), "Gi");
+        var mongodStorage = Quantity.fromNumericalAmount(BigDecimal.valueOf(storageBytes), "Gi");
 
         Context context = new Context();
         context.setVariables(Map.ofEntries(
@@ -63,7 +63,7 @@ public class TemplateProvider {
                 Map.entry("SECRETS_USERS_NAME", secretsUsersName),
                 Map.entry("REPLSET_NAME", replsetName),
                 Map.entry("REPLSET_SIZE", replsetSize),
-                Map.entry("MONGOD_CPU", vcpu),
+                Map.entry("MONGOD_CPU", vcpuMillis + "m"),
                 Map.entry("MONGOD_MEMORY", mongodMemory),
                 Map.entry("MONGOD_STORAGE_CLASS", storageClass),
                 Map.entry("MONGOD_STORAGE", mongodStorage),
