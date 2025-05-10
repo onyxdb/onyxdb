@@ -11,7 +11,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ActiveProfiles;
 
 import com.onyxdb.platform.generated.jooq.Public;
 import com.onyxdb.platform.generated.jooq.Tables;
@@ -20,8 +19,10 @@ import com.onyxdb.platform.generated.openapi.models.JwtResponseDTO;
 import com.onyxdb.platform.mdb.clients.k8s.psmdb.PsmdbClient;
 import com.onyxdb.platform.mdb.context.DatasourceContextConfiguration;
 
-@ActiveProfiles("test")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+        properties = "spring.profiles.active=test",
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
+)
 @RunWith(MockitoJUnitRunner.class)
 public class BaseTest {
     @Autowired
