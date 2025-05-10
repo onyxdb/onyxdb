@@ -33,6 +33,7 @@ public class OnyxdbInitializer implements CommandLineRunner {
 
     // TODO don't hardcode admin id
     public static final UUID ADMIN_ID = UUID.fromString("4a2770da-c806-4ae2-8e02-3b54641463df");
+    public static final String ONYXDB_ROBOT_SECRET = "onyxdb-robot";
 
     private final String selfNamespace;
     private final TransactionTemplate transactionTemplate;
@@ -115,7 +116,7 @@ public class OnyxdbInitializer implements CommandLineRunner {
 
         Secret secret = new SecretBuilder()
                 .withNewMetadata()
-                .withName("onyxdb-robot")
+                .withName(ONYXDB_ROBOT_SECRET)
                 .endMetadata()
                 .addToStringData("login", login)
                 .addToStringData("password", password)

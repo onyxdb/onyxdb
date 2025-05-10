@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.onyxdb.platform.generated.openapi.apis.ManagedMongoDbInternalsApi;
-import com.onyxdb.platform.generated.openapi.models.UpdateMongoHostsRequest;
+import com.onyxdb.platform.generated.openapi.models.UpdateMongoHostsRequestDTO;
 import com.onyxdb.platform.mdb.clusters.models.MongoHost;
 import com.onyxdb.platform.mdb.hosts.HostMapper;
 import com.onyxdb.platform.mdb.hosts.HostService;
@@ -22,7 +22,7 @@ public class MongoInternalsController implements ManagedMongoDbInternalsApi {
     }
 
     @Override
-    public ResponseEntity<Void> updateHosts(UpdateMongoHostsRequest rq) {
+    public ResponseEntity<Void> updateHosts(UpdateMongoHostsRequestDTO rq) {
         List<MongoHost> mongoHosts = hostMapper.map(rq);
         hostService.updateMongoHosts(mongoHosts);
 

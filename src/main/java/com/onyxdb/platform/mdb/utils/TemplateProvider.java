@@ -8,6 +8,8 @@ import io.fabric8.kubernetes.api.model.Quantity;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
+import com.onyxdb.platform.mdb.context.OnyxdbInitializer;
+
 import static com.onyxdb.platform.mdb.clusters.ClusterMapper.DEFAULT_NAMESPACE;
 
 public class TemplateProvider {
@@ -89,7 +91,8 @@ public class TemplateProvider {
         context.setVariables(Map.ofEntries(
                 Map.entry("METADATA_NAME", metadataName),
                 Map.entry("ONYXDB_BASE_URL", onyxdbBaseUrl),
-                Map.entry("CLUSTER_ID", clusterId),
+                Map.entry("ONYXDB_CLUSTER_ID", clusterId),
+                Map.entry("ONYXDB_ROBOT_SECRET", OnyxdbInitializer.ONYXDB_ROBOT_SECRET),
                 Map.entry("SECRETS_USERS_NAME", secretsUsersName),
                 Map.entry("REPLSET_SERVICE", rsServiceName),
                 Map.entry("NAMESPACE", DEFAULT_NAMESPACE)

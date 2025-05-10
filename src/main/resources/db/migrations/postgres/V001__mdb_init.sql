@@ -272,6 +272,15 @@ CREATE TABLE public.product_quotas
 --     FOREIGN KEY (resource_id) REFERENCES public.resources (id)
 );
 
+CREATE TABLE public.shedlock
+(
+    name       VARCHAR(64),
+    lock_until TIMESTAMP(3) NULL,
+    locked_at  TIMESTAMP(3) NULL,
+    locked_by  VARCHAR(255),
+    PRIMARY KEY (name)
+);
+
 INSERT INTO public.product_quotas(product_id, resource_id, "limit", allocation, free)
 VALUES ('3ec32ad8-db16-4955-8872-41404d483b9f',
         'a162cf17-0320-42be-b4e2-9b2e91070916',
@@ -283,16 +292,6 @@ VALUES ('3ec32ad8-db16-4955-8872-41404d483b9f',
         10737418240,
         0,
         10737418240);
-;
-
-CREATE TABLE public.shedlock
-(
-    name       VARCHAR(64),
-    lock_until TIMESTAMP(3) NULL,
-    locked_at  TIMESTAMP(3) NULL,
-    locked_by  VARCHAR(255),
-    PRIMARY KEY (name)
-);
 
 INSERT INTO public.projects (id, name, description, product_id, namespace, created_at, created_by)
 VALUES ('5cb0ca1c-e6c1-47ab-b832-0074312490a3',

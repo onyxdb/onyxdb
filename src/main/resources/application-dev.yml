@@ -35,8 +35,9 @@ onyxdb:
     self-namespace: onyxdb
     namespaces: onyxdb
     storage-classes: standard
+  # TODO build url in runtime with namespace
   agent:
-    base-url: http://localhost:9004
+    base-url: http://localhost:9002
   postgres:
     url: jdbc:postgresql://localhost:5432/onyxdb
     username: postgres

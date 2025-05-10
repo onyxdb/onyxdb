@@ -4,7 +4,8 @@ import java.util.List;
 import java.util.UUID;
 
 import com.onyxdb.platform.generated.jooq.tables.records.HostsRecord;
-import com.onyxdb.platform.generated.openapi.models.UpdateMongoHostsRequest;
+import com.onyxdb.platform.generated.openapi.models.MongoHostDTO;
+import com.onyxdb.platform.generated.openapi.models.UpdateMongoHostsRequestDTO;
 import com.onyxdb.platform.mdb.clusters.models.EnrichedHost;
 import com.onyxdb.platform.mdb.clusters.models.Host;
 import com.onyxdb.platform.mdb.clusters.models.MongoHost;
@@ -13,30 +14,30 @@ import com.onyxdb.platform.mdb.clusters.models.MongoHostStatus;
 import com.onyxdb.platform.mdb.clusters.models.MongoHostType;
 
 public class HostMapper {
-    public com.onyxdb.platform.generated.openapi.models.MongoHost map(MongoHost h) {
-        return new com.onyxdb.platform.generated.openapi.models.MongoHost(
+    public MongoHostDTO map(MongoHost h) {
+        return new MongoHostDTO(
                 h.name(),
                 h.clusterId(),
-                com.onyxdb.platform.generated.openapi.models.MongoHostType.fromValue(h.type().value()),
-                com.onyxdb.platform.generated.openapi.models.MongoHostStatus.fromValue(h.status().value()),
-                com.onyxdb.platform.generated.openapi.models.MongoHostRole.fromValue(h.role().value())
+                h.type().value(),
+                h.status().value(),
+                h.role().value()
         );
     }
 
-    public List<MongoHost> map(UpdateMongoHostsRequest rq) {
+    public List<MongoHost> map(UpdateMongoHostsRequestDTO rq) {
         return rq.getHosts()
                 .stream()
                 .map(this::map)
                 .toList();
     }
 
-    public MongoHost map(com.onyxdb.platform.generated.openapi.models.MongoHost s) {
+    public MongoHost map(MongoHostDTO s) {
         return new MongoHost(
                 s.getName(),
                 s.getClusterId(),
-                MongoHostType.R.fromValueOrDefault(s.getType().getValue(), MongoHostType.UNKNOWN),
-                MongoHostStatus.R.fromValueOrDefault(s.getStatus().getValue(), MongoHostStatus.UNKNOWN),
-                MongoHostRole.R.fromValueOrDefault(s.getRole().getValue(), MongoHostRole.UNKNOWN)
+                MongoHostType.R.fromValueOrDefault(s.getType(), MongoHostType.UNKNOWN),
+                MongoHostStatus.R.fromValueOrDefault(s.getStatus(), MongoHostStatus.UNKNOWN),
+                MongoHostRole.R.fromValueOrDefault(s.getRole(), MongoHostRole.UNKNOWN)
         );
     }
 
