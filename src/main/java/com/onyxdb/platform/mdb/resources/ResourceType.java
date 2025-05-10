@@ -9,7 +9,7 @@ import com.onyxdb.platform.mdb.utils.StringEnum;
 
 public enum ResourceType implements StringEnum {
     UNKNOWN("unknown", ResourceUnit.UNKNOWN),
-    VCPU("vcpu", ResourceUnit.CORES),
+    VCPU("vcpu", ResourceUnit.MILLICORES),
     RAM("ram", ResourceUnit.BYTES),
     ;
 

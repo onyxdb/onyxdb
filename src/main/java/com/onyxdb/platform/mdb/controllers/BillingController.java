@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.onyxdb.platform.generated.openapi.apis.BillingApi;
-import com.onyxdb.platform.generated.openapi.models.GetProductQuotaUsageReportResponseOA;
+import com.onyxdb.platform.generated.openapi.models.GetProductQuotaUsageReportResponseDTO;
 import com.onyxdb.platform.mdb.billing.BillingMapper;
 import com.onyxdb.platform.mdb.billing.BillingService;
 import com.onyxdb.platform.mdb.billing.ProductQuotaUsageReportItem;
@@ -37,7 +37,7 @@ public class BillingController implements BillingApi {
     }
 
     @Override
-    public ResponseEntity<GetProductQuotaUsageReportResponseOA> getProductQuotaUsageReport(
+    public ResponseEntity<GetProductQuotaUsageReportResponseDTO> getProductQuotaUsageReport(
             UUID productId,
             LocalDate starDate,
             LocalDate endDate
@@ -50,7 +50,7 @@ public class BillingController implements BillingApi {
         List<Resource> resources = resourceService.listResources(ResourceFilter.builder().build());
 
 
-        GetProductQuotaUsageReportResponseOA response = billingMapper.toGetProductQuotaUsageReportResponse(
+        GetProductQuotaUsageReportResponseDTO response = billingMapper.toGetProductQuotaUsageReportResponse(
                 resources,
                 reportItems,
                 resourceMapper

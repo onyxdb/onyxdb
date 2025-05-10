@@ -3,19 +3,19 @@ package com.onyxdb.platform.mdb.resources;
 import org.jooq.Record;
 
 import com.onyxdb.platform.generated.jooq.tables.records.ResourcesRecord;
-import com.onyxdb.platform.generated.openapi.models.ResourceUnit;
+import com.onyxdb.platform.generated.openapi.models.ResourceDTO;
 import com.onyxdb.platform.mdb.quotas.QuotaProvider;
 
 import static com.onyxdb.platform.generated.jooq.Tables.RESOURCES;
 
 public class ResourceMapper {
-    public com.onyxdb.platform.generated.openapi.models.Resource map(Resource r) {
-        return new com.onyxdb.platform.generated.openapi.models.Resource(
+    public ResourceDTO resourceToResourceDTO(Resource r) {
+        return new ResourceDTO(
                 r.id(),
                 r.name(),
                 r.description(),
-                com.onyxdb.platform.generated.openapi.models.ResourceType.fromValue(r.type().value()),
-                ResourceUnit.fromValue(r.type().getUnit().value())
+                r.type().value(),
+                r.type().getUnit().value()
         );
     }
 
@@ -28,7 +28,7 @@ public class ResourceMapper {
                 QuotaProvider.R.fromValue(r.get(RESOURCES.PROVIDER).getLiteral()));
     }
 
-    public Resource map(ResourcesRecord r) {
+    public Resource resourceRecordToResource(ResourcesRecord r) {
         return new Resource(
                 r.getId(),
                 r.getName(),

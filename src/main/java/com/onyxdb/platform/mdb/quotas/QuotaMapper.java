@@ -6,8 +6,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import com.onyxdb.platform.generated.jooq.tables.records.ProductQuotasRecord;
-import com.onyxdb.platform.generated.openapi.models.ProductQuotas;
-import com.onyxdb.platform.generated.openapi.models.UploadQuotasToProductsRequest;
+import com.onyxdb.platform.generated.openapi.models.ProductQuotasDTO;
+import com.onyxdb.platform.generated.openapi.models.UploadQuotasToProductsRequestDTO;
 import com.onyxdb.platform.mdb.resources.Resource;
 import com.onyxdb.platform.mdb.resources.ResourceMapper;
 
@@ -22,7 +22,7 @@ public class QuotaMapper {
         );
     }
 
-    public List<ProductQuotaToUpload> map(UploadQuotasToProductsRequest rq) {
+    public List<ProductQuotaToUpload> map(UploadQuotasToProductsRequestDTO rq) {
         return rq.getProducts().stream()
                 .flatMap(p -> p.getQuotas()
                         .stream()
@@ -45,14 +45,14 @@ public class QuotaMapper {
         );
     }
 
-    public QuotaToTransfer mapToQuotaExchange(com.onyxdb.platform.generated.openapi.models.QuotaToTransfer q) {
+    public QuotaToTransfer mapToQuotaExchange(com.onyxdb.platform.generated.openapi.models.QuotaToTransferDTO q) {
         return new QuotaToTransfer(
                 q.getResourceId(),
                 q.getLimit()
         );
     }
 
-    public List<com.onyxdb.platform.generated.openapi.models.Quota> mapToQuotaList(
+    public List<com.onyxdb.platform.generated.openapi.models.QuotaDTO> mapToQuotaList(
             List<ProductQuota> quotas,
             List<Resource> resources,
             ResourceMapper resourceMapper
@@ -65,8 +65,8 @@ public class QuotaMapper {
                         throw new RuntimeException("Can't find resource with id " + q.resourceId());
                     }
 
-                    return new com.onyxdb.platform.generated.openapi.models.Quota(
-                            resourceMapper.map(resourceIdToResource.get(q.resourceId())),
+                    return new com.onyxdb.platform.generated.openapi.models.QuotaDTO(
+                            resourceMapper.resourceToResourceDTO(resourceIdToResource.get(q.resourceId())),
                             q.limit(),
                             q.usage(),
                             q.free()
@@ -75,19 +75,19 @@ public class QuotaMapper {
                 .toList();
     }
 
-    public com.onyxdb.platform.generated.openapi.models.Quota mapToQuotaResponse(
+    public com.onyxdb.platform.generated.openapi.models.QuotaDTO mapToQuotaResponse(
             EnrichedProductQuota q,
             ResourceMapper resourceMapper
     ) {
-        return new com.onyxdb.platform.generated.openapi.models.Quota(
-                resourceMapper.map(q.resource()),
+        return new com.onyxdb.platform.generated.openapi.models.QuotaDTO(
+                resourceMapper.resourceToResourceDTO(q.resource()),
                 q.limit(),
                 q.usage(),
                 q.free()
         );
     }
 
-    public List<ProductQuotas> mapToProductQuotasListResponse(
+    public List<ProductQuotasDTO> mapToProductQuotasListResponse(
             List<EnrichedProductQuota> qs,
             ResourceMapper resourceMapper
     ) {
@@ -96,25 +96,25 @@ public class QuotaMapper {
 
         return productIdToQuota.entrySet()
                 .stream()
-                .map(e -> new ProductQuotas(
+                .map(e -> new ProductQuotasDTO(
                         e.getKey(),
                         e.getValue().stream().map(q -> mapToQuotaResponse(q, resourceMapper)).toList()
                 ))
                 .toList();
     }
 
-    public ProductQuotas mapToProductQuotasListResponse(
+    public ProductQuotasDTO mapToProductQuotasListResponse(
             UUID productId,
             List<EnrichedProductQuota> qs,
             ResourceMapper resourceMapper
     ) {
-        return new ProductQuotas(
+        return new ProductQuotasDTO(
                 productId,
                 qs.stream().map(q -> mapToQuotaResponse(q, resourceMapper)).toList()
         );
     }
 
-    public List<ProductQuotas> mapToProductQuotasList(
+    public List<ProductQuotasDTO> mapToProductQuotasList(
             List<ProductQuota> productQuotas,
             List<Resource> resources,
             ResourceMapper resourceMapper
@@ -129,13 +129,13 @@ public class QuotaMapper {
                 .stream()
                 .map(e -> {
                     UUID productId = e.getKey();
-                    List<com.onyxdb.platform.generated.openapi.models.Quota> quotas = e.getValue().stream().map(q -> {
+                    List<com.onyxdb.platform.generated.openapi.models.QuotaDTO> quotas = e.getValue().stream().map(q -> {
                                 if (!resourceIdToResource.containsKey(q.resourceId())) {
                                     throw new RuntimeException("Can't find resource with id " + q.resourceId());
                                 }
 
-                                return new com.onyxdb.platform.generated.openapi.models.Quota(
-                                        resourceMapper.map(resourceIdToResource.get(q.resourceId())),
+                                return new com.onyxdb.platform.generated.openapi.models.QuotaDTO(
+                                        resourceMapper.resourceToResourceDTO(resourceIdToResource.get(q.resourceId())),
                                         q.limit(),
                                         q.usage(),
                                         q.free()
@@ -143,7 +143,7 @@ public class QuotaMapper {
                             })
                             .toList();
 
-                    return new ProductQuotas(
+                    return new ProductQuotasDTO(
                             productId,
                             quotas
                     );

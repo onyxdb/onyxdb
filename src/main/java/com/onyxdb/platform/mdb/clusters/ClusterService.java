@@ -35,6 +35,7 @@ import com.onyxdb.platform.mdb.operations.repositories.OperationRepository;
 import com.onyxdb.platform.mdb.operations.repositories.TaskRepository;
 import com.onyxdb.platform.mdb.projects.Project;
 import com.onyxdb.platform.mdb.projects.ProjectService;
+import com.onyxdb.platform.mdb.quotas.QuotaService;
 import com.onyxdb.platform.mdb.users.UserMapper;
 import com.onyxdb.platform.mdb.users.UserRepository;
 import com.onyxdb.platform.mdb.utils.ObjectMapperUtils;
@@ -64,6 +65,7 @@ public class ClusterService {
     private final HostRepository hostRepository;
     private final ObjectMapper objectMapper;
     private final HostMapper hostMapper;
+    private final QuotaService quotaService;
 
     public List<Cluster> listClusters(ClusterFilter filter) {
         return clusterRepository.listClusters(filter);
@@ -79,6 +81,7 @@ public class ClusterService {
         String namespace = OnyxdbConsts.NAMESPACE;
 
         clusterConfigValidator.validate(createCluster.config());
+        quotaService.validateQuotaByClusterConfig(project.id(), createCluster.config());
 
         Cluster cluster = clusterMapper.createClusterToCluster(createCluster, namespace);
 
@@ -150,6 +153,13 @@ public class ClusterService {
     public UUID updateCluster(UpdateCluster updateCluster) {
         Cluster cluster = getClusterOrThrow(updateCluster.id());
 
+        var updatedCluster = Cluster.builder()
+                .copy(cluster)
+                .overrideWithUpdateCluster(updateCluster)
+                .build();
+
+        quotaService.validateQuotaByClusterConfig(cluster.projectId(), updatedCluster.config());
+
         var operation = Operation.scheduledWithPayload(
                 OperationType.MONGO_MODIFY_CLUSTER,
                 updateCluster.id(),
@@ -158,10 +168,6 @@ public class ClusterService {
                         updateCluster.config()
                 ))
         );
-        var updatedCluster = Cluster.builder()
-                .copy(cluster)
-                .overrideWithUpdateCluster(updateCluster)
-                .build();
         transactionTemplate.executeWithoutResult(status -> {
             clusterRepository.updateCluster(updatedCluster);
             operationRepository.createOperation(operation);
