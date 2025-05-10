@@ -20,8 +20,6 @@ import com.onyxdb.platform.mdb.resourcePresets.ResourcePresetRepository;
 import com.onyxdb.platform.mdb.resourcePresets.ResourcePresetService;
 import com.onyxdb.platform.mdb.resources.ResourceRepository;
 import com.onyxdb.platform.mdb.resources.ResourceService;
-import com.onyxdb.platform.mdb.zones.ZoneRepository;
-import com.onyxdb.platform.mdb.zones.ZoneService;
 
 /**
  * @author foxleren
@@ -31,11 +29,6 @@ public class ServiceContextConfiguration {
     @Bean
     public ResourcePresetService resourcePresetService(ResourcePresetRepository resourcePresetRepository) {
         return new ResourcePresetService(resourcePresetRepository);
-    }
-
-    @Bean
-    public ZoneService zoneService(ZoneRepository zoneRepository) {
-        return new ZoneService(zoneRepository);
     }
 
     @Bean
@@ -49,45 +42,6 @@ public class ServiceContextConfiguration {
         );
     }
 
-//    @Bean
-//    public ClusterService clusterService(
-//            ClusterMapper clusterMapper,
-//            ClusterRepository clusterRepository,
-//            TransactionTemplate transactionTemplate,
-////            CompositeTaskGenerator compositeTaskGenerator,
-//            OperationRepository operationRepository,
-//            TaskRepository taskRepository,
-//            MongoCreateClusterTaskGenerator mongoCreateClusterTaskGenerator,
-//            MongoScaleHostsTaskGenerator mongoScaleHostsTaskGenerator,
-//            MongoDeleteClusterTaskGenerator mongoDeleteClusterTaskGenerator,
-//            DatabaseRepository databaseRepository,
-//            DatabaseMapper databaseMapper,
-//            UserRepository userRepository,
-//            UserMapper userMapper,
-//            PsmdbClient psmdbClient,
-//            MongoCreateDatabaseTaskGenerator mongoCreateDatabaseTaskGenerator,
-//            MongoDeleteDatabaseTaskGenerator mongoDeleteDatabaseTaskGenerator
-//    ) {
-//        return new ClusterService(
-//                clusterMapper,
-//                clusterRepository,
-//                transactionTemplate,
-
-    /// /                compositeTaskGenerator,
-//                operationRepository,
-//                taskRepository,
-//                mongoCreateClusterTaskGenerator,
-//                mongoScaleHostsTaskGenerator,
-//                mongoDeleteClusterTaskGenerator,
-//                databaseRepository,
-//                databaseMapper,
-//                userRepository,
-//                userMapper,
-//                psmdbClient,
-//                mongoCreateDatabaseTaskGenerator,
-//                mongoDeleteDatabaseTaskGenerator
-//        );
-//    }
     @Bean
     public HostService hostService(
             HostRepository hostRepository,

@@ -56,16 +56,6 @@ VALUES
     ('ro-c64-r512', 'ram_optimized', 64000, 549755813888),
     ('ro-c80-r640', 'ram_optimized', 80000, 687194767360);
 
--- TODO remove
-CREATE TABLE public.zones
-(
-    id          varchar NOT NULL,
-    description varchar NOT NULL,
-    selector    varchar NOT NULL,
-    PRIMARY KEY (id),
-    UNIQUE (selector)
-);
-
 CREATE TABLE public.projects
 (
     id          uuid      NOT NULL,
@@ -80,7 +70,6 @@ CREATE TABLE public.projects
     deleted_by  uuid,
     PRIMARY KEY (id)
 );
-
 
 CREATE UNIQUE INDEX projects_project_name_is_deleted_uniq_idx ON public.projects (name, is_deleted)
     WHERE public.projects.is_deleted = false;
