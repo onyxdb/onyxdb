@@ -10,9 +10,9 @@ import com.onyxdb.platform.generated.openapi.models.InternalServerErrorResponse;
 import com.onyxdb.platform.generated.openapi.models.NotFoundResponse;
 import com.onyxdb.platform.generated.openapi.models.UnauthorizedResponse;
 import com.onyxdb.platform.idm.models.exceptions.ResourceNotFoundException;
+import com.onyxdb.platform.idm.models.exceptions.UnauthorizedException;
 import com.onyxdb.platform.mdb.exceptions.BadRequestException;
 import com.onyxdb.platform.mdb.exceptions.NotFoundException;
-import com.onyxdb.platform.idm.models.exceptions.UnauthorizedException;
 
 /**
  * @author foxleren

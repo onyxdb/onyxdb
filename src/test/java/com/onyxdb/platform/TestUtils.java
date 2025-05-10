@@ -2,7 +2,7 @@ package com.onyxdb.platform;
 
 import java.util.UUID;
 
-import com.onyxdb.platform.idm.common.jwt.AdminInitializer;
+import com.onyxdb.platform.mdb.context.OnyxdbInitializer;
 import com.onyxdb.platform.idm.models.Product;
 import com.onyxdb.platform.mdb.projects.Project;
 import com.onyxdb.platform.mdb.resourcePresets.ResourcePreset;
@@ -16,7 +16,7 @@ public class TestUtils {
     public static final UUID PARENT_PRODUCT_ID = UUID.fromString("22eb7009-ab07-4c1f-a3b4-9c861d5b697f");
     public static final UUID CHILD_PRODUCT_ID = UUID.fromString("8369fd6e-f7c5-4f8d-844f-10ab39ad1eaa");
 
-    public static final UUID ADMIN_ID = AdminInitializer.ADMIN_ID;
+    public static final UUID ADMIN_ID = OnyxdbInitializer.ADMIN_ID;
 
     public static final String TEST_1_RESOURCE_PRESET_ID = "s-c2-r8";
     public static final String NOT_EXISTING_RESOURCE_PRESET_ID = "not-existing-preset";

@@ -5,11 +5,17 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
+import org.flywaydb.core.Flyway;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.transaction.support.TransactionTemplate;
 
+import com.onyxdb.platform.idm.repositories.AccountRepository;
+import com.onyxdb.platform.idm.services.RoleService;
+import com.onyxdb.platform.mdb.initialization.InitializationRepository;
 import com.onyxdb.platform.mdb.operations.ConsumeTasksWorker;
 import com.onyxdb.platform.mdb.operations.OperationService;
 import com.onyxdb.platform.mdb.operations.consumers.CompositeTaskConsumer;
@@ -17,6 +23,25 @@ import com.onyxdb.platform.mdb.operations.consumers.CompositeTaskConsumer;
 @Configuration
 public class OnyxdbCommonContextConfiguration {
     public static final String CONSUME_TASKS_WORKER_EXECUTOR_BEAN = "consumeTasksWorkerExecutor";
+
+    @Bean
+    public OnyxdbInitializer onyxdbInitializer(
+            @Qualifier(FlywayContextConfiguration.POSTGRES_FLYWAY_BEAN_NAME)
+            Flyway postgresFlyway,
+            @Qualifier(FlywayContextConfiguration.CLICKHOUSE_FLYWAY_BEAN_NAME)
+            Flyway clickhouseFlyway,
+            TransactionTemplate transactionTemplate,
+            InitializationRepository initializationRepository,
+            AccountRepository accountRepository,
+            RoleService roleService
+    ) {
+        return new OnyxdbInitializer(
+                transactionTemplate,
+                initializationRepository,
+                accountRepository,
+                roleService
+        );
+    }
 
     @Bean(name = CONSUME_TASKS_WORKER_EXECUTOR_BEAN)
     public ExecutorService processClusterTasksWorkerExecutor() {
