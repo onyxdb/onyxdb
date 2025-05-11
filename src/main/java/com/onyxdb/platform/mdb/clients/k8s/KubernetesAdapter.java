@@ -42,6 +42,30 @@ public class KubernetesAdapter {
                 .serverSideApply();
     }
 
+    public void applyOnyxdbAgentService(
+            String namespace,
+            String project,
+            String clusterName
+    ) {
+        String resource = templateProvider.buildOnyxdbAgentService(getOnyxdbAgentName(clusterName, project));
+
+        kubernetesClient.resource(resource)
+                .inNamespace(namespace)
+                .serverSideApply();
+    }
+
+    public void deleteOnyxdbAgentService(
+            String namespace,
+            String project,
+            String clusterName
+    ) {
+        String resource = templateProvider.buildOnyxdbAgentService(getOnyxdbAgentName(clusterName, project));
+
+        kubernetesClient.resource(resource)
+                .inNamespace(namespace)
+                .delete();
+    }
+
     public boolean isOnyxdbAgentReady(
             String namespace,
             String project,

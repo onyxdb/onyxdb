@@ -12,6 +12,7 @@ public enum TaskType implements StringEnum {
     MONGO_UPDATE_HOSTS("mongo_update_hosts"),
     MONGO_CHECK_PSMDB_READINESS("mongo_check_psmdb_readiness"),
     MONGO_APPLY_ONYXDB_AGENT("mongo_apply_onyxdb_agent"),
+    MONGO_APPLY_ONYXDB_AGENT_SERVICE("mongo_apply_onyxdb_agent_service"),
     MONGO_CHECK_ONYXDB_AGENT_READINESS("mongo_check_onyxdb_agent_readiness"),
     MONGO_APPLY_EXPORTER_SERVICE("mongo_apply_exporter_service"),
     MONGO_APPLY_EXPORTER_SERVICE_SCRAPE("mongo_apply_exporter_service_scrape"),
@@ -35,6 +36,7 @@ public enum TaskType implements StringEnum {
 
     MONGO_DELETE_EXPORTER_SERVICE_SCRAPE("mongo_delete_exporter_service_scrape"),
     MONGO_DELETE_EXPORTER_SERVICE("mongo_delete_exporter_service"),
+    MONGO_DELETE_ONYXDB_AGENT_SERVICE("mongo_delete_onyxdb_agent_service"),
     MONGO_DELETE_ONYXDB_AGENT("mongo_delete_onyxdb_agent"),
     MONGO_CHECK_ONYXDB_AGENT_IS_DELETED("mongo_check_onyxdb_agent_is_deleted"),
     MONGO_DELETE_PSMDB("mongo_delete_psmdb"),

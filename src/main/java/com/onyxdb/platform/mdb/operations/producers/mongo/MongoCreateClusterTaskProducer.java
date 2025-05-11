@@ -62,10 +62,16 @@ public class MongoCreateClusterTaskProducer extends TaskProducer<MongoCreateClus
                 List.of(applyOnyxdbAgentTask.id()),
                 clusterPayload
         );
+        var applyOnyxdbAgentServiceTask = ProducedTask.createWithPayload(
+                TaskType.MONGO_APPLY_ONYXDB_AGENT_SERVICE,
+                operationId,
+                List.of(checkOnyxdbAgentReadinessTask.id()),
+                clusterPayload
+        );
         var applyExporterServiceTask = ProducedTask.createWithPayload(
                 TaskType.MONGO_APPLY_EXPORTER_SERVICE,
                 operationId,
-                List.of(checkOnyxdbAgentReadinessTask.id()),
+                List.of(applyOnyxdbAgentServiceTask.id()),
                 clusterPayload
         );
         var applyExporterServiceScrapeTask = ProducedTask.createWithPayload(
@@ -121,6 +127,7 @@ public class MongoCreateClusterTaskProducer extends TaskProducer<MongoCreateClus
                 checkPsmdbReadinessTask,
                 applyOnyxdbAgentTask,
                 checkOnyxdbAgentReadinessTask,
+                applyOnyxdbAgentServiceTask,
                 applyExporterServiceTask,
                 applyExporterServiceScrapeTask,
                 createMongoDatabaseTask,

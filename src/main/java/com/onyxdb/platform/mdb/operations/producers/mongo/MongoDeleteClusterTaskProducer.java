@@ -41,10 +41,16 @@ public class MongoDeleteClusterTaskProducer extends TaskProducer<MongoDeleteClus
                 List.of(deleteExporterServiceScrapeTask.id()),
                 payload
         );
+        var deleteOnyxdbAgentServiceTask = ProducedTask.createWithPayload(
+                TaskType.MONGO_DELETE_ONYXDB_AGENT_SERVICE,
+                operationId,
+                List.of(deleteExporterServiceTask.id()),
+                payload
+        );
         var deleteOnyxdbAgentTask = ProducedTask.createWithPayload(
                 TaskType.MONGO_DELETE_ONYXDB_AGENT,
                 operationId,
-                List.of(deleteExporterServiceTask.id()),
+                List.of(deleteOnyxdbAgentServiceTask.id()),
                 payload
         );
         var checkOnyxdbAgentIsDeletedTask = ProducedTask.createWithPayload(
@@ -93,6 +99,7 @@ public class MongoDeleteClusterTaskProducer extends TaskProducer<MongoDeleteClus
                 markClusterDeletingTask,
                 deleteExporterServiceScrapeTask,
                 deleteExporterServiceTask,
+                deleteOnyxdbAgentServiceTask,
                 deleteOnyxdbAgentTask,
                 checkOnyxdbAgentIsDeletedTask,
                 deletePsmdbTask,

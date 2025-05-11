@@ -10,6 +10,7 @@ import com.onyxdb.platform.mdb.operations.OperationService;
 import com.onyxdb.platform.mdb.operations.consumers.CompositeTaskConsumer;
 import com.onyxdb.platform.mdb.operations.consumers.TaskConsumer;
 import com.onyxdb.platform.mdb.operations.consumers.mongo.FinalTaskConsumer;
+import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoApplyOnyxdbAgentServiceTaskConsumer;
 import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoApplyOnyxdbAgentTaskConsumer;
 import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoApplyPsmdbTaskConsumer;
 import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoCheckBackupIsDeletedTaskConsumer;
@@ -28,6 +29,7 @@ import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoDeleteBackupTaskC
 import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoDeleteDatabaseTaskConsumer;
 import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoDeleteExporterServiceConsumer;
 import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoDeleteExporterServiceScrapeTaskConsumer;
+import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoDeleteOnyxdbAgentServiceTaskConsumer;
 import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoDeleteOnyxdbAgentTaskConsumer;
 import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoDeletePsmdbTaskConsumer;
 import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoDeleteSecretsConsumer;
@@ -76,7 +78,9 @@ public class TaskProcessorsContextConfiguration {
             MongoCheckBackupIsDeletedTaskConsumer mongoCheckBackupIsDeletedTaskConsumer,
             MongoRestoreClusterTaskConsumer mongoRestoreClusterTaskConsumer,
             MongoCheckClusterIsRestoredTaskConsumer mongoCheckClusterIsRestoredTaskConsumer,
-            MongoUpdateQuotaAfterClusterDeletionTaskConsumer mongoUpdateQuotaAfterClusterDeletionTaskConsumer
+            MongoUpdateQuotaAfterClusterDeletionTaskConsumer mongoUpdateQuotaAfterClusterDeletionTaskConsumer,
+            MongoApplyOnyxdbAgentServiceTaskConsumer mongoApplyOnyxdbAgentServiceTaskConsumer,
+            MongoDeleteOnyxdbAgentServiceTaskConsumer mongoDeleteOnyxdbAgentServiceTaskConsumer
     ) {
         Map<TaskType, TaskConsumer<?>> taskTypeToTaskProcessors = Map.ofEntries(
                 Map.entry(
@@ -198,6 +202,14 @@ public class TaskProcessorsContextConfiguration {
                 Map.entry(
                         TaskType.MONGO_MARK_CLUSTER_DELETED,
                         mongoMarkClusterDeletedTaskConsumer
+                ),
+                Map.entry(
+                        TaskType.MONGO_APPLY_ONYXDB_AGENT_SERVICE,
+                        mongoApplyOnyxdbAgentServiceTaskConsumer
+                ),
+                Map.entry(
+                        TaskType.MONGO_DELETE_ONYXDB_AGENT_SERVICE,
+                        mongoDeleteOnyxdbAgentServiceTaskConsumer
                 )
         );
 

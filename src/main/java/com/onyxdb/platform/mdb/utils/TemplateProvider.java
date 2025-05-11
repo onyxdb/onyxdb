@@ -100,6 +100,17 @@ public class TemplateProvider {
         return templateEngine.process("onyxdb-agent.yaml.txt", context);
     }
 
+    public String buildOnyxdbAgentService(
+            String metadataName
+    ) {
+        Context context = new Context();
+        context.setVariables(Map.ofEntries(
+                Map.entry("METADATA_NAME", metadataName)
+        ));
+
+        return templateEngine.process("onyxdb-agent-service.yaml.txt", context);
+    }
+
     public String buildPsmdbExporterService(
             String metadataName,
             String portName,
