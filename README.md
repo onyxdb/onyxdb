@@ -4,7 +4,7 @@
 
 ### Create Kubernetes cluster
 
-Master node preset:
+Master node with preset:
 ```shell
 2 vcpu
 8 ram
