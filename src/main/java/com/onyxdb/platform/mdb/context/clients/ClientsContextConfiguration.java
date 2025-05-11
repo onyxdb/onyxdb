@@ -27,6 +27,8 @@ import static com.onyxdb.platform.mdb.context.MapperContextConfiguration.YAML_OB
 public class ClientsContextConfiguration {
     @Bean
     public KubernetesClient kubernetesClient() {
+//        return new KubernetesClientBuilder()
+//                .build();
         return new DefaultKubernetesClient();
     }
 
