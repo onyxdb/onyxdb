@@ -152,17 +152,28 @@ helm install -f ./deploy/vector/values.yaml vector vector/vector --version 0.42.
 kubectl apply -f ./deploy/grafana -n onyxdb
 ```
 
-VLogs address: 
-
+Port forward service 3000 port
 ```shell
-http://vlogs-onyxdb.onyxdb.svc.cluster.local:9428
+kubectl port-forward service/grafana 3000:3000
 ```
 
-VMetrics address:
-
+Login with default credentials:
 ```shell
-http://vmselect-onyxdb.onyxdb.svc.cluster.local:8481/select/0:0/prometheus
+user: admin
+password: admin
 ```
+
+Add VLogs datasource via UI:
+```shell
+VLogs address: http://vlogs-onyxdb.onyxdb.svc.cluster.local:9428
+```
+
+Add Prometheus datasource via UI:
+```shell
+VMetrics address: http://vmselect-onyxdb.onyxdb.svc.cluster.local:8481/select/0:0/prometheus
+```
+
+Import dashboards from folder ./deploy/dashboards via UI.
 
 ### Deploy MinIO
 
@@ -173,7 +184,7 @@ kubectl apply -f ./deploy/minio/minio.yaml -n onyxdb
 
 Port forward service 9001 port
 ```shell
-TODO
+kubectl port-forward service/minio 9001:9001
 ```
 
 Login with default credentials:
@@ -181,6 +192,8 @@ Login with default credentials:
 user: minioadmin
 password: minioadmin
 ```
+
+Create bucket with name "onyxdb".
 
 Create access key via UI, place key data to ./deploy/minio/onyxdb-minio.yaml and then apply secret:
 ```shell
