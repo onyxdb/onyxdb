@@ -17,13 +17,49 @@ stringData:
   ONYXDB_REDIS_PORT: "6379"
   ONYXDB_REDIS_USER: "onyxdb"
   ONYXDB_REDIS_PASSWORD: "qwerty"
-  ONYXDB_CLICKHOUSE_URL: "jdbc:clickhouse://clickhouse-onyxdb.onyxdb.svc.cluster.local:8323/onyxdb"
+  ONYXDB_CLICKHOUSE_URL: "jdbc:clickhouse://clickhouse-onyxdb.onyxdb.svc.cluster.local:8123/onyxdb"
   ONYXDB_CLICKHOUSE_USER: "onyxdb"
   ONYXDB_CLICKHOUSE_PASSWORD: "qwerty"
   ONYXDB_MINIO_URL: "http://minio-onyxdb.onyxdb.svc.cluster.local:9000"
   ONYXDB_MINIO_SECRET: "minio-onyxdb"
   ONYXDB_MINIO_BUCKET: "onyxdb"
   ONYXDB_VLOGS_URL: "http://vls-onyxdb.onyxdb.svc.cluster.local:9428"
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: onyxdb-robot
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: onyxdb-robot
+automountServiceAccountToken: true
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: onyxdb-robot
+subjects:
+  - kind: ServiceAccount
+    name: onyxdb-robot
+roleRef:
+  kind: Role
+  name: onyxdb-robot
+  apiGroup: rbac.authorization.k8s.io
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -44,12 +80,25 @@ spec:
         app.kubernetes.io/name: onyxdb
         app.kubernetes.io/instance: onyxdb
     spec:
+      serviceAccountName: onyxdb-robot
       containers:
         - name: onyxdb
-          image: foxleren/onyxdb:latest
+          image: foxleren/onyxdb:foxleren-deploy-onyxdb-to-k8s-ba3a1f2
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8080
+            - containerPort: 9001
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 9001
+            initialDelaySeconds: 15
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 9001
+            initialDelaySeconds: 15
+            periodSeconds: 5
           envFrom:
             - secretRef:
                 name: onyxdb
@@ -66,4 +115,5 @@ spec:
     app.kubernetes.io/name: onyxdb
     app.kubernetes.io/instance: onyxdb
   ports:
-    - port: 8080
+    - port: 9001
+      targetPort: 9001
