@@ -15,6 +15,7 @@ import com.onyxdb.platform.generated.openapi.models.BusinessRolePostDTO;
 import com.onyxdb.platform.generated.openapi.models.BusinessRoleDTO;
 import com.onyxdb.platform.generated.openapi.models.PaginatedBusinessRoleResponse;
 import com.onyxdb.platform.generated.openapi.models.RoleDTO;
+import com.onyxdb.platform.idm.common.PermissionCheck;
 import com.onyxdb.platform.idm.models.BusinessRole;
 import com.onyxdb.platform.idm.models.PaginatedResult;
 import com.onyxdb.platform.idm.models.Role;
@@ -29,6 +30,7 @@ public class BusinessRolesController implements BusinessRolesApi {
     private final BusinessRoleService businessRoleService;
 
     @Override
+    @PermissionCheck(entity = "business-role", action = "create")
     public ResponseEntity<BusinessRoleDTO> createBusinessRole(@Valid BusinessRolePostDTO businessRoleDTO) {
         BusinessRole businessRole = BusinessRole.fromPostDTO(businessRoleDTO);
         BusinessRole createdBusinessRole = businessRoleService.create(businessRole);
@@ -36,12 +38,14 @@ public class BusinessRolesController implements BusinessRolesApi {
     }
 
     @Override
+    @PermissionCheck(entity = "business-role", action = "delete")
     public ResponseEntity<Void> deleteBusinessRole(UUID businessRoleId) {
         businessRoleService.delete(businessRoleId);
         return ResponseEntity.noContent().build();
     }
 
     @Override
+    @PermissionCheck(entity = "business-role", action = "get")
     public ResponseEntity<PaginatedBusinessRoleResponse> getAllBusinessRoles(
             String search, Integer limit, Integer offset
     ) {
@@ -56,12 +60,14 @@ public class BusinessRolesController implements BusinessRolesApi {
     }
 
     @Override
+    @PermissionCheck(entity = "business-role", action = "get")
     public ResponseEntity<BusinessRoleDTO> getBusinessRoleById(UUID businessRoleId) {
         BusinessRole businessRole = businessRoleService.findById(businessRoleId);
         return ResponseEntity.ok(businessRole.toDTO());
     }
 
     @Override
+    @PermissionCheck(entity = "business-role", action = "get")
     public ResponseEntity<List<BusinessRoleDTO>> getBusinessRoleChildrenBRs(UUID businessRoleId) {
         List<BusinessRole> businessRoles = businessRoleService.findChildren(businessRoleId);
         List<BusinessRoleDTO> businessRoleDTOs = businessRoles.stream().map(BusinessRole::toDTO).toList();
@@ -69,6 +75,7 @@ public class BusinessRolesController implements BusinessRolesApi {
     }
 
     @Override
+    @PermissionCheck(entity = "business-role", action = "get")
     public ResponseEntity<List<BusinessRoleDTO>> getBusinessRoleParentsBRs(UUID businessRoleId) {
         List<BusinessRole> businessRoles = businessRoleService.findParents(businessRoleId);
         List<BusinessRoleDTO> businessRoleDTOs = businessRoles.stream().map(BusinessRole::toDTO).toList();
@@ -76,6 +83,7 @@ public class BusinessRolesController implements BusinessRolesApi {
     }
 
     @Override
+    @PermissionCheck(entity = "business-role", action = "update")
     public ResponseEntity<BusinessRoleDTO> updateBusinessRole(
             UUID businessRoleId, @Valid BusinessRolePostDTO businessRoleDTO
     ) {
@@ -86,18 +94,21 @@ public class BusinessRolesController implements BusinessRolesApi {
     }
 
     @Override
+    @PermissionCheck(entity = "business-role", action = "update")
     public ResponseEntity<Void> addRoleToBusinessRole(UUID businessRoleId, UUID roleId) {
         businessRoleService.addRole(businessRoleId, roleId);
         return null;
     }
 
     @Override
+    @PermissionCheck(entity = "business-role", action = "update")
     public ResponseEntity<Void> removeRoleFromBusinessRole(UUID businessRoleId, UUID roleId) {
         businessRoleService.removeRole(businessRoleId, roleId);
         return null;
     }
 
     @Override
+    @PermissionCheck(entity = "business-role", action = "get")
     public ResponseEntity<List<RoleDTO>> getRolesByBusinessRoleId(UUID businessRoleId) {
         List<Role> roles = businessRoleService.getRolesByBusinessRoleId(businessRoleId);
         List<RoleDTO> roleDTOs = roles.stream().map(Role::toDTO).toList();

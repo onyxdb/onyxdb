@@ -7,6 +7,9 @@ CREATE TABLE account_table (
     first_name VARCHAR(255),
     last_name VARCHAR(255),
     data JSONB NOT NULL,
+    is_deleted bool NOT NULL DEFAULT false,
+    deleted_at timestamp,
+    deleted_by uuid,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

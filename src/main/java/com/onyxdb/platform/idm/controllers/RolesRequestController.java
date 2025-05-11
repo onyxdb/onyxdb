@@ -15,6 +15,7 @@ import com.onyxdb.platform.generated.openapi.models.PaginatedRoleRequestResponse
 import com.onyxdb.platform.generated.openapi.models.RoleRequestFullDTO;
 import com.onyxdb.platform.generated.openapi.models.RoleRequestPostDTO;
 import com.onyxdb.platform.generated.openapi.models.RoleRequestDTO;
+import com.onyxdb.platform.idm.common.PermissionCheck;
 import com.onyxdb.platform.idm.models.PaginatedResult;
 import com.onyxdb.platform.idm.models.RoleRequest;
 import com.onyxdb.platform.idm.models.RoleRequestFull;
@@ -30,6 +31,7 @@ public class RolesRequestController implements RolesRequestsApi {
     private final RoleRequestService roleRequestService;
 
     @Override
+    @PermissionCheck(entity = "role-request", action = "create")
     public ResponseEntity<RoleRequestDTO> createRoleRequest(@Valid RoleRequestPostDTO roleRequestDTO) {
         RoleRequest roleRequest = RoleRequest.fromPostDTO(roleRequestDTO);
         RoleRequest createdRoleRequest = roleRequestService.create(roleRequest);
@@ -37,6 +39,7 @@ public class RolesRequestController implements RolesRequestsApi {
     }
 
     @Override
+    @PermissionCheck(entity = "role-request", action = "get")
     public ResponseEntity<PaginatedRoleRequestResponse> getAllRolesRequests(UUID ownerId, String status, UUID accountId, UUID roleId, Integer limit, Integer offset) {
         PaginatedResult<RoleRequestFull> roleRequests = roleRequestService.findAll(status, accountId, ownerId, roleId, limit, offset);
         List<RoleRequestFullDTO> roleRequestDTOs = roleRequests.data().stream().map(RoleRequestFull::toDTO).toList();
@@ -49,12 +52,14 @@ public class RolesRequestController implements RolesRequestsApi {
     }
 
     @Override
+    @PermissionCheck(entity = "role-request", action = "get")
     public ResponseEntity<RoleRequestDTO> getRoleRequestById(UUID roleRequestId) {
         RoleRequest roleRequest = roleRequestService.findById(roleRequestId);
         return ResponseEntity.ok(roleRequest.toDTO());
     }
 
     @Override
+//    @PermissionCheck(entity = "role-request", action = "update")
     public ResponseEntity<RoleRequestDTO> updateRoleRequest(UUID roleRequestId, @Valid RoleRequestPostDTO roleRequestDTO) {
         roleRequestDTO.setId(roleRequestId);
         RoleRequest roleRequest = RoleRequest.fromPostDTO(roleRequestDTO);
@@ -63,6 +68,7 @@ public class RolesRequestController implements RolesRequestsApi {
     }
 
     @Override
+//    @PermissionCheck(entity = "role-request", action = "update")
     public ResponseEntity<RoleRequestDTO> updateRoleRequestStatus(UUID roleRequestId, String newStatus) {
         RoleRequest updatedRoleRequest = roleRequestService.setStatus(roleRequestId, RoleRequestStatus.valueOf(newStatus));
         return ResponseEntity.ok(updatedRoleRequest.toDTO());

@@ -91,11 +91,20 @@ public class RolePostgresRepository implements RoleRepository {
 
     @Override
     public Role create(Role role) {
+        String entity = role.entity();
+        if (entity == null || entity.isEmpty()) {
+            if (role.productId() != null) {
+                entity = "product";
+            } else if (role.orgUnitId() != null) {
+                entity = "orgunit";
+            }
+        }
         var record = dslContext.insertInto(roleTable)
                 .set(roleTable.ID, UUID.randomUUID())
                 .set(roleTable.NAME, role.name())
                 .set(roleTable.SHOP_NAME, role.name())
                 .set(roleTable.DESCRIPTION, role.description())
+                .set(roleTable.ENTITY, entity)
                 .set(roleTable.ROLE_TYPE, role.roleType())
                 .set(roleTable.IS_SHOP_HIDDEN, role.isShopHidden())
                 .set(roleTable.PRODUCT_ID, role.productId())
@@ -111,10 +120,19 @@ public class RolePostgresRepository implements RoleRepository {
 
     @Override
     public Role update(Role role) {
+        String entity = role.entity();
+        if (entity == null || entity.isEmpty()) {
+            if (role.productId() != null) {
+                entity = "product";
+            } else if (role.orgUnitId() != null) {
+                entity = "orgunit";
+            }
+        }
         var record = dslContext.update(roleTable)
                 .set(roleTable.NAME, role.name())
                 .set(roleTable.SHOP_NAME, role.name())
                 .set(roleTable.DESCRIPTION, role.description())
+                .set(roleTable.ENTITY, entity)
                 .set(roleTable.ROLE_TYPE, role.roleType())
                 .set(roleTable.IS_SHOP_HIDDEN, role.isShopHidden())
                 .set(roleTable.PRODUCT_ID, role.productId())
