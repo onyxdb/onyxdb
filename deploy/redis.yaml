@@ -40,7 +40,7 @@ spec:
         app.kubernetes.io/instance: redis-onyxdb
     spec:
       containers:
-        - name: postgres
+        - name: redis
           image: "redis:8.0"
           imagePullPolicy: IfNotPresent
           ports:

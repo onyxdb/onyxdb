@@ -1,0 +1,79 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: clickhouse-onyxdb
+  labels:
+    app.kubernetes.io/name: clickhouse-onyxdb
+    app.kubernetes.io/instance: clickhouse-onyxdb
+stringData:
+  CLICKHOUSE_DB: "onyxdb"
+  CLICKHOUSE_USER: "onyxdb"
+  CLICKHOUSE_PASSWORD: "qwerty"
+  CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: "1"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: clickhouse-onyxdb
+  labels:
+    app.kubernetes.io/name: clickhouse-onyxdb
+    app.kubernetes.io/instance: clickhouse-onyxdb
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 0.5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: clickhouse-onyxdb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: clickhouse-onyxdb
+      app.kubernetes.io/instance: clickhouse-onyxdb
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: clickhouse-onyxdb
+        app.kubernetes.io/instance: clickhouse-onyxdb
+    spec:
+      containers:
+        - name: clickhouse
+          image: "clickhouse/clickhouse-server:25.4"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8123
+            - name: native-client
+              containerPort: 9000
+          envFrom:
+            - secretRef:
+                name: clickhouse-onyxdb
+          volumeMounts:
+            - mountPath: /redis/data
+              name: data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: clickhouse-onyxdb
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: clickhouse-onyxdb
+  labels:
+    app.kubernetes.io/name: clickhouse-onyxdb
+    app.kubernetes.io/instance: clickhouse-onyxdb
+spec:
+  ports:
+    - name: http
+      port: 8123
+    - name: native-client
+      port: 9000
+  selector:
+    app.kubernetes.io/name: clickhouse-onyxdb
+    app.kubernetes.io/instance: clickhouse-onyxdb
