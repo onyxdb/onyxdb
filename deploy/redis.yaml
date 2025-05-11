@@ -68,8 +68,8 @@ metadata:
     app.kubernetes.io/name: redis-onyxdb
     app.kubernetes.io/instance: redis-onyxdb
 spec:
-  ports:
-    - port: 6379
   selector:
     app.kubernetes.io/name: redis-onyxdb
     app.kubernetes.io/instance: redis-onyxdb
+  ports:
+    - port: 6379

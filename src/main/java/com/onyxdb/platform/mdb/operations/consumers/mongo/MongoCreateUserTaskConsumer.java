@@ -8,6 +8,7 @@ import com.onyxdb.platform.mdb.clients.onyxdbAgent.OnyxdbAgentClient;
 import com.onyxdb.platform.mdb.clients.onyxdbAgent.models.CreateMongoUserRequestDTO;
 import com.onyxdb.platform.mdb.clients.onyxdbAgent.models.MongoPermissionDTO;
 import com.onyxdb.platform.mdb.clusters.ClusterService;
+import com.onyxdb.platform.mdb.clusters.models.Cluster;
 import com.onyxdb.platform.mdb.clusters.models.MongoRole;
 import com.onyxdb.platform.mdb.databases.DatabaseRepository;
 import com.onyxdb.platform.mdb.operations.consumers.TaskConsumer;
@@ -15,21 +16,26 @@ import com.onyxdb.platform.mdb.operations.models.Task;
 import com.onyxdb.platform.mdb.operations.models.TaskResult;
 import com.onyxdb.platform.mdb.operations.models.TaskType;
 import com.onyxdb.platform.mdb.operations.models.payload.MongoCreateUserPayload;
+import com.onyxdb.platform.mdb.projects.Project;
+import com.onyxdb.platform.mdb.projects.ProjectRepository;
 
 @Component
 public class MongoCreateUserTaskConsumer extends TaskConsumer<MongoCreateUserPayload> {
     private final OnyxdbAgentClient onyxdbAgentClient;
     private final DatabaseRepository databaseRepository;
+    private final ProjectRepository projectRepository;
 
     public MongoCreateUserTaskConsumer(
             ObjectMapper objectMapper,
             ClusterService clusterService,
             OnyxdbAgentClient onyxdbAgentClient,
-            DatabaseRepository databaseRepository
+            DatabaseRepository databaseRepository,
+            ProjectRepository projectRepository
     ) {
         super(objectMapper, clusterService);
         this.onyxdbAgentClient = onyxdbAgentClient;
         this.databaseRepository = databaseRepository;
+        this.projectRepository = projectRepository;
     }
 
     @Override
@@ -39,6 +45,9 @@ public class MongoCreateUserTaskConsumer extends TaskConsumer<MongoCreateUserPay
 
     @Override
     protected TaskResult internalProcess(Task task, MongoCreateUserPayload payload) {
+        Cluster cluster = clusterService.getClusterOrThrow(payload.clusterId());
+        Project project = projectRepository.getProjectOrThrow(cluster.projectId());
+
         var rq = new CreateMongoUserRequestDTO(
                 payload.username(),
                 payload.passwordSecretName(),
@@ -48,7 +57,12 @@ public class MongoCreateUserTaskConsumer extends TaskConsumer<MongoCreateUserPay
                         p.roles().stream().map(MongoRole::value).toList()
                 )).toList()
         );
-        onyxdbAgentClient.createUser(rq);
+        onyxdbAgentClient.createUser(
+                cluster.namespace(),
+                project.name(),
+                cluster.name(),
+                rq
+        );
 
         return TaskResult.success();
     }

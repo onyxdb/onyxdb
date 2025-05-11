@@ -65,8 +65,8 @@ metadata:
     app.kubernetes.io/name: postgres-onyxdb
     app.kubernetes.io/instance: postgres-onyxdb
 spec:
-  ports:
-    - port: 5432
   selector:
     app.kubernetes.io/name: postgres-onyxdb
     app.kubernetes.io/instance: postgres-onyxdb
+  ports:
+    - port: 5432

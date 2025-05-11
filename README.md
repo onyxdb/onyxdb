@@ -83,20 +83,20 @@ kubectl apply --server-side -f https://raw.githubusercontent.com/percona/percona
 Deploy VictoriaMetrics according to [docs](https://docs.victoriametrics.com/operator/setup/#installing-by-manifest).
 
 ```shell
-kubectl apply -f ./deploy/vm-operator.yaml
+kubectl apply -f ./deploy/vm-operator.yaml -n onyxdb
 ```
 
 ### Deploy VictoriaMetrics
 
 ```shell
-kubectl apply -f ./deploy/vm-cluster.yaml
-kubectl apply -f ./deploy/vm-agent.yaml
+kubectl apply -f ./deploy/vm-cluster.yaml -n onyxdb
+kubectl apply -f ./deploy/vm-agent.yaml -n onyxdb
 ```
 
 ### Deploy VictoriaLogs
 
 ```shell
-kubectl apply -f ./deploy/vlogs.yaml
+kubectl apply -f ./deploy/vlogs.yaml -n onyxdb
 ```
 
 ### Deploy Vector agent
@@ -105,13 +105,13 @@ kubectl apply -f ./deploy/vlogs.yaml
 helm repo add vector https://helm.vector.dev
 helm repo update
 
-helm install -f ./deploy/vector/values.yaml vector vector/vector
+helm install -f ./deploy/vector/values.yaml vector vector/vector --version 0.42.1 -n onyxdb
 ```
 
 ### Deploy Grafana
 
 ```shell
-kubectl apply -f ./deploy/grafana
+kubectl apply -f ./deploy/grafana -n onyxdb
 ```
 
 VLogs address: 
@@ -130,7 +130,7 @@ http://vmselect-onyxdb.onyxdb.svc.cluster.local:8481/select/0:0/prometheus
 
 Deploy MinIO:
 ```shell
-kubectl apply -f ./deploy/minio/minio.yaml
+kubectl apply -f ./deploy/minio/minio.yaml -n onyxdb
 ```
 
 Port forward service 9001 port

@@ -3,7 +3,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: grafana-pvc
+  name: grafana
 spec:
   accessModes:
     - ReadWriteOnce
@@ -15,7 +15,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: grafana
-  namespace: onyxdb
   labels:
     app: grafana
 spec:
@@ -33,7 +32,7 @@ spec:
           - 0
       containers:
         - name: grafana
-          image: grafana/grafana:latest
+          image: grafana/grafana:12.0.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
@@ -57,29 +56,28 @@ spec:
             tcpSocket:
               port: 3000
             timeoutSeconds: 1
-          resources:
-            requests:
-              cpu: 250m
-              memory: 750Mi
+#          resources:
+#            requests:
+#              cpu: 250m
+#              memory: 750Mi
           volumeMounts:
             - mountPath: /var/lib/grafana
-              name: grafana-pv
+              name: grafana
             - mountPath: /etc/grafana/grafana.ini
               name: grafana-config
               subPath: grafana.ini
       volumes:
-        - name: grafana-pv
+        - name: grafana
           persistentVolumeClaim:
-            claimName: grafana-pvc
+            claimName: grafana
         - name: grafana-config
           configMap:
-            name: grafana-config
+            name: grafana
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: grafana
-  namespace: onyxdb
 spec:
   ports:
     - port: 3000
@@ -87,5 +85,3 @@ spec:
       targetPort: http-grafana
   selector:
     app: grafana
-  sessionAffinity: None
-  type: LoadBalancer

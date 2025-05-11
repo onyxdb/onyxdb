@@ -69,11 +69,11 @@ metadata:
     app.kubernetes.io/name: clickhouse-onyxdb
     app.kubernetes.io/instance: clickhouse-onyxdb
 spec:
+  selector:
+    app.kubernetes.io/name: clickhouse-onyxdb
+    app.kubernetes.io/instance: clickhouse-onyxdb
   ports:
     - name: http
       port: 8123
     - name: native-client
       port: 9000
-  selector:
-    app.kubernetes.io/name: clickhouse-onyxdb
-    app.kubernetes.io/instance: clickhouse-onyxdb

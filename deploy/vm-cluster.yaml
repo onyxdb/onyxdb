@@ -2,12 +2,23 @@ apiVersion: operator.victoriametrics.com/v1beta1
 kind: VMCluster
 metadata:
   name: onyxdb
-  namespace: onyxdb
 spec:
   retentionPeriod: "24h"
   vmstorage:
     replicaCount: 1
+    image:
+      repository: victoriametrics/vmstorage
+      tag: v1.93.4-cluster
+      pullPolicy: Always
   vmselect:
     replicaCount: 1
+    image:
+      repository: victoriametrics/vmselect
+      tag: v1.93.4-cluster
+      pullPolicy: Always
   vminsert:
     replicaCount: 1
+    image:
+      repository: victoriametrics/vminsert
+      tag: v1.93.4-cluster
+      pullPolicy: Always

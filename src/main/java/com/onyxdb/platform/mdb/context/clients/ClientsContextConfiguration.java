@@ -106,12 +106,9 @@ public class ClientsContextConfiguration {
     }
 
     @Bean
-    public OnyxdbAgentClient agentClient(
-            @Value("${onyxdb.agent.base-url}")
-            String baseUrl
-    ) {
+    public OnyxdbAgentClient agentClient() {
         HttpClient httpClient = HttpClient.create().option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 3000);
-        WebClient webClient = WebClient.builder().baseUrl(baseUrl)
+        WebClient webClient = WebClient.builder()
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .build();
 

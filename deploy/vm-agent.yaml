@@ -2,8 +2,14 @@ apiVersion: operator.victoriametrics.com/v1beta1
 kind: VMAgent
 metadata:
   name: onyxdb
-  namespace: onyxdb
 spec:
+  replicaCount: 1
+  image:
+    repository: victoriametrics/vmagent
+    tag: v1.93.4
+    pullPolicy: Always
+  remoteWrite:
+    - url: "http://vminsert-onyxdb.onyxdb.svc.cluster.local:8480/insert/0/prometheus/api/v1/write"
   serviceScrapeNamespaceSelector: {}
   podScrapeNamespaceSelector: {}
   podScrapeSelector: {}
@@ -12,6 +18,3 @@ spec:
   nodeScrapeNamespaceSelector: {}
   staticScrapeSelector: {}
   staticScrapeNamespaceSelector: {}
-  replicaCount: 1
-  remoteWrite:
-    - url: "http://vminsert-onyxdb.onyxdb.svc.cluster.local:8480/insert/0/prometheus/api/v1/write"

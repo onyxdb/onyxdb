@@ -1,0 +1,69 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: onyxdb
+  labels:
+    app.kubernetes.io/name: onyxdb
+    app.kubernetes.io/instance: onyxdb
+stringData:
+  ONYXDB_SELF_URL: "http://onyxdb.onyxdb.svc.cluster.local:9001"
+  ONYXDB_SELF_NAMESPACE: "onyxdb"
+  ONYXDB_NAMESPACES: "onyxdb"
+  ONYXDB_STORAGE_CLASSES: "yc-network-hdd"
+  ONYXDB_POSTGRES_URL: "jdbc:postgresql://postgres-onyxdb.onyxdb.svc.cluster.local:5432/onyxdb"
+  ONYXDB_POSTGRES_USER: "onyxdb"
+  ONYXDB_POSTGRES_PASSWORD: "qwerty"
+  ONYXDB_REDIS_HOST: "redis-onyxdb.onyxdb.svc.cluster.local"
+  ONYXDB_REDIS_PORT: "6379"
+  ONYXDB_REDIS_USER: "onyxdb"
+  ONYXDB_REDIS_PASSWORD: "qwerty"
+  ONYXDB_CLICKHOUSE_URL: "jdbc:clickhouse://clickhouse-onyxdb.onyxdb.svc.cluster.local:8323/onyxdb"
+  ONYXDB_CLICKHOUSE_USER: "onyxdb"
+  ONYXDB_CLICKHOUSE_PASSWORD: "qwerty"
+  ONYXDB_MINIO_URL: "http://minio-onyxdb.onyxdb.svc.cluster.local:9000"
+  ONYXDB_MINIO_SECRET: "minio-onyxdb"
+  ONYXDB_MINIO_BUCKET: "onyxdb"
+  ONYXDB_VLOGS_URL: "http://vls-onyxdb.onyxdb.svc.cluster.local:9428"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: onyxdb
+  labels:
+    app.kubernetes.io/name: onyxdb
+    app.kubernetes.io/instance: onyxdb
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: onyxdb
+      app.kubernetes.io/instance: onyxdb
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: onyxdb
+        app.kubernetes.io/instance: onyxdb
+    spec:
+      containers:
+        - name: onyxdb
+          image: foxleren/onyxdb:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: onyxdb
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: onyxdb
+  labels:
+    app.kubernetes.io/name: onyxdb
+    app.kubernetes.io/instance: onyxdb
+spec:
+  selector:
+    app.kubernetes.io/name: onyxdb
+    app.kubernetes.io/instance: onyxdb
+  ports:
+    - port: 8080
