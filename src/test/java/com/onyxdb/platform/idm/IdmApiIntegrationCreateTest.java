@@ -115,28 +115,28 @@ public class IdmApiIntegrationCreateTest {
         AccountDTO account20 = createAccount(accountCreate20);
 
         // 2. Создаем Domain Components (DC)
-        var dc1Create = TestDataFactory.createDomainComponentDTO("DC1", "Сonnectify");
-        var dc2Create = TestDataFactory.createDomainComponentDTO("DC2", "Outsource");
+        var dc1Create = TestDataFactory.createDomainComponentDTO("Сonnectify", "DC1");
+        var dc2Create = TestDataFactory.createDomainComponentDTO("Outsource", "DC2");
 
         var dc1 = createDomainComponent(dc1Create);
         var dc2 = createDomainComponent(dc2Create);
 
         // 3. Создаем Organization Units (OU) для DC1
-        var ou1Create = TestDataFactory.createOrganizationUnitDTO("OU1", "Управление", account1.getId(), dc1.getId(), null);
-        var ou2Create = TestDataFactory.createOrganizationUnitDTO("OU2", "Разработка", account2.getId(), dc1.getId(), null);
-        var ou3Create = TestDataFactory.createOrganizationUnitDTO("OU3", "Аналитика и данные", account3.getId(), dc1.getId(), null);
+        var ou1Create = TestDataFactory.createOrganizationUnitDTO("Управление", "OU1", account1.getId(), dc1.getId(), null);
+        var ou2Create = TestDataFactory.createOrganizationUnitDTO("Разработка", "OU2", account2.getId(), dc1.getId(), null);
+        var ou3Create = TestDataFactory.createOrganizationUnitDTO("Аналитика и данные", "OU3", account3.getId(), dc1.getId(), null);
 
         var ou1 = createOrganizationUnit(ou1Create);
         var ou2 = createOrganizationUnit(ou2Create);
         var ou3 = createOrganizationUnit(ou3Create);
 
         // 3.1. Дочерние OU для DC1
-        var ou1Child1Create = TestDataFactory.createOrganizationUnitDTO("OU1-Child1", "Отдел стратегии и планирования", account1.getId(), dc1.getId(), ou1.getId());
-        var ou2Child1Create = TestDataFactory.createOrganizationUnitDTO("OU2-Child1", "Команда Backend-разработки", account2.getId(), dc1.getId(), ou2.getId());
-        var ou2Child2Create = TestDataFactory.createOrganizationUnitDTO("OU2-Child2", "Команда Frontend-разработки", account2.getId(), dc1.getId(), ou2.getId());
-        var ou3Child1Create = TestDataFactory.createOrganizationUnitDTO("OU3-Child1", "Команда аналитики", account3.getId(), dc1.getId(), ou3.getId());
-        var ou3Child2Create = TestDataFactory.createOrganizationUnitDTO("OU3-Child2", "Команда Data Science", account3.getId(), dc1.getId(), ou3.getId());
-        var ou3Child3Create = TestDataFactory.createOrganizationUnitDTO("OU3-Child3", "Команда BI (Business Intelligence)", account3.getId(), dc1.getId(), ou3.getId());
+        var ou1Child1Create = TestDataFactory.createOrganizationUnitDTO("Отдел стратегии и планирования", "OU1-Child1", account1.getId(), dc1.getId(), ou1.getId());
+        var ou2Child1Create = TestDataFactory.createOrganizationUnitDTO("Команда Backend-разработки", "OU2-Child1", account2.getId(), dc1.getId(), ou2.getId());
+        var ou2Child2Create = TestDataFactory.createOrganizationUnitDTO("Команда Frontend-разработки", "OU2-Child2", account2.getId(), dc1.getId(), ou2.getId());
+        var ou3Child1Create = TestDataFactory.createOrganizationUnitDTO("Команда аналитики", "OU3-Child1", account3.getId(), dc1.getId(), ou3.getId());
+        var ou3Child2Create = TestDataFactory.createOrganizationUnitDTO("Команда Data Science", "OU3-Child2", account3.getId(), dc1.getId(), ou3.getId());
+        var ou3Child3Create = TestDataFactory.createOrganizationUnitDTO("Команда BI (Business Intelligence)", "OU3-Child3", account3.getId(), dc1.getId(), ou3.getId());
 
         var ou1Child1 = createOrganizationUnit(ou1Child1Create);
         var ou2Child1 = createOrganizationUnit(ou2Child1Create);
@@ -146,14 +146,14 @@ public class IdmApiIntegrationCreateTest {
         var ou3Child3 = createOrganizationUnit(ou3Child3Create);
 
         // 3.2. Вложенные OU для аналитики
-        var ou3Child1Child1Create = TestDataFactory.createOrganizationUnitDTO("OU3-Child1-Child1", "Группа анализа данных", account14.getId(), dc1.getId(), ou3Child1.getId());
+        var ou3Child1Child1Create = TestDataFactory.createOrganizationUnitDTO("Группа анализа данных", "OU3-Child1-Child1", account14.getId(), dc1.getId(), ou3Child1.getId());
         var ou3Child1Child1 = createOrganizationUnit(ou3Child1Child1Create);
 
         // 4. Создаем OU для DC2
-        var ou4Create = TestDataFactory.createOrganizationUnitDTO("OU4", "Маркетинг и продажи", account6.getId(), dc2.getId(), null);
+        var ou4Create = TestDataFactory.createOrganizationUnitDTO("Маркетинг и продажи", "OU4", account6.getId(), dc2.getId(), null);
         var ou4 = createOrganizationUnit(ou4Create);
 
-        var ou4Child1Create = TestDataFactory.createOrganizationUnitDTO("OU4-Child1", "Команда цифрового маркетинга", account6.getId(), dc2.getId(), ou4.getId());
+        var ou4Child1Create = TestDataFactory.createOrganizationUnitDTO("Команда цифрового маркетинга", "OU4-Child1", account6.getId(), dc2.getId(), ou4.getId());
         var ou4Child1 = createOrganizationUnit(ou4Child1Create);
 
         // 5. Связываем аккаунты с OU
@@ -275,7 +275,7 @@ public class IdmApiIntegrationCreateTest {
         // 8. Создаем роли
 
         // Глобальные роли
-        var  domainComponentAdminCreate = TestDataFactory.createRoleDTO("ADMIN", "Domain Component Admin", "Domain Component Admin", "Admin role for Domain Component", false, "domain-component", null, null);
+        var  domainComponentAdminCreate = TestDataFactory.createRoleDTO("ADMIN", "Domain Component Admin", "Domain Component Admin", "Admin role for Domain Component", false, "domain-comp", null, null);
         var  businessRoleAdminCreate = TestDataFactory.createRoleDTO("ADMIN", "Business Role Admin", "Business Role Admin", "Admin role for Business Role", false, "business-role", null, null);
         var  roleAdminCreate = TestDataFactory.createRoleDTO("ADMIN", "Role Admin", "Role Admin", "Admin role for Role", false, "role", null, null);
         var  permissionAdminCreate = TestDataFactory.createRoleDTO("ADMIN", "Permission Admin", "Permission Admin", "Admin role for Permission", false, "permission", null, null);

@@ -61,7 +61,7 @@ public record Permission(
                 permissionDAO.getId(),
                 permissionDAO.getActionType(),
                 permissionDAO.getResourceType(),
-                dataMap,
+                dataMap == null || dataMap.isEmpty() ? null : dataMap,
                 permissionDAO.getCreatedAt(),
                 permissionDAO.getUpdatedAt()
         );

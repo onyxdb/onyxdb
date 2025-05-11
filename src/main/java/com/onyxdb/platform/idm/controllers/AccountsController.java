@@ -15,6 +15,7 @@ import com.onyxdb.platform.generated.openapi.apis.AccountsApi;
 import com.onyxdb.platform.generated.openapi.models.AccountBusinessRolesHistoryDTO;
 import com.onyxdb.platform.generated.openapi.models.AccountPostDTO;
 import com.onyxdb.platform.generated.openapi.models.AccountDTO;
+import com.onyxdb.platform.generated.openapi.models.AccountRolesAllDTO;
 import com.onyxdb.platform.generated.openapi.models.AccountRolesHistoryDTO;
 import com.onyxdb.platform.generated.openapi.models.BusinessRoleDTO;
 import com.onyxdb.platform.generated.openapi.models.OrganizationUnitDTO;
@@ -22,6 +23,7 @@ import com.onyxdb.platform.generated.openapi.models.PaginatedAccountResponse;
 import com.onyxdb.platform.generated.openapi.models.RoleDTO;
 import com.onyxdb.platform.generated.openapi.models.RoleWithPermissionsDTO;
 import com.onyxdb.platform.idm.models.Account;
+import com.onyxdb.platform.idm.models.AccountRolesAll;
 import com.onyxdb.platform.idm.models.BusinessRole;
 import com.onyxdb.platform.idm.models.OrganizationUnit;
 import com.onyxdb.platform.idm.models.PaginatedResult;
@@ -50,6 +52,12 @@ public class AccountsController implements AccountsApi {
     public ResponseEntity<Void> deleteAccount(UUID accountId) {
         accountService.delete(accountId);
         return null;
+    }
+
+    @Override
+    public ResponseEntity<AccountRolesAllDTO> getAccountAccess(UUID accountId) {
+        AccountRolesAll data = accountService.getAccountAllAccess(accountId);
+        return ResponseEntity.ok(data.toDTO());
     }
 
     @Override

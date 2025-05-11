@@ -1,7 +1,10 @@
 package com.onyxdb.platform.idm.repositories;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -19,6 +22,7 @@ import com.onyxdb.platform.generated.jooq.tables.AccountBusinessRoleTable;
 import com.onyxdb.platform.generated.jooq.tables.AccountOuTable;
 import com.onyxdb.platform.generated.jooq.tables.AccountRoleTable;
 import com.onyxdb.platform.generated.jooq.tables.AccountTable;
+import com.onyxdb.platform.generated.jooq.tables.BusinessRoleRoleTable;
 import com.onyxdb.platform.generated.jooq.tables.BusinessRoleTable;
 import com.onyxdb.platform.generated.jooq.tables.OrganizationUnitTable;
 import com.onyxdb.platform.generated.jooq.tables.PermissionTable;
@@ -27,10 +31,12 @@ import com.onyxdb.platform.generated.jooq.tables.RoleTable;
 import com.onyxdb.platform.generated.jooq.tables.records.AccountTableRecord;
 import com.onyxdb.platform.idm.models.Account;
 import com.onyxdb.platform.idm.models.BusinessRole;
+import com.onyxdb.platform.idm.models.BusinessRoleWithRoles;
 import com.onyxdb.platform.idm.models.OrganizationUnit;
 import com.onyxdb.platform.idm.models.PaginatedResult;
 import com.onyxdb.platform.idm.models.Permission;
 import com.onyxdb.platform.idm.models.Role;
+import com.onyxdb.platform.idm.models.RoleWithPermissions;
 
 import static org.jooq.impl.DSL.trueCondition;
 
@@ -46,6 +52,7 @@ public class AccountPostgresRepository implements AccountRepository {
     private final static AccountBusinessRoleTable accountBusinessRoleTable = Tables.ACCOUNT_BUSINESS_ROLE_TABLE;
     private final static AccountRoleTable accountRoleTable = Tables.ACCOUNT_ROLE_TABLE;
     private final static BusinessRoleTable businessRoleTable = Tables.BUSINESS_ROLE_TABLE;
+    private final static BusinessRoleRoleTable businessRoleRoleTable = Tables.BUSINESS_ROLE_ROLE_TABLE;
     private final static RolePermissionTable rolePermissionTable = Tables.ROLE_PERMISSION_TABLE;
     private final static RoleTable roleTable = Tables.ROLE_TABLE;
     private final static PermissionTable permissionTable = Tables.PERMISSION_TABLE;
@@ -85,7 +92,7 @@ public class AccountPostgresRepository implements AccountRepository {
                 : trueCondition();
 
         Result<AccountTableRecord> records = dslContext.selectFrom(accountTable)
-                .where(condition)
+                .where(condition.and(accountTable.IS_DELETED.eq(false)))
                 .orderBy(accountTable.CREATED_AT)
                 .limit(limit)
                 .offset(offset)
@@ -157,9 +164,12 @@ public class AccountPostgresRepository implements AccountRepository {
 
     @Override
     public void delete(UUID id) {
-        dslContext.deleteFrom(accountTable)
+        dslContext.update(accountTable)
+                .set(accountTable.DELETED_AT, LocalDateTime.now())
+                .set(accountTable.IS_DELETED, true)
                 .where(accountTable.ID.eq(id))
-                .execute();
+                .returning()
+                .fetchOne();
     }
 
     @Override
@@ -206,6 +216,82 @@ public class AccountPostgresRepository implements AccountRepository {
                         .where(roleTable.ID.eq(link.getRoleId()))
                         .orderBy(roleTable.CREATED_AT)
                         .fetchOne(Role::fromDAO));
+    }
+
+    @Override
+    public List<RoleWithPermissions> getDirectRolesWithPermissions(UUID accountId) {
+        // Запрос для прямых ролей и их пермиссий
+        var result = dslContext.select(roleTable.asterisk(), permissionTable.asterisk())
+                .from(accountRoleTable)
+                .join(roleTable).on(accountRoleTable.ROLE_ID.eq(roleTable.ID))
+                .leftJoin(rolePermissionTable).on(roleTable.ID.eq(rolePermissionTable.ROLE_ID))
+                .leftJoin(permissionTable).on(rolePermissionTable.PERMISSION_ID.eq(permissionTable.ID))
+                .where(accountRoleTable.ACCOUNT_ID.eq(accountId))
+                .fetch();
+
+        // Группируем роли и их пермиссии
+        Map<Role, List<Permission>> rolePermissions = new LinkedHashMap<>();
+
+        for (var record : result) {
+            Role role = record.into(roleTable).into(Role.class);
+            Permission permission = record.into(permissionTable).into(Permission.class);
+
+            if (!rolePermissions.containsKey(role)) {
+                rolePermissions.put(role, new ArrayList<>());
+            }
+
+            if (permission.id() != null) {
+                rolePermissions.get(role).add(permission);
+            }
+        }
+
+        return rolePermissions.entrySet().stream()
+                .map(entry -> new RoleWithPermissions(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<BusinessRoleWithRoles> getBusinessRolesWithRoles(UUID accountId) {
+        // Запрос для бизнес-ролей и их ролей с пермиссиями
+        var result = dslContext.select(
+                        businessRoleTable.asterisk(),
+                        roleTable.asterisk(),
+                        permissionTable.asterisk()
+                )
+                .from(accountBusinessRoleTable)
+                .join(businessRoleTable).on(accountBusinessRoleTable.BUSINESS_ROLE_ID.eq(businessRoleTable.ID))
+                .join(businessRoleRoleTable).on(businessRoleTable.ID.eq(businessRoleRoleTable.BUSINESS_ROLE_ID))
+                .join(roleTable).on(businessRoleRoleTable.ROLE_ID.eq(roleTable.ID))
+                .leftJoin(rolePermissionTable).on(roleTable.ID.eq(rolePermissionTable.ROLE_ID))
+                .leftJoin(permissionTable).on(rolePermissionTable.PERMISSION_ID.eq(permissionTable.ID))
+                .where(accountBusinessRoleTable.ACCOUNT_ID.eq(accountId))
+                .fetch();
+
+        // Группируем по бизнес-ролям, затем по ролям
+        Map<BusinessRole, Map<Role, List<Permission>>> grouped = new LinkedHashMap<>();
+
+        for (var record : result) {
+            BusinessRole businessRole = record.into(businessRoleRoleTable).into(BusinessRole.class);
+            Role role = record.into(roleTable).into(Role.class);
+            Permission permission = record.into(permissionTable).into(Permission.class);
+
+            grouped.computeIfAbsent(businessRole, k -> new LinkedHashMap<>())
+                    .computeIfAbsent(role, k -> new ArrayList<>())
+                    .add(permission);
+        }
+
+        // Преобразуем в итоговую структуру
+        return grouped.entrySet().stream()
+                .map(entry -> {
+                    List<RoleWithPermissions> rolePermissions = entry.getValue().entrySet().stream()
+                            .map(e -> new RoleWithPermissions(
+                                    e.getKey(),
+                                    e.getValue().stream().filter(p -> p.id() != null).collect(Collectors.toList())
+                            )).collect(Collectors.toList());
+
+                    return new BusinessRoleWithRoles(entry.getKey(), rolePermissions);
+                })
+                .collect(Collectors.toList());
     }
 
     @Override

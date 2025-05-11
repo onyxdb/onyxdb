@@ -71,6 +71,9 @@ dependencies {
 	implementation(libs.springSecurity.crypto)
 	implementation(libs.springSecurity.web)
 
+	// https://mvnrepository.com/artifact/org.aspectj/aspectjweaver
+	implementation("org.aspectj:aspectjweaver:1.9.24")
+
 	// netflix
 	implementation(libs.netflix.graphql.dgs.codegen)
 	testImplementation(libs.netflix.graphql.dgs.starterTest)

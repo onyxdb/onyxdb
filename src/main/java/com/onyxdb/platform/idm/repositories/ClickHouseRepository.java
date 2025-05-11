@@ -20,7 +20,7 @@ public class ClickHouseRepository {
     private final JdbcTemplate clickHouseJdbcTemplate;
 
     public List<AccountRolesHistory> getAllAccountsRoleHistory() {
-        return clickHouseJdbcTemplate.query("SELECT * FROM default.account_roles_history",
+        return clickHouseJdbcTemplate.query("SELECT * FROM onyxdb.account_roles_history",
                 (rs, rowNum) -> new AccountRolesHistory(
                         UUID.fromString(rs.getString("record_id")),
                         UUID.fromString(rs.getString("account_id")),
@@ -32,7 +32,7 @@ public class ClickHouseRepository {
 
 
     public List<AccountRolesHistory> getAllAccountRoleHistory(UUID accountId) {
-        String sql = "SELECT * FROM default.account_roles_history WHERE default.account_roles_history.account_id == '" + accountId.toString() + "'";
+        String sql = "SELECT * FROM onyxdb.account_roles_history WHERE onyxdb.account_roles_history.account_id == '" + accountId.toString() + "'";
         return clickHouseJdbcTemplate.query(sql,
                 (rs, rowNum) -> new AccountRolesHistory(
                         UUID.fromString(rs.getString("record_id")),
@@ -44,13 +44,13 @@ public class ClickHouseRepository {
     }
 
     public AccountRolesHistory addAccountRoleHistory(AccountRolesHistory data) {
-        String sqlInsert = "INSERT INTO default.account_roles_history (record_id, account_id, role_id, status, created_at) VALUES (?, ?, ?, ?, now())";
+        String sqlInsert = "INSERT INTO onyxdb.account_roles_history (record_id, account_id, role_id, status, created_at) VALUES (?, ?, ?, ?, now())";
         clickHouseJdbcTemplate.update(sqlInsert, data.record_id(), data.account_id(), data.role_id(), data.status());
         return data;
     }
 
     public List<AccountBusinessRolesHistory> getAllAccountsBusinessRoleHistory() {
-        return clickHouseJdbcTemplate.query("SELECT * FROM default.account_business_roles_history",
+        return clickHouseJdbcTemplate.query("SELECT * FROM onyxdb.account_business_roles_history",
                 (rs, rowNum) -> new AccountBusinessRolesHistory(
                         UUID.fromString(rs.getString("record_id")),
                         UUID.fromString(rs.getString("account_id")),
@@ -61,7 +61,7 @@ public class ClickHouseRepository {
     }
 
     public List<AccountBusinessRolesHistory> getAllAccountBusinessRoleHistory(UUID accountId) {
-        String sql = "SELECT * FROM default.account_business_roles_history WHERE default.account_business_roles_history.account_id == '" + accountId.toString() + "'";
+        String sql = "SELECT * FROM onyxdb.account_business_roles_history WHERE onyxdb.account_business_roles_history.account_id == '" + accountId.toString() + "'";
         return clickHouseJdbcTemplate.query(sql,
                 (rs, rowNum) -> new AccountBusinessRolesHistory(
                         UUID.fromString(rs.getString("record_id")),
@@ -73,7 +73,7 @@ public class ClickHouseRepository {
     }
 
     public AccountBusinessRolesHistory addAccountBusinessRoleHistory(AccountBusinessRolesHistory data) {
-        String sqlInsert = "INSERT INTO default.account_business_roles_history (record_id, account_id, business_role_id, status, created_at) VALUES (?, ?, ?, ?, now())";
+        String sqlInsert = "INSERT INTO onyxdb.account_business_roles_history (record_id, account_id, business_role_id, status, created_at) VALUES (?, ?, ?, ?, now())";
         clickHouseJdbcTemplate.update(sqlInsert, data.record_id(), data.account_id(), data.business_role_id(), data.status());
         return data;
     }
