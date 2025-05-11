@@ -18,10 +18,9 @@ import com.onyxdb.platform.mdb.operations.models.OperationType;
 import com.onyxdb.platform.mdb.operations.models.payload.MongoCreateUserPayload;
 import com.onyxdb.platform.mdb.operations.models.payload.MongoDeleteUserPayload;
 import com.onyxdb.platform.mdb.operations.repositories.OperationRepository;
+import com.onyxdb.platform.mdb.projects.Project;
+import com.onyxdb.platform.mdb.projects.ProjectRepository;
 import com.onyxdb.platform.mdb.utils.ObjectMapperUtils;
-
-import static com.onyxdb.platform.mdb.clusters.ClusterMapper.DEFAULT_NAMESPACE;
-import static com.onyxdb.platform.mdb.clusters.ClusterMapper.DEFAULT_PROJECT;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +32,7 @@ public class UserService {
     private final OperationRepository operationRepository;
     private final ClusterRepository clusterRepository;
     private final ObjectMapper objectMapper;
+    private final ProjectRepository projectRepository;
 
     public List<User> listUsers(UUID clusterId) {
         return userRepository.listUsers(clusterId, null);
@@ -44,10 +44,11 @@ public class UserService {
 
     public UUID createUser(CreateUser createUser) {
         Cluster cluster = clusterRepository.getClusterOrThrow(createUser.clusterId());
+        Project project = projectRepository.getProjectOrThrow(cluster.projectId());
 
         String userPasswordSecretName = psmdbClient.applyMongoUserSecret(
-                DEFAULT_NAMESPACE,
-                DEFAULT_PROJECT,
+                cluster.namespace(),
+                project.name(),
                 cluster.name(),
                 createUser.userName(),
                 createUser.password()
@@ -57,11 +58,12 @@ public class UserService {
         var operation = Operation.scheduledWithPayload(
                 OperationType.MONGO_CREATE_USER,
                 cluster.id(),
+                createUser.createdBy(),
                 ObjectMapperUtils.convertToString(objectMapper, new MongoCreateUserPayload(
                         cluster.id(),
                         user.name(),
                         userPasswordSecretName,
-                        DEFAULT_NAMESPACE,
+                        cluster.namespace(),
                         createUser.permissions()
                 )));
 
@@ -80,6 +82,7 @@ public class UserService {
         var operation = Operation.scheduledWithPayload(
                 OperationType.MONGO_DELETE_USER,
                 user.clusterId(),
+                deletedBy,
                 ObjectMapperUtils.convertToString(objectMapper, new MongoDeleteUserPayload(
                         user.clusterId(),
                         user.id(),

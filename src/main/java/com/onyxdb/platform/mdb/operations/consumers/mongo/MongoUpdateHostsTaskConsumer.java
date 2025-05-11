@@ -16,23 +16,26 @@ import com.onyxdb.platform.mdb.operations.models.Task;
 import com.onyxdb.platform.mdb.operations.models.TaskResult;
 import com.onyxdb.platform.mdb.operations.models.TaskType;
 import com.onyxdb.platform.mdb.operations.models.payload.ClusterPayload;
-
-import static com.onyxdb.platform.mdb.clusters.ClusterMapper.DEFAULT_PROJECT;
+import com.onyxdb.platform.mdb.projects.Project;
+import com.onyxdb.platform.mdb.projects.ProjectRepository;
 
 @Component
 public class MongoUpdateHostsTaskConsumer extends ClusterTaskConsumer {
     private final HostRepository hostRepository;
     private final TransactionTemplate transactionTemplate;
+    private final ProjectRepository projectRepository;
 
     public MongoUpdateHostsTaskConsumer(
             ObjectMapper objectMapper,
             ClusterService clusterService,
             HostRepository hostRepository,
-            TransactionTemplate transactionTemplate
+            TransactionTemplate transactionTemplate,
+            ProjectRepository projectRepository
     ) {
         super(objectMapper, clusterService);
         this.hostRepository = hostRepository;
         this.transactionTemplate = transactionTemplate;
+        this.projectRepository = projectRepository;
     }
 
     @Override
@@ -43,9 +46,10 @@ public class MongoUpdateHostsTaskConsumer extends ClusterTaskConsumer {
     @Override
     protected TaskResult internalProcess(Task task, ClusterPayload payload) {
         Cluster cluster = clusterService.getClusterOrThrow(payload.clusterId());
+        Project project = projectRepository.getProjectOrThrow(cluster.projectId());
 
         List<String> hostnames = PsmdbClient.calculatePsmdbHostNames(
-                DEFAULT_PROJECT,
+                project.name(),
                 cluster.name(),
                 cluster.config().replicas()
         );

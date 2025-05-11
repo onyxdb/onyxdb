@@ -2835,20 +2835,10 @@ components:
     UpdateProjectRequestDTO:
       type: object
       properties:
-        name:
-          type: string
         description:
           type: string
-        productId:
-          type: string
-          format: uuid
-        namespace:
-          type: string
       required:
-        - name
         - description
-        - productId
-        - namespace
     CreateMongoClusterRequestDTO:
       type: object
       properties:

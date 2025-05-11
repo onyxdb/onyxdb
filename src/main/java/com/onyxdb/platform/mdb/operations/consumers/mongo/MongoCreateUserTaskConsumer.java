@@ -2,6 +2,7 @@ package com.onyxdb.platform.mdb.operations.consumers.mongo;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Component;
 
 import com.onyxdb.platform.mdb.clients.onyxdbAgent.OnyxdbAgentClient;
 import com.onyxdb.platform.mdb.clients.onyxdbAgent.models.CreateMongoUserRequestDTO;
@@ -15,6 +16,7 @@ import com.onyxdb.platform.mdb.operations.models.TaskResult;
 import com.onyxdb.platform.mdb.operations.models.TaskType;
 import com.onyxdb.platform.mdb.operations.models.payload.MongoCreateUserPayload;
 
+@Component
 public class MongoCreateUserTaskConsumer extends TaskConsumer<MongoCreateUserPayload> {
     private final OnyxdbAgentClient onyxdbAgentClient;
     private final DatabaseRepository databaseRepository;

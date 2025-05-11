@@ -1,6 +1,7 @@
 package com.onyxdb.platform.mdb.operations.consumers.mongo;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Component;
 
 import com.onyxdb.platform.mdb.clients.k8s.psmdb.PsmdbExporterServiceClient;
 import com.onyxdb.platform.mdb.clusters.ClusterService;
@@ -10,20 +11,23 @@ import com.onyxdb.platform.mdb.operations.models.Task;
 import com.onyxdb.platform.mdb.operations.models.TaskResult;
 import com.onyxdb.platform.mdb.operations.models.TaskType;
 import com.onyxdb.platform.mdb.operations.models.payload.ClusterPayload;
+import com.onyxdb.platform.mdb.projects.Project;
+import com.onyxdb.platform.mdb.projects.ProjectRepository;
 
-import static com.onyxdb.platform.mdb.clusters.ClusterMapper.DEFAULT_NAMESPACE;
-import static com.onyxdb.platform.mdb.clusters.ClusterMapper.DEFAULT_PROJECT;
-
+@Component
 public class MongoDeleteExporterServiceConsumer extends ClusterTaskConsumer {
     private final PsmdbExporterServiceClient psmdbExporterServiceClient;
+    private final ProjectRepository projectRepository;
 
     public MongoDeleteExporterServiceConsumer(
             ObjectMapper objectMapper,
             ClusterService clusterService,
-            PsmdbExporterServiceClient psmdbExporterServiceClient
+            PsmdbExporterServiceClient psmdbExporterServiceClient,
+            ProjectRepository projectRepository
     ) {
         super(objectMapper, clusterService);
         this.psmdbExporterServiceClient = psmdbExporterServiceClient;
+        this.projectRepository = projectRepository;
     }
 
     @Override
@@ -34,10 +38,11 @@ public class MongoDeleteExporterServiceConsumer extends ClusterTaskConsumer {
     @Override
     protected TaskResult internalProcess(Task task, ClusterPayload payload) {
         Cluster cluster = clusterService.getClusterOrThrow(payload.clusterId());
+        Project project = projectRepository.getProjectOrThrow(cluster.projectId());
 
         psmdbExporterServiceClient.deletePsmdbExporterService(
-                DEFAULT_NAMESPACE,
-                DEFAULT_PROJECT,
+                cluster.namespace(),
+                project.name(),
                 cluster.name()
         );
 

@@ -28,15 +28,11 @@ import com.onyxdb.platform.mdb.clusters.models.UpdateCluster;
 import com.onyxdb.platform.mdb.clusters.models.UpdateClusterConfig;
 import com.onyxdb.platform.mdb.clusters.models.UpdateClusterResources;
 import com.onyxdb.platform.mdb.exceptions.InternalServerErrorException;
-import com.onyxdb.platform.mdb.utils.OnyxdbConsts;
 
 /**
  * @author foxleren
  */
 public class ClusterMapper {
-    public static final String DEFAULT_NAMESPACE = OnyxdbConsts.NAMESPACE;
-    public static final String DEFAULT_PROJECT = OnyxdbConsts.PROJECT;
-
     private final ObjectMapper objectMapper;
 
     public ClusterMapper(ObjectMapper objectMapper) {

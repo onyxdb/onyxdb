@@ -51,6 +51,11 @@ public class ProjectPostgresRepository implements ProjectRepository {
     }
 
     @Override
+    public Project getProjectOrThrow(UUID projectId) {
+        return getProjectOrThrow(projectId, false);
+    }
+
+    @Override
     public void createProject(Project project) {
         try {
             dslContext.insertInto(PROJECTS)
@@ -70,27 +75,13 @@ public class ProjectPostgresRepository implements ProjectRepository {
 
     @Override
     public boolean updateProject(UpdateProject updateProject) {
-        try {
-            var updatedProjectId = dslContext.update(PROJECTS)
-                    .set(PROJECTS.NAME, updateProject.name())
-                    .set(PROJECTS.DESCRIPTION, updateProject.description())
-                    .set(PROJECTS.PRODUCT_ID, updateProject.productId())
-                    .set(PROJECTS.NAMESPACE, updateProject.namespace())
-                    .where(PROJECTS.ID.eq(updateProject.id()))
-                    .returningResult(PROJECTS.ID)
-                    .fetchOne();
+        var updatedProjectId = dslContext.update(PROJECTS)
+                .set(PROJECTS.DESCRIPTION, updateProject.description())
+                .where(PROJECTS.ID.eq(updateProject.id()))
+                .returningResult(PROJECTS.ID)
+                .fetchOne();
 
-            return updatedProjectId != null;
-        } catch (DataAccessException | DuplicateKeyException e) {
-            PsqlUtils.handleDataAccessEx(
-                    e,
-                    PROJECTS,
-                    Indexes.PROJECTS_PROJECT_NAME_IS_DELETED_UNIQ_IDX,
-                    () -> new ProjectAlreadyExistsException(updateProject.name())
-            );
-
-            throw e;
-        }
+        return updatedProjectId != null;
     }
 
     @Override

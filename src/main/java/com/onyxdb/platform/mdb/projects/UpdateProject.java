@@ -7,9 +7,6 @@ import java.util.UUID;
  */
 public record UpdateProject(
         UUID id,
-        String name,
-        String description,
-        UUID productId,
-        String namespace
+        String description
 ) {
 }

@@ -14,6 +14,8 @@ public interface ProjectRepository {
 
     Project getProjectOrThrow(UUID projectId, boolean isDeleted);
 
+    Project getProjectOrThrow(UUID projectId);
+
     void createProject(Project project);
 
     boolean updateProject(UpdateProject updateProject);

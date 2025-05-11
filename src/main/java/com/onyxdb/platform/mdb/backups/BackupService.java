@@ -81,10 +81,11 @@ public class BackupService {
         );
     }
 
-    public UUID createBackup(UUID clusterId) {
+    public UUID createBackup(UUID clusterId, UUID createdBy) {
         var operation = Operation.scheduledWithPayload(
                 OperationType.MONGO_CREATE_BACKUP,
                 clusterId,
+                createdBy,
                 ObjectMapperUtils.convertToString(objectMapper, new MongoCreateBackupPayload(clusterId, TimeUtils.now()))
         );
 
@@ -93,7 +94,7 @@ public class BackupService {
         return operation.id();
     }
 
-    public UUID deleteBackup(UUID clusterId, String backupName) {
+    public UUID deleteBackup(UUID clusterId, String backupName, UUID deletedBy) {
         Cluster cluster = clusterRepository.getClusterOrThrow(clusterId);
         Project project = projectRepository.getProjectOrThrow(cluster.projectId(), false);
 
@@ -110,6 +111,7 @@ public class BackupService {
         var operation = Operation.scheduledWithPayload(
                 OperationType.MONGO_DELETE_BACKUP,
                 clusterId,
+                deletedBy,
                 ObjectMapperUtils.convertToString(objectMapper, new MongoDeleteBackupPayload(clusterId, backupName))
         );
 

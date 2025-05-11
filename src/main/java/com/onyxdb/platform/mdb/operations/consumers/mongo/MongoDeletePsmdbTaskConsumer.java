@@ -1,6 +1,7 @@
 package com.onyxdb.platform.mdb.operations.consumers.mongo;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Component;
 
 import com.onyxdb.platform.mdb.clients.k8s.psmdb.PsmdbClient;
 import com.onyxdb.platform.mdb.clusters.ClusterService;
@@ -10,20 +11,23 @@ import com.onyxdb.platform.mdb.operations.models.Task;
 import com.onyxdb.platform.mdb.operations.models.TaskResult;
 import com.onyxdb.platform.mdb.operations.models.TaskType;
 import com.onyxdb.platform.mdb.operations.models.payload.ClusterPayload;
+import com.onyxdb.platform.mdb.projects.Project;
+import com.onyxdb.platform.mdb.projects.ProjectRepository;
 
-import static com.onyxdb.platform.mdb.clusters.ClusterMapper.DEFAULT_NAMESPACE;
-import static com.onyxdb.platform.mdb.clusters.ClusterMapper.DEFAULT_PROJECT;
-
+@Component
 public class MongoDeletePsmdbTaskConsumer extends ClusterTaskConsumer {
     private final PsmdbClient psmdbClient;
+    private final ProjectRepository projectRepository;
 
     public MongoDeletePsmdbTaskConsumer(
             ObjectMapper objectMapper,
             ClusterService clusterService,
-            PsmdbClient psmdbClient
+            PsmdbClient psmdbClient,
+            ProjectRepository projectRepository
     ) {
         super(objectMapper, clusterService);
         this.psmdbClient = psmdbClient;
+        this.projectRepository = projectRepository;
     }
 
     @Override
@@ -34,7 +38,9 @@ public class MongoDeletePsmdbTaskConsumer extends ClusterTaskConsumer {
     @Override
     protected TaskResult internalProcess(Task task, ClusterPayload payload) {
         Cluster cluster = clusterService.getClusterOrThrow(payload.clusterId());
-        psmdbClient.deletePsmdb(DEFAULT_NAMESPACE, DEFAULT_PROJECT, cluster.name());
+        Project project = projectRepository.getProjectOrThrow(cluster.projectId());
+
+        psmdbClient.deletePsmdb(cluster.namespace(), project.name(), cluster.name());
 
         return TaskResult.success();
     }

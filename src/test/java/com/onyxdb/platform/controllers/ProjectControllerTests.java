@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -211,10 +212,7 @@ public class ProjectControllerTests extends BaseTest {
         projectRepository.createProject(projectBefore);
 
         var rq = new UpdateProjectRequestDTO(
-                "updated name",
-                "updated desc",
-                TestUtils.CHILD_PRODUCT_ID,
-                TestUtils.DEFAULT_NAMESPACE
+                "updated desc"
         );
 
         ResponseEntity<Void> response = restTemplate.exchange(
@@ -229,9 +227,9 @@ public class ProjectControllerTests extends BaseTest {
 
         var expected = Project.create(
                 projectBefore.id(),
-                rq.getName(),
+                projectBefore.name(),
                 rq.getDescription(),
-                rq.getProductId(),
+                projectBefore.productId(),
                 TestUtils.DEFAULT_NAMESPACE,
                 TestUtils.ADMIN_ID
         );
@@ -248,10 +246,7 @@ public class ProjectControllerTests extends BaseTest {
         var projectId = TestUtils.SANDBOX_PROJECT_ID;
 
         var rq = new UpdateProjectRequestDTO(
-                "updated name",
-                "updated desc",
-                TestUtils.PARENT_PRODUCT_ID,
-                TestUtils.DEFAULT_NAMESPACE
+                "updated desc"
         );
 
         ResponseEntity<BadRequestResponse> response = restTemplate.exchange(
@@ -270,6 +265,7 @@ public class ProjectControllerTests extends BaseTest {
     }
 
     @Test
+    @Disabled
     public void whenUpdateProjectNameDuplicate_then400() {
         var project1 = Project.create(
                 "project1",
@@ -289,10 +285,7 @@ public class ProjectControllerTests extends BaseTest {
         projectRepository.createProject(project2);
 
         var rq = new UpdateProjectRequestDTO(
-                project1.name(),
-                "updated desc",
-                TestUtils.CHILD_PRODUCT_ID,
-                TestUtils.DEFAULT_NAMESPACE
+                "updated desc"
         );
 
         ResponseEntity<BadRequestResponse> response = restTemplate.exchange(
@@ -303,11 +296,11 @@ public class ProjectControllerTests extends BaseTest {
                 project2.id()
         );
 
-        var expected = new BadRequestResponse(ProjectAlreadyExistsException.buildMessage(rq.getName()));
-
-        Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        Assertions.assertNotNull(response.getBody());
-        MatcherAssert.assertThat(response.getBody(), is(expected));
+//        var expected = new BadRequestResponse(ProjectAlreadyExistsException.buildMessage(rq.getName()));
+//
+//        Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+//        Assertions.assertNotNull(response.getBody());
+//        MatcherAssert.assertThat(response.getBody(), is(expected));
     }
 
     @Test

@@ -11,21 +11,23 @@ import com.onyxdb.platform.mdb.operations.models.Task;
 import com.onyxdb.platform.mdb.operations.models.TaskResult;
 import com.onyxdb.platform.mdb.operations.models.TaskType;
 import com.onyxdb.platform.mdb.operations.models.payload.ClusterPayload;
-
-import static com.onyxdb.platform.mdb.clusters.ClusterMapper.DEFAULT_NAMESPACE;
-import static com.onyxdb.platform.mdb.clusters.ClusterMapper.DEFAULT_PROJECT;
+import com.onyxdb.platform.mdb.projects.Project;
+import com.onyxdb.platform.mdb.projects.ProjectRepository;
 
 @Component
 public class MongoDeleteExporterServiceScrapeTaskConsumer extends ClusterTaskConsumer {
     private final PsmdbExporterServiceScrapeClient psmdbExporterServiceScrapeClient;
+    private final ProjectRepository projectRepository;
 
     public MongoDeleteExporterServiceScrapeTaskConsumer(
             ObjectMapper objectMapper,
             ClusterService clusterService,
-            PsmdbExporterServiceScrapeClient psmdbExporterServiceScrapeClient
+            PsmdbExporterServiceScrapeClient psmdbExporterServiceScrapeClient,
+            ProjectRepository projectRepository
     ) {
         super(objectMapper, clusterService);
         this.psmdbExporterServiceScrapeClient = psmdbExporterServiceScrapeClient;
+        this.projectRepository = projectRepository;
     }
 
     public TaskType getTaskType() {
@@ -35,10 +37,11 @@ public class MongoDeleteExporterServiceScrapeTaskConsumer extends ClusterTaskCon
     @Override
     public TaskResult internalProcess(Task task, ClusterPayload payload) {
         Cluster cluster = clusterService.getClusterOrThrow(payload.clusterId());
+        Project project = projectRepository.getProjectOrThrow(cluster.projectId());
 
         psmdbExporterServiceScrapeClient.deletePsmdbExporterServiceScrape(
-                DEFAULT_NAMESPACE,
-                DEFAULT_PROJECT,
+                cluster.namespace(),
+                project.name(),
                 cluster.name()
         );
 
