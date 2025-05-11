@@ -17,7 +17,7 @@ public class QuotaMapper {
                 r.getProductId(),
                 r.getResourceId(),
                 r.getLimit(),
-                r.getAllocation(),
+                r.getUsage(),
                 r.getFree()
         );
     }
@@ -168,6 +168,26 @@ public class QuotaMapper {
                 productId,
                 q.resourceId(),
                 q.limit()
+        );
+    }
+
+    public ProductQuotasRecord productQuotaToProductQuotasRecord(ProductQuota q) {
+        return new ProductQuotasRecord(
+                q.productId(),
+                q.resourceId(),
+                q.limit(),
+                q.usage(),
+                q.free()
+        );
+    }
+
+    public ProductQuota enrichedProductQuotaToProductQuota(EnrichedProductQuota q) {
+        return new ProductQuota(
+                q.productId(),
+                q.resource().id(),
+                q.limit(),
+                q.usage(),
+                q.free()
         );
     }
 

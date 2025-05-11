@@ -9,8 +9,8 @@ import org.jooq.impl.DSL;
 import com.onyxdb.platform.generated.jooq.tables.records.ProductQuotasRecord;
 import com.onyxdb.platform.mdb.resources.ResourceMapper;
 
-import static com.onyxdb.platform.generated.jooq.Tables.PRODUCTS;
 import static com.onyxdb.platform.generated.jooq.Tables.PRODUCT_QUOTAS;
+import static com.onyxdb.platform.generated.jooq.Tables.PRODUCT_TABLE;
 import static com.onyxdb.platform.generated.jooq.Tables.RESOURCES;
 
 public class QuotaPostgresRepository implements QuotaRepository {
@@ -31,7 +31,7 @@ public class QuotaPostgresRepository implements QuotaRepository {
     @Override
     public List<EnrichedProductQuota> listProductQuotas(QuotaFilter filter) {
         return dslContext.select(
-                        PRODUCTS.ID,
+                        PRODUCT_TABLE.ID,
                         PRODUCT_QUOTAS.PRODUCT_ID,
                         RESOURCES.ID,
                         RESOURCES.NAME,
@@ -39,23 +39,37 @@ public class QuotaPostgresRepository implements QuotaRepository {
                         RESOURCES.TYPE,
                         RESOURCES.PROVIDER,
                         DSL.coalesce(PRODUCT_QUOTAS.LIMIT, 0).as("limit"),
-                        DSL.coalesce(PRODUCT_QUOTAS.ALLOCATION, 0).as("usage"),
+                        DSL.coalesce(PRODUCT_QUOTAS.USAGE, 0).as("usage"),
                         DSL.coalesce(PRODUCT_QUOTAS.FREE, 0).as("free")
                 )
-                .from(PRODUCTS)
+                .from(PRODUCT_TABLE)
                 .crossJoin(RESOURCES)
                 .leftJoin(PRODUCT_QUOTAS)
                 .on(RESOURCES.ID.eq(PRODUCT_QUOTAS.RESOURCE_ID)
-                        .and(PRODUCTS.ID.eq(PRODUCT_QUOTAS.PRODUCT_ID))
+                        .and(PRODUCT_TABLE.ID.eq(PRODUCT_QUOTAS.PRODUCT_ID))
                 )
                 .where(filter.buildCondition())
                 .fetch(r -> new EnrichedProductQuota(
-                        r.get(PRODUCTS.ID),
+                        r.get(PRODUCT_TABLE.ID),
                         resourceMapper.fromRecord(r),
                         r.get("limit", Long.class),
                         r.get("usage", Long.class),
                         r.get("free", Long.class)
                 ));
+    }
+
+    @Override
+    public void updateProductQuotas(List<ProductQuota> quotas) {
+        List<ProductQuotasRecord> records = quotas.stream().map(quotaMapper::productQuotaToProductQuotasRecord).toList();
+
+        dslContext.insertInto(PRODUCT_QUOTAS)
+                .set(records)
+                .onConflict(PRODUCT_QUOTAS.PRODUCT_ID, PRODUCT_QUOTAS.RESOURCE_ID)
+                .doUpdate()
+                .set(PRODUCT_QUOTAS.LIMIT, DSL.excluded(PRODUCT_QUOTAS.LIMIT))
+                .set(PRODUCT_QUOTAS.USAGE, DSL.excluded(PRODUCT_QUOTAS.USAGE))
+                .set(PRODUCT_QUOTAS.FREE, DSL.excluded(PRODUCT_QUOTAS.FREE))
+                .execute();
     }
 
     @Override

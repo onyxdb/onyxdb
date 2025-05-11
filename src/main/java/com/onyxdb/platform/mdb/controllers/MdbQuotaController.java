@@ -114,7 +114,8 @@ public class MdbQuotaController implements MdbQuotasApi {
         ClusterConfig clusterConfig = clusterMapper.mongoConfigDTOtoClusterConfig(rq.getConfig());
         List<EnrichedProductQuota> simulatedQuotas = quotaService.simulateMongoDbQuotasUsage(
                 rq.getProjectId(),
-                clusterConfig
+                clusterConfig,
+                null
         );
 
         var response = new SimulateMongoDBQuotasUsageResponseDTO(

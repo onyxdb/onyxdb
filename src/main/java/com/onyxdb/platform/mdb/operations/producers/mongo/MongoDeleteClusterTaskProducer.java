@@ -65,10 +65,16 @@ public class MongoDeleteClusterTaskProducer extends TaskProducer<MongoDeleteClus
                 List.of(deletePsmdbTask.id()),
                 payload
         );
+        var updateQuotaAfterClusterTask = ProducedTask.createWithPayload(
+                TaskType.MONGO_UPDATE_QUOTA_AFTER_CLUSTER_DELETION,
+                operationId,
+                List.of(checkPsmdbIsDeletedTask.id()),
+                payload
+        );
         var deleteSecretsTask = ProducedTask.createWithPayload(
                 TaskType.MONGO_DELETE_SECRETS,
                 operationId,
-                List.of(checkPsmdbIsDeletedTask.id()),
+                List.of(updateQuotaAfterClusterTask.id()),
                 payload
         );
         var markClusterDeletedTask = ProducedTask.createWithPayload(
@@ -91,6 +97,7 @@ public class MongoDeleteClusterTaskProducer extends TaskProducer<MongoDeleteClus
                 checkOnyxdbAgentIsDeletedTask,
                 deletePsmdbTask,
                 checkPsmdbIsDeletedTask,
+                updateQuotaAfterClusterTask,
                 deleteSecretsTask,
                 markClusterDeletedTask,
                 finalTask

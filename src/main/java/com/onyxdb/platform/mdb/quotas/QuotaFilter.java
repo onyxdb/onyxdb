@@ -9,7 +9,7 @@ import org.jooq.impl.DSL;
 
 import com.onyxdb.platform.mdb.resources.ResourceType;
 
-import static com.onyxdb.platform.generated.jooq.Tables.PRODUCTS;
+import static com.onyxdb.platform.generated.jooq.Tables.PRODUCT_TABLE;
 import static com.onyxdb.platform.generated.jooq.Tables.RESOURCES;
 
 public record QuotaFilter(
@@ -25,7 +25,7 @@ public record QuotaFilter(
     public Condition buildCondition() {
         Condition condition = DSL.trueCondition();
         if (productIds != null && !productIds.isEmpty()) {
-            condition = condition.and(PRODUCTS.ID.in(productIds));
+            condition = condition.and(PRODUCT_TABLE.ID.in(productIds));
         }
 
         if (resourceTypes != null && !resourceTypes.isEmpty()) {

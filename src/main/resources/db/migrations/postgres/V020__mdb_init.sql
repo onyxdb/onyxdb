@@ -249,23 +249,21 @@ VALUES ('a162cf17-0320-42be-b4e2-9b2e91070916',
         'ram',
         'mdb');
 
-CREATE TABLE public.products
-(
-    id   uuid    NOT NULL,
-    name varchar NOT NULL,
-    PRIMARY KEY (id)
-);
+-- CREATE TABLE public.products
+-- (
+--     id   uuid    NOT NULL,
+--     name varchar NOT NULL,
+--     PRIMARY KEY (id)
+-- );
 
 CREATE TABLE public.product_quotas
 (
     product_id  uuid   NOT NULL,
     resource_id uuid   NOT NULL,
     "limit"     bigint NOT NULL,
-    allocation  bigint NOT NULL,
+    usage       bigint NOT NULL,
     free        bigint NOT NULL,
     PRIMARY KEY (product_id, resource_id)
---     FOREIGN KEY (product_id) REFERENCES public.products (id),
---     FOREIGN KEY (resource_id) REFERENCES public.resources (id)
 );
 
 CREATE TABLE public.shedlock
