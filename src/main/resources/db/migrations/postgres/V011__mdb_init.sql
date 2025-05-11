@@ -249,13 +249,12 @@ VALUES ('a162cf17-0320-42be-b4e2-9b2e91070916',
         'ram',
         'mdb');
 
---  TODO delete
-CREATE TABLE public.products
-(
-    id   uuid    NOT NULL,
-    name varchar NOT NULL,
-    PRIMARY KEY (id)
-);
+-- CREATE TABLE public.products
+-- (
+--     id   uuid    NOT NULL,
+--     name varchar NOT NULL,
+--     PRIMARY KEY (id)
+-- );
 
 CREATE TABLE public.product_quotas
 (
