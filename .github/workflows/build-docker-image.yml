@@ -30,6 +30,16 @@ jobs:
           username: ${{secrets.DOCKER_LOGIN}}
           password: ${{secrets.DOCKER_PASSWORD}}
 
+      - uses: actions/setup-java@v4
+        with:
+          java-version: 21
+          distribution: corretto
+
+      - uses: gradle/actions/setup-gradle@v3
+
+      - name: Build with Gradle
+        run: ./gradlew clean build
+
       - name: Build Docker image
         run: docker build -t ${{env.DOCKER_REPOSITORY}} -f ./docker/onyxdb.dockerfile .
 
