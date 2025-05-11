@@ -33,6 +33,7 @@ dependencies {
 
 	implementation(libs.springBoot.starterWeb)
 	implementation("org.springframework.boot:spring-boot-starter-webflux:3.3.5")
+	implementation("org.springframework.boot:spring-boot-starter-actuator:3.3.5")
 	implementation(libs.springBoot.starterLog4j2)
 	implementation(libs.springBoot.starterValidation)
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf:3.3.5")
