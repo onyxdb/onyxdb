@@ -39,7 +39,6 @@ import com.onyxdb.platform.mdb.quotas.QuotaService;
 import com.onyxdb.platform.mdb.users.UserMapper;
 import com.onyxdb.platform.mdb.users.UserRepository;
 import com.onyxdb.platform.mdb.utils.ObjectMapperUtils;
-import com.onyxdb.platform.mdb.utils.OnyxdbConsts;
 
 /**
  * @author foxleren
@@ -77,8 +76,7 @@ public class ClusterService {
 
     public CreateClusterResult createCluster(CreateCluster createCluster) {
         Project project = projectService.getUndeletedProjectOrThrow(createCluster.projectId());
-        // TODO get namespace from project
-        String namespace = OnyxdbConsts.NAMESPACE;
+        String namespace = project.namespace();
 
         clusterConfigValidator.validate(createCluster.config());
         quotaService.applyQuotaByClusterConfig(project.id(), createCluster.config(), null);
@@ -132,6 +130,7 @@ public class ClusterService {
         var operation = Operation.scheduledWithPayload(
                 OperationType.MONGO_CREATE_CLUSTER,
                 cluster.id(),
+                createCluster.createdBy(),
                 ObjectMapperUtils.convertToString(objectMapper, operationPayload)
         );
 
@@ -163,6 +162,7 @@ public class ClusterService {
         var operation = Operation.scheduledWithPayload(
                 OperationType.MONGO_MODIFY_CLUSTER,
                 updateCluster.id(),
+                updateCluster.updatedBy(),
                 ObjectMapperUtils.convertToString(objectMapper, new MongoModifyClusterPayload(
                         cluster.id(),
                         updateCluster.config()
@@ -182,6 +182,7 @@ public class ClusterService {
         var operation = Operation.scheduledWithPayload(
                 OperationType.MONGO_DELETE_CLUSTER,
                 cluster.id(),
+                deletedBy,
                 ObjectMapperUtils.convertToString(objectMapper, new MongoDeleteClusterPayload(
                         clusterId,
                         deletedBy
@@ -192,12 +193,13 @@ public class ClusterService {
         return operation.id();
     }
 
-    public UUID restoreCluster(UUID clusterId, String backupName) {
+    public UUID restoreCluster(UUID clusterId, String backupName, UUID restoredBy) {
         Cluster cluster = getClusterOrThrow(clusterId);
 
         var operation = Operation.scheduledWithPayload(
                 OperationType.MONGO_RESTORE_CLUSTER,
                 cluster.id(),
+                restoredBy,
                 ObjectMapperUtils.convertToString(objectMapper, new MongoRestoreClusterPayload(
                         clusterId,
                         backupName

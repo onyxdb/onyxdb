@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.onyxdb.platform.mdb.utils.OnyxdbConsts;
 import com.onyxdb.platform.mdb.utils.TimeUtils;
 
 /**
@@ -26,25 +25,10 @@ public record Operation(
         return status.equalsStringEnum(OperationStatus.ERROR);
     }
 
-    public static Operation scheduled(
-            OperationType type,
-            UUID clusterId
-    ) {
-        return new Operation(
-                UUID.randomUUID(),
-                type,
-                OperationStatus.SCHEDULED,
-                TimeUtils.now(),
-                OnyxdbConsts.USER_ID,
-                TimeUtils.now(),
-                null,
-                clusterId
-        );
-    }
-
     public static Operation scheduledWithPayload(
             OperationType type,
             UUID clusterId,
+            UUID createdBy,
             String payload
     ) {
         return new Operation(
@@ -52,7 +36,7 @@ public record Operation(
                 type,
                 OperationStatus.SCHEDULED,
                 TimeUtils.now(),
-                OnyxdbConsts.USER_ID,
+                createdBy,
                 TimeUtils.now(),
                 payload,
                 clusterId

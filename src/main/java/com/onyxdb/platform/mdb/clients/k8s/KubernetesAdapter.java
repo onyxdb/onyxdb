@@ -7,8 +7,6 @@ import io.fabric8.kubernetes.client.KubernetesClient;
 import com.onyxdb.platform.mdb.clients.k8s.psmdb.PsmdbClient;
 import com.onyxdb.platform.mdb.utils.TemplateProvider;
 
-import static com.onyxdb.platform.mdb.clusters.ClusterMapper.DEFAULT_NAMESPACE;
-
 public class KubernetesAdapter {
     private final KubernetesClient kubernetesClient;
     private final TemplateProvider templateProvider;
@@ -25,12 +23,14 @@ public class KubernetesAdapter {
     }
 
     public void applyOnyxdbAgent(
+            String namespace,
             String project,
             UUID clusterId,
             String clusterName
     ) {
         String resource = templateProvider.buildOnyxdbAgent(
                 getOnyxdbAgentName(clusterName, project),
+                namespace,
                 onyxdbBaseUrl,
                 clusterId,
                 PsmdbClient.getSecretName(project, clusterName),
@@ -38,17 +38,19 @@ public class KubernetesAdapter {
         );
 
         kubernetesClient.resource(resource)
-                .inNamespace(DEFAULT_NAMESPACE)
+                .inNamespace(namespace)
                 .serverSideApply();
     }
 
     public boolean isOnyxdbAgentReady(
+            String namespace,
             String project,
             UUID clusterId,
             String clusterName
     ) {
         String resource = templateProvider.buildOnyxdbAgent(
                 getOnyxdbAgentName(clusterName, project),
+                namespace,
                 onyxdbBaseUrl,
                 clusterId,
                 PsmdbClient.getSecretName(project, clusterName),
@@ -56,17 +58,19 @@ public class KubernetesAdapter {
         );
 
         return kubernetesClient.resource(resource)
-                .inNamespace(DEFAULT_NAMESPACE)
+                .inNamespace(namespace)
                 .isReady();
     }
 
     public void deleteOnyxdbAgent(
+            String namespace,
             String project,
             UUID clusterId,
             String clusterName
     ) {
         String resource = templateProvider.buildOnyxdbAgent(
                 getOnyxdbAgentName(clusterName, project),
+                namespace,
                 onyxdbBaseUrl,
                 clusterId,
                 PsmdbClient.getSecretName(project, clusterName),
@@ -74,17 +78,19 @@ public class KubernetesAdapter {
         );
 
         kubernetesClient.resource(resource)
-                .inNamespace(DEFAULT_NAMESPACE)
+                .inNamespace(namespace)
                 .delete();
     }
 
     public boolean onyxdbAgentExists(
+            String namespace,
             String project,
             UUID clusterId,
             String clusterName
     ) {
         String resource = templateProvider.buildOnyxdbAgent(
                 getOnyxdbAgentName(clusterName, project),
+                namespace,
                 onyxdbBaseUrl,
                 clusterId,
                 PsmdbClient.getSecretName(project, clusterName),
@@ -92,7 +98,7 @@ public class KubernetesAdapter {
         );
 
         return kubernetesClient.resource(resource)
-                .inNamespace(DEFAULT_NAMESPACE)
+                .inNamespace(namespace)
                 .get() != null;
     }
 

@@ -10,8 +10,6 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import com.onyxdb.platform.mdb.context.OnyxdbInitializer;
 
-import static com.onyxdb.platform.mdb.clusters.ClusterMapper.DEFAULT_NAMESPACE;
-
 public class TemplateProvider {
     private final SpringTemplateEngine templateEngine;
 
@@ -82,6 +80,7 @@ public class TemplateProvider {
 
     public String buildOnyxdbAgent(
             String metadataName,
+            String namespace,
             String onyxdbBaseUrl,
             UUID clusterId,
             String secretsUsersName,
@@ -95,7 +94,7 @@ public class TemplateProvider {
                 Map.entry("ONYXDB_ROBOT_SECRET", OnyxdbInitializer.ONYXDB_ROBOT_SECRET),
                 Map.entry("SECRETS_USERS_NAME", secretsUsersName),
                 Map.entry("REPLSET_SERVICE", rsServiceName),
-                Map.entry("NAMESPACE", DEFAULT_NAMESPACE)
+                Map.entry("NAMESPACE", namespace)
         ));
 
         return templateEngine.process("onyxdb-agent.yaml.txt", context);

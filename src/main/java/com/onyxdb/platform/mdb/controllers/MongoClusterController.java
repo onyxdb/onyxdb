@@ -113,7 +113,9 @@ public class MongoClusterController implements ManagedMongoDbClustersApi {
     // TODO move to backups controller
     @Override
     public ResponseEntity<ScheduledOperationDTO> restoreCluster(UUID clusterId, String backupName) {
-        UUID operationId = clusterService.restoreCluster(clusterId, backupName);
+        Account account = SecurityContextUtils.getCurrentAccount();
+
+        UUID operationId = clusterService.restoreCluster(clusterId, backupName, account.id());
         return ResponseEntity.ok(new ScheduledOperationDTO(operationId));
     }
 }

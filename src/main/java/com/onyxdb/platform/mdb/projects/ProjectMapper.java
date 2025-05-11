@@ -62,10 +62,7 @@ public class ProjectMapper {
     public static UpdateProject updateProjectRequestDTOtoUpdateProject(UUID productId, UpdateProjectRequestDTO rq) {
         return new UpdateProject(
                 productId,
-                rq.getName(),
-                rq.getDescription(),
-                rq.getProductId(),
-                rq.getNamespace()
+                rq.getDescription()
         );
     }
 

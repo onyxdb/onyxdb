@@ -11,21 +11,23 @@ import com.onyxdb.platform.mdb.operations.models.Task;
 import com.onyxdb.platform.mdb.operations.models.TaskResult;
 import com.onyxdb.platform.mdb.operations.models.TaskType;
 import com.onyxdb.platform.mdb.operations.models.payload.ClusterPayload;
-
-import static com.onyxdb.platform.mdb.clusters.ClusterMapper.DEFAULT_NAMESPACE;
-import static com.onyxdb.platform.mdb.clusters.ClusterMapper.DEFAULT_PROJECT;
+import com.onyxdb.platform.mdb.projects.Project;
+import com.onyxdb.platform.mdb.projects.ProjectRepository;
 
 @Component
 public class MongoDeleteSecretsConsumer extends ClusterTaskConsumer {
     private final PsmdbClient psmdbClient;
+    private final ProjectRepository projectRepository;
 
     public MongoDeleteSecretsConsumer(
             ObjectMapper objectMapper,
             ClusterService clusterService,
-            PsmdbClient psmdbClient
+            PsmdbClient psmdbClient,
+            ProjectRepository projectRepository
     ) {
         super(objectMapper, clusterService);
         this.psmdbClient = psmdbClient;
+        this.projectRepository = projectRepository;
     }
 
     @Override
@@ -36,8 +38,9 @@ public class MongoDeleteSecretsConsumer extends ClusterTaskConsumer {
     @Override
     protected TaskResult internalProcess(Task task, ClusterPayload payload) {
         Cluster cluster = clusterService.getClusterOrThrow(payload.clusterId());
+        Project project = projectRepository.getProjectOrThrow(cluster.projectId());
 
-        psmdbClient.deleteAllSecrets(DEFAULT_NAMESPACE, DEFAULT_PROJECT, cluster.name());
+        psmdbClient.deleteAllSecrets(cluster.namespace(), project.name(), cluster.name());
 
         return TaskResult.success();
     }

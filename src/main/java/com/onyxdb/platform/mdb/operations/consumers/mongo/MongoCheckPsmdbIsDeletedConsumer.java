@@ -12,24 +12,26 @@ import com.onyxdb.platform.mdb.operations.models.Task;
 import com.onyxdb.platform.mdb.operations.models.TaskResult;
 import com.onyxdb.platform.mdb.operations.models.TaskType;
 import com.onyxdb.platform.mdb.operations.models.payload.ClusterPayload;
-
-import static com.onyxdb.platform.mdb.clusters.ClusterMapper.DEFAULT_NAMESPACE;
-import static com.onyxdb.platform.mdb.clusters.ClusterMapper.DEFAULT_PROJECT;
+import com.onyxdb.platform.mdb.projects.Project;
+import com.onyxdb.platform.mdb.projects.ProjectRepository;
 
 @Component
 public class MongoCheckPsmdbIsDeletedConsumer extends ClusterTaskConsumer {
     private final PsmdbClient psmdbClient;
     private final ClusterRepository clusterRepository;
+    private final ProjectRepository projectRepository;
 
     public MongoCheckPsmdbIsDeletedConsumer(
             ObjectMapper objectMapper,
             ClusterService clusterService,
             PsmdbClient psmdbClient,
-            ClusterRepository clusterRepository
+            ClusterRepository clusterRepository,
+            ProjectRepository projectRepository
     ) {
         super(objectMapper, clusterService);
         this.psmdbClient = psmdbClient;
         this.clusterRepository = clusterRepository;
+        this.projectRepository = projectRepository;
     }
 
     @Override
@@ -40,8 +42,9 @@ public class MongoCheckPsmdbIsDeletedConsumer extends ClusterTaskConsumer {
     @Override
     protected TaskResult internalProcess(Task task, ClusterPayload payload) {
         Cluster cluster = clusterService.getClusterOrThrow(payload.clusterId());
+        Project project = projectRepository.getProjectOrThrow(cluster.projectId());
 
-        boolean psmdbExists = psmdbClient.psmdbExists(DEFAULT_NAMESPACE, DEFAULT_PROJECT, cluster.name());
+        boolean psmdbExists = psmdbClient.psmdbExists(cluster.namespace(), project.name(), cluster.name());
         if (psmdbExists) {
             return TaskResult.error();
         }

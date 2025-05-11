@@ -35,6 +35,7 @@ public class DatabaseService {
         var operation = Operation.scheduledWithPayload(
                 OperationType.MONGO_CREATE_DATABASE,
                 database.clusterId(),
+                createDatabase.createdBy(),
                 ObjectMapperUtils.convertToString(objectMapper, new MongoCreateDatabasePayload(
                         database.clusterId(),
                         database.name()
@@ -55,6 +56,7 @@ public class DatabaseService {
         var operation = Operation.scheduledWithPayload(
                 OperationType.MONGO_DELETE_DATABASE,
                 clusterId,
+                deletedBy,
                 ObjectMapperUtils.convertToString(objectMapper, new MongoDeleteDatabasePayload(
                         clusterId,
                         database.name(),
