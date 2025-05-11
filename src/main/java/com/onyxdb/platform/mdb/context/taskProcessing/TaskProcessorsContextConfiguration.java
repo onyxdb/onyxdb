@@ -50,6 +50,7 @@ import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoMarkClusterReadyT
 import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoMarkClusterUpdatingTaskConsumer;
 import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoRestoreClusterTaskConsumer;
 import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoUpdateHostsTaskConsumer;
+import com.onyxdb.platform.mdb.operations.consumers.mongo.MongoUpdateQuotaAfterClusterDeletionTaskConsumer;
 import com.onyxdb.platform.mdb.operations.models.TaskType;
 
 @Configuration
@@ -237,7 +238,8 @@ public class TaskProcessorsContextConfiguration {
             MongoDeleteBackupTaskConsumer mongoDeleteBackupTaskConsumer,
             MongoCheckBackupIsDeletedTaskConsumer mongoCheckBackupIsDeletedTaskConsumer,
             MongoRestoreClusterTaskConsumer mongoRestoreClusterTaskConsumer,
-            MongoCheckClusterIsRestoredTaskConsumer mongoCheckClusterIsRestoredTaskConsumer
+            MongoCheckClusterIsRestoredTaskConsumer mongoCheckClusterIsRestoredTaskConsumer,
+            MongoUpdateQuotaAfterClusterDeletionTaskConsumer mongoUpdateQuotaAfterClusterDeletionTaskConsumer
     ) {
         Map<TaskType, TaskConsumer<?>> taskTypeToTaskProcessors = Map.ofEntries(
                 Map.entry(
@@ -311,6 +313,10 @@ public class TaskProcessorsContextConfiguration {
                 Map.entry(
                         TaskType.MONGO_CHECK_PSMDB_IS_DELETED,
                         mongoCheckPsmdbIsDeletedProcessor
+                ),
+                Map.entry(
+                        TaskType.MONGO_UPDATE_QUOTA_AFTER_CLUSTER_DELETION,
+                        mongoUpdateQuotaAfterClusterDeletionTaskConsumer
                 ),
                 Map.entry(
                         TaskType.MONGO_CREATE_BACKUP,

@@ -31,6 +31,16 @@ public record EnrichedProductQuota(
         );
     }
 
+    public EnrichedProductQuota subtractUsage(long usage) {
+        return new EnrichedProductQuota(
+                productId,
+                resource,
+                this.limit,
+                this.usage - usage,
+                this.free + usage
+        );
+    }
+
     public EnrichedProductQuota addUsage(long usage) {
         return new EnrichedProductQuota(
                 productId,

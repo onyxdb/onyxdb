@@ -81,7 +81,7 @@ public class ClusterService {
         String namespace = OnyxdbConsts.NAMESPACE;
 
         clusterConfigValidator.validate(createCluster.config());
-        quotaService.validateQuotaByClusterConfig(project.id(), createCluster.config());
+        quotaService.applyQuotaByClusterConfig(project.id(), createCluster.config(), null);
 
         Cluster cluster = clusterMapper.createClusterToCluster(createCluster, namespace);
 
@@ -158,7 +158,7 @@ public class ClusterService {
                 .overrideWithUpdateCluster(updateCluster)
                 .build();
 
-        quotaService.validateQuotaByClusterConfig(cluster.projectId(), updatedCluster.config());
+        quotaService.applyQuotaByClusterConfig(cluster.projectId(), updatedCluster.config(), cluster.config());
 
         var operation = Operation.scheduledWithPayload(
                 OperationType.MONGO_MODIFY_CLUSTER,

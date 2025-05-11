@@ -6,6 +6,8 @@ import java.util.UUID;
 public interface QuotaRepository {
     List<EnrichedProductQuota> listProductQuotas(QuotaFilter filter);
 
+    void updateProductQuotas(List<ProductQuota> quotas);
+
     void addProductQuotas(List<ProductQuotaToUpload> quotas);
 
     void subtractProductQuotas(List<ProductQuotaToUpload> quotas);

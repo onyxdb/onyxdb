@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.jetbrains.annotations.Nullable;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import com.onyxdb.platform.mdb.clusters.models.ClusterConfig;
@@ -151,8 +152,20 @@ public class QuotaService {
         );
     }
 
-    public void validateQuotaByClusterConfig(UUID projectId, ClusterConfig clusterConfig) {
-        List<EnrichedProductQuota> quotas = simulateMongoDbQuotasUsage(projectId, clusterConfig);
+    public void applyQuotaByClusterConfig(
+            UUID projectId,
+            @Nullable
+            ClusterConfig currentClusterConfig,
+            @Nullable
+            ClusterConfig previousClusterConfig
+    ) {
+        List<EnrichedProductQuota> quotas = simulateMongoDbQuotasUsage(
+                projectId,
+                currentClusterConfig,
+                previousClusterConfig
+        );
+
+        // if quota was super negative, then we can't update quotas resizing to smaller or deleting cluster
         quotas.forEach(q -> {
             if (q.free() < 0) {
                 throw new BadRequestException(String.format(
@@ -164,13 +177,18 @@ public class QuotaService {
                 ));
             }
         });
+
+        List<ProductQuota> productQuotas = quotas.stream().map(quotaMapper::enrichedProductQuotaToProductQuota).toList();
+        quotaRepository.updateProductQuotas(productQuotas);
     }
 
     public List<EnrichedProductQuota> simulateMongoDbQuotasUsage(
             UUID projectId,
-            ClusterConfig clusterConfig
+            @Nullable
+            ClusterConfig currentClusterConfig,
+            @Nullable
+            ClusterConfig previousClusterConfig
     ) {
-        ResourcePreset preset = resourcePresetService.getOrThrow(clusterConfig.resources().presetId());
         Resource cpuResource = resourceService.getOrThrow(
                 ResourceFilter.builder()
                         .withType(ResourceType.VCPU)
@@ -205,9 +223,25 @@ public class QuotaService {
                 EnrichedProductQuota.empty(productId, ramResource)
         );
 
+        if (currentClusterConfig != null) {
+            ResourcePreset currentPreset = resourcePresetService.getOrThrow(currentClusterConfig.resources().presetId());
+            vcpuQuota = vcpuQuota.addUsage(Double.valueOf(Math.ceil(currentPreset.vcpu())).longValue() * currentClusterConfig.replicas());
+            ramQuota = ramQuota.addUsage(Double.valueOf(Math.ceil(currentPreset.ram())).longValue() * currentClusterConfig.replicas());
+        }
+
+        if (previousClusterConfig != null) {
+            ResourcePreset previousPreset = resourcePresetService.getOrThrow(previousClusterConfig.resources().presetId());
+            vcpuQuota = vcpuQuota.subtractUsage(
+                    Double.valueOf(Math.ceil(previousPreset.vcpu())).longValue() * previousClusterConfig.replicas()
+            );
+            ramQuota = ramQuota.subtractUsage(
+                    Double.valueOf(Math.ceil(previousPreset.ram())).longValue() * previousClusterConfig.replicas()
+            );
+        }
+
         return List.of(
-                vcpuQuota.addUsage(Double.valueOf(Math.ceil(preset.vcpu())).longValue() * clusterConfig.replicas()),
-                ramQuota.addUsage(Double.valueOf(Math.ceil(preset.ram())).longValue() * clusterConfig.replicas())
+                vcpuQuota,
+                ramQuota
         );
     }
 }
