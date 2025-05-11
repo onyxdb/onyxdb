@@ -1,20 +1,26 @@
 package com.onyxdb.platform.idm.services;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.onyxdb.platform.idm.models.exceptions.ResourceNotFoundException;
 import com.onyxdb.platform.idm.models.Account;
+import com.onyxdb.platform.idm.models.AccountRolesAll;
 import com.onyxdb.platform.idm.models.BusinessRole;
+import com.onyxdb.platform.idm.models.BusinessRoleWithRoles;
 import com.onyxdb.platform.idm.models.OrganizationUnit;
 import com.onyxdb.platform.idm.models.PaginatedResult;
 import com.onyxdb.platform.idm.models.Permission;
@@ -22,9 +28,14 @@ import com.onyxdb.platform.idm.models.Role;
 import com.onyxdb.platform.idm.models.RoleWithPermissions;
 import com.onyxdb.platform.idm.models.clickhouse.AccountBusinessRolesHistory;
 import com.onyxdb.platform.idm.models.clickhouse.AccountRolesHistory;
+import com.onyxdb.platform.idm.models.exceptions.ResourceNotFoundException;
+import com.onyxdb.platform.idm.models.redis.CalculatedAccessAll;
+import com.onyxdb.platform.idm.models.redis.CalculatedAccessBits;
 import com.onyxdb.platform.idm.repositories.AccountRepository;
 import com.onyxdb.platform.idm.repositories.BusinessRoleRepository;
 import com.onyxdb.platform.idm.repositories.ClickHouseRepository;
+import com.onyxdb.platform.idm.repositories.RedisAccessAllRepository;
+import com.onyxdb.platform.idm.repositories.RedisAccessBitsRepository;
 
 /**
  * @author ArtemFed
@@ -32,13 +43,16 @@ import com.onyxdb.platform.idm.repositories.ClickHouseRepository;
 @Service
 @RequiredArgsConstructor
 public class AccountService {
-//    TODO: Добавить смену пароля
-
+    //    TODO: Добавить крутую смену пароля
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private static final Logger logger = LoggerFactory.getLogger(AccountService.class);
+
     private final AccountRepository accountRepository;
     private final BusinessRoleRepository businessRoleRepository;
     private final RoleService roleService;
     private final ClickHouseRepository clickHouseRepository;
+    private final RedisAccessAllRepository redisAccessAllRepository;
+    private final RedisAccessBitsRepository redisAccessBitsRepository;
 
     public Account findById(UUID id) {
         return accountRepository
@@ -111,40 +125,106 @@ public class AccountService {
         return accountRepository.getAccountRoles(accountId);
     }
 
-    public String getPermissionBit(Role role, Permission permission) {
-        String prefix = "";
-        if (permission.resourceType() != null) {
-            prefix += permission.resourceType() + "-";
+    public AccountRolesAll getAccountAllAccess(UUID accountId) {
+        Optional<CalculatedAccessAll> cachedResult = redisAccessAllRepository.getByAccount(accountId);
+        if (cachedResult.isPresent()) {
+            if (cachedResult.get().expireDate().isAfter(LocalDateTime.now())) {
+                logger.info("Read cached access for {}", accountId);
+                return cachedResult.get().data();
+            }
+            redisAccessAllRepository.deleteData(accountId);
         }
 
-        if (role.productId() != null) {
-            prefix += "product-" + role.productId();
-        } else if (role.orgUnitId() != null) {
-            prefix += "orgunit-" + role.orgUnitId();
-        } else {
-            prefix += "global";
+        List<Role> roles = accountRepository.getAccountRoles(accountId);
+        List<RoleWithPermissions> rolesPermissions = new ArrayList<>();
+        for (Role role : roles) {
+            RoleWithPermissions rolePermission = roleService.getPermissionsByRoleId(role.id());
+            rolesPermissions.add(rolePermission);
         }
-        return (prefix + "-" + permission.actionType()).toLowerCase();
+
+        List<BusinessRole> brs = accountRepository.getAccountBusinessRoles(accountId);
+        Set<BusinessRoleWithRoles> allBrs = new HashSet<>();
+        for (BusinessRole br : brs) {
+            var brRoles = businessRoleRepository.getRoles(br.id());
+            List<RoleWithPermissions> brRolesPermissions = new ArrayList<>();
+            for (Role role : brRoles) {
+                RoleWithPermissions rolePermission = roleService.getPermissionsByRoleId(role.id());
+                brRolesPermissions.add(rolePermission);
+            }
+            allBrs.add(new BusinessRoleWithRoles(br, brRolesPermissions));
+
+            List<BusinessRole> parentBrsRoles = businessRoleRepository.findAllParents(br.id());
+            for (BusinessRole br2 : parentBrsRoles) {
+                var br2Roles = businessRoleRepository.getRoles(br2.id());
+                List<RoleWithPermissions> br2RolesPermissions = new ArrayList<>();
+                for (Role role : br2Roles) {
+                    RoleWithPermissions rolePermission = roleService.getPermissionsByRoleId(role.id());
+                    br2RolesPermissions.add(rolePermission);
+                }
+                allBrs.add(new BusinessRoleWithRoles(br2, br2RolesPermissions));
+            }
+        }
+
+        var result = new AccountRolesAll(rolesPermissions, allBrs.stream().toList());
+        redisAccessAllRepository.saveData(new CalculatedAccessAll(accountId, result, LocalDateTime.now().plusMinutes(10)));
+        return result;
     }
 
-    public Map<String, Map<String, Object>> getAllPermissionBitsResponse(UUID accountId) {
-        Map<String, Optional<Map<String, Object>>> optionalData = getAllPermissionBits(accountId);
+
+    public String getPermissionBit(Role role, Permission permission) {
+        String prefix = "";
+//        if (permission.resourceType() != null) {
+//            prefix += permission.resourceType() + "-";
+//        }
+
+        if (role.entity() == null || role.entity().isEmpty()) {
+            prefix += "global-";
+        } else {
+            prefix += role.entity() + "-";
+        }
+
+        prefix += permission.actionType();
+
+        if (role.productId() != null) {
+            prefix += "-" + role.productId();
+        } else if (role.orgUnitId() != null) {
+            prefix += "-" + role.orgUnitId();
+        }
+        return prefix.toLowerCase();
+    }
+
+    public Map<String, Map<String, Object>> filterPermissionBits(Map<String, Optional<Map<String, Object>>> permissions) {
         Map<String, Map<String, Object>> data = new HashMap<>();
-        for (Map.Entry<String, Optional<Map<String, Object>>> entry : optionalData.entrySet()) {
+        for (Map.Entry<String, Optional<Map<String, Object>>> entry : permissions.entrySet()) {
             data.put(entry.getKey(), entry.getValue().orElse(null));
         }
         return data;
     }
 
+    public Map<String, Map<String, Object>> getAllPermissionBitsResponse(UUID accountId) {
+        Map<String, Optional<Map<String, Object>>> optionalData = getAllPermissionBits(accountId);
+        return filterPermissionBits(optionalData);
+    }
+
     public Map<String, Optional<Map<String, Object>>> getAllPermissionBits(UUID accountId) {
+        Optional<CalculatedAccessBits> cachedResult = redisAccessBitsRepository.getByAccount(accountId);
+        if (cachedResult.isPresent()) {
+            if (cachedResult.get().expireDate().isAfter(LocalDateTime.now())) {
+                logger.info("Read cached bits for {}", accountId);
+                return cachedResult.get().bits();
+            }
+            redisAccessBitsRepository.deleteData(accountId);
+        }
+
         List<RoleWithPermissions> roles = getAllPermissions(accountId);
         Map<String, Optional<Map<String, Object>>> bits = new HashMap<>();
         for (RoleWithPermissions roleWP : roles) {
             var role = roleWP.role();
             for (Permission permission : roleWP.permissions()) {
-                bits.put(getPermissionBit(role, permission), Optional.ofNullable(permission.data().isEmpty() ? null : permission.data()));
+                bits.put(getPermissionBit(role, permission), Optional.ofNullable(permission.data() == null || permission.data().isEmpty() ? null : permission.data()));
             }
         }
+        redisAccessBitsRepository.saveData(new CalculatedAccessBits(accountId, bits, LocalDateTime.now().plusMinutes(10)));
         return bits;
     }
 
@@ -153,8 +233,12 @@ public class AccountService {
         List<BusinessRole> brs = accountRepository.getAccountBusinessRoles(accountId);
         List<Role> allRoles = new ArrayList<>(roles);
         for (BusinessRole br : brs) {
-            List<Role> brsRoles = businessRoleRepository.getRoles(br.id());
-            allRoles.addAll(brsRoles);
+            allRoles.addAll(businessRoleRepository.getRoles(br.id()));
+
+            List<BusinessRole> parentBrsRoles = businessRoleRepository.findAllParents(br.id());
+            for (BusinessRole br2 : parentBrsRoles) {
+                allRoles.addAll(businessRoleRepository.getRoles(br2.id()));
+            }
         }
         List<RoleWithPermissions> allPermissions = new ArrayList<>();
         for (Role role : allRoles) {

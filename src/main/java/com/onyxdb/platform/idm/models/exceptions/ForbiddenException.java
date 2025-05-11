@@ -5,8 +5,8 @@ import com.onyxdb.platform.mdb.exceptions.MdbException;
 /**
  * @author ArtemFed
  */
-public class UnauthorizedException extends MdbException {
-    public UnauthorizedException(String message) {
+public class ForbiddenException extends MdbException {
+    public ForbiddenException(String message) {
         super(message);
     }
 }

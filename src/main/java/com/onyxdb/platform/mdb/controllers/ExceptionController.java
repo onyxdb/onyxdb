@@ -5,10 +5,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.onyxdb.platform.generated.openapi.models.AccessDeniedResponse;
 import com.onyxdb.platform.generated.openapi.models.BadRequestResponse;
 import com.onyxdb.platform.generated.openapi.models.InternalServerErrorResponse;
 import com.onyxdb.platform.generated.openapi.models.NotFoundResponse;
 import com.onyxdb.platform.generated.openapi.models.UnauthorizedResponse;
+import com.onyxdb.platform.idm.models.exceptions.ForbiddenException;
 import com.onyxdb.platform.idm.models.exceptions.ResourceNotFoundException;
 import com.onyxdb.platform.idm.models.exceptions.UnauthorizedException;
 import com.onyxdb.platform.mdb.exceptions.BadRequestException;
@@ -50,6 +52,13 @@ public class ExceptionController {
         NotFoundResponse notFoundResponse = new NotFoundResponse();
         notFoundResponse.setMessage(e.getMessage());
         return new ResponseEntity<>(notFoundResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = ForbiddenException.class)
+    public ResponseEntity<AccessDeniedResponse> handleForbiddenException(ForbiddenException e) {
+        AccessDeniedResponse response = new AccessDeniedResponse();
+        response.setMessage(e.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(value = UnauthorizedException.class)

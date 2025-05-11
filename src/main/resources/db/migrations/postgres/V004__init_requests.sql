@@ -7,8 +7,5 @@ CREATE TABLE role_request_table (
     owner_id UUID NOT NULL,
     status VARCHAR(20) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    resolved_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (role_id) REFERENCES role_table(id),
-    FOREIGN KEY (account_id) REFERENCES account_table(id),
-    FOREIGN KEY (owner_id) REFERENCES account_table(id)
+    resolved_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

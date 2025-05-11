@@ -9,8 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.JSONB;
-import org.jooq.Record;
-import org.jooq.Result;
 import org.springframework.stereotype.Repository;
 
 import com.onyxdb.platform.generated.jooq.Tables;
@@ -139,6 +137,9 @@ public class RoleRequestPostgresRepository implements RoleRequestRepository {
                             record.get("account.first_name", String.class),
                             record.get("account.last_name", String.class),
                             record.get("account.data", JSONB.class),
+                            record.get("account.is_deleted", Boolean.class),
+                            record.get("account.deleted_at", LocalDateTime.class),
+                            record.get("account.deleted_by", UUID.class),
                             record.get("account.created_at", LocalDateTime.class),
                             record.get("account.updated_at", LocalDateTime.class)
                     );
@@ -151,6 +152,9 @@ public class RoleRequestPostgresRepository implements RoleRequestRepository {
                             record.get("owner.first_name", String.class),
                             record.get("owner.last_name", String.class),
                             record.get("owner.data", JSONB.class),
+                            record.get("owner.is_deleted", Boolean.class),
+                            record.get("owner.deleted_at", LocalDateTime.class),
+                            record.get("owner.deleted_by", UUID.class),
                             record.get("owner.created_at", LocalDateTime.class),
                             record.get("owner.updated_at", LocalDateTime.class)
                     );
