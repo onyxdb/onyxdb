@@ -1,8 +1,0 @@
-/data/db/mongod.log {
-    rotate 36500
-	compress
-	daily
-	postrotate
-		systemctl kill -s USR1 mongod
-	endscript
-}
