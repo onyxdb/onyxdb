@@ -1,7 +1,6 @@
-package com.onyxdb.platform.idm;
+package com.onyxdb.platform.idm.common;
 
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -18,7 +17,6 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.SimpleEvaluationContext;
 import org.springframework.stereotype.Component;
 
-import com.onyxdb.platform.idm.common.PermissionCheck;
 import com.onyxdb.platform.idm.common.jwt.SecurityContextUtils;
 import com.onyxdb.platform.idm.models.exceptions.ForbiddenException;
 
@@ -42,7 +40,7 @@ public class PermissionCheckAspect {
         UUID resourceId = parseResourceId(joinPoint, resourceIdExpr);
 
         // Генерация ключей для проверки
-        List<String> permissionKeys = generatePermissionKeys(entity, action, resourceId);
+        List<String> permissionKeys = PermissionCheckUtils.generatePermissionKeys(entity, action, resourceId);
 
         // Получение текущих разрешений
         Map<String, Optional<Map<String, Object>>> permissions = SecurityContextUtils.getCurrentPermissions();
@@ -91,21 +89,5 @@ public class PermissionCheckAspect {
         throw new IllegalArgumentException("ResourceId must be UUID or String");
     }
 
-    private List<String> generatePermissionKeys(String entity, String action, UUID resourceId) {
-        List<String> keys = new ArrayList<>();
-
-        if (resourceId != null) {
-            keys.add(String.format("%s-%s-%s", entity, action, resourceId));
-            keys.add(String.format("%s-%s-any", entity, action));
-        }
-
-        keys.addAll(List.of(
-                String.format("%s-%s", entity, action),
-                String.format("%s-any", entity),
-                String.format("global-%s", action),
-                "global-any"
-        ));
-
-        return keys;
-    }
 }
+

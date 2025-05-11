@@ -177,10 +177,10 @@ public class AccountService {
 //            prefix += permission.resourceType() + "-";
 //        }
 
-        if (role.entity() != null) {
-            prefix += role.entity() + "-";
-        } else {
+        if (role.entity() == null || role.entity().isEmpty()) {
             prefix += "global-";
+        } else {
+            prefix += role.entity() + "-";
         }
 
         prefix += permission.actionType();

@@ -47,7 +47,7 @@ public record Account(
 
     public static Account fromPostDTO(AccountPostDTO accountDTO) {
         return new Account(
-                null,
+                accountDTO.getId(),
                 accountDTO.getUsername(),
                 accountDTO.getPassword(),
                 accountDTO.getEmail(),

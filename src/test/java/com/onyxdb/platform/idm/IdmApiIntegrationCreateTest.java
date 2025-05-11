@@ -275,7 +275,7 @@ public class IdmApiIntegrationCreateTest {
         // 8. Создаем роли
 
         // Глобальные роли
-        var  domainComponentAdminCreate = TestDataFactory.createRoleDTO("ADMIN", "Domain Component Admin", "Domain Component Admin", "Admin role for Domain Component", false, "domain-comp", null, null);
+        var  domainComponentAdminCreate = TestDataFactory.createRoleDTO("ADMIN", "Domain Component Admin", "Domain Component Admin", "Admin role for Domain Component", false, "domain-component", null, null);
         var  businessRoleAdminCreate = TestDataFactory.createRoleDTO("ADMIN", "Business Role Admin", "Business Role Admin", "Admin role for Business Role", false, "business-role", null, null);
         var  roleAdminCreate = TestDataFactory.createRoleDTO("ADMIN", "Role Admin", "Role Admin", "Admin role for Role", false, "role", null, null);
         var  permissionAdminCreate = TestDataFactory.createRoleDTO("ADMIN", "Permission Admin", "Permission Admin", "Admin role for Permission", false, "permission", null, null);

@@ -38,7 +38,7 @@ public class ProductsController implements ProductsApi {
     }
 
     @Override
-    @PermissionCheck(entity = "product", action = "delete", resourceId = "#productId")
+    @PermissionCheck(entity = "product", action = "delete")
     public ResponseEntity<Void> deleteProduct(UUID productId) {
         productService.delete(productId);
         return ResponseEntity.noContent().build();

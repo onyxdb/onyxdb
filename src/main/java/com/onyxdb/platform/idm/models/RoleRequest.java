@@ -33,14 +33,14 @@ public record RoleRequest(
         );
     }
 
-    public static RoleRequest fromPostDTO(RoleRequestPostDTO RoleRequestDTO) {
+    public static RoleRequest fromPostDTO(RoleRequestPostDTO roleRequestDTO) {
         return new RoleRequest(
-                null,
-                RoleRequestDTO.getRoleId(),
-                RoleRequestDTO.getAccountId(),
-                RoleRequestDTO.getOwnerId(),
-                RoleRequestDTO.getReason(),
-                RoleRequestDTO.getStatus().toString(),
+                roleRequestDTO.getId(),
+                roleRequestDTO.getRoleId(),
+                roleRequestDTO.getAccountId(),
+                roleRequestDTO.getOwnerId(),
+                roleRequestDTO.getReason(),
+                roleRequestDTO.getStatus().toString(),
                 null,
                 null
         );
