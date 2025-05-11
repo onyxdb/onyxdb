@@ -32074,6 +32074,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: vm-operator
+  namespace: onyxdb
 ---
 apiVersion: v1
 kind: Service
