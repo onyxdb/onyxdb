@@ -59,7 +59,6 @@ import com.onyxdb.platform.mdb.resourcePresets.ResourcePresetRepository;
 import com.onyxdb.platform.mdb.users.UserMapper;
 import com.onyxdb.platform.mdb.users.UserRepository;
 import com.onyxdb.platform.mdb.utils.ObjectMapperUtils;
-import com.onyxdb.platform.mdb.utils.OnyxdbConsts;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
@@ -100,7 +99,7 @@ public class ManagedMongoDbControllerTests extends BaseTest {
         try {
             Project project = TestUtils.SANDBOX_PROJECT;
             ResourcePreset resourcePreset = TestUtils.RESOURCE_PRESET;
-            String namespace = OnyxdbConsts.NAMESPACE;
+            String namespace = TestUtils.DEFAULT_NAMESPACE;
             UUID createdBy = TestUtils.ADMIN_ID;
             List<MongoRole> userRoles = List.of(MongoRole.READ_WRITE);
 
@@ -238,6 +237,7 @@ public class ManagedMongoDbControllerTests extends BaseTest {
             var expectedOperation = Operation.scheduledWithPayload(
                     OperationType.MONGO_CREATE_CLUSTER,
                     createdClusterId,
+                    createdBy,
                     ObjectMapperUtils.convertToString(objectMapper, operationPayload)
             );
 
@@ -283,7 +283,7 @@ public class ManagedMongoDbControllerTests extends BaseTest {
     public void whenCreateClusterWithDuplicateName_then400() {
         Project project = TestUtils.SANDBOX_PROJECT;
         ResourcePreset resourcePreset = TestUtils.RESOURCE_PRESET;
-        String namespace = OnyxdbConsts.NAMESPACE;
+        String namespace = TestUtils.DEFAULT_NAMESPACE;
 
         var rq = new CreateMongoClusterRequestDTO(
                 "test",
