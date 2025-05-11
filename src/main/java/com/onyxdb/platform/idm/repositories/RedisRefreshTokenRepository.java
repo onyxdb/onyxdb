@@ -12,24 +12,25 @@ import com.onyxdb.platform.idm.models.redis.RefreshToken;
  * @author ArtemFed
  */
 @Repository
-public class RefreshTokenRepository {
-    private final RedisTemplate<String, RefreshToken> redisTemplate;
+public class RedisRefreshTokenRepository {
+    private final RedisTemplate<String, RefreshToken> redisRefTokenTemplate;
     private final ValueOperations<String, RefreshToken> valueOps;
+    public final String prefix = "refresh-token-";
 
-    public RefreshTokenRepository(RedisTemplate<String, RefreshToken> redisTemplate) {
-        this.redisTemplate = redisTemplate;
+    public RedisRefreshTokenRepository(RedisTemplate<String, RefreshToken> redisTemplate) {
+        this.redisRefTokenTemplate = redisTemplate;
         this.valueOps = redisTemplate.opsForValue();
     }
 
     public void saveToken(RefreshToken token) {
-        valueOps.set(token.token().toString(), token);
+        valueOps.set(prefix + token.token().toString(), token);
     }
 
     public Optional<RefreshToken> getByToken(String token) {
-        return Optional.ofNullable(valueOps.get(token));
+        return Optional.ofNullable(valueOps.get(prefix + token));
     }
 
     public void deleteToken(RefreshToken token) {
-        redisTemplate.delete(token.token().toString());
+        redisRefTokenTemplate.delete(prefix + token.token().toString());
     }
 }

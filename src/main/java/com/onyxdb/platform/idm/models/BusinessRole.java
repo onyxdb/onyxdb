@@ -45,7 +45,7 @@ public record BusinessRole(
 
     public static BusinessRole fromPostDTO(BusinessRolePostDTO businessRoleDTO) {
         return new BusinessRole(
-                null,
+                businessRoleDTO.getId(),
                 businessRoleDTO.getName(),
                 businessRoleDTO.getShopName(),
                 businessRoleDTO.getDescription(),

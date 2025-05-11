@@ -41,7 +41,7 @@ public record Permission(
 
     public static Permission fromPostDTO(PermissionPostDTO permissionDTO) {
         return new Permission(
-                null,
+                permissionDTO.getId(),
                 permissionDTO.getActionType(),
                 permissionDTO.getResourceType(),
                 permissionDTO.getData(),
@@ -61,7 +61,7 @@ public record Permission(
                 permissionDAO.getId(),
                 permissionDAO.getActionType(),
                 permissionDAO.getResourceType(),
-                dataMap,
+                dataMap == null || dataMap.isEmpty() ? null : dataMap,
                 permissionDAO.getCreatedAt(),
                 permissionDAO.getUpdatedAt()
         );
@@ -71,6 +71,7 @@ public record Permission(
         return new PermissionDTO()
                 .id(id)
                 .actionType(actionType)
+                .resourceType(resourceType)
                 .data(data)
                 .createdAt(createdAt)
                 .updatedAt(updatedAt);

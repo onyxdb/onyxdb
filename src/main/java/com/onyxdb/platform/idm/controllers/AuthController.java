@@ -2,6 +2,7 @@ package com.onyxdb.platform.idm.controllers;
 
 
 import java.util.Map;
+import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -70,11 +71,11 @@ public class AuthController implements AuthApi {
         System.out.println("getCurrentUser context" + account.id());
         AccountDTO accountDTO = account.toDTO();
 
-        Map<String, Map<String, Object>> data = accountService.getAllPermissionBitsResponse(account.id());
+        Map<String, Optional<Map<String, Object>>> permissions = SecurityContextUtils.getCurrentPermissions();
+        Map<String, Map<String, Object>> data = accountService.filterPermissionBits(permissions);
         GetCurrentUser200Response response = new GetCurrentUser200Response()
                 .account(accountDTO)
                 .permissions(data);
-
         return ResponseEntity.ok(response);
     }
 }

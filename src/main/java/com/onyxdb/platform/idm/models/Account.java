@@ -10,8 +10,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jooq.JSONB;
 
 import com.onyxdb.platform.generated.jooq.tables.records.AccountTableRecord;
-import com.onyxdb.platform.generated.openapi.models.AccountPostDTO;
 import com.onyxdb.platform.generated.openapi.models.AccountDTO;
+import com.onyxdb.platform.generated.openapi.models.AccountPostDTO;
 
 /**
  * @author ArtemFed
@@ -47,7 +47,7 @@ public record Account(
 
     public static Account fromPostDTO(AccountPostDTO accountDTO) {
         return new Account(
-                null,
+                accountDTO.getId(),
                 accountDTO.getUsername(),
                 accountDTO.getPassword(),
                 accountDTO.getEmail(),
@@ -68,6 +68,7 @@ public record Account(
         return new Account(
                 accountDAO.getId(),
                 accountDAO.getLogin(),
+//                null,
                 accountDAO.getPassword(),
                 accountDAO.getEmail(),
                 accountDAO.getFirstName(),
@@ -82,7 +83,8 @@ public record Account(
         return new AccountDTO()
                 .id(id)
                 .username(login)
-                .password(password)
+                .password(null)
+//                .password(password)
                 .email(email)
                 .firstName(firstName)
                 .lastName(lastName)

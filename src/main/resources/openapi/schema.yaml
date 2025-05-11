@@ -973,6 +973,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotFoundResponse'
+  /api/v1/accounts/{accountId}/access:
+    get:
+      summary: Get all account BRs, Roles and Permissions
+      operationId: getAccountAccess
+      tags:
+        - Accounts
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountRolesAllDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
   /api/v1/accounts/{accountId}/permissions-bits:
     get:
       summary: Get all account Permissions in bits
@@ -3873,6 +3899,32 @@ components:
       required:
         - role
         - permissions
+    BusinessRoleWithRolesDTO:
+      type: object
+      properties:
+        businessRole:
+          $ref: '#/components/schemas/BusinessRoleDTO'
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoleWithPermissionsDTO'
+      required:
+        - businessRole
+        - roles
+    AccountRolesAllDTO:
+      type: object
+      properties:
+        businessRoles:
+          type: array
+          items:
+            $ref: '#/components/schemas/BusinessRoleWithRolesDTO'
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoleWithPermissionsDTO'
+      required:
+        - businessRoles
+        - roles
     PaginatedRoleResponse:
       type: object
       properties:
@@ -4397,6 +4449,13 @@ components:
         message:
           type: string
     UnauthorizedResponse:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+    AccessDeniedResponse:
       type: object
       required:
         - message

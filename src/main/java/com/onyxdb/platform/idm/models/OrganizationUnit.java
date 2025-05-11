@@ -35,7 +35,7 @@ public record OrganizationUnit(
 
     public static OrganizationUnit fromPostDTO(OrganizationUnitPostDTO organizationUnitDTO) {
         return new OrganizationUnit(
-                null,
+                organizationUnitDTO.getId(),
                 organizationUnitDTO.getName(),
                 organizationUnitDTO.getDescription(),
                 organizationUnitDTO.getDomainComponentId(),
