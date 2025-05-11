@@ -45,7 +45,7 @@ public record Product(
 
     public static Product fromPostDTO(ProductPostDTO productDTO) {
         return new Product(
-                null,
+                productDTO.getId(),
                 productDTO.getName(),
                 productDTO.getDescription(),
                 productDTO.getParentId(),

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.onyxdb.platform.generated.openapi.apis.PermissionsApi;
 import com.onyxdb.platform.generated.openapi.models.CheckPermission200Response;
 import com.onyxdb.platform.generated.openapi.models.PermissionDTO;
+import com.onyxdb.platform.idm.common.PermissionCheck;
 import com.onyxdb.platform.idm.models.Permission;
 import com.onyxdb.platform.idm.services.PermissionService;
 
@@ -27,6 +28,7 @@ public class PermissionsController implements PermissionsApi {
     }
 
     @Override
+    @PermissionCheck(entity = "role", action = "get")
     public ResponseEntity<PermissionDTO> getPermissionById(UUID permissionId) {
         Permission permission = permissionService.findById(permissionId);
         return ResponseEntity.ok(permission.toDTO());

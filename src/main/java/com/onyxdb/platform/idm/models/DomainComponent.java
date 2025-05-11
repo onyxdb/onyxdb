@@ -29,7 +29,7 @@ public record DomainComponent(
 
     public static DomainComponent fromPostDTO(DomainComponentPostDTO domainComponentDTO) {
         return new DomainComponent(
-                null,
+                domainComponentDTO.getId(),
                 domainComponentDTO.getName(),
                 domainComponentDTO.getDescription(),
                 null,
