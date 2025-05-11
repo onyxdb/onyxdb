@@ -1,5 +1,34 @@
 # onyxdb - DBaaS platform in Kubernetes
 
+## Demo
+
+### Deploy PostgreSQL
+
+Apply resources:
+```shell
+kubectl apply -f ./deploy/postgres.yaml -n onyxdb
+```
+
+Create client:
+```shell
+kubectl -n onyxdb run -i --rm --tty postgres-client --image=postgres:17 --restart=Never -- bash -il
+```
+
+Connect to PostgreSQL:
+```shell
+psql postgresql://onyxdb:qwerty@postgres-onyxdb.onyxdb.svc.cluster.local:5432/onyxdb
+```
+
+Check connection:
+```shell
+\conninfo
+```
+
+Expected output:
+```shell
+You are connected to database "onyxdb" as user "onyxdb" on host "postgres-onyxdb.onyxdb.svc.cluster.local" (address "10.96.233.216") at port "5432".
+```
+
 ## Development
 
 This instruction launches the necessary components in namespace "onyxdb".
