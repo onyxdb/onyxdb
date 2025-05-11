@@ -17,6 +17,7 @@ spec:
         app.kubernetes.io/name: onyxdb-agent
         app.kubernetes.io/instance: [[${METADATA_NAME}]]
     spec:
+      serviceAccountName: onyxdb-agent-robot
       containers:
         - name: agent
           image: foxleren/onyxdb-agent:master-feb840b
