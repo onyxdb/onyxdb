@@ -2,6 +2,44 @@
 
 ## Demo
 
+### Create Kubernetes cluster
+
+Master node preset:
+```shell
+2 vcpu
+8 ram
+```
+
+2 Worker nodes with preset:
+```shell
+4 vcpu
+16 ram
+```
+
+### Prepare Kubernetes in Yandex Cloud
+
+Apply custom storage class: 
+```shell
+kubectl apply -f ./deploy/yc/onyxdb-hdd.yaml
+```
+
+Reset default storage class:
+```shell
+ kubectl patch storageclass yc-network-hdd \
+  -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
+```
+
+Set new default storage class:
+```shell
+kubectl patch storageclass onyxdb-hdd \
+-p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+```
+
+Check new default storage class:
+```shell
+kubectl get storageclass
+```
+
 ### Deploy Postgres
 
 Apply resources:

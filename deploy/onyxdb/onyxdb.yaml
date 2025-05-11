@@ -9,7 +9,7 @@ stringData:
   ONYXDB_SELF_URL: "http://onyxdb.onyxdb.svc.cluster.local:9001"
   ONYXDB_SELF_NAMESPACE: "onyxdb"
   ONYXDB_NAMESPACES: "onyxdb"
-  ONYXDB_STORAGE_CLASSES: "yc-network-hdd"
+  ONYXDB_STORAGE_CLASSES: "onyxdb-hdd"
   ONYXDB_POSTGRES_URL: "jdbc:postgresql://postgres-onyxdb.onyxdb.svc.cluster.local:5432/onyxdb"
   ONYXDB_POSTGRES_USER: "onyxdb"
   ONYXDB_POSTGRES_PASSWORD: "qwerty"
@@ -34,6 +34,26 @@ rules:
       - ""
     resources:
       - secrets
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+  - apiGroups:
+      - psmdb.percona.com
+    resources:
+      - perconaservermongodbs
+#      - perconaservermongodbs/status
+#      - perconaservermongodbs/finalizers
+      - perconaservermongodbbackups
+#      - perconaservermongodbbackups/status
+#      - perconaservermongodbbackups/finalizers
+      - perconaservermongodbrestores
+#      - perconaservermongodbrestores/status
+#      - perconaservermongodbrestores/finalizers
     verbs:
       - get
       - list
@@ -69,7 +89,7 @@ metadata:
     app.kubernetes.io/name: onyxdb
     app.kubernetes.io/instance: onyxdb
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: onyxdb
