@@ -25,10 +25,11 @@ spec:
       storage: 1Gi
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: postgres-onyxdb
 spec:
+  serviceName: postgres-onyxdb
   replicas: 1
   selector:
     matchLabels:
@@ -50,8 +51,9 @@ spec:
             - secretRef:
                 name: postgres-onyxdb
           volumeMounts:
-            - mountPath: /postgres/data
-              name: data
+            - name: data
+              mountPath: /var/lib/postgresql/data
+              subPath: pgdata
       volumes:
         - name: data
           persistentVolumeClaim:
