@@ -103,8 +103,8 @@ spec:
       serviceAccountName: onyxdb-robot
       containers:
         - name: onyxdb
-          image: foxleren/onyxdb:foxleren-deploy-onyxdb-to-k8s-8ba6a45
-          imagePullPolicy: IfNotPresent
+          image: foxleren/onyxdb:debugging
+          imagePullPolicy: Always
           ports:
             - containerPort: 9001
           livenessProbe:

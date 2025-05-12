@@ -1,7 +1,7 @@
 {
-  "name": "onecloud-paas",
-  "description": "OneCloud PaaS",
-  "productId": "64985115-08ec-4bbb-8d20-3020819f3a70",
+  "name": "infra",
+  "description": "Infrastructure",
+  "productId": "83724976-fe87-4e7f-b779-c4375d20b734",
   "namespace": "onyxdb"
 }
-0761b9e3-f5c2-45cc-af0c-d3620d32bb4c
+55212c44-a713-4c81-a378-f056bce23b8a
