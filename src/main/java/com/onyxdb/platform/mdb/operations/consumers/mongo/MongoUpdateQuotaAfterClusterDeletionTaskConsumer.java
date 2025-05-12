@@ -33,8 +33,8 @@ public class MongoUpdateQuotaAfterClusterDeletionTaskConsumer extends ClusterTas
     @Override
     protected TaskResult internalProcess(Task task, ClusterPayload payload) {
         Cluster cluster = clusterService.getClusterOrThrow(payload.clusterId());
-        // TODO uncomment
-//        quotaService.applyQuotaByClusterConfig(cluster.projectId(), null, cluster.config());
+
+        quotaService.applyQuotaByClusterConfig(cluster.projectId(), null, cluster.config());
 
         return TaskResult.success();
     }
