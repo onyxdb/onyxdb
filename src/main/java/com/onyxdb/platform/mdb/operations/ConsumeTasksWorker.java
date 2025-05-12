@@ -88,13 +88,13 @@ public class ConsumeTasksWorker implements CommandLineRunner {
 
                 int freeThreads = maxThreads - taskQueue.size();
                 if (freeThreads == 0) {
-                    logger.info("There is no free thread for processing, waiting next iteration");
+                    logger.debug("There is no free thread for processing, waiting next iteration");
                     continue;
                 }
 
                 List<Task> tasks = operationService.getTasksToConsume(freeThreads);
                 if (tasks.isEmpty()) {
-                    logger.info("There are no tasks to process, waiting next iteration");
+                    logger.debug("There are no tasks to process, waiting next iteration");
                     continue;
                 }
 
@@ -104,7 +104,7 @@ public class ConsumeTasksWorker implements CommandLineRunner {
                     executor.execute(() -> compositeTaskConsumer.processTask(task));
                 }
 
-                logger.info("Finished iteration");
+                logger.debug("Finished iteration");
             } catch (Exception e) {
                 logger.error("Failed to process tasks", e);
             }
