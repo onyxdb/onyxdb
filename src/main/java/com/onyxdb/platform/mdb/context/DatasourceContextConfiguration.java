@@ -140,9 +140,13 @@ public class DatasourceContextConfiguration {
             @Value("${onyxdb.redis.host}")
             String host,
             @Value("${onyxdb.redis.port}")
-            int port
+            int port,
+            @Value("${onyxdb.redis.user}")
+            String user,
+            @Value("${onyxdb.redis.password}")
+            String password
     ) {
-        return new JedisPool(config, host, port);
+        return new JedisPool(config, host, port, user, password);
     }
 
     @Bean(JEDIS_CONNECTION_FACTORY_BEAN)

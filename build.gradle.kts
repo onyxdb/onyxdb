@@ -66,6 +66,8 @@ dependencies {
 	implementation("net.javacrumbs.shedlock:shedlock-spring:6.3.1")
 	implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:6.3.1")
 
+	implementation("io.micrometer:micrometer-registry-prometheus:1.14.0")
+
 	// security
 	implementation(libs.springSecurity.core)
 	implementation(libs.springSecurity.config)

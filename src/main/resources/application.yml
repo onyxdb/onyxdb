@@ -23,12 +23,14 @@ management:
   endpoints:
     web:
       exposure:
-        include: health
+        include: health,prometheus
   endpoint:
     health:
       show-details: always
       probes:
         enabled: true
+    prometheus:
+      enabled: true
 
 springdoc:
   swagger-ui:
@@ -56,8 +58,8 @@ onyxdb:
   redis:
     host: ${ONYXDB_REDIS_HOST:localhost}
     port: ${ONYXDB_REDIS_PORT:6379}
-    user: ${ONYXDB_REDIS_PORT:default}
-    password: ${ONYXDB_REDIS_PORT:qwerty}
+    user: ${ONYXDB_REDIS_USER:default}
+    password: ${ONYXDB_REDIS_PASSWORD:qwerty}
   clickhouse:
     url: ${ONYXDB_CLICKHOUSE_URL:jdbc:clickhouse://localhost:8323/onyxdb}
     username: ${ONYXDB_CLICKHOUSE_USER:username}

@@ -38,9 +38,9 @@ public class ProduceOperationTasksJob {
     )
     public void scheduledTask() {
         List<Operation> operations = operationRepository.listOperations(null, OperationStatus.SCHEDULED);
-        logger.info("Scheduled operations for {}", operations.size());
 
         for (Operation operation : operations) {
+            logger.info("Registering operation id '{}'", operation.id());
             operationService.registerOperation(operation);
         }
     }

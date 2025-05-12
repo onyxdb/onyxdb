@@ -8,7 +8,6 @@ import com.onyxdb.platform.mdb.utils.StringEnumResolver;
  */
 public enum ClusterVersion implements StringEnum {
     MONGODB_7_0(ClusterType.MONGODB, "7.0"),
-    MONGODB_8_0(ClusterType.MONGODB, "8.0"),
     ;
 
     public static final StringEnumResolver<ClusterVersion> R = new StringEnumResolver<>(ClusterVersion.class);

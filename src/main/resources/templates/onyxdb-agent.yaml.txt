@@ -20,8 +20,8 @@ spec:
       serviceAccountName: onyxdb-agent-robot
       containers:
         - name: agent
-          image: foxleren/onyxdb-agent:master-feb840b
-          imagePullPolicy: IfNotPresent
+          image: foxleren/onyxdb-agent:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 9002
           env:

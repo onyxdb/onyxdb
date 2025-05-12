@@ -9,7 +9,7 @@ stringData:
   ONYXDB_SELF_URL: "http://onyxdb.onyxdb.svc.cluster.local:9001"
   ONYXDB_SELF_NAMESPACE: "onyxdb"
   ONYXDB_NAMESPACES: "onyxdb"
-  ONYXDB_STORAGE_CLASSES: "onyxdb-hdd"
+  ONYXDB_STORAGE_CLASSES: "yc-network-hdd"
   ONYXDB_POSTGRES_URL: "jdbc:postgresql://postgres-onyxdb.onyxdb.svc.cluster.local:5432/onyxdb"
   ONYXDB_POSTGRES_USER: "onyxdb"
   ONYXDB_POSTGRES_PASSWORD: "qwerty"
@@ -20,7 +20,7 @@ stringData:
   ONYXDB_CLICKHOUSE_URL: "jdbc:clickhouse://clickhouse-onyxdb.onyxdb.svc.cluster.local:8123/onyxdb"
   ONYXDB_CLICKHOUSE_USER: "onyxdb"
   ONYXDB_CLICKHOUSE_PASSWORD: "qwerty"
-  ONYXDB_MINIO_URL: "http://minio-onyxdb.onyxdb.svc.cluster.local:9000"
+  ONYXDB_MINIO_URL: "http://minio.onyxdb.svc.cluster.local:9000"
   ONYXDB_MINIO_SECRET: "minio-onyxdb"
   ONYXDB_MINIO_BUCKET: "onyxdb"
   ONYXDB_VLOGS_URL: "http://vls-onyxdb.onyxdb.svc.cluster.local:9428"
@@ -33,7 +33,39 @@ rules:
   - apiGroups:
       - ""
     resources:
+      - pods
+      - pods/exec
+      - services
+      - persistentvolumeclaims
       - secrets
+      - configmaps
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+      - deletecollection
+  - apiGroups:
+      - apps
+    resources:
+      - deployments
+      - replicasets
+      - statefulsets
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+  - apiGroups:
+      - batch
+    resources:
+      - cronjobs
     verbs:
       - get
       - list
@@ -46,14 +78,26 @@ rules:
       - psmdb.percona.com
     resources:
       - perconaservermongodbs
-#      - perconaservermongodbs/status
-#      - perconaservermongodbs/finalizers
+      - perconaservermongodbs/status
+      - perconaservermongodbs/finalizers
       - perconaservermongodbbackups
-#      - perconaservermongodbbackups/status
-#      - perconaservermongodbbackups/finalizers
+      - perconaservermongodbbackups/status
+      - perconaservermongodbbackups/finalizers
       - perconaservermongodbrestores
-#      - perconaservermongodbrestores/status
-#      - perconaservermongodbrestores/finalizers
+      - perconaservermongodbrestores/status
+      - perconaservermongodbrestores/finalizers
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+  - apiGroups:
+      - operator.victoriametrics.com
+    resources:
+      - vmservicescrapes
     verbs:
       - get
       - list
@@ -103,8 +147,8 @@ spec:
       serviceAccountName: onyxdb-robot
       containers:
         - name: onyxdb
-          image: foxleren/onyxdb:foxleren-deploy-onyxdb-to-k8s-38e5341
-          imagePullPolicy: IfNotPresent
+          image: foxleren/onyxdb:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 9001
           livenessProbe:

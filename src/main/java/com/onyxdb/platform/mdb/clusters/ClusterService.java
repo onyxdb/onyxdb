@@ -79,7 +79,8 @@ public class ClusterService {
         String namespace = project.namespace();
 
         clusterConfigValidator.validate(createCluster.config());
-        quotaService.applyQuotaByClusterConfig(project.id(), createCluster.config(), null);
+
+         quotaService.applyQuotaByClusterConfig(project.id(), createCluster.config(), null);
 
         Cluster cluster = clusterMapper.createClusterToCluster(createCluster, namespace);
 

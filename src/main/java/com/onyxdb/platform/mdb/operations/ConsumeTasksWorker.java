@@ -78,13 +78,13 @@ public class ConsumeTasksWorker implements CommandLineRunner {
         var isFirstIteration = true;
         while (true) {
             try {
-                var scheduledAt = LocalDateTime.now();
-
                 if (isFirstIteration) {
                     isFirstIteration = false;
                 } else {
                     Thread.sleep(pollingIntervalSeconds * 1000L);
                 }
+
+                logger.info("maxThreads={}, taskQueue.size()={}", maxThreads, taskQueue.size());
 
                 int freeThreads = maxThreads - taskQueue.size();
                 if (freeThreads == 0) {

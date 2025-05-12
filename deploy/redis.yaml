@@ -21,13 +21,14 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 0.5Gi
+      storage: 1Gi
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: redis-onyxdb
 spec:
+  serviceName: redis-onyxdb
   replicas: 1
   selector:
     matchLabels:
@@ -53,8 +54,8 @@ spec:
             - secretRef:
                 name: redis-onyxdb
           volumeMounts:
-            - mountPath: /redis/data
-              name: data
+            - name: data
+              mountPath: /data
       volumes:
         - name: data
           persistentVolumeClaim:
