@@ -80,8 +80,6 @@ public class ClusterService {
 
         clusterConfigValidator.validate(createCluster.config());
 
-         quotaService.applyQuotaByClusterConfig(project.id(), createCluster.config(), null);
-
         Cluster cluster = clusterMapper.createClusterToCluster(createCluster, namespace);
 
         var createDatabase = new CreateDatabase(
@@ -136,6 +134,7 @@ public class ClusterService {
         );
 
         transactionTemplate.executeWithoutResult(status -> {
+            quotaService.applyQuotaByClusterConfig(project.id(), createCluster.config(), null);
             clusterRepository.createCluster(cluster);
             hostRepository.upsertHosts(hosts);
             databaseRepository.createDatabase(database);
@@ -158,8 +157,6 @@ public class ClusterService {
                 .overrideWithUpdateCluster(updateCluster)
                 .build();
 
-        quotaService.applyQuotaByClusterConfig(cluster.projectId(), updatedCluster.config(), cluster.config());
-
         var operation = Operation.scheduledWithPayload(
                 OperationType.MONGO_MODIFY_CLUSTER,
                 updateCluster.id(),
@@ -170,6 +167,7 @@ public class ClusterService {
                 ))
         );
         transactionTemplate.executeWithoutResult(status -> {
+            quotaService.applyQuotaByClusterConfig(cluster.projectId(), updatedCluster.config(), cluster.config());
             clusterRepository.updateCluster(updatedCluster);
             operationRepository.createOperation(operation);
         });

@@ -1,0 +1,11 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMServiceScrape
+metadata:
+  name: onyxdb
+spec:
+  endpoints:
+    - port: "http"
+      path: /actuator/prometheus
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: onyxdb

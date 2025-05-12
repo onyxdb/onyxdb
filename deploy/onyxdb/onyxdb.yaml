@@ -151,6 +151,13 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 9001
+#          resources:
+#            limits:
+#              cpu: "1"
+#              memory: "1G"
+#            requests:
+#              cpu: "1"
+#              memory: "1G"
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness
@@ -179,5 +186,6 @@ spec:
     app.kubernetes.io/name: onyxdb
     app.kubernetes.io/instance: onyxdb
   ports:
-    - port: 9001
+    - name: http
+      port: 9001
       targetPort: 9001
