@@ -16,6 +16,7 @@ import org.springframework.boot.autoconfigure.jooq.ExceptionTranslatorExecuteLis
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -139,9 +140,13 @@ public class DatasourceContextConfiguration {
             @Value("${onyxdb.redis.host}")
             String host,
             @Value("${onyxdb.redis.port}")
-            int port
+            int port,
+            @Value("${onyxdb.redis.user}")
+            String user,
+            @Value("${onyxdb.redis.password}")
+            String password
     ) {
-        return new JedisPool(config, host, port);
+        return new JedisPool(config, host, port, user, password);
     }
 
     @Bean(JEDIS_CONNECTION_FACTORY_BEAN)
@@ -150,12 +155,18 @@ public class DatasourceContextConfiguration {
             @Value("${onyxdb.redis.host}")
             String host,
             @Value("${onyxdb.redis.port}")
-            int port
+            int port,
+            @Value("${onyxdb.redis.user}")
+            String user,
+            @Value("${onyxdb.redis.password}")
+            String password
     ) {
-        JedisConnectionFactory jedisConFactory = new JedisConnectionFactory();
-        jedisConFactory.setHostName(host);
-        jedisConFactory.setPort(port);
+        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
+        config.setHostName(host);
+        config.setPort(port);
+        config.setUsername(user);
+        config.setPassword(password);
 
-        return jedisConFactory;
+        return new JedisConnectionFactory(config);
     }
 }

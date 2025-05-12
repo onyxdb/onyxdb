@@ -17,6 +17,19 @@ spring:
 server:
   port: 9001
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+    prometheus:
+      enabled: true
+
 springdoc:
   swagger-ui:
     path: /swagger-ui
@@ -31,14 +44,11 @@ logging:
 
 onyxdb:
   mdb:
-    self-url: http://host.minikube.internal:9001
-    self-namespace: onyxdb
-    namespaces: onyxdb
-    storage-classes: standard
+    self-url: ${ONYXDB_SELF_URL:http://host.minikube.internal:9001 }
+    self-namespace: ${ONYXDB_SELF_NAMESPACE:onyxdb}
+    namespaces: ${ONYXDB_NAMESPACES:onyxdb}
+    storage-classes: ${ONYXDB_STORAGE_CLASSES:standard}
     disabled-kube: false
-  # TODO build url in runtime with namespace
-  agent:
-    base-url: http://localhost:9002
   postgres:
     url: jdbc:postgresql://localhost:5432/onyxdb
     username: postgres

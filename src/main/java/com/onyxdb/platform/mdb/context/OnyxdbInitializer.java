@@ -10,7 +10,6 @@ import io.fabric8.kubernetes.api.model.SecretBuilder;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import com.onyxdb.platform.idm.models.Account;
@@ -29,7 +28,7 @@ import com.onyxdb.platform.mdb.utils.SpringProfileManager;
 /**
  * @author ArtemFed
  */
-public class OnyxdbInitializer implements CommandLineRunner {
+public class OnyxdbInitializer {
     private static final Logger logger = LoggerFactory.getLogger(OnyxdbInitializer.class);
 
     // TODO don't hardcode admin id
@@ -68,16 +67,15 @@ public class OnyxdbInitializer implements CommandLineRunner {
         this.springProfileManager = springProfileManager;
     }
 
-    @Override
-    public void run(String... args) {
+    public void initialize() {
         try {
-            initialize();
+            internalInitialize();
         } catch (Exception e) {
             throw new RuntimeException("Failed to perform initialization", e);
         }
     }
 
-    private void initialize() {
+    private void internalInitialize() {
         transactionTemplate.executeWithoutResult(status -> {
             boolean isInitialized = initializationRepository.getIsInitializedForUpdate();
 

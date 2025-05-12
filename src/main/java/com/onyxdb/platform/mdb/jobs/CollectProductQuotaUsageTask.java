@@ -38,7 +38,7 @@ public class CollectProductQuotaUsageTask {
     )
     public void scheduledTask() {
         int collectedQuotas = 0;
-        logger.info("Started collecting product quota usage");
+        logger.debug("Started collecting product quota usage");
         try {
             List<EnrichedProductQuota> productQuotas = quotaService.listProductQuotas(QuotaFilter.builder().build());
             collectedQuotas = productQuotas.size();
@@ -47,6 +47,6 @@ public class CollectProductQuotaUsageTask {
             logger.error("Failed to collect product quota usage", e);
             return;
         }
-        logger.info("Finished collecting product quota usage. Collected {} records", collectedQuotas);
+        logger.debug("Finished collecting product quota usage. Collected {} records", collectedQuotas);
     }
 }

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import com.onyxdb.platform.mdb.clusters.ClusterRepository;
 import com.onyxdb.platform.mdb.clusters.models.CreateDatabase;
 import com.onyxdb.platform.mdb.clusters.models.Database;
 import com.onyxdb.platform.mdb.operations.models.Operation;
@@ -25,12 +26,15 @@ public class DatabaseService {
     private final OperationRepository operationRepository;
     private final TransactionTemplate transactionTemplate;
     private final ObjectMapper objectMapper;
+    private final ClusterRepository clusterRepository;
 
     public List<Database> listDatabases(UUID clusterId) {
         return databaseRepository.listDatabases(clusterId);
     }
 
     public UUID createDatabase(CreateDatabase createDatabase) {
+        clusterRepository.getClusterOrThrow(createDatabase.clusterId());
+
         Database database = databaseMapper.databaseToCreateToDatabase(createDatabase);
         var operation = Operation.scheduledWithPayload(
                 OperationType.MONGO_CREATE_DATABASE,

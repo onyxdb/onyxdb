@@ -1,4 +1,4 @@
-FROM amazoncorretto:21
+FROM --platform=linux/amd64 amazoncorretto:21.0.7-alpine
 
 WORKDIR /onyxdb
 

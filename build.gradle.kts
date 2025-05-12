@@ -33,6 +33,7 @@ dependencies {
 
 	implementation(libs.springBoot.starterWeb)
 	implementation("org.springframework.boot:spring-boot-starter-webflux:3.3.5")
+	implementation("org.springframework.boot:spring-boot-starter-actuator:3.3.5")
 	implementation(libs.springBoot.starterLog4j2)
 	implementation(libs.springBoot.starterValidation)
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf:3.3.5")
@@ -64,6 +65,8 @@ dependencies {
 	// schedlock
 	implementation("net.javacrumbs.shedlock:shedlock-spring:6.3.1")
 	implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:6.3.1")
+
+	implementation("io.micrometer:micrometer-registry-prometheus:1.14.0")
 
 	// security
 	implementation(libs.springSecurity.core)

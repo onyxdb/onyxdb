@@ -104,8 +104,7 @@ public class MongoClusterController implements ManagedMongoDbClustersApi {
     @Override
     public ResponseEntity<ListMongoVersionsResponseDTO> listVersions() {
         var response = new ListMongoVersionsResponseDTO(List.of(
-                ClusterVersion.MONGODB_7_0.getVersion(),
-                ClusterVersion.MONGODB_8_0.getVersion()
+                ClusterVersion.MONGODB_7_0.getVersion()
         ));
         return ResponseEntity.ok(response);
     }

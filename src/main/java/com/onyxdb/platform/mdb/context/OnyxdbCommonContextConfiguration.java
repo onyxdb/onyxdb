@@ -45,7 +45,7 @@ public class OnyxdbCommonContextConfiguration {
             AuthService authService,
             SpringProfileManager springProfileManager
     ) {
-        return new OnyxdbInitializer(
+        var initializer = new OnyxdbInitializer(
                 disabledKube,
                 selfNamespace,
                 transactionTemplate,
@@ -56,6 +56,10 @@ public class OnyxdbCommonContextConfiguration {
                 authService,
                 springProfileManager
         );
+
+        initializer.initialize();
+
+        return initializer;
     }
 
     @Bean(name = CONSUME_TASKS_WORKER_EXECUTOR_BEAN)

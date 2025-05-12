@@ -2,12 +2,11 @@ apiVersion: operator.victoriametrics.com/v1beta1
 kind: VLogs
 metadata:
   name: onyxdb
-  namespace: onyxdb
 spec:
-#  image:
-#    repository: victoriametrics/victoria-logs
-#    tag: v1.4.0
-#    pullPolicy: Always
+  image:
+    repository: victoriametrics/victoria-logs
+    tag: v1.21.0-victorialogs
+    pullPolicy: Always
   retentionPeriod: "24h"
   removePvcAfterDelete: true
   storage:
@@ -16,10 +15,3 @@ spec:
     resources:
       requests:
         storage: 5Gi
-#  resources:
-#    requests:
-#      memory: 500Mi
-#      cpu: 500m
-#    limits:
-#      memory: 10Gi
-#      cpu: 5
