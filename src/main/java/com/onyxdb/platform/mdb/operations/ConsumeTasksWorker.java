@@ -78,8 +78,6 @@ public class ConsumeTasksWorker implements CommandLineRunner {
         var isFirstIteration = true;
         while (true) {
             try {
-                var scheduledAt = LocalDateTime.now();
-
                 if (isFirstIteration) {
                     isFirstIteration = false;
                 } else {
@@ -88,13 +86,13 @@ public class ConsumeTasksWorker implements CommandLineRunner {
 
                 int freeThreads = maxThreads - taskQueue.size();
                 if (freeThreads == 0) {
-                    logger.debug("There is no free thread for processing, waiting next iteration");
+                    logger.info("There is no free thread for processing, waiting next iteration");
                     continue;
                 }
 
                 List<Task> tasks = operationService.getTasksToConsume(freeThreads);
                 if (tasks.isEmpty()) {
-                    logger.debug("There are no tasks to process, waiting next iteration");
+                    logger.info("There are no tasks to process, waiting next iteration");
                     continue;
                 }
 
@@ -104,7 +102,7 @@ public class ConsumeTasksWorker implements CommandLineRunner {
                     executor.execute(() -> compositeTaskConsumer.processTask(task));
                 }
 
-                logger.debug("Finished iteration");
+                logger.info("Finished iteration");
             } catch (Exception e) {
                 logger.error("Failed to process tasks", e);
             }
