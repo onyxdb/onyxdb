@@ -23,13 +23,14 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 0.5Gi
+      storage: 1Gi
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: clickhouse-onyxdb
 spec:
+  serviceName: clickhouse-onyxdb
   replicas: 1
   selector:
     matchLabels:
@@ -54,8 +55,8 @@ spec:
             - secretRef:
                 name: clickhouse-onyxdb
           volumeMounts:
-            - mountPath: /redis/data
-              name: data
+            - name: data
+              mountPath: /var/lib/clickhouse
       volumes:
         - name: data
           persistentVolumeClaim:
