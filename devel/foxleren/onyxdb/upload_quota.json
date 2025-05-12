@@ -1,0 +1,17 @@
+{
+  "products": [
+    {
+      "productId": "64985115-08ec-4bbb-8d20-3020819f3a70",
+      "quotas": [
+        {
+          "resourceId": "a162cf17-0320-42be-b4e2-9b2e91070916",
+          "limit": 10000
+        },
+        {
+          "resourceId": "070dc19a-4000-4035-94a7-fe389df8fb1b",
+          "limit": 21474836480
+        }
+      ]
+    }
+  ]
+}

@@ -1,12 +1,12 @@
 {
   "name": "test-1",
-  "description": "This this test cluster",
-  "projectId": "5cb0ca1c-e6c1-47ab-b832-0074312490a3",
+  "description": "Some description",
+  "projectId": "0761b9e3-f5c2-45cc-af0c-d3620d32bb4c",
   "config": {
     "version": "8.0",
     "resources": {
       "presetId": "dev",
-      "storageClass": "standard",
+      "storageClass": "onyxdb-hdd",
       "storage": 1073741824
     },
     "replicas": 3,
