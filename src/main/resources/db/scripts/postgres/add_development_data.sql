@@ -24,7 +24,7 @@ VALUES ('3ec32ad8-db16-4955-8872-41404d483b9f', 'Connectify'),
 --            0,
 --            10737418240);
 
-INSERT INTO public.product_quotas(product_id, resource_id, "limit", allocation, free)
+INSERT INTO public.product_quotas(product_id, resource_id, "limit", usage, free)
 VALUES (
 --         '3ec32ad8-db16-4955-8872-41404d483b9f',
            '672fdd9c-fdef-49c2-a675-3c890e7316a3',
