@@ -102,7 +102,7 @@ Follow [docs](https://kubernetes.io/ru/docs/tasks/tools/install-minikube/).
 ### Prepare Minikube
 
 ```shell
-minikube start --memory=8000 --cpus=4 --disk-size=30g
+minikube start --memory=8000 --cpus=4 --disk-size=30g --kubernetes-version=v1.31.0
 minikube create ns onyxdb
 kubectl config set-context --current --namespace onyxdb
 minikube addons enable metrics-server
