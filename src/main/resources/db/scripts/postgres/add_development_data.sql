@@ -4,9 +4,9 @@ VALUES ('dev', 'standard', 500, 1073741824);
 INSERT INTO public.resource_presets (id, type, vcpu, ram)
 VALUES ('dev-x2', 'standard', 1000, 2147483648);
 
-INSERT INTO public.products (id, name)
-VALUES ('3ec32ad8-db16-4955-8872-41404d483b9f', 'Connectify'),
-       ('672fdd9c-fdef-49c2-a675-3c890e7316a3', 'Production');
+-- INSERT INTO public.products (id, name)
+-- VALUES ('3ec32ad8-db16-4955-8872-41404d483b9f', 'Connectify'),
+--        ('672fdd9c-fdef-49c2-a675-3c890e7316a3', 'Production');
 
 -- INSERT INTO public.product_quotas(product_id, resource_id, "limit", allocation, free)
 -- VALUES (
