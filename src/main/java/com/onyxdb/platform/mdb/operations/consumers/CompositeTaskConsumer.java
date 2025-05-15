@@ -44,9 +44,7 @@ public class CompositeTaskConsumer {
 
             Task startedTask = operationService.markTaskAsStarted(task);
 
-            TaskResult taskResult =
-                    TaskResult.success();
-//            taskConsumer.process(startedTask);
+            TaskResult taskResult = taskConsumer.process(startedTask);
 
             if (taskResult.ok()) {
                 operationService.markTaskAsFinished(startedTask);

@@ -40,6 +40,7 @@ public class OperationService {
 
     private static final Set<TaskType> CHECK_RESULT_TASK_TYPES = Set.of(
             TaskType.MONGO_CHECK_PSMDB_READINESS,
+            TaskType.MONGO_CHECK_ONYXDB_AGENT_READINESS,
             TaskType.MONGO_CHECK_ONYXDB_AGENT_IS_DELETED,
             TaskType.MONGO_CHECK_PSMDB_IS_DELETED,
             TaskType.MONGO_CHECK_BACKUP_IS_READY,

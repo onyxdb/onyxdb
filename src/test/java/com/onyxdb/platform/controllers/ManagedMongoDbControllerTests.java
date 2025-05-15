@@ -108,7 +108,7 @@ public class ManagedMongoDbControllerTests extends BaseTest {
                     "test cluster",
                     project.id(),
                     new MongoConfigDTO(
-                            "8.0",
+                            "7.0",
                             new ClusterResourcesDTO(
                                     resourcePreset.id(),
                                     "standard",
@@ -165,7 +165,7 @@ public class ManagedMongoDbControllerTests extends BaseTest {
                     namespace,
                     ClusterType.MONGODB,
                     new ClusterConfig(
-                            ClusterVersion.MONGODB_8_0,
+                            ClusterVersion.MONGODB_7_0,
                             new ClusterResources(
                                     rq.getConfig().getResources().getPresetId(),
                                     rq.getConfig().getResources().getStorageClass(),
@@ -290,7 +290,7 @@ public class ManagedMongoDbControllerTests extends BaseTest {
                 "test cluster",
                 project.id(),
                 new MongoConfigDTO(
-                        "8.0",
+                        "7.0",
                         new ClusterResourcesDTO(
                                 resourcePreset.id(),
                                 "standard",
@@ -358,7 +358,7 @@ public class ManagedMongoDbControllerTests extends BaseTest {
                 "test cluster",
                 TestUtils.NOT_EXISTING_PROJECT_ID,
                 new MongoConfigDTO(
-                        "8.0",
+                        "7.0",
                         new ClusterResourcesDTO(
                                 resourcePreset.id(),
                                 "standard",
@@ -403,7 +403,7 @@ public class ManagedMongoDbControllerTests extends BaseTest {
                 "test cluster",
                 project.id(),
                 new MongoConfigDTO(
-                        "8.0",
+                        "7.0",
                         new ClusterResourcesDTO(
                                 TestUtils.NOT_EXISTING_RESOURCE_PRESET_ID,
                                 "standard",

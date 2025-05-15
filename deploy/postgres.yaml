@@ -47,6 +47,11 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5432
+          env:
+            - name: TZ
+              value: 'Europe/Moscow'
+            - name: PGTZ
+              value: 'Europe/Moscow'
           envFrom:
             - secretRef:
                 name: postgres-onyxdb

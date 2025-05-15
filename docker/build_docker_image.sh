@@ -9,13 +9,14 @@ IMAGE_VERSION="$BRANCH_NAME-$COMMIT_HASH"
 ./gradlew clean build
 
 DOCKER_REPOSITORY="foxleren/onyxdb"
-#DOCKER_IMAGE="$DOCKER_REPOSITORY:$IMAGE_VERSION"
-DOCKER_IMAGE="$DOCKER_REPOSITORY:debugging"
+DOCKER_IMAGE="$DOCKER_REPOSITORY:$IMAGE_VERSION"
 
-docker build \
+docker buildx build \
 -t $DOCKER_IMAGE \
 -f ./docker/onyxdb.dockerfile \
 --network host \
+--platform=linux/amd64 \
+--no-cache \
 .
 
 docker push $DOCKER_IMAGE

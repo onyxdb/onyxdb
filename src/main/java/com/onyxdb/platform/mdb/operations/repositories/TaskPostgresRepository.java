@@ -14,6 +14,7 @@ import com.onyxdb.platform.mdb.operations.mappers.TaskMapper;
 import com.onyxdb.platform.mdb.operations.models.Task;
 import com.onyxdb.platform.mdb.operations.models.TaskFilter;
 import com.onyxdb.platform.mdb.operations.models.TaskStatus;
+import com.onyxdb.platform.mdb.utils.TimeUtils;
 
 import static com.onyxdb.platform.generated.jooq.Tables.TASKS;
 
@@ -44,7 +45,7 @@ public class TaskPostgresRepository implements TaskRepository {
                         .and(TASKS.STATUS.eq(taskMapper.taskStatusToJooqTaskStatus(TaskStatus.SCHEDULED))
                                 .or(TASKS.STATUS.eq(taskMapper.taskStatusToJooqTaskStatus(TaskStatus.RESCHEDULED))
                                         .and(DSL.localDateTimeAdd(TASKS.UPDATED_AT, TASKS.RETRY_DELAY_SECONDS, DatePart.SECOND)
-                                                .lt(DSL.currentLocalDateTime()))
+                                                .lt(TimeUtils.now()))
                                 ))
                         .andNotExists(
                                 DSL.selectOne()
@@ -53,7 +54,7 @@ public class TaskPostgresRepository implements TaskRepository {
                                         .and(blockers.STATUS.ne(taskMapper.taskStatusToJooqTaskStatus(TaskStatus.SUCCESS))
                                                 .or(blockers.FINISHED_AT.isNull())
                                                 .or(DSL.localDateTimeAdd(blockers.FINISHED_AT, blockers.POST_DELAY_SECONDS, DatePart.SECOND)
-                                                        .ge(DSL.currentLocalDateTime())
+                                                        .ge(TimeUtils.now())
                                                 )
                                         )
                         )
