@@ -82,6 +82,7 @@ public class BackupService {
     }
 
     public UUID createBackup(UUID clusterId, UUID createdBy) {
+        clusterRepository.getClusterOrThrow(clusterId);
         var operation = Operation.scheduledWithPayload(
                 OperationType.MONGO_CREATE_BACKUP,
                 clusterId,

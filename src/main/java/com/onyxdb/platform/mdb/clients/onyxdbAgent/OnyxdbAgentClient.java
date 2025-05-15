@@ -89,5 +89,6 @@ public class OnyxdbAgentClient {
     ) {
         String agentName = KubernetesAdapter.getOnyxdbAgentName(clusterName, projectName);
         return "http://%s.%s.svc.cluster.local:9002".formatted(agentName, namespace);
+//        return "http://localhost:9002";
     }
 }

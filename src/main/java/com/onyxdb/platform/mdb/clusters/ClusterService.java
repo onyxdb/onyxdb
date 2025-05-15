@@ -80,7 +80,8 @@ public class ClusterService {
 
         clusterConfigValidator.validate(createCluster.config());
 
-         quotaService.applyQuotaByClusterConfig(project.id(), createCluster.config(), null);
+        // TODO uncomment!!!
+//         quotaService.applyQuotaByClusterConfig(project.id(), createCluster.config(), null);
 
         Cluster cluster = clusterMapper.createClusterToCluster(createCluster, namespace);
 
@@ -158,7 +159,8 @@ public class ClusterService {
                 .overrideWithUpdateCluster(updateCluster)
                 .build();
 
-        quotaService.applyQuotaByClusterConfig(cluster.projectId(), updatedCluster.config(), cluster.config());
+        // TODO uncomment!!!
+//        quotaService.applyQuotaByClusterConfig(cluster.projectId(), updatedCluster.config(), cluster.config());
 
         var operation = Operation.scheduledWithPayload(
                 OperationType.MONGO_MODIFY_CLUSTER,
