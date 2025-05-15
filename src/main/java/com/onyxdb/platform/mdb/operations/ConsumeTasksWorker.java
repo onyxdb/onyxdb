@@ -84,6 +84,8 @@ public class ConsumeTasksWorker implements CommandLineRunner {
                     Thread.sleep(pollingIntervalSeconds * 1000L);
                 }
 
+                logger.info("maxThreads={}, taskQueue.size()={}", maxThreads, taskQueue.size());
+
                 int freeThreads = maxThreads - taskQueue.size();
                 if (freeThreads == 0) {
                     logger.info("There is no free thread for processing, waiting next iteration");
